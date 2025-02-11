@@ -20,5 +20,5 @@ Mac/Linux:
 
 ## Testing
 
-To test the server, you can connect to the server using a websocket client. The server runs on `ws://localhost:8080/hello`.
+To test the server, you can connect to the server using a websocket client. The server runs on `ws://localhost:8080/connect`.
 You can connect to this URL using a websocket client and send messages to the server, which will be broadcasted to all other connected clients.

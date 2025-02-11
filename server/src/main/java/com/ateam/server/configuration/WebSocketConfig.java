@@ -29,7 +29,7 @@ public class WebSocketConfig
         // the CORS policy for the handlers so that other
         // domains can also access the socket
         webSocketHandlerRegistry
-            .addHandler(new SocketConnectionHandler(),"/hello")
+            .addHandler(new SocketConnectionHandler(),"/connect")
             .setAllowedOrigins("*");
     }
 }
