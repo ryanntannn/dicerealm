@@ -21,10 +21,14 @@ import com.google.gson.JsonSyntaxException;
  * Manages a single room and all the players in it and their websocket sessions.
  */
 public class RoomManager {
+
 	private Map<UUID, WebSocketSession> playerSessions = Collections.synchronizedMap(new HashMap<UUID, WebSocketSession>());
 	private Map<String, UUID> sessionIdToPlayerIdMap = Collections.synchronizedMap(new HashMap<String, UUID>());
+	
+	// We use the OpenAI LLMStrategy and the WebsocketBroadcaster BroadcastStrategy for this room
+	private OpenAI openAI = new OpenAI();
 	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions);
-	private Room room = new Room(broadcaster);
+	private Room room = new Room(broadcaster, openAI);
 	private Gson gson = new Gson();
 	
 	public void onJoin(WebSocketSession session) {

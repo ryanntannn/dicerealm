@@ -14,17 +14,20 @@ java {
 }
 
 repositories {
-	mavenCentral()
+  mavenCentral()
+  maven { url 'https://repo.spring.io/milestone' }
+  maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
+	implementation platform("org.springframework.ai:spring-ai-bom:1.0.0-SNAPSHOT")
+  implementation 'org.springframework.ai:spring-ai-openai'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'com.google.code.gson:gson:2.12.1'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
 }
 
 tasks.named('test') {

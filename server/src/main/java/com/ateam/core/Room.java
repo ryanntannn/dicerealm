@@ -3,6 +3,7 @@ package com.ateam.core;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import com.ateam.core.command.MessageCommand;
 import com.ateam.core.command.PlayerJoinCommand;
@@ -14,9 +15,11 @@ public class Room {
 	// value: player object
 	private Map<UUID, Player> players = new HashMap<UUID, Player>();
 	private BroadcastStrategy broadcastStrategy;
+	private LLMStrategy llmStrategy;
 	
-	public Room(BroadcastStrategy broadcastStrategy) {
+	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy) {
 		this.broadcastStrategy = broadcastStrategy;
+		this.llmStrategy = llmStrategy;
 	}
 
 	public void addPlayer(Player player) {
@@ -36,5 +39,9 @@ public class Room {
 
 	public void handleNormalMessage(UUID playerId, String message) {
 		broadcastStrategy.sendToAllPlayers(new MessageCommand(message));
+		Stream<String> responseSteam = llmStrategy.prompt(message);
+		responseSteam.forEach(response -> {
+			broadcastStrategy.sendToAllPlayers(new MessageCommand(response));
+		});
 	}
 }
