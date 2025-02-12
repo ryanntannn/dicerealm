@@ -33,4 +33,9 @@ public class OpenAI extends LLMStrategy {
 				.onErrorReturn("An error occurred while processing the request.")
 				.toStream();
 	}
+
+	public String promptStr(String prompt) {
+		return this.chatModel
+			.call(prompt);
+	}
 }

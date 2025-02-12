@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import com.ateam.core.command.MessageCommand;
+import com.ateam.core.command.MessageHistoryCommand;
 import com.ateam.core.command.OutgoingMessageCommand;
 import com.ateam.core.command.PlayerJoinCommand;
 import com.ateam.core.command.PlayerLeaveCommand;
@@ -19,17 +19,22 @@ public class Room {
 	// value: player object
 	private Map<UUID, Player> players = new HashMap<UUID, Player>();
 	private BroadcastStrategy broadcastStrategy;
-	private LLMStrategy llmStrategy;
 	private List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
+	private DungeonMaster dungeonMaster;
 	
 	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy) {
 		this.broadcastStrategy = broadcastStrategy;
-		this.llmStrategy = llmStrategy;
+		this.dungeonMaster = new DungeonMaster(llmStrategy, messages);
 	}
 
 	public void addPlayer(Player player) {
 		players.put(player.getId(), player);
 		broadcastStrategy.sendToAllPlayers(new PlayerJoinCommand(player));
+		broadcastStrategy.sendToPlayer(
+			new MessageHistoryCommand(
+				messages.toArray(new Message[messages.size()])), 
+				player
+			);
 	}
 
 	public Player getPlayerById(UUID id) {
@@ -43,8 +48,11 @@ public class Room {
 	}
 
 	public void handleNormalMessage(UUID playerId, String message) {
-		broadcastStrategy.sendToAllPlayers(new MessageCommand(message));
-		Stream<String> responseSteam = llmStrategy.prompt(message);
+		Player thisPlayer = players.get(playerId);
+		Message playerMessage = new Message(message, thisPlayer.getDisplayName());
+		messages.add(playerMessage);
+		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(playerMessage));
+		Stream<String> responseSteam = dungeonMaster.handlePlayerMessage(message, thisPlayer);
 		Message dmResponseMessage = new Message("", "Dungeon Master");
 		responseSteam.forEach(response -> {
 			dmResponseMessage.appendMessage(response);
