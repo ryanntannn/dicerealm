@@ -2,7 +2,6 @@ package com.ateam.core;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DungeonMaster {
 
@@ -21,10 +20,12 @@ public class DungeonMaster {
 		this.messageHistory = messageHistory;
 	}
 
-	public Stream<String> handlePlayerMessage(String message, Player player) {
+	public String handlePlayerMessage(String message, Player player) {
 		String prompt = makeSystemPrompt() + "\nSummary\n" + summary + "\nPrevious Messages:\n" + latestTenMessages() + "\n New Message from " + player.getDisplayName() + " says: " + message;
 		updateSummary();
-		return llmStrategy.prompt(prompt);
+		DungeonMasterResponse response = llmStrategy.promptSchema(prompt, DungeonMasterResponse.class);
+		response.actionChoices();
+		return response.displayText();
 	}
 
 	private String latestTenMessages() {
@@ -38,7 +39,7 @@ public class DungeonMaster {
 		}
 
 		String prompt = "Provide an updated summary of not more than 1000 characters, given the previous summary and the latest ten messages:\nSummary:\n" + summary + "\nLatest 10 messages\n" + latestTenMessages();
-		
+
 		summary = llmStrategy.promptStr(prompt);
 	}
 }

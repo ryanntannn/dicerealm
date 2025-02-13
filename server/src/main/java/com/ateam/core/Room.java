@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import com.ateam.core.command.MessageHistoryCommand;
 import com.ateam.core.command.OutgoingMessageCommand;
@@ -52,12 +51,9 @@ public class Room {
 		Message playerMessage = new Message(message, thisPlayer.getDisplayName());
 		messages.add(playerMessage);
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(playerMessage));
-		Stream<String> responseSteam = dungeonMaster.handlePlayerMessage(message, thisPlayer);
-		Message dmResponseMessage = new Message("", "Dungeon Master");
-		responseSteam.forEach(response -> {
-			dmResponseMessage.appendMessage(response);
-			broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(dmResponseMessage));
-		});
+		String response = dungeonMaster.handlePlayerMessage(message, thisPlayer);
+		Message dmResponseMessage = new Message(response, "Dungeon Master");
+		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(dmResponseMessage));
 		messages.add(dmResponseMessage);
 	}
 }
