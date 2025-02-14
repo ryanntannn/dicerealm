@@ -40,7 +40,7 @@ public class Room {
 		return players.get(id);
 	}
 
-	public void removePlayerById(UUID id) {
+	public void removePlayerById(UUID id) throws NullPointerException {
 		Player player = players.get(id);
 		players.remove(id);
 		broadcastStrategy.sendToAllPlayers(new PlayerLeaveCommand(player));

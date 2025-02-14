@@ -3,6 +3,19 @@ package com.ateam.core;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+record DungeonMasterResponse(
+    @JsonProperty(required = true, value = "displayText") String displayText,
+		@JsonProperty(required = true, value = "actionChoices") PlayerAction[] actionChoices
+){
+		record PlayerAction(
+			@JsonProperty(required = true, value = "displayText") String action,
+			@JsonProperty(required = true, value = "actionId") String actionId
+		) {
+		}
+}
+
 public class DungeonMaster {
 
 	private String makeSystemPrompt() { 

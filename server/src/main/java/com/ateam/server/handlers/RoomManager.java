@@ -10,6 +10,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.ateam.core.MockLLMStrategy;
 import com.ateam.core.Player;
 import com.ateam.core.Room;
 import com.ateam.core.command.Command;
@@ -26,9 +27,10 @@ public class RoomManager {
 	private Map<String, UUID> sessionIdToPlayerIdMap = Collections.synchronizedMap(new HashMap<String, UUID>());
 	
 	// We use the OpenAI LLMStrategy and the WebsocketBroadcaster BroadcastStrategy for this room
-	private OpenAI openAI = new OpenAI();
+	// private OpenAI llm = new OpenAI();
+	private MockLLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
 	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions);
-	private Room room = new Room(broadcaster, openAI);
+	private Room room = new Room(broadcaster, llm);
 	private Gson gson = new Gson();
 	
 	public void onJoin(WebSocketSession session) {
