@@ -13,10 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 import com.dicerealm.core.MockLLMStrategy;
 import com.dicerealm.core.Player;
 import com.dicerealm.core.Room;
-import com.dicerealm.core.command.Command;
-import com.dicerealm.core.command.MessageCommand;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.dicerealm.core.command.CommandDeserializerStrategy;
 
 /**
  * Manages a single room and all the players in it and their websocket sessions.
@@ -30,8 +27,13 @@ public class RoomManager {
 	// private OpenAI llm = new OpenAI();
 	private MockLLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
 	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions);
-	private Room room = new Room(broadcaster, llm);
-	private Gson gson = new Gson();
+	private CommandDeserializerStrategy deserializer = new GsonDeserializer();
+	private Room room = Room.builder()
+		.setBroadcastStrategy(broadcaster)
+		.setLLMStrategy(llm)
+		.setCommandDeserializerStrategy(deserializer)
+		.build();
+
 	
 	public void onJoin(WebSocketSession session) {
 		Player newPlayer = new Player();
@@ -49,28 +51,17 @@ public class RoomManager {
 
 
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
-
-		UUID playerId = sessionIdToPlayerIdMap.get(session.getId());
-		Object payload = message.getPayload();
-
-		// check if payload is a string
-		if (!(payload instanceof String)) {
-			return;
-		}
-
 		try {
-			Command command = gson.fromJson((String)payload, Command.class);
-			switch (command.type) {
-				case "MESSAGE":
-					MessageCommand messageCommand = gson.fromJson((String)payload, MessageCommand.class);
-					room.handleNormalMessage(playerId, messageCommand.message);
-					break;
-				default:
-					sendErrorMessage(session, "Invalid Command Type");
-					break;
+			UUID playerId = sessionIdToPlayerIdMap.get(session.getId());
+			Object payload = message.getPayload();
+	
+			// check if payload is a string
+			if (!(payload instanceof String)) {
+				throw new IllegalArgumentException("Payload must be a string");
 			}
-		} catch (JsonSyntaxException e) {
-			sendErrorMessage(session, "Invalid JSON");
+			room.handlePlayerCommand(playerId, (String) payload);
+		} catch (Exception e) {
+			sendErrorMessage(session, e.getMessage());
 		}
 	}
 

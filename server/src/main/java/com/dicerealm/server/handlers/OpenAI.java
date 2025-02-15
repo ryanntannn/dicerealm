@@ -13,7 +13,7 @@ import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
 
 import com.dicerealm.core.LLMStrategy;
 
-public class OpenAI extends LLMStrategy {
+public class OpenAI implements LLMStrategy {
 
 	private static final int MAX_TOKENS = 4096;
 

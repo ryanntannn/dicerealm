@@ -6,11 +6,19 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.dicerealm.core.command.CommandDeserializerStrategy;
+import com.dicerealm.server.handlers.GsonDeserializer;
+
 
 public class RoomTest {
 	private BroadcastStrategy broadcaster = new MockBroadcastStrategy();
 	private LLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
-	private Room room = new Room(broadcaster, llm);
+	private CommandDeserializerStrategy deserializer = new GsonDeserializer();
+	private Room room = Room.builder()
+		.setBroadcastStrategy(broadcaster)
+		.setLLMStrategy(llm)
+		.setCommandDeserializerStrategy(deserializer)
+		.build();
 
 	@Test
 	void testAddPlayer() {

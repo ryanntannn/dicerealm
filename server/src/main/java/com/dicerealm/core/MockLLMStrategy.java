@@ -7,7 +7,7 @@ import org.springframework.ai.converter.BeanOutputConverter;
 /**
  * A mock implementation of the LLMStrategy interface that returns a fixed response. Use this when testing to save on API calls.
  */
-public class MockLLMStrategy extends LLMStrategy {
+public class MockLLMStrategy implements LLMStrategy {
 
 	private String mockResponse;
 

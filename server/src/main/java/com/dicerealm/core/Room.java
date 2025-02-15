@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.dicerealm.core.command.Command;
+import com.dicerealm.core.command.CommandDeserializerStrategy;
+import com.dicerealm.core.command.MessageCommand;
 import com.dicerealm.core.command.MessageHistoryCommand;
 import com.dicerealm.core.command.OutgoingMessageCommand;
 import com.dicerealm.core.command.PlayerJoinCommand;
@@ -17,13 +20,18 @@ public class Room {
 	// key: player id
 	// value: player object
 	private Map<UUID, Player> players = new HashMap<UUID, Player>();
-	private BroadcastStrategy broadcastStrategy;
 	private List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
+	private BroadcastStrategy broadcastStrategy;
 	private DungeonMaster dungeonMaster;
+	private CommandDeserializerStrategy commandDeserializerStrategy;
+	public static RoomBuilder builder() {
+		return new RoomBuilder();
+	}
 	
-	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy) {
+	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy, CommandDeserializerStrategy commandDeserializerStrategy) {
 		this.broadcastStrategy = broadcastStrategy;
 		this.dungeonMaster = new DungeonMaster(llmStrategy, messages);
+		this.commandDeserializerStrategy = commandDeserializerStrategy;
 	}
 
 	public void addPlayer(Player player) {
@@ -44,6 +52,13 @@ public class Room {
 		Player player = players.get(id);
 		players.remove(id);
 		broadcastStrategy.sendToAllPlayers(new PlayerLeaveCommand(player));
+	}
+
+	public void handlePlayerCommand(UUID playerId, String json) {
+		Command command = commandDeserializerStrategy.deserialize(json);
+		if (command instanceof MessageCommand) {
+			handleNormalMessage(playerId, ((MessageCommand) command).message);
+		}
 	}
 
 	public void handleNormalMessage(UUID playerId, String message) {
