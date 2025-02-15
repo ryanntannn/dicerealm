@@ -7,7 +7,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 // Socket-Connection Configuration class
 public class SocketConnectionHandler extends TextWebSocketHandler {
-		private RoomManager roomManager = new RoomManager();
+		private RoomRouter router = new RoomRouter();
 		
     @Override
     public void
@@ -15,7 +15,7 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
         throws Exception
     {
 				super.afterConnectionEstablished(session);
-				roomManager.onJoin(session);
+				router.onJoin(session);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
                           CloseStatus status)throws Exception
     {
 				super.afterConnectionClosed(session, status);
-				roomManager.onLeave(session);
+				router.onLeave(session);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
         throws Exception
     {
         super.handleMessage(session, message);
-				roomManager.handleMessage(session, message);
+				router.handleMessage(session, message);
     }
 }

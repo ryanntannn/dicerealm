@@ -71,4 +71,8 @@ public class Room {
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(dmResponseMessage));
 		messages.add(dmResponseMessage);
 	}
+
+	public boolean isEmpty() {
+		return players.size() == 0;
+	}
 }
