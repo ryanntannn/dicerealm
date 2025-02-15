@@ -1,4 +1,4 @@
-package com.ateam.core;
+package com.dicerealm.core;
 
 import java.util.List;
 import java.util.stream.Collectors;

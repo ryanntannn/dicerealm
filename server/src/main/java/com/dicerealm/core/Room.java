@@ -1,4 +1,4 @@
-package com.ateam.core;
+package com.dicerealm.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.ateam.core.command.MessageHistoryCommand;
-import com.ateam.core.command.OutgoingMessageCommand;
-import com.ateam.core.command.PlayerJoinCommand;
-import com.ateam.core.command.PlayerLeaveCommand;
+import com.dicerealm.core.command.MessageHistoryCommand;
+import com.dicerealm.core.command.OutgoingMessageCommand;
+import com.dicerealm.core.command.PlayerJoinCommand;
+import com.dicerealm.core.command.PlayerLeaveCommand;
 
 public class Room {
 	// create a dictionary of players

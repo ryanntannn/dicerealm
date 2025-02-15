@@ -1,4 +1,4 @@
-package com.ateam.core.command;
+package com.dicerealm.core.command;
 
 
 /**

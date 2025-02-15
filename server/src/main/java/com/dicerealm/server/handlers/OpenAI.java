@@ -1,4 +1,4 @@
-package com.ateam.server.handlers;
+package com.dicerealm.server.handlers;
 
 import java.util.stream.Stream;
 
@@ -11,7 +11,7 @@ import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.openai.api.ResponseFormat;
 import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
 
-import com.ateam.core.LLMStrategy;
+import com.dicerealm.core.LLMStrategy;
 
 public class OpenAI extends LLMStrategy {
 

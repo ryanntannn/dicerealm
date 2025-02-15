@@ -1,4 +1,4 @@
-package com.ateam.server.handlers;
+package com.dicerealm.server.handlers;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -10,11 +10,11 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.ateam.core.MockLLMStrategy;
-import com.ateam.core.Player;
-import com.ateam.core.Room;
-import com.ateam.core.command.Command;
-import com.ateam.core.command.MessageCommand;
+import com.dicerealm.core.MockLLMStrategy;
+import com.dicerealm.core.Player;
+import com.dicerealm.core.Room;
+import com.dicerealm.core.command.Command;
+import com.dicerealm.core.command.MessageCommand;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 

@@ -1,10 +1,11 @@
-package com.ateam.core;
+package com.dicerealm.core;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+
 
 public class RoomTest {
 	private BroadcastStrategy broadcaster = new MockBroadcastStrategy();

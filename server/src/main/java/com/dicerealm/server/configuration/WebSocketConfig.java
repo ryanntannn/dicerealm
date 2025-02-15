@@ -1,11 +1,11 @@
-package com.ateam.server.configuration;
+package com.dicerealm.server.configuration;
 // This is the configuration class for WebSocket
 // connections. It enables WebSocket and registers the
 // SocketConnectionHandler class as the handler for the
 // "/hello" endpoint. It also sets the allowed origins to
 // "*" so that other domains can also access the socket.
 
-import com.ateam.server.handlers.SocketConnectionHandler;
+import com.dicerealm.server.handlers.SocketConnectionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;

@@ -1,6 +1,6 @@
-package com.ateam.core.command;
+package com.dicerealm.core.command;
 
-import com.ateam.core.Message;
+import com.dicerealm.core.Message;
 
 public class MessageHistoryCommand extends Command {
 	public OutgoingMessageCommand[] messages;

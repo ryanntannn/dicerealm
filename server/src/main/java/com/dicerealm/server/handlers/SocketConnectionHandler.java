@@ -1,4 +1,4 @@
-package com.ateam.server.handlers;
+package com.dicerealm.server.handlers;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketMessage;

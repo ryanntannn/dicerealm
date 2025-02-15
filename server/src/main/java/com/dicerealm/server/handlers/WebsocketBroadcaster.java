@@ -1,4 +1,4 @@
-package com.ateam.server.handlers;
+package com.dicerealm.server.handlers;
 
 import java.util.Map;
 import java.util.UUID;
@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.ateam.core.BroadcastStrategy;
-import com.ateam.core.Player;
-import com.ateam.core.command.Command;
+import com.dicerealm.core.BroadcastStrategy;
+import com.dicerealm.core.Player;
+import com.dicerealm.core.command.Command;
 import com.google.gson.Gson;
 
 public class WebsocketBroadcaster implements BroadcastStrategy {

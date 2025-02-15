@@ -1,6 +1,6 @@
-package com.ateam.core.command;
+package com.dicerealm.core.command;
 
-import com.ateam.core.Player;
+import com.dicerealm.core.Player;
 
 public class PlayerLeaveCommand extends Command {
 	public String playerId;

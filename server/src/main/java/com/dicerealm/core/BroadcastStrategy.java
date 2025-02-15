@@ -1,6 +1,6 @@
-package com.ateam.core;
+package com.dicerealm.core;
 
-import com.ateam.core.command.Command;
+import com.dicerealm.core.command.Command;
 
 public interface BroadcastStrategy {
 		public abstract void sendToAllPlayers(Command command);
