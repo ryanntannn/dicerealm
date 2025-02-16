@@ -10,11 +10,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.dicerealm.core.MockLLMStrategy;
+import com.dicerealm.core.JsonSerializationStrategy;
 import com.dicerealm.core.Player;
 import com.dicerealm.core.PresetPlayerFactory;
 import com.dicerealm.core.Room;
-import com.dicerealm.core.command.CommandDeserializerStrategy;
 
 /**
  * Manages a single room and all the players in it and their websocket sessions.
@@ -25,14 +24,14 @@ public class RoomManager {
 	private Map<String, UUID> sessionIdToPlayerIdMap = Collections.synchronizedMap(new HashMap<String, UUID>());
 	
 	// We use the OpenAI LLMStrategy and the WebsocketBroadcaster BroadcastStrategy for this room
-	// private OpenAI llm = new OpenAI();
-	private MockLLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
-	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions);
-	private CommandDeserializerStrategy deserializer = new GsonDeserializer();
+	private OpenAI llm = new OpenAI();
+	// private MockLLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
+	private JsonSerializationStrategy serializer = new GsonSerializer();
+	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions, serializer);
 	private Room room = Room.builder()
 		.setBroadcastStrategy(broadcaster)
 		.setLLMStrategy(llm)
-		.setCommandDeserializerStrategy(deserializer)
+		.setJsonSerializationStrategy(serializer)
 		.build();
 
 	

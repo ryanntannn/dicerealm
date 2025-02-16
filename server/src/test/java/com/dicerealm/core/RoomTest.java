@@ -6,18 +6,17 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.dicerealm.core.command.CommandDeserializerStrategy;
-import com.dicerealm.server.handlers.GsonDeserializer;
+import com.dicerealm.server.handlers.GsonSerializer;
 
 
 public class RoomTest {
 	private BroadcastStrategy broadcaster = new MockBroadcastStrategy();
 	private LLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
-	private CommandDeserializerStrategy deserializer = new GsonDeserializer();
+	private JsonSerializationStrategy serializer = new GsonSerializer();
 	private Room room = Room.builder()
 		.setBroadcastStrategy(broadcaster)
 		.setLLMStrategy(llm)
-		.setCommandDeserializerStrategy(deserializer)
+		.setJsonSerializationStrategy(serializer)
 		.build();
 
 	@Test

@@ -1,11 +1,10 @@
 package com.dicerealm.core;
 
-import com.dicerealm.core.command.CommandDeserializerStrategy;
 
 public class RoomBuilder { 
 	private BroadcastStrategy broadcastStrategy;
 	private LLMStrategy llmStrategy;
-	private CommandDeserializerStrategy commandDeserializerStrategy;
+	private JsonSerializationStrategy jsonSerializationStrategy;
 
 	public RoomBuilder setBroadcastStrategy(BroadcastStrategy broadcastStrategy) {
 		this.broadcastStrategy = broadcastStrategy;
@@ -17,12 +16,12 @@ public class RoomBuilder {
 		return this;
 	}
 
-	public RoomBuilder setCommandDeserializerStrategy(CommandDeserializerStrategy commandDeserializerStrategy) {
-		this.commandDeserializerStrategy = commandDeserializerStrategy;
+	public RoomBuilder setJsonSerializationStrategy(JsonSerializationStrategy jsonSerializationStrategy) {
+		this.jsonSerializationStrategy = jsonSerializationStrategy;
 		return this;
 	}
 
 	public Room build() {
-		return new Room(broadcastStrategy, llmStrategy, commandDeserializerStrategy);
+		return new Room(broadcastStrategy, llmStrategy, jsonSerializationStrategy);
 	}
 }

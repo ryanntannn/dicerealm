@@ -3,7 +3,7 @@ package com.dicerealm.core;
 import java.util.UUID;
 
 import com.dicerealm.core.command.Command;
-import com.dicerealm.core.command.CommandDeserializerStrategy;
+import com.dicerealm.core.command.CommandDeserializer;
 import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.MessageCommand;
 import com.dicerealm.core.command.OutgoingMessageCommand;
@@ -17,15 +17,16 @@ public class Room {
 	private RoomState roomState = new RoomState();
 	private BroadcastStrategy broadcastStrategy;
 	private DungeonMaster dungeonMaster;
-	private CommandDeserializerStrategy commandDeserializerStrategy;
+	private CommandDeserializer commandDeserializer;
+
 	public static RoomBuilder builder() {
 		return new RoomBuilder();
 	}
 	
-	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy, CommandDeserializerStrategy commandDeserializerStrategy) {
+	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy, JsonSerializationStrategy jsonSerializationStrategy) {
 		this.broadcastStrategy = broadcastStrategy;
-		this.dungeonMaster = new DungeonMaster(llmStrategy, roomState.getMessages());
-		this.commandDeserializerStrategy = commandDeserializerStrategy;
+		this.dungeonMaster = new DungeonMaster(llmStrategy, jsonSerializationStrategy, roomState);
+		this.commandDeserializer = new CommandDeserializer(jsonSerializationStrategy);
 	}
 
 	public void addPlayer(Player player) {
@@ -45,7 +46,7 @@ public class Room {
 	}
 
 	public void handlePlayerCommand(UUID playerId, String json) {
-		Command command = commandDeserializerStrategy.deserialize(json);
+		Command command = commandDeserializer.deserialize(json);
 		if (command instanceof MessageCommand) {
 			handleNormalMessage(playerId, ((MessageCommand) command).message);
 		}
