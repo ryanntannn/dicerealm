@@ -1,5 +1,7 @@
 package com.dicerealm.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import com.dicerealm.core.command.Command;
@@ -9,6 +11,9 @@ import com.dicerealm.core.command.MessageCommand;
 import com.dicerealm.core.command.OutgoingMessageCommand;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.PlayerLeaveCommand;
+import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.dm.DungeonMaster;
+import com.dicerealm.core.dm.DungeonMasterResponse;
 
 public class Room {
 	// create a dictionary of players
@@ -57,10 +62,27 @@ public class Room {
 		Message playerMessage = new Message(message, thisPlayer.getDisplayName());
 		roomState.getMessages().add(playerMessage);
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(playerMessage));
-		String response = dungeonMaster.handlePlayerMessage(message, thisPlayer);
-		Message dmResponseMessage = new Message(response, "Dungeon Master");
+		DungeonMasterResponse response = dungeonMaster.handlePlayerMessage(message, thisPlayer);
+
+		Message dmResponseMessage = new Message(response.displayText(), "Dungeon Master");
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(dmResponseMessage));
 		roomState.getMessages().add(dmResponseMessage);
+
+		HashMap<UUID, ArrayList<String>> playerActions = new HashMap<>();
+
+		for (DungeonMasterResponse.PlayerAction action : response.actionChoices()) {
+			UUID id = UUID.fromString(action.playerId());
+			if (!playerActions.containsKey(id)) {
+				playerActions.put(id, new ArrayList<>());
+			}
+			playerActions.get(id).add(action.action());
+		}
+
+		for (UUID id : playerActions.keySet()) {
+			Player player = roomState.getPlayerMap().get(id);
+			String[] actions = playerActions.get(id).toArray(new String[0]);
+			broadcastStrategy.sendToPlayer(new ShowPlayerActionsCommand(actions), player);
+		}
 	}
 
 	public boolean isEmpty() {

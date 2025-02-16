@@ -1,26 +1,23 @@
-package com.dicerealm.core;
+package com.dicerealm.core.dm;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-record DungeonMasterResponse(
-    @JsonProperty(required = true, value = "displayText") String displayText,
-		@JsonProperty(required = true, value = "actionChoices") PlayerAction[] actionChoices
-){
-		record PlayerAction(
-			@JsonProperty(required = true, value = "displayText") String action,
-			@JsonProperty(required = true, value = "actionId") String actionId
-		) {
-		}
-}
+import com.dicerealm.core.JsonSerializationStrategy;
+import com.dicerealm.core.LLMStrategy;
+import com.dicerealm.core.Message;
+import com.dicerealm.core.Player;
+import com.dicerealm.core.RoomState;
 
 public class DungeonMaster {
 
 	private String makeSystemPrompt() { 
 		return """
-			Act as a Dungeon Master for a game of DND. You will be provided with a JSON object containing the state of the players, a summary of the progress so far, and 10 of the latest messages so far. Using this information, you will be asked to provide a response to the player, and a list of possible actions they might be able to take.
+			Act as a Dungeon Master for a game of DND. You will be provided with a JSON object containing the state of the players, a summary of the progress so far, and 10 of the latest messages so far. Using this information, you will be asked to provide a response to the entire room in a json format:
+			
+			displayText - the text to display to the players
+			actionChoices - a list of actions that the players can take
+			removedItems - a list of items that have been removed from players inventory. This should be empty if the last action did not involve consuming items
 			""";
 	}
 
@@ -37,12 +34,10 @@ public class DungeonMaster {
 		this.jsonSerializationStrategy = jsonSerializationStrategy;
 	}
 
-	public String handlePlayerMessage(String message, Player player) {
+	public DungeonMasterResponse handlePlayerMessage(String message, Player player) {
 		String prompt = makeSystemPrompt() + "\nPlayers\n" + jsonSerializationStrategy.serialize(roomState.getPlayers()) + "\nSummary\n" + summary + "\nPrevious Messages:\n" + latestTenMessages() + "\n New Message from " + player.getDisplayName() + " says: " + message;
 		updateSummary();
-		DungeonMasterResponse response = llmStrategy.promptSchema(prompt, DungeonMasterResponse.class);
-		response.actionChoices();
-		return response.displayText();
+		return llmStrategy.promptSchema(prompt, DungeonMasterResponse.class);
 	}
 
 	private String latestTenMessages() {

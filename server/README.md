@@ -13,7 +13,7 @@ This folder contains the server-side code for the project. The server is built u
 Spring boot automatically detects environment variables from your system.
 
 ```bash
-export OPEN_AI_API_KEY=<your-api-key>
+export OPENAI_API_KEY=<your-api-key>
 ```
 
 ## Running the server

@@ -35,10 +35,16 @@ export const fullRoomStateCommandSchema = z.object({
   myId: z.string(),
 });
 
+export const showPlayerActionsCommandSchema = z.object({
+  type: z.literal("SHOW_PLAYER_ACTIONS"),
+  actions: z.array(z.string()),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
   playerJoinCommandSchema,
   playerLeaveCommandSchema,
   fullRoomStateCommandSchema,
+  showPlayerActionsCommandSchema,
 ]);

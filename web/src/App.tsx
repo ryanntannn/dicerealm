@@ -143,9 +143,37 @@ function Inventory({
   );
 }
 
+function Actions({
+  actions,
+  onAction,
+}: {
+  actions: string[];
+  onAction: (action: string) => void;
+}) {
+  return (
+    <div className="flex flex-row gap-2 px-4">
+      {actions.map((action) => (
+        <button
+          onClick={() => onAction(action)}
+          key={action}
+          className="bg-gray-100 px-4 rounded border border-gray-300">
+          {action}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function App() {
-  const { messages, sendTextMessage, readyState, players, myId, myPlayer } =
-    useRoomClient("0000");
+  const {
+    messages,
+    sendTextMessage,
+    readyState,
+    players,
+    myId,
+    myPlayer,
+    actions,
+  } = useRoomClient("0000");
 
   return (
     <div className="h-screen flex flex-row">
@@ -162,6 +190,10 @@ function App() {
           <ReadStateChip readyState={readyState} />
         </div>
         <Messages messages={messages} />
+        <Actions
+          actions={actions}
+          onAction={(action) => sendTextMessage(action)}
+        />
         <TextMessageForm onSend={sendTextMessage} />
       </div>
     </div>

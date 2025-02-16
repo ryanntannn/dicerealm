@@ -32,6 +32,7 @@ export function useRoomClient(
   const [messages, setMessages] = useState<Message[]>([]);
   const [players, setPlayers] = useState<Record<string, Player>>({});
   const [myId, setMyId] = useState<string | null>(null);
+  const [actions, setActions] = useState<string[]>([]);
 
   const myPlayer = useMemo(() => {
     if (!myId) return null;
@@ -99,6 +100,9 @@ export function useRoomClient(
         setPlayers(command.state.playerMap);
         setMyId(command.myId);
         break;
+      case "SHOW_PLAYER_ACTIONS":
+        setActions(command.actions);
+        break;
       default:
         console.warn("Unhandled command type", command);
     }
@@ -113,5 +117,6 @@ export function useRoomClient(
     players,
     myPlayer,
     myId,
+    actions,
   };
 }
