@@ -1,25 +1,13 @@
 package com.dicerealm.core;
 
-import java.util.UUID;
+import com.dicerealm.core.entity.Entity;
 
-public class Player {
-	private UUID id;
-	private String displayName;
-
+public class Player extends Entity {
 	public Player() {
-		this.id = UUID.randomUUID();
-		this.displayName = "Player " + id.toString().substring(0, 8);
+		super("Player", 5);
 	}
 
-	public UUID getId() {
-		return id;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public Player(String name) {
+		super(name, 5);
 	}
 }

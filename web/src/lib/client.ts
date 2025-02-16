@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { commandSchema } from "./command";
+import { Player } from "./room-state";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL as string;
 
@@ -29,6 +30,13 @@ export function useRoomClient(
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(wsUrl);
 
   const [messages, setMessages] = useState<Message[]>([]);
+  const [players, setPlayers] = useState<Record<string, Player>>({});
+  const [myId, setMyId] = useState<string | null>(null);
+
+  const myPlayer = useMemo(() => {
+    if (!myId) return null;
+    return players[myId];
+  }, [myId, players]);
 
   const sendTextMessage = (message: string) => {
     sendJsonMessage({ type: "MESSAGE", message });
@@ -38,6 +46,14 @@ export function useRoomClient(
     const { data: command, error } = commandSchema.safeParse(lastJsonMessage);
     if (error) {
       console.error(lastJsonMessage, error);
+      setMessages((messages) => [
+        ...messages,
+        {
+          message: "Something went wrong",
+          senderName: "System",
+          messageId: crypto.randomUUID(),
+        },
+      ]);
       return;
     }
     switch (command.type) {
@@ -51,11 +67,37 @@ export function useRoomClient(
         setMessages((messages) => [
           ...messages,
           {
-            message: "Player joined",
+            message: `Player joined: ${command.player.displayName}`,
             senderName: "System",
             messageId: crypto.randomUUID(),
           },
         ]);
+
+        setPlayers((players) => ({
+          ...players,
+          [command.player.id]: command.player,
+        }));
+        break;
+      case "PLAYER_LEAVE":
+        setMessages((messages) => [
+          ...messages,
+          {
+            message: "Player left",
+            senderName: "System",
+            messageId: crypto.randomUUID(),
+          },
+        ]);
+
+        setPlayers((players) => {
+          const newPlayers = { ...players };
+          delete newPlayers[command.playerId];
+          return newPlayers;
+        });
+        break;
+      case "FULL_ROOM_STATE":
+        setMessages(command.state.messages);
+        setPlayers(command.state.playerMap);
+        setMyId(command.myId);
         break;
       default:
         console.warn("Unhandled command type", command);
@@ -68,5 +110,8 @@ export function useRoomClient(
     lastJsonMessage,
     readyState,
     messages,
+    players,
+    myPlayer,
+    myId,
   };
 }

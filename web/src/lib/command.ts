@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { playerSchema, roomStateSchema } from "./room-state";
 
 export const outgoingMessageCommandSchema = z.object({
   type: z.literal("OUTGOING_MESSAGE"),
@@ -20,7 +21,7 @@ export const messageHistoryCommandSchema = z.object({
 
 export const playerJoinCommandSchema = z.object({
   type: z.literal("PLAYER_JOIN"),
-  playerId: z.string(),
+  player: playerSchema,
 });
 
 export const playerLeaveCommandSchema = z.object({
@@ -28,9 +29,16 @@ export const playerLeaveCommandSchema = z.object({
   playerId: z.string(),
 });
 
+export const fullRoomStateCommandSchema = z.object({
+  type: z.literal("FULL_ROOM_STATE"),
+  state: roomStateSchema,
+  myId: z.string(),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
   playerJoinCommandSchema,
   playerLeaveCommandSchema,
+  fullRoomStateCommandSchema,
 ]);

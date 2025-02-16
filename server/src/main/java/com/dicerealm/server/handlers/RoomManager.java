@@ -12,6 +12,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.dicerealm.core.MockLLMStrategy;
 import com.dicerealm.core.Player;
+import com.dicerealm.core.PresetPlayerFactory;
 import com.dicerealm.core.Room;
 import com.dicerealm.core.command.CommandDeserializerStrategy;
 
@@ -36,7 +37,7 @@ public class RoomManager {
 
 	
 	public void onJoin(WebSocketSession session) {
-		Player newPlayer = new Player();
+		Player newPlayer = PresetPlayerFactory.createPresetPlayer();
 		playerSessions.put(newPlayer.getId(), session);
 		sessionIdToPlayerIdMap.put(session.getId(), newPlayer.getId());
 		room.addPlayer(newPlayer);

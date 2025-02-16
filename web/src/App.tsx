@@ -3,6 +3,7 @@ import { useRoomClient } from "./lib/client";
 import TextMessageForm from "./TextMessageForm";
 import cn from "./lib/cn";
 import { ReadyState } from "react-use-websocket";
+import { Player } from "./lib/room-state";
 
 function Message({
   message,
@@ -85,19 +86,84 @@ function ReadStateChip({ readyState }: { readyState: number }) {
   return <Chip className={`bg-${color}-200`}>{text}</Chip>;
 }
 
+function Players({
+  players,
+  myId,
+}: {
+  players: Record<string, Player>;
+  myId?: string;
+}) {
+  return (
+    <div className="p-4 border-b border-gray-300 rounded">
+      <h2 className="font-medium text-lg">Players</h2>
+      <ul>
+        {Object.values(players).map((player) => (
+          <li key={player.id}>
+            {player.displayName} {player.id === myId && <Chip>Me</Chip>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Inventory({
+  inventorySize,
+  items,
+}: {
+  inventorySize: number;
+  items: { displayName: string; description: string }[];
+}) {
+  return (
+    <div className="p-4 border-b border-gray-300 rounded w-[400px] flex flex-col gap-4">
+      <h2 className="font-medium text-lg">Inventory 💼</h2>
+      <p>
+        {items.length} / {inventorySize} items
+      </p>
+      <div className="grid grid-cols-2 gap-2">
+        {items.map((item) => (
+          <div
+            key={item.displayName}
+            className="border border-gray-300 rounded p-2">
+            <p className="font-medium">{item.displayName}</p>
+            <p>{item.description}</p>
+          </div>
+        ))}
+        {Array(inventorySize - items.length)
+          .fill(null)
+          .map((_, index) => (
+            <div
+              key={index}
+              className="border border-gray-300 rounded p-2 bg-gray-100">
+              <p className="text-gray-400 text-xs">Empty Slot</p>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
+}
+
 function App() {
-  const { messages, sendTextMessage, readyState } = useRoomClient("0000");
+  const { messages, sendTextMessage, readyState, players, myId, myPlayer } =
+    useRoomClient("0000");
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="p-4 flex flex-row items-center justify-between border-b border-gray-300">
-        <h1 className="font-medium text-lg flex flex-row items-center">
-          DiceRealm <Chip>BETA</Chip>
-        </h1>
-        <ReadStateChip readyState={readyState} />
+    <div className="h-screen flex flex-row">
+      <div className="h-full">
+        <Players players={players} myId={myId ?? undefined} />
+        {myPlayer && <Inventory {...myPlayer.inventory} />}
       </div>
-      <Messages messages={messages} />
-      <TextMessageForm onSend={sendTextMessage} />
+      <div className="border-r border-gray-200"></div>
+      <div className="h-full flex flex-col flex-grow">
+        <div className="p-4 flex flex-row items-center justify-between border-b border-gray-300">
+          <h1 className="font-medium text-lg flex flex-row items-center">
+            DiceRealm <Chip>BETA</Chip>
+          </h1>
+          <ReadStateChip readyState={readyState} />
+        </div>
+        <Messages messages={messages} />
+        <TextMessageForm onSend={sendTextMessage} />
+      </div>
     </div>
   );
 }
