@@ -12,10 +12,10 @@ type Message = {
 
 export function useRoomClient(
   roomId: string,
-  options: { serverUrl: string } = { serverUrl: SERVER_URL }
+  options: { serverUrl?: string } = { serverUrl: SERVER_URL }
 ) {
   const wsUrl = useMemo(() => {
-    const url = new URL(options.serverUrl);
+    const url = new URL(options.serverUrl ?? window.location.href);
     const currentUrl = new URL(window.location.href);
     if (currentUrl.protocol === "https:") {
       url.protocol = "wss:";
