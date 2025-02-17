@@ -1,19 +1,18 @@
 package com.dicerealm.core.item;
 
-import java.util.Map;
-
 import com.dicerealm.core.entity.BodyPart;
-import com.dicerealm.core.entity.Stats;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 
 /**
  * Base class for all wearable items
  */
-public class WearableItem extends Item implements Stats {
+public class EquippableItem extends Item {
 
 	private BodyPart[] suitableBodyParts;
-	private Map<Stat, Integer> stats;
+	private StatsMap stats;
 
-	public WearableItem(String name, String description, BodyPart[] suitableBodyParts, Map<Stat, Integer> stats) {
+	public EquippableItem(String name, String description, BodyPart[] suitableBodyParts, StatsMap stats) {
 		super(name, description);
 		this.suitableBodyParts = suitableBodyParts;
 		this.stats = stats;
@@ -29,6 +28,6 @@ public class WearableItem extends Item implements Stats {
 	}
 	
 	public int getStat(Stat stat) {
-		return stats.get(stat);
+		return stats.getOrDefault(stat, 0);
 	}
 }

@@ -38,8 +38,9 @@ export const playerSchema = z.object({
   displayName: z.string(),
   equippedItems: z.record(itemSchema),
   health: z.number(),
-  maxHealth: z.number(),
   inventory: inventorySchema,
+  baseStats: z.record(z.number()),
+  stats: z.record(z.number()),
 });
 
 export const roomStateSchema = z.object({

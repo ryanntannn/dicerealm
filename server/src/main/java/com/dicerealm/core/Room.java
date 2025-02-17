@@ -17,7 +17,7 @@ import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.item.Item;
-import com.dicerealm.core.item.WearableItem;
+import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
@@ -171,13 +171,13 @@ public class Room {
 		if (item == null) {
 			throw new IllegalArgumentException("Item not found in inventory");
 		}
-		if (!(item instanceof WearableItem)) {
+		if (!(item instanceof EquippableItem)) {
 			throw new IllegalArgumentException("Item is not wearable");
 		}
-		boolean equipSuccessful = player.equipItem(command.getBodyPart(), (WearableItem) item);
+		boolean equipSuccessful = player.equipItem(command.getBodyPart(), (EquippableItem) item);
 		if (!equipSuccessful) {
 			throw new IllegalArgumentException("Item could not be equipped");
 		}
-		broadcastStrategy.sendToAllPlayers(new PlayerEquipItemResponse(playerId.toString(), item, command.getBodyPart()));
+		broadcastStrategy.sendToAllPlayers(new PlayerEquipItemResponse(playerId.toString(), item, command.getBodyPart(), player.getStats()));
 	}
 }

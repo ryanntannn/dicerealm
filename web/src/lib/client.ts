@@ -53,6 +53,7 @@ export function useRoomClient(
 
   useEffect(() => {
     const { data: command, error } = commandSchema.safeParse(lastJsonMessage);
+    console.log(lastJsonMessage);
     if (error) {
       console.error(lastJsonMessage, error);
       setMessages((messages) => [
@@ -130,6 +131,8 @@ export function useRoomClient(
           player.inventory.items = player.inventory.items.filter(
             (item) => item.id !== command.item.id
           );
+
+          player.stats = command.updatedPlayerStats;
 
           return newPlayers;
         });

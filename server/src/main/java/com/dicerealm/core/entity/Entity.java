@@ -5,30 +5,30 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.dicerealm.core.inventory.Inventory;
-import com.dicerealm.core.item.WearableItem;
+import com.dicerealm.core.item.EquippableItem;
 
 /**
  * Base class for all entities in the game. Entities can be players, monsters, NPCs, etc.
  * 
- * @see WearableItem - represents an item that can be worn by an entity
+ * @see EquippableItem - represents an item that can be worn by an entity
  * @see Inventory - represents the inventory of an entity
  */
-public abstract class Entity implements Stats {
+public abstract class Entity {
 	private UUID id;
 	private String displayName;
 	private int health;
-	private int maxHealth;
-	
-	private Map<BodyPart, WearableItem> equippedItems = new HashMap<BodyPart, WearableItem>();
-	private Map<Stat, Integer> baseStats = new HashMap<Stat, Integer>();
+	private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();
+	private StatsMap baseStats = new StatsMap();
+	private StatsMap stats = new StatsMap();
 
 	private Inventory	inventory = new Inventory();
 
-	public Entity(String displayName, int maxHealth) {
+	public Entity(String displayName, StatsMap baseStats) {
 		this.id = UUID.randomUUID();
 		this.displayName = displayName;
-		this.maxHealth = maxHealth;
-		this.health = maxHealth;
+		this.baseStats = baseStats;
+		this.health = baseStats.get(Stat.MAX_HEALTH);
+		updateStats();
 	}
 
 	public UUID getId() {
@@ -43,10 +43,6 @@ public abstract class Entity implements Stats {
 		return health;
 	}
 
-	public int getMaxHealth() {
-		return maxHealth;
-	}
-
 	public Inventory getInventory() {
 		return inventory;
 	}
@@ -55,7 +51,7 @@ public abstract class Entity implements Stats {
 		return health > 0;
 	}
 
-	public boolean equipItem(BodyPart bodyPart, WearableItem item) {
+	public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
 		// Check if item is in inventory
 		if (!inventory.containsItem(item)) {
 			return false;
@@ -69,22 +65,32 @@ public abstract class Entity implements Stats {
 
 		// check if the body part is already equipped
 		if (equippedItems.containsKey(bodyPart)) {
-			// unequip the item
+			// un-equip the item
 			inventory.addItem(equippedItems.get(bodyPart));
 		}
 
 		equippedItems.put(bodyPart, item);
-
-		System.out.println(equippedItems.get(bodyPart));
+		updateStats();
 
 		return true;
 	}
 
+	public void updateStats() {
+		stats.clear();
+		for (Stat stat : baseStats.keySet()) {
+			stats.put(stat, getStat(stat));
+		}
+	}
+
 	public int getStat(Stat stat) {
 		int out = baseStats.get(stat);
-		for (WearableItem item : equippedItems.values()) {
+		for (EquippableItem item : equippedItems.values()) {
 			out += item.getStat(stat);
 		}
 		return out;
+	}
+
+	public StatsMap getStats() {
+		return stats;
 	}
 }

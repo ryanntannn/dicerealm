@@ -123,7 +123,7 @@ function Inventory({
   equipItemRequest: (itemId: string, bodyPart: string) => void;
 }) {
   return (
-    <div className="p-4 border-b border-gray-300 rounded w-[400px] flex flex-col gap-4">
+    <div className="p-4 border-b border-gray-300 flex flex-col gap-4">
       <h2 className="font-medium text-lg">Inventory 💼</h2>
       <p>
         {items.length} / {inventorySize} items
@@ -237,17 +237,16 @@ function App() {
     equipItemRequest,
   } = useRoomClient("0000");
 
-  console.log(myPlayer);
-
   return (
     <div className="h-screen flex flex-row">
-      <div className="h-full">
+      <div className="h-full min-w-[400px]">
         <Players players={players} myId={myId ?? undefined} />
+
         {myPlayer && (
-          <Inventory
-            equipItemRequest={equipItemRequest}
-            {...myPlayer.inventory}
-          />
+          <div className="p-4 border-b border-gray-300 ">
+            <h1 className="font-medium text-lg ">Character Sheet</h1>
+            <Stats stats={myPlayer.stats} />
+          </div>
         )}
         {myPlayer && (
           <EquippedItems
@@ -255,6 +254,12 @@ function App() {
               bodyPart: k,
               ...v,
             }))}
+          />
+        )}
+        {myPlayer && (
+          <Inventory
+            equipItemRequest={equipItemRequest}
+            {...myPlayer.inventory}
           />
         )}
       </div>

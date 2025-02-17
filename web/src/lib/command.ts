@@ -45,6 +45,7 @@ export const playerEquipItemResponseSchema = z.object({
   playerId: z.string(),
   item: itemSchema,
   bodyPart: z.string(),
+  updatedPlayerStats: z.record(z.number()),
 });
 
 export const commandSchema = z.discriminatedUnion("type", [
