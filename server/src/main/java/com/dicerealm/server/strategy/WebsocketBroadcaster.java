@@ -1,4 +1,4 @@
-package com.dicerealm.server.handlers;
+package com.dicerealm.server.strategy;
 
 import java.util.Map;
 import java.util.UUID;
@@ -6,16 +6,16 @@ import java.util.UUID;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.dicerealm.core.BroadcastStrategy;
-import com.dicerealm.core.JsonSerializationStrategy;
 import com.dicerealm.core.Player;
 import com.dicerealm.core.command.Command;
+import com.dicerealm.core.strategy.BroadcastStrategy;
+import com.dicerealm.core.strategy.JsonSerializationStrategy;
 public class WebsocketBroadcaster implements BroadcastStrategy {
 	private Map<UUID, WebSocketSession> playerSessions;
 
 	private JsonSerializationStrategy serializationStrategy;
 
-	WebsocketBroadcaster(Map<UUID, WebSocketSession> playerSessions, JsonSerializationStrategy serializationStrategy) {
+	public WebsocketBroadcaster(Map<UUID, WebSocketSession> playerSessions, JsonSerializationStrategy serializationStrategy) {
 		this.playerSessions = playerSessions;
 		this.serializationStrategy = serializationStrategy;
 	}

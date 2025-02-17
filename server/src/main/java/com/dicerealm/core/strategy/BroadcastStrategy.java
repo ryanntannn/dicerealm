@@ -1,5 +1,6 @@
-package com.dicerealm.core;
+package com.dicerealm.core.strategy;
 
+import com.dicerealm.core.Player;
 import com.dicerealm.core.command.Command;
 
 public interface BroadcastStrategy {

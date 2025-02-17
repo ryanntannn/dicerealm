@@ -7,6 +7,12 @@ import java.util.UUID;
 import com.dicerealm.core.inventory.Inventory;
 import com.dicerealm.core.item.WearableItem;
 
+/**
+ * Base class for all entities in the game. Entities can be players, monsters, NPCs, etc.
+ * 
+ * @see WearableItem - represents an item that can be worn by an entity
+ * @see Inventory - represents the inventory of an entity
+ */
 public abstract class Entity {
 	private UUID id;
 	private String displayName;

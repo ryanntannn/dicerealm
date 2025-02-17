@@ -1,8 +1,10 @@
-package com.dicerealm.core;
+package com.dicerealm.mock;
 
 import java.util.stream.Stream;
 
 import org.springframework.ai.converter.BeanOutputConverter;
+
+import com.dicerealm.core.strategy.LLMStrategy;
 
 /**
  * A mock implementation of the LLMStrategy interface that returns a fixed response. Use this when testing to save on API calls.

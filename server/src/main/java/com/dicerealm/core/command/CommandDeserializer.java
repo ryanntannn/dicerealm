@@ -1,6 +1,6 @@
 package com.dicerealm.core.command;
 
-import com.dicerealm.core.JsonSerializationStrategy;
+import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.google.gson.JsonSyntaxException;
 
 public class CommandDeserializer extends CommandMap {

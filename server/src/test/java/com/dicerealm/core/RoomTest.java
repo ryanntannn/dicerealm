@@ -6,7 +6,12 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.dicerealm.server.handlers.GsonSerializer;
+import com.dicerealm.core.strategy.BroadcastStrategy;
+import com.dicerealm.core.strategy.JsonSerializationStrategy;
+import com.dicerealm.core.strategy.LLMStrategy;
+import com.dicerealm.mock.MockBroadcastStrategy;
+import com.dicerealm.mock.MockLLMStrategy;
+import com.dicerealm.server.strategy.GsonSerializer;
 
 
 public class RoomTest {

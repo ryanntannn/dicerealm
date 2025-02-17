@@ -1,4 +1,4 @@
-package com.dicerealm.server.handlers;
+package com.dicerealm.server.strategy;
 
 import java.util.stream.Stream;
 
@@ -10,8 +10,9 @@ import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.openai.api.ResponseFormat;
 import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
 
-import com.dicerealm.core.JsonSerializationStrategy;
-import com.dicerealm.core.LLMStrategy;
+import com.dicerealm.core.strategy.JsonSerializationStrategy;
+import com.dicerealm.core.strategy.LLMStrategy;
+import com.dicerealm.server.util.JsonSchemaHelper;
 
 public class OpenAI implements LLMStrategy {
 

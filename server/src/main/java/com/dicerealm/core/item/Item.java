@@ -2,6 +2,9 @@ package com.dicerealm.core.item;
 
 import java.util.UUID;
 
+/**
+ * Base class for all items
+ */
 public abstract class Item {
 	@SuppressWarnings("unused")
 	private UUID id;

@@ -1,4 +1,4 @@
-package com.dicerealm.server.handlers;
+package com.dicerealm.server.room;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -10,10 +10,13 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.dicerealm.core.JsonSerializationStrategy;
 import com.dicerealm.core.Player;
 import com.dicerealm.core.PresetPlayerFactory;
 import com.dicerealm.core.Room;
+import com.dicerealm.core.strategy.JsonSerializationStrategy;
+import com.dicerealm.server.strategy.GsonSerializer;
+import com.dicerealm.server.strategy.OpenAI;
+import com.dicerealm.server.strategy.WebsocketBroadcaster;
 
 /**
  * Manages a single room and all the players in it and their websocket sessions.
@@ -28,6 +31,7 @@ public class RoomManager {
 	private JsonSerializationStrategy serializer = new GsonSerializer();
 	private OpenAI llm = new OpenAI(serializer);
 	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions, serializer);
+
 	private Room room = Room.builder()
 		.setBroadcastStrategy(broadcaster)
 		.setLLMStrategy(llm)
@@ -54,7 +58,6 @@ public class RoomManager {
 		try {
 			UUID playerId = sessionIdToPlayerIdMap.get(session.getId());
 			Object payload = message.getPayload();
-	
 			// check if payload is a string
 			if (!(payload instanceof String)) {
 				throw new IllegalArgumentException("Payload must be a string");

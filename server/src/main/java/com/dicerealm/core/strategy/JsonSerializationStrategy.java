@@ -1,4 +1,4 @@
-package com.dicerealm.core;
+package com.dicerealm.core.strategy;
 
 public interface JsonSerializationStrategy {
 	public abstract String serialize(Object object);

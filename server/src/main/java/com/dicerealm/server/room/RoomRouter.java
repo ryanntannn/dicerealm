@@ -1,4 +1,4 @@
-package com.dicerealm.server.handlers;
+package com.dicerealm.server.room;
 
 import java.util.HashMap;
 

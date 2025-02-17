@@ -1,4 +1,4 @@
-package com.dicerealm.core;
+package com.dicerealm.core.strategy;
 
 import java.util.stream.Stream;
 

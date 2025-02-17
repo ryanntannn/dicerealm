@@ -1,8 +1,8 @@
-package com.dicerealm.server.handlers;
+package com.dicerealm.server.strategy;
 
 import org.springframework.ai.converter.BeanOutputConverter;
 
-import com.dicerealm.core.JsonSerializationStrategy;
+import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.google.gson.Gson;
 
 public class GsonSerializer implements JsonSerializationStrategy {

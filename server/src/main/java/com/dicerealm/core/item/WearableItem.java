@@ -2,6 +2,9 @@ package com.dicerealm.core.item;
 
 import com.dicerealm.core.entity.BodyPart;
 
+/**
+ * Base class for all wearable items
+ */
 public class WearableItem extends Item {
 
 	private BodyPart[] suitableBodyParts;

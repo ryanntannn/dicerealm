@@ -5,6 +5,8 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.dicerealm.server.room.RoomRouter;
+
 // Socket-Connection Configuration class
 public class SocketConnectionHandler extends TextWebSocketHandler {
 		private RoomRouter router = new RoomRouter();

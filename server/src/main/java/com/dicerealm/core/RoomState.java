@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Represents the entire state of a room
+ * 
+ * @see Room - manages a RoomState
+ * @see Player - represents a player in the room
+ * @see Message - represents a text message in the room
+ */
 public class RoomState {
 		private Map<UUID, Player> playerMap = new HashMap<UUID, Player>();
 		private List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
