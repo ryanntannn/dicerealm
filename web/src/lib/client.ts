@@ -43,6 +43,14 @@ export function useRoomClient(
     sendJsonMessage({ type: "MESSAGE", message });
   };
 
+  const equipItemRequest = (itemId: string, bodyPart: string) => {
+    sendJsonMessage({
+      type: "PLAYER_EQUIP_ITEM_REQUEST",
+      itemId,
+      bodyPart,
+    });
+  };
+
   useEffect(() => {
     const { data: command, error } = commandSchema.safeParse(lastJsonMessage);
     if (error) {
@@ -103,6 +111,37 @@ export function useRoomClient(
       case "SHOW_PLAYER_ACTIONS":
         setActions(command.actions);
         break;
+      case "PLAYER_EQUIP_ITEM_RESPONSE":
+        setPlayers((players) => {
+          const newPlayers = { ...players };
+          const player = newPlayers[command.playerId];
+          if (!player) {
+            console.error("Player not found", command.playerId);
+            return newPlayers;
+          }
+
+          const prevItem = player.equippedItems[command.bodyPart];
+          player.equippedItems[command.bodyPart] = command.item;
+
+          if (prevItem) {
+            player.inventory.items.push(prevItem);
+          }
+
+          player.inventory.items = player.inventory.items.filter(
+            (item) => item.id !== command.item.id
+          );
+
+          return newPlayers;
+        });
+        setMessages((messages) => [
+          ...messages,
+          {
+            message: `Player equipped item ${command.item.displayName} to ${command.bodyPart}`,
+            senderName: "System",
+            messageId: crypto.randomUUID(),
+          },
+        ]);
+        break;
       default:
         console.warn("Unhandled command type", command);
     }
@@ -118,5 +157,6 @@ export function useRoomClient(
     myPlayer,
     myId,
     actions,
+    equipItemRequest,
   };
 }

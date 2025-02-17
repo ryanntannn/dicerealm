@@ -110,9 +110,17 @@ function Players({
 function Inventory({
   inventorySize,
   items,
+  equipItemRequest,
 }: {
   inventorySize: number;
-  items: { displayName: string; description: string }[];
+  items: {
+    id: string;
+    displayName: string;
+    description: string;
+    suitableBodyParts?: string[];
+    stats?: Record<string, number>;
+  }[];
+  equipItemRequest: (itemId: string, bodyPart: string) => void;
 }) {
   return (
     <div className="p-4 border-b border-gray-300 rounded w-[400px] flex flex-col gap-4">
@@ -127,6 +135,16 @@ function Inventory({
             className="border border-gray-300 rounded p-2">
             <p className="font-medium">{item.displayName}</p>
             <p>{item.description}</p>
+            {item?.stats && <Stats stats={item.stats} />}
+            {item.suitableBodyParts &&
+              item.suitableBodyParts.map((bodyPart) => (
+                <button
+                  onClick={() => equipItemRequest(item.id, bodyPart)}
+                  key={bodyPart}
+                  className="bg-gray-100 px-4 rounded border border-gray-300">
+                  Equip to {bodyPart}
+                </button>
+              ))}
           </div>
         ))}
         {Array(inventorySize - items.length)
@@ -139,6 +157,33 @@ function Inventory({
             </div>
           ))}
       </div>
+    </div>
+  );
+}
+
+function EquippedItems({
+  items,
+}: {
+  items: {
+    bodyPart: string;
+    displayName: string;
+    description: string;
+    stats?: Record<string, number>;
+  }[];
+}) {
+  return (
+    <div className="p-4 border-b border-gray-300 rounded">
+      <h2 className="font-medium text-lg">Equipped Items 🛡️</h2>
+      <ul>
+        {items.map((item) => (
+          <li
+            key={item.displayName}
+            className="border border-gray-300 rounded p-2">
+            {item.bodyPart} - {item.displayName} - {item.description}
+            {item?.stats && <Stats stats={item.stats} />}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -164,6 +209,22 @@ function Actions({
   );
 }
 
+function Stats({ stats }: { stats: Record<string, number> }) {
+  return (
+    <div className="border-gray-300 rounded py-2">
+      <h2 className="font-bold text-gray-500 text-xs">STATS</h2>
+      <ul>
+        {Object.entries(stats).map(([stat, value]) => (
+          <li className="text-sm" key={stat}>
+            {stat}: {value > 0 && "+"}
+            {value}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function App() {
   const {
     messages,
@@ -173,13 +234,29 @@ function App() {
     myId,
     myPlayer,
     actions,
+    equipItemRequest,
   } = useRoomClient("0000");
+
+  console.log(myPlayer);
 
   return (
     <div className="h-screen flex flex-row">
       <div className="h-full">
         <Players players={players} myId={myId ?? undefined} />
-        {myPlayer && <Inventory {...myPlayer.inventory} />}
+        {myPlayer && (
+          <Inventory
+            equipItemRequest={equipItemRequest}
+            {...myPlayer.inventory}
+          />
+        )}
+        {myPlayer && (
+          <EquippedItems
+            items={Object.entries(myPlayer.equippedItems).map(([k, v]) => ({
+              bodyPart: k,
+              ...v,
+            }))}
+          />
+        )}
       </div>
       <div className="border-r border-gray-200"></div>
       <div className="h-full flex flex-col flex-grow">

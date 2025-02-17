@@ -7,12 +7,25 @@ export const bodyPartSchema = z.enum([
   "LEGS",
   "LEFT_HAND",
   "RIGHT_HAND",
-] as const);
+]);
+
+export const statSchema = z.enum([
+  "MAX_HEALTH",
+  "ARMOUR_CLASS",
+  "STRENGTH",
+  "DEXTERITY",
+  "CONSTITUTION",
+  "INTELLIGENCE",
+  "WISDOM",
+  "CHARISMA",
+]);
 
 export const itemSchema = z.object({
   id: z.string(),
   displayName: z.string(),
   description: z.string(),
+  suitableBodyParts: z.array(bodyPartSchema).optional(),
+  stats: z.record(z.number()).optional(),
 });
 
 export const inventorySchema = z.object({
@@ -23,7 +36,7 @@ export const inventorySchema = z.object({
 export const playerSchema = z.object({
   id: z.string(),
   displayName: z.string(),
-  equippedItems: z.map(bodyPartSchema, z.unknown()).or(z.object({})),
+  equippedItems: z.record(itemSchema),
   health: z.number(),
   maxHealth: z.number(),
   inventory: inventorySchema,

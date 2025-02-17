@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { playerSchema, roomStateSchema } from "./room-state";
+import { itemSchema, playerSchema, roomStateSchema } from "./room-state";
 
 export const outgoingMessageCommandSchema = z.object({
   type: z.literal("OUTGOING_MESSAGE"),
@@ -40,6 +40,13 @@ export const showPlayerActionsCommandSchema = z.object({
   actions: z.array(z.string()),
 });
 
+export const playerEquipItemResponseSchema = z.object({
+  type: z.literal("PLAYER_EQUIP_ITEM_RESPONSE"),
+  playerId: z.string(),
+  item: itemSchema,
+  bodyPart: z.string(),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
@@ -47,4 +54,5 @@ export const commandSchema = z.discriminatedUnion("type", [
   playerLeaveCommandSchema,
   fullRoomStateCommandSchema,
   showPlayerActionsCommandSchema,
+  playerEquipItemResponseSchema,
 ]);

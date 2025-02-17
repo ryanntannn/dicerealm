@@ -9,11 +9,15 @@ import com.dicerealm.core.command.CommandDeserializer;
 import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.MessageCommand;
 import com.dicerealm.core.command.OutgoingMessageCommand;
+import com.dicerealm.core.command.PlayerEquipItemRequest;
+import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.dm.DungeonMasterResponse;
+import com.dicerealm.core.item.Item;
+import com.dicerealm.core.item.WearableItem;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
@@ -107,6 +111,9 @@ public class Room {
 		if (command instanceof MessageCommand) {
 			handleNormalMessage(playerId, ((MessageCommand) command).message);
 		}
+		if (command instanceof PlayerEquipItemRequest) {
+			handlePlayerEquipItemRequest(playerId, (PlayerEquipItemRequest) command);
+		}
 	}
 
 	/**
@@ -145,5 +152,32 @@ public class Room {
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(dmResponseMessage));
 		roomState.getMessages().add(dmResponseMessage);
 		handlePlayerActions(response.actionChoices);
+	}
+
+	/**
+	 * Handle a player request to equip an item, and broadcast the event if successful
+	 * @param playerId
+	 * @param command
+	 */
+	public void handlePlayerEquipItemRequest(UUID playerId, PlayerEquipItemRequest command) {
+		Player player = roomState.getPlayerMap().get(playerId);
+
+		String itemIdStr = command.getItemId();
+
+		UUID itemId = UUID.fromString(itemIdStr);
+
+		Item item = player.getInventory().getItem(itemId);
+		
+		if (item == null) {
+			throw new IllegalArgumentException("Item not found in inventory");
+		}
+		if (!(item instanceof WearableItem)) {
+			throw new IllegalArgumentException("Item is not wearable");
+		}
+		boolean equipSuccessful = player.equipItem(command.getBodyPart(), (WearableItem) item);
+		if (!equipSuccessful) {
+			throw new IllegalArgumentException("Item could not be equipped");
+		}
+		broadcastStrategy.sendToAllPlayers(new PlayerEquipItemResponse(playerId.toString(), item, command.getBodyPart()));
 	}
 }

@@ -13,13 +13,14 @@ import com.dicerealm.core.item.WearableItem;
  * @see WearableItem - represents an item that can be worn by an entity
  * @see Inventory - represents the inventory of an entity
  */
-public abstract class Entity {
+public abstract class Entity implements Stats {
 	private UUID id;
 	private String displayName;
 	private int health;
 	private int maxHealth;
 	
 	private Map<BodyPart, WearableItem> equippedItems = new HashMap<BodyPart, WearableItem>();
+	private Map<Stat, Integer> baseStats = new HashMap<Stat, Integer>();
 
 	private Inventory	inventory = new Inventory();
 
@@ -55,10 +56,35 @@ public abstract class Entity {
 	}
 
 	public boolean equipItem(BodyPart bodyPart, WearableItem item) {
+		// Check if item is in inventory
+		if (!inventory.containsItem(item)) {
+			return false;
+		}
+
 		if (!item.isSuitableFor(bodyPart)) {
 			return false;
 		}
+
+		inventory.removeItem(item);
+
+		// check if the body part is already equipped
+		if (equippedItems.containsKey(bodyPart)) {
+			// unequip the item
+			inventory.addItem(equippedItems.get(bodyPart));
+		}
+
 		equippedItems.put(bodyPart, item);
+
+		System.out.println(equippedItems.get(bodyPart));
+
 		return true;
+	}
+
+	public int getStat(Stat stat) {
+		int out = baseStats.get(stat);
+		for (WearableItem item : equippedItems.values()) {
+			out += item.getStat(stat);
+		}
+		return out;
 	}
 }

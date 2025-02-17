@@ -6,7 +6,6 @@ import java.util.UUID;
  * Base class for all items
  */
 public abstract class Item {
-	@SuppressWarnings("unused")
 	private UUID id;
 	private String displayName;
 	private String description;
@@ -23,5 +22,9 @@ public abstract class Item {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public UUID getId() {
+		return id;
 	}
 }
