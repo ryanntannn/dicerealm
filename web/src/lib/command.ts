@@ -48,6 +48,14 @@ export const playerEquipItemResponseSchema = z.object({
   updatedPlayerStats: z.record(z.number()),
 });
 
+export const changeLocationCommandSchema = z.object({
+  type: z.literal("CHANGE_LOCATION"),
+  location: z.object({
+    displayName: z.string(),
+    description: z.string(),
+  }),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
@@ -56,4 +64,5 @@ export const commandSchema = z.discriminatedUnion("type", [
   fullRoomStateCommandSchema,
   showPlayerActionsCommandSchema,
   playerEquipItemResponseSchema,
+  changeLocationCommandSchema,
 ]);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.Command;
 import com.dicerealm.core.command.CommandDeserializer;
 import com.dicerealm.core.command.FullRoomStateCommand;
@@ -17,6 +18,7 @@ import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
@@ -137,6 +139,24 @@ public class Room {
 	}
 
 	/**
+	 * Handle a location change from a DungeonMasterResponse
+	 * @param response
+	 */
+	public void handleLocationChange(DungeonMasterResponse response) {
+		UUID newLocationUuid = UUID.fromString(response.locationId);
+		// check if location change is needed
+		if (newLocationUuid.equals(roomState.getLocationGraph().getCurrentLocation().getId())) {
+			return;
+		}
+		Location newLocation = roomState.getLocationGraph().getN(newLocationUuid);
+		if (newLocation == null) {
+			throw new IllegalArgumentException("Invalid location id");
+		}
+		roomState.getLocationGraph().setCurrentLocation(newLocation);
+		broadcastStrategy.sendToAllPlayers(new ChangeLocationCommand(newLocation));
+	}
+
+	/**
 	 * Handle a normal text message from a player
 	 * @param playerId
 	 * @param message
@@ -152,6 +172,7 @@ public class Room {
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(dmResponseMessage));
 		roomState.getMessages().add(dmResponseMessage);
 		handlePlayerActions(response.actionChoices);
+		handleLocationChange(response);
 	}
 
 	/**

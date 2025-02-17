@@ -10,6 +10,7 @@ public class DungeonMasterResponse{
 
 		public String displayText;
 		public PlayerAction[] actionChoices;
+		public String locationId;
 
 		public class PlayerAction{
 			public String action;
