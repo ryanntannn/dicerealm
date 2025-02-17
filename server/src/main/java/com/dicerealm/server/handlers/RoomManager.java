@@ -24,9 +24,9 @@ public class RoomManager {
 	private Map<String, UUID> sessionIdToPlayerIdMap = Collections.synchronizedMap(new HashMap<String, UUID>());
 	
 	// We use the OpenAI LLMStrategy and the WebsocketBroadcaster BroadcastStrategy for this room
-	private OpenAI llm = new OpenAI();
 	// private MockLLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
 	private JsonSerializationStrategy serializer = new GsonSerializer();
+	private OpenAI llm = new OpenAI(serializer);
 	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions, serializer);
 	private Room room = Room.builder()
 		.setBroadcastStrategy(broadcaster)

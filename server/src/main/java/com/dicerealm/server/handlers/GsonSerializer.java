@@ -1,5 +1,7 @@
 package com.dicerealm.server.handlers;
 
+import org.springframework.ai.converter.BeanOutputConverter;
+
 import com.dicerealm.core.JsonSerializationStrategy;
 import com.google.gson.Gson;
 
@@ -17,4 +19,10 @@ public class GsonSerializer implements JsonSerializationStrategy {
 		return gson.fromJson(json, object);
 	}
 
+	@Override
+	public String makeJsonSchema(Class<?> schema) {
+		// We use the BeanOutputConverter to generate the JSON schema instead of gson because gson does not support JSON schema generation
+		BeanOutputConverter<?> outputConverter = new BeanOutputConverter<>(schema);
+		return outputConverter.getJsonSchema();
+	}
 }

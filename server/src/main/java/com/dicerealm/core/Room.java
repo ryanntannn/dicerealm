@@ -50,6 +50,11 @@ public class Room {
 		broadcastStrategy.sendToAllPlayers(new PlayerLeaveCommand(player));
 	}
 
+	/**
+	 * Handle an incoming command from a player
+	 * @param playerId
+	 * @param json
+	 */
 	public void handlePlayerCommand(UUID playerId, String json) {
 		Command command = commandDeserializer.deserialize(json);
 		if (command instanceof MessageCommand) {
@@ -57,6 +62,27 @@ public class Room {
 		}
 	}
 
+	public void handlePlayerActions(DungeonMasterResponse.PlayerAction[] actionChoices) {
+		HashMap<UUID, ArrayList<String>> playerActions = new HashMap<>();
+		for (DungeonMasterResponse.PlayerAction action : actionChoices) {
+			UUID id = UUID.fromString(action.playerId);
+			if (!playerActions.containsKey(id)) {
+				playerActions.put(id, new ArrayList<>());
+			}
+			playerActions.get(id).add(action.action);
+		}
+		for (UUID id : playerActions.keySet()) {
+			Player player = roomState.getPlayerMap().get(id);
+			String[] actions = playerActions.get(id).toArray(new String[0]);
+			broadcastStrategy.sendToPlayer(new ShowPlayerActionsCommand(actions), player);
+		}
+	}
+
+	/**
+	 * Handle a normal text message from a player
+	 * @param playerId
+	 * @param message
+	 */
 	public void handleNormalMessage(UUID playerId, String message) {
 		Player thisPlayer = roomState.getPlayerMap().get(playerId);
 		Message playerMessage = new Message(message, thisPlayer.getDisplayName());
@@ -64,25 +90,10 @@ public class Room {
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(playerMessage));
 		DungeonMasterResponse response = dungeonMaster.handlePlayerMessage(message, thisPlayer);
 
-		Message dmResponseMessage = new Message(response.displayText(), "Dungeon Master");
+		Message dmResponseMessage = new Message(response.displayText, "Dungeon Master");
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(dmResponseMessage));
 		roomState.getMessages().add(dmResponseMessage);
-
-		HashMap<UUID, ArrayList<String>> playerActions = new HashMap<>();
-
-		for (DungeonMasterResponse.PlayerAction action : response.actionChoices()) {
-			UUID id = UUID.fromString(action.playerId());
-			if (!playerActions.containsKey(id)) {
-				playerActions.put(id, new ArrayList<>());
-			}
-			playerActions.get(id).add(action.action());
-		}
-
-		for (UUID id : playerActions.keySet()) {
-			Player player = roomState.getPlayerMap().get(id);
-			String[] actions = playerActions.get(id).toArray(new String[0]);
-			broadcastStrategy.sendToPlayer(new ShowPlayerActionsCommand(actions), player);
-		}
+		handlePlayerActions(response.actionChoices);
 	}
 
 	public boolean isEmpty() {

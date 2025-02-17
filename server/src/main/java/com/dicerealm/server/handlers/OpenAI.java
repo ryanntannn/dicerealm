@@ -4,13 +4,13 @@ import java.util.stream.Stream;
 
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.openai.api.ResponseFormat;
 import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
 
+import com.dicerealm.core.JsonSerializationStrategy;
 import com.dicerealm.core.LLMStrategy;
 
 public class OpenAI implements LLMStrategy {
@@ -35,6 +35,12 @@ public class OpenAI implements LLMStrategy {
 			.defaultOptions(options)
 			.build();
 
+	private JsonSerializationStrategy serializer;
+
+	public OpenAI(JsonSerializationStrategy serializer) {
+		this.serializer = serializer;
+	}
+
 	@Override
 	public Stream<String> prompt(String prompt) {
 			return this.chatModel.stream(prompt)
@@ -50,8 +56,8 @@ public class OpenAI implements LLMStrategy {
 
 	
 	public <T> T promptSchema(String prompt, Class<T> schema) {
-		BeanOutputConverter<T> outputConverter = new BeanOutputConverter<T>(schema);
-		String jsonSchema = outputConverter.getJsonSchema();
+		// OpenAI's Structured Response API requires all fields to be required in the JSON schema
+		String jsonSchema = JsonSchemaHelper.makeAllFieldsRequired(serializer.makeJsonSchema(schema));
 
 		Prompt promptObj = new Prompt(prompt, OpenAiChatOptions.builder()
 			.model(ChatModel.GPT_4_O)
@@ -62,7 +68,7 @@ public class OpenAI implements LLMStrategy {
 
 		ChatResponse response = chatModel.call(promptObj);
 		String content = response.getResult().getOutput().getText();
-
-		return outputConverter.convert(content);
+		
+		return serializer.deserialize(content, schema);
 	}
 }
