@@ -21,5 +21,5 @@ docker build -t dicerealm/server .
 To start the server, you can run the following command:
 
 ```bash
-docker run -p 8080:8080 dicerealm/server -e OPENAI_API_KEY=<your-api-key>
+docker run -p 8080:8080 -e OPENAI_API_KEY=<your-api-key> dicerealm/server
 ```

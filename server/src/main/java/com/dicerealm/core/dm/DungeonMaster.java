@@ -13,11 +13,13 @@ public class DungeonMaster {
 
 	private String makeSystemPrompt() { 
 		return """
-			Act as a Dungeon Master for a game of DND. You will be provided with a JSON object containing the state of the players, a summary of the progress so far, and 10 of the latest messages so far. Using this information, you will be asked to provide a response to the entire room in a json format:
+			Act as a Dungeon Master for a multiplayer game of DND. You will be provided with a JSON object containing the state of the players, a summary of the progress so far, and 10 of the latest messages so far. Using this information, you will be asked to provide a response based on the latest message, to the entire room in a json format:
 			
 			displayText - the text to display to the players
 			actionChoices - a list of actions that the players can take
-			removedItems - a list of items that have been removed from players inventory. This should be empty if the last action did not involve consuming items
+			locationId - the id of the location of the party. If you want to stay in the current location, set this to the current location id. This should be a UUID.
+
+			You may only move the party to an adjacent location, which will be provided in the JSON object.
 			""";
 	}
 
@@ -35,7 +37,7 @@ public class DungeonMaster {
 	}
 
 	public DungeonMasterResponse handlePlayerMessage(String message, Player player) {
-		String prompt = makeSystemPrompt() + "\nPlayers\n" + jsonSerializationStrategy.serialize(roomState.getPlayers()) + "\nSummary\n" + summary + "\nPrevious Messages:\n" + latestTenMessages() + "\n New Message from " + player.getDisplayName() + " says: " + message;
+		String prompt = makeSystemPrompt() + "\nPlayers\n" + jsonSerializationStrategy.serialize(roomState.getPlayers()) + "\nCurrent Location\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getCurrentLocation()) + "\nAdjacent Locations\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getAdjacentLocations()) + "\nSummary\n" + summary + "\nPrevious Messages:\n" + latestTenMessages() + "\n New Message from " + player.getDisplayName() + " says: " + message;
 		updateSummary();
 		return llmStrategy.promptSchema(prompt, DungeonMasterResponse.class);
 	}

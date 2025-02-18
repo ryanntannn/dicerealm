@@ -145,6 +145,16 @@ export function useRoomClient(
           },
         ]);
         break;
+      case "CHANGE_LOCATION":
+        setMessages((messages) => [
+          ...messages,
+          {
+            message: `Party moved to ${command.location.displayName}`,
+            senderName: "System",
+            messageId: crypto.randomUUID(),
+          },
+        ]);
+        break;
       default:
         console.warn("Unhandled command type", command);
     }

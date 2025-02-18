@@ -1,5 +1,6 @@
 package com.dicerealm.core.util.graph;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class Graph<N extends Node, E extends Edge<N>> {
 				neighbors.add(edge.getTarget());
 			}
 		}
-		return neighbors.toArray((N[]) new Node[neighbors.size()]);
+		return neighbors.toArray((N[]) Array.newInstance(node.getClass(), neighbors.size()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,7 +53,7 @@ public class Graph<N extends Node, E extends Edge<N>> {
 			N node = path.get(path.size() - 1);
 
 			if (node.equals(end)) {
-				return path.toArray((N[]) new Node[path.size()]);
+				return path.toArray((N[]) Array.newInstance(node.getClass(), path.size()));
 			}
 
 			if (!visited.contains(node)) {
