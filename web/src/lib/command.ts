@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { itemSchema, playerSchema, roomStateSchema } from "./room-state";
+import {
+  itemSchema,
+  playerActionSchema,
+  playerSchema,
+  roomStateSchema,
+} from "./room-state";
 
 export const outgoingMessageCommandSchema = z.object({
   type: z.literal("OUTGOING_MESSAGE"),
@@ -37,7 +42,7 @@ export const fullRoomStateCommandSchema = z.object({
 
 export const showPlayerActionsCommandSchema = z.object({
   type: z.literal("SHOW_PLAYER_ACTIONS"),
-  actions: z.array(z.string()),
+  actions: z.array(playerActionSchema),
 });
 
 export const playerEquipItemResponseSchema = z.object({

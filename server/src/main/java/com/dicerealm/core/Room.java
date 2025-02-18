@@ -10,19 +10,24 @@ import com.dicerealm.core.command.CommandDeserializer;
 import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.MessageCommand;
 import com.dicerealm.core.command.OutgoingMessageCommand;
+import com.dicerealm.core.command.PlayerActionCommand;
 import com.dicerealm.core.command.PlayerEquipItemRequest;
 import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.dice.D20;
 import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.dm.DungeonMasterResponse;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
+import com.dicerealm.core.strategy.RandomStrategy;
 
 /**
  * Represents a room in the game, containing the state of the room and the logic for handling player actions and messages
@@ -42,6 +47,7 @@ public class Room {
 	private BroadcastStrategy broadcastStrategy;
 	private DungeonMaster dungeonMaster;
 	private CommandDeserializer commandDeserializer;
+	private D20 d20 = new D20();
 
 	/**
 	 * Create a new RoomBuilder for creating a Room
@@ -59,10 +65,11 @@ public class Room {
 	 * 
 	 * @see RoomBuilder
 	 */
-	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy, JsonSerializationStrategy jsonSerializationStrategy) {
+	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy, JsonSerializationStrategy jsonSerializationStrategy, RandomStrategy randomStrategy) {
 		this.broadcastStrategy = broadcastStrategy;
 		this.dungeonMaster = new DungeonMaster(llmStrategy, jsonSerializationStrategy, roomState);
 		this.commandDeserializer = new CommandDeserializer(jsonSerializationStrategy);
+		d20.setRandomStrategy(randomStrategy);
 	}
 
 	/**
@@ -116,6 +123,9 @@ public class Room {
 		if (command instanceof PlayerEquipItemRequest) {
 			handlePlayerEquipItemRequest(playerId, (PlayerEquipItemRequest) command);
 		}
+		if (command instanceof PlayerActionCommand) {
+			handlePlayerAction(playerId, ((PlayerActionCommand) command));
+		}
 	}
 
 	/**
@@ -123,18 +133,19 @@ public class Room {
 	 * @param actionChoices
 	 */
 	public void handlePlayerActions(DungeonMasterResponse.PlayerAction[] actionChoices) {
-		HashMap<UUID, ArrayList<String>> playerActions = new HashMap<>();
+		HashMap<UUID, ArrayList<DungeonMasterResponse.PlayerAction>> playerActions = new HashMap<>();
 		for (DungeonMasterResponse.PlayerAction action : actionChoices) {
 			UUID id = UUID.fromString(action.playerId);
 			if (!playerActions.containsKey(id)) {
 				playerActions.put(id, new ArrayList<>());
 			}
-			playerActions.get(id).add(action.action);
+			playerActions.get(id).add(action);
 		}
 		for (UUID id : playerActions.keySet()) {
 			Player player = roomState.getPlayerMap().get(id);
-			String[] actions = playerActions.get(id).toArray(new String[0]);
-			broadcastStrategy.sendToPlayer(new ShowPlayerActionsCommand(actions), player);
+			ArrayList<DungeonMasterResponse.PlayerAction> actions = playerActions.getOrDefault(id, new ArrayList<>());
+			DungeonMasterResponse.PlayerAction[] playerActionsArray = actions.toArray(new DungeonMasterResponse.PlayerAction[actions.size()]);
+			broadcastStrategy.sendToPlayer(new ShowPlayerActionsCommand(playerActionsArray), player);
 		}
 	}
 
@@ -143,6 +154,9 @@ public class Room {
 	 * @param response
 	 */
 	public void handleLocationChange(DungeonMasterResponse response) {
+		if (response.locationId == null) {
+			return;
+		}
 		UUID newLocationUuid = UUID.fromString(response.locationId);
 		// check if location change is needed
 		if (newLocationUuid.equals(roomState.getLocationGraph().getCurrentLocation().getId())) {
@@ -162,10 +176,13 @@ public class Room {
 	 * @param message
 	 */
 	public void handleNormalMessage(UUID playerId, String message) {
+		
 		Player thisPlayer = roomState.getPlayerMap().get(playerId);
 		Message playerMessage = new Message(message, thisPlayer.getDisplayName());
 		roomState.getMessages().add(playerMessage);
 		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(playerMessage));
+
+		broadcastStrategy.sendToAllPlayers(new OutgoingMessageCommand(new Message("Dungeon Master is thinking...", "Dungeon Master")));
 		DungeonMasterResponse response = dungeonMaster.handlePlayerMessage(message, thisPlayer);
 
 		Message dmResponseMessage = new Message(response.displayText, "Dungeon Master");
@@ -200,5 +217,65 @@ public class Room {
 			throw new IllegalArgumentException("Item could not be equipped");
 		}
 		broadcastStrategy.sendToAllPlayers(new PlayerEquipItemResponse(playerId.toString(), item, command.getBodyPart(), player.getStats()));
+	}
+
+
+	/**
+	 * Handle a player action from a PlayerActionCommand
+	 * @param playerId
+	 * @param command
+	 */
+	public void handlePlayerAction(UUID playerId, PlayerActionCommand command) {
+		Player player = roomState.getPlayerMap().get(playerId);
+		StatsMap playerStatsMap = player.getStats();
+		StatsMap skillCheck = command.skillCheck;
+
+		// filter skillCheck to remove zero values
+		StatsMap filteredSkillCheck = new StatsMap();
+		for (Stat key : skillCheck.keySet()) {
+			if (skillCheck.get(key) != 0) {
+				filteredSkillCheck.put(key, skillCheck.get(key));
+			}
+		}
+
+		// Check if a skill check is required
+		if (filteredSkillCheck.isEmpty()) {
+			handleNormalMessage(playerId, "ACTION: " + command.action);
+			return;
+		}
+
+		String skillCheckString = new String();
+
+		boolean success = true;
+		// roll a d20 for each stat in the skill check
+		StatsMap rollResults = new StatsMap();
+		for (Stat key : filteredSkillCheck.keySet()) {
+			skillCheckString += ("\n" + key + ": ");
+			int roll = d20.roll();
+			rollResults.put(key, roll);
+			skillCheckString += (roll + "(1d20) + " + playerStatsMap.get(key) + "(modifier) = " + (roll + playerStatsMap.get(key)));
+			if (roll >= 20) {
+				success = true;
+				break;
+			}
+			if (roll <= 1) {
+				success = false;
+				break;
+			}
+			if (roll + playerStatsMap.get(key) < filteredSkillCheck.get(key)) {
+				success = false;
+				skillCheckString += (" < " + filteredSkillCheck.get(key) + "(Fail)");
+			} else {
+				skillCheckString += (" >= " + filteredSkillCheck.get(key) + "(Success)");
+			}
+		}
+
+		if (success) {
+			skillCheckString += ("\nit was successful!");
+		} else {
+			skillCheckString += ("\nit was a fail!");
+		}
+		String dmMessage = "I attempted action " + command.action + " with skill check: " + skillCheckString;
+		handleNormalMessage(playerId, dmMessage);
 	}
 }

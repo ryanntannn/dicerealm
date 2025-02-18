@@ -3,7 +3,7 @@ import { useRoomClient } from "./lib/client";
 import TextMessageForm from "./TextMessageForm";
 import cn from "./lib/cn";
 import { ReadyState } from "react-use-websocket";
-import { Player } from "./lib/room-state";
+import { Player, PlayerAction } from "./lib/room-state";
 
 function Message({
   message,
@@ -192,34 +192,52 @@ function Actions({
   actions,
   onAction,
 }: {
-  actions: string[];
-  onAction: (action: string) => void;
+  actions: PlayerAction[];
+  onAction: (action: PlayerAction) => void;
 }) {
   return (
     <div className="flex flex-row gap-2 px-4">
       {actions.map((action) => (
         <button
           onClick={() => onAction(action)}
-          key={action}
           className="bg-gray-100 px-4 rounded border border-gray-300">
-          {action}
+          {action.action}
+          <Stats stats={action.skillCheck} omitZero omitPositive />
         </button>
       ))}
     </div>
   );
 }
 
-function Stats({ stats }: { stats: Record<string, number> }) {
+function Stats({
+  stats,
+  omitZero,
+  omitPositive,
+}: {
+  stats: Record<string, number>;
+  omitZero?: boolean;
+  omitPositive?: boolean;
+}) {
   return (
     <div className="border-gray-300 rounded py-2">
-      <h2 className="font-bold text-gray-500 text-xs">STATS</h2>
       <ul>
-        {Object.entries(stats).map(([stat, value]) => (
-          <li className="text-sm" key={stat}>
-            {stat}: {value > 0 && "+"}
-            {value}
-          </li>
-        ))}
+        {Object.entries(stats).map(([stat, value]) => {
+          if (omitZero && value === 0) {
+            return null;
+          }
+          return (
+            <li className="text-sm text-gray-600 font-medium" key={stat}>
+              {stat}: {!omitPositive && value > 0 && "+"}
+              {value}
+            </li>
+          );
+        })}
+        {
+          // If all stats are zero, show a message
+          Object.values(stats).every((v) => v === 0) && (
+            <li className="text-sm text-gray-400">No stats</li>
+          )
+        }
       </ul>
     </div>
   );
@@ -235,6 +253,7 @@ function App() {
     myPlayer,
     actions,
     equipItemRequest,
+    chooseAction,
   } = useRoomClient("0000");
 
   return (
@@ -274,7 +293,7 @@ function App() {
         <Messages messages={messages} />
         <Actions
           actions={actions}
-          onAction={(action) => sendTextMessage(action)}
+          onAction={(action) => chooseAction(action.action, action.skillCheck)}
         />
         <TextMessageForm onSend={sendTextMessage} />
       </div>

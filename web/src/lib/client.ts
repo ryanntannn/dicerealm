@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { commandSchema } from "./command";
-import { Player } from "./room-state";
+import { Player, PlayerAction } from "./room-state";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL as string;
 
@@ -27,12 +27,13 @@ export function useRoomClient(
     return url.toString();
   }, [options.serverUrl, roomId]);
 
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(wsUrl);
+  const { sendJsonMessage, lastMessage, lastJsonMessage, readyState } =
+    useWebSocket(wsUrl);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [players, setPlayers] = useState<Record<string, Player>>({});
   const [myId, setMyId] = useState<string | null>(null);
-  const [actions, setActions] = useState<string[]>([]);
+  const [actions, setActions] = useState<PlayerAction[]>([]);
 
   const myPlayer = useMemo(() => {
     if (!myId) return null;
@@ -50,6 +51,19 @@ export function useRoomClient(
       bodyPart,
     });
   };
+
+  const chooseAction = (action: string, skillCheck: Record<string, number>) => {
+    sendJsonMessage({
+      type: "PLAYER_ACTION",
+      action,
+      skillCheck,
+    });
+  };
+
+  useEffect(() => {
+    if (!lastMessage) return;
+    console.log(lastMessage);
+  }, [lastMessage]);
 
   useEffect(() => {
     const { data: command, error } = commandSchema.safeParse(lastJsonMessage);
@@ -171,5 +185,6 @@ export function useRoomClient(
     myId,
     actions,
     equipItemRequest,
+    chooseAction,
   };
 }

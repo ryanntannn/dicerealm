@@ -24,5 +24,6 @@ public class CommandMap {
 		// Register all incoming command types here
 		registerCommand("MESSAGE", MessageCommand.class);
 		registerCommand("PLAYER_EQUIP_ITEM_REQUEST", PlayerEquipItemRequest.class);
+		registerCommand("PLAYER_ACTION", PlayerActionCommand.class);
 	}
 }

@@ -14,13 +14,13 @@ public class Player extends Entity {
 	public Player() {
 		super("Player", new StatsMap(Map.of(
 			Stat.MAX_HEALTH, 20,
-			Stat.ARMOUR_CLASS, 5,
-			Stat.STRENGTH, 10,
-			Stat.DEXTERITY, 10,
-			Stat.CONSTITUTION, 10,
-			Stat.INTELLIGENCE, 10,
-			Stat.WISDOM, 10,
-			Stat.CHARISMA, 10
+			Stat.ARMOUR_CLASS, 0,
+			Stat.STRENGTH, 0,
+			Stat.DEXTERITY, 0,
+			Stat.CONSTITUTION, 0,
+			Stat.INTELLIGENCE, 0,
+			Stat.WISDOM, 0,
+			Stat.CHARISMA, 0
 		)));
 	}
 
