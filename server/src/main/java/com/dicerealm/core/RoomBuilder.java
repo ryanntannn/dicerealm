@@ -3,6 +3,7 @@ package com.dicerealm.core;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
+import com.dicerealm.core.strategy.RandomStrategy;
 
 /**
  * Builder for creating a Room
@@ -16,6 +17,12 @@ public class RoomBuilder {
 	private BroadcastStrategy broadcastStrategy;
 	private LLMStrategy llmStrategy;
 	private JsonSerializationStrategy jsonSerializationStrategy;
+	private RandomStrategy randomStrategy = new RandomStrategy() {
+		@Override
+		public double random() {
+			return Math.random();
+		}
+	};
 
 	/**
 	 * Set the BroadcastStrategy for the Room
@@ -54,11 +61,23 @@ public class RoomBuilder {
 	}
 
 	/**
+	 * Set the RandomStrategy for the Room
+	 * @param randomStrategy
+	 * @return RoomBuilder
+	 * 
+	 * @see RandomStrategy
+	 */
+	public RoomBuilder setRandomStrategy(RandomStrategy randomStrategy) {
+		this.randomStrategy = randomStrategy;
+		return this;
+	}
+
+	/**
 	 * Build the Room
 	 * @return Room
 	 * @see Room
 	 */
 	public Room build() {
-		return new Room(broadcastStrategy, llmStrategy, jsonSerializationStrategy);
+		return new Room(broadcastStrategy, llmStrategy, jsonSerializationStrategy, randomStrategy);
 	}
 }

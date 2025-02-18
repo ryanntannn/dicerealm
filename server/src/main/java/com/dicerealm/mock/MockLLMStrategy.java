@@ -2,8 +2,7 @@ package com.dicerealm.mock;
 
 import java.util.stream.Stream;
 
-import org.springframework.ai.converter.BeanOutputConverter;
-
+import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
 
 /**
@@ -11,33 +10,37 @@ import com.dicerealm.core.strategy.LLMStrategy;
  */
 public class MockLLMStrategy implements LLMStrategy {
 
-	private String mockResponse;
+	private String response = "{\"displayText\": \"mock response\", \"actionChoices\":[]}";
+		private JsonSerializationStrategy jsonSerializationStrategy;
+		private String latestPrompt = null;
 
-	public MockLLMStrategy(String mockResponse) {
-		this.mockResponse = mockResponse;
-	}
+		public MockLLMStrategy(JsonSerializationStrategy jsonSerializationStrategy) {
+			this.jsonSerializationStrategy = jsonSerializationStrategy;
+		}
 
-	public MockLLMStrategy() {
-		this.mockResponse = "<mock response>";
-	}
+		public void setResponse(String response) {
+			this.response = response;
+		}
 
-	public void setMockResponse(String mockResponse) {
-		this.mockResponse = mockResponse;
-	}
+		public String getLatestPrompt() {
+			return latestPrompt;
+		}
 
-	@Override
-	public Stream<String> prompt(String prompt) {
-		return mockResponse.lines();
-	}
+		@Override
+		public Stream<String> prompt(String prompt) {
+			latestPrompt = prompt;
+			return Stream.of(response);
+		}
 
-	@Override
-	public String promptStr(String prompt) {
-		return mockResponse;
-	}
+		@Override
+		public String promptStr(String prompt) {
+			latestPrompt = prompt;
+			return response;
+		}
 
-	@Override
-	public <T> T promptSchema(String prompt, Class<T> schema) {
-		BeanOutputConverter<T> outputConverter = new BeanOutputConverter<T>(schema);
-		return outputConverter.convert(mockResponse);
-	}
+		@Override
+		public <T> T promptSchema(String prompt, Class<T> schema) {
+			latestPrompt = prompt;
+			return jsonSerializationStrategy.deserialize(response, schema);
+		}
 }

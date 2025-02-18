@@ -19,6 +19,12 @@ public class DungeonMaster {
 			actionChoices - a list of actions that the players can take
 			locationId - the id of the location of the party. If you want to stay in the current location, set this to the current location id. This should be a UUID.
 
+			`actionChoices` should be a list of objects with the following fields:
+			action - a string representing the action the player can take
+			playerId - the id of the player that can take this action
+			skillCheck - a JSON object representing the skill check required to take this action. This should be a JSON object that could have the following keys:
+			`STRENGTH`, `DEXTERITY`, `CONSTITUTION`, `INTELLIGENCE`, `WISDOM`, `CHARISMA` Each of these keys should have an integer value representing the skill check required to take this action. If the player will roll a d20, and add their modifier to the roll. If the roll is greater than or equal to the value in the JSON object, the player can take the action. If a stat is not required, it should be set to 0. Do not unnecessarily require skill checks.
+
 			You may only move the party to an adjacent location, which will be provided in the JSON object.
 			""";
 	}
