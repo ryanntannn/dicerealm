@@ -16,6 +16,8 @@ import com.dicerealm.core.item.EquippableItem;
 public abstract class Entity {
 	private UUID id;
 	private String displayName;
+	private String Race;
+	private String entityClass;
 	private int health;
 	private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();
 	private StatsMap baseStats = new StatsMap();
@@ -26,6 +28,8 @@ public abstract class Entity {
 	public Entity(String displayName, StatsMap baseStats) {
 		this.id = UUID.randomUUID();
 		this.displayName = displayName;
+		this.race = race;
+		this.entityClass = entityClass;
 		this.baseStats = baseStats;
 		this.health = baseStats.get(Stat.MAX_HEALTH);
 		updateStats();
@@ -37,6 +41,14 @@ public abstract class Entity {
 
 	public String getDisplayName() {
 		return displayName;
+	}
+
+	public String getRace() {
+		return race;
+	}
+
+	public String getEntityClass() {
+		return entityClass;
 	}
 
 	public int getHealth() {
@@ -88,6 +100,16 @@ public abstract class Entity {
 			out += item.getStat(stat);
 		}
 		return out;
+	}
+
+	public void displayStats(){
+		System.out.println("Name: " + getDisplayName());
+		System.out.println("Race: " + getRace());
+		System.out.println("Class: " + getEntityClass());
+		System.out.println("Entity Stats:");
+		for (Stat stat : getStats().keySet()) {
+			System.out.println(stat + ": " + getStats().get(stat));
+		}
 	}
 
 	public StatsMap getStats() {

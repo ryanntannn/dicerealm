@@ -9,17 +9,17 @@ import com.dicerealm.core.item.Dummy;
 import com.dicerealm.core.item.Helmet;
 
 /**
- * Factory for creating preset players
+ * Factory for creating preset monsters
  * 
- * @see Player
+ * @see Monster
  */
-public class PresetPlayerFactory {
+public class PresetMonsterFactory {
 	public static final String[] CHARACTER_NAMES = {
-		"Kael'thas Sunstrider",
-		"Jaina Proudmoore",
+		"Skeleton",
+		"Zombie",
 		"Thrall",
-		"Garrosh Hellscream",
-		"Uther Lightbringer",
+		"Garold",
+		"Mindflayer",
 	};
 
 	public static String getRandomCharacterName() {
@@ -51,28 +51,23 @@ public class PresetPlayerFactory {
 	}
 
 	/**
-	 * Choose a random character preset and create a player with that preset
-	 * @return Player
-	 * @see Player
+	 * Choose a random character preset and create a monster with that preset
+	 * @return Monster
+	 * @see Monster
 	 */
-	public static Player createPresetPlayer() {
+	public static Monster createPresetMonster() {
 		StatsMap baseStats = new StatsMap(Map.of(
 			Stat.MAX_HEALTH, 20,
-			Stat.ARMOUR_CLASS, 0,
-			Stat.STRENGTH, 0,
-			Stat.DEXTERITY, 0,
-			Stat.CONSTITUTION, 0,
-			Stat.INTELLIGENCE, 0,
-			Stat.WISDOM, 0,
-			Stat.CHARISMA, 0
+			Stat.ARMOUR_CLASS, 12,
+			Stat.STRENGTH, 11,
+			Stat.DEXTERITY, 12,
+			Stat.CONSTITUTION, 11,
+			Stat.INTELLIGENCE, 6,
+			Stat.WISDOM, 6,
+			Stat.CHARISMA, 6
 		));
-		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
-		player.getInventory().addItem(new Dummy());
-		Helmet helmet = new Helmet("Iron Helmet", 1);
-		player.getInventory().addItem(helmet);
-		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
-		player.equipItem(BodyPart.HEAD, helmet);
+		Monster monster = new monster(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
 		player.displayStats()
-		return player;
+		return monster;
 	}
 }
