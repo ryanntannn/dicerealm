@@ -16,7 +16,7 @@ import com.dicerealm.core.item.EquippableItem;
 public abstract class Entity {
 	private UUID id;
 	private String displayName;
-	private String Race;
+	private String race;
 	private String entityClass;
 	private int health;
 	private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();

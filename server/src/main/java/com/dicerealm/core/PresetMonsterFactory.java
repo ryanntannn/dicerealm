@@ -41,8 +41,8 @@ public class PresetMonsterFactory {
 	public static final String[] CHARACTER_CLASS = {
 			"Warrior",
 			"Ranger",
-			"Rogue,
-			"Wizard,
+			"Rogue",
+			"Wizard",
 			"Cleric",
 	};
 
