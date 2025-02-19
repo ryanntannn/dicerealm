@@ -4,6 +4,8 @@ import TextMessageForm from "./TextMessageForm";
 import cn from "./lib/cn";
 import { ReadyState } from "react-use-websocket";
 import { Player, PlayerAction } from "./lib/room-state";
+import { useParams } from "react-router";
+import { z } from "zod";
 
 function Message({
   message,
@@ -243,7 +245,13 @@ function Stats({
   );
 }
 
-function App() {
+const paramsSchema = z.object({
+  roomCode: z.string().min(4).max(4),
+});
+
+type ParamProps = z.infer<typeof paramsSchema>;
+
+function App({ roomCode }: ParamProps) {
   const {
     messages,
     sendTextMessage,
@@ -254,7 +262,7 @@ function App() {
     actions,
     equipItemRequest,
     chooseAction,
-  } = useRoomClient("0000");
+  } = useRoomClient(roomCode);
 
   return (
     <div className="h-screen flex flex-row">
@@ -288,7 +296,10 @@ function App() {
           <h1 className="font-medium text-lg flex flex-row items-center">
             DiceRealm <Chip>BETA</Chip>
           </h1>
-          <ReadStateChip readyState={readyState} />
+          <div>
+            Room Code: {roomCode}
+            <ReadStateChip readyState={readyState} />
+          </div>
         </div>
         <Messages messages={messages} />
         <Actions
@@ -301,4 +312,16 @@ function App() {
   );
 }
 
-export default App;
+function UnsafeApp() {
+  const params = useParams();
+
+  const { data, error } = paramsSchema.safeParse(params);
+
+  if (error) {
+    return <div>Invalid room code</div>;
+  }
+
+  return <App {...data} />;
+}
+
+export default UnsafeApp;
