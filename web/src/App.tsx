@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRoomClient } from "./lib/client";
 import TextMessageForm from "./TextMessageForm";
 import cn from "./lib/cn";
@@ -264,9 +264,20 @@ function App({ roomCode }: ParamProps) {
     chooseAction,
   } = useRoomClient(roomCode);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div className="h-screen flex flex-row">
-      <div className="h-full min-w-[400px]">
+      <div
+        className={cn(
+          "h-full w-screen md:w-[400px] md:min-w-[400px] md:relative flex-col",
+          isSidebarOpen ? "absolute flex bg-white" : "hidden"
+        )}>
+        <button
+          className="absolute right-4 top-4 text-gray-500 font-medium text-xs"
+          onClick={() => setIsSidebarOpen(false)}>
+          Close
+        </button>
         <Players players={players} myId={myId ?? undefined} />
 
         {myPlayer && (
@@ -306,7 +317,14 @@ function App({ roomCode }: ParamProps) {
           actions={actions}
           onAction={(action) => chooseAction(action.action, action.skillCheck)}
         />
-        <TextMessageForm onSend={sendTextMessage} />
+        <div className="flex flex-row gap-2 items-center">
+          <button
+            className="ml-4"
+            onClick={() => setIsSidebarOpen((prev) => !prev)}>
+            ☰
+          </button>
+          <TextMessageForm onSend={sendTextMessage} />
+        </div>
       </div>
     </div>
   );
