@@ -2,6 +2,7 @@ package com.dicerealm.core.skills;
 
 import java.util.UUID;
 import com.dicerealm.core.dice.Dice;
+import com.dicerealm.core.entity.EntityClass;
 
 /**
  * Base class for all skills
@@ -10,10 +11,10 @@ public abstract class Skill {
     private UUID id;
     private String displayName;
     private String description;
-    private String entityClass;
+    private EntityClass entityClass;
     private Dice damageDice;
 
-    public Skill(String name, String description, String entityClass, int diceSides) {
+    public Skill(String name, String description, EntityClass entityClass, int diceSides) {
         this.id = UUID.randomUUID();
         this.displayName = name;
         this.description = description;
@@ -24,7 +25,7 @@ public abstract class Skill {
 
     public String getDescription() { return description; }
 
-    public String getEntityClass(){ return entityClass; }
+    public EntityClass getEntityClass(){ return entityClass; }
 
     public Dice getDamageDice(){ return damageDice; }
 
