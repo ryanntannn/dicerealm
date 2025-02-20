@@ -9,6 +9,7 @@ import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.item.Dummy;
 import com.dicerealm.core.item.Helmet;
+import com.dicerealm.core.item.IronSword;
 
 /**
  * Factory for creating preset players
@@ -59,9 +60,12 @@ public class PresetPlayerFactory {
 		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
 		player.getInventory().addItem(new Dummy());
 		Helmet helmet = new Helmet("Iron Helmet", 1);
+		IronSword ironsword = new IronSword(1);
 		player.getInventory().addItem(helmet);
 		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
+		player.getInventory().addItem(ironsword);
 		player.equipItem(BodyPart.HEAD, helmet);
+		player.equipItem(BodyPart.LEFT_HAND, ironsword);
 		player.displayStats();
 		return player;
 	}
