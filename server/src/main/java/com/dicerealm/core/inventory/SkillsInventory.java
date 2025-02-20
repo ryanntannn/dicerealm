@@ -8,14 +8,14 @@ import com.dicerealm.core.skills.Skill;
 
 public class SkillsInventory {
     private int maxSkills;
-    private List<Skill> skills = new ArrayList<Item>();
+    private List<Skill> skills = new ArrayList<Skill>();
 
     public SkillsInventory() {
         this.maxSkills = 4;
     }
 
-    public Inventory(int inventorySize) {
-        this.inventorySize = inventorySize;
+    public SkillsInventory(int maxSkills) {
+        this.maxSkills = maxSkills;
     }
 
     public boolean addSkill(Skill skill) {

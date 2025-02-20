@@ -41,8 +41,8 @@ public class PresetPlayerFactory {
 	public static final String[] CHARACTER_CLASS = {
 			"Warrior",
 			"Ranger",
-			"Rogue,
-			"Wizard,
+			"Rogue",
+			"Wizard",
 			"Cleric",
 	};
 
@@ -72,7 +72,7 @@ public class PresetPlayerFactory {
 		player.getInventory().addItem(helmet);
 		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
 		player.equipItem(BodyPart.HEAD, helmet);
-		player.displayStats()
+		player.displayStats();
 		return player;
 	}
 }

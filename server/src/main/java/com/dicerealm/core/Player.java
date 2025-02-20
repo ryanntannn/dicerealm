@@ -12,7 +12,7 @@ import com.dicerealm.core.entity.StatsMap;
  */
 public class Player extends Entity {
 	public Player() {
-		super("Player", new StatsMap(Map.of(
+		super("Player", "Race", "Class", new StatsMap(Map.of(
 			Stat.MAX_HEALTH, 20,
 			Stat.ARMOUR_CLASS, 0,
 			Stat.STRENGTH, 0,
@@ -24,7 +24,7 @@ public class Player extends Entity {
 		)));
 	}
 
-	public Player(String name, String race, String entityClass StatsMap baseStats) {
+	public Player(String name, String race, String entityClass, StatsMap baseStats) {
 		super(name, race, entityClass, baseStats);
 	}
 }

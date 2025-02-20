@@ -66,8 +66,8 @@ public class PresetMonsterFactory {
 			Stat.WISDOM, 6,
 			Stat.CHARISMA, 6
 		));
-		Monster monster = new monster(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
-		player.displayStats()
+		Monster monster = new Monster(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
+		monster.displayStats();
 		return monster;
 	}
 }

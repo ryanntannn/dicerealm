@@ -25,7 +25,7 @@ public abstract class Entity {
 
 	private Inventory	inventory = new Inventory();
 
-	public Entity(String displayName, StatsMap baseStats) {
+	public Entity(String displayName, String race, String entityClass, StatsMap baseStats) {
 		this.id = UUID.randomUUID();
 		this.displayName = displayName;
 		this.race = race;
