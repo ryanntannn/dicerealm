@@ -2,11 +2,11 @@ package com.dicerealm.core;
 
 import java.util.Map;
 
-import com.dicerealm.core.entity.BodyPart;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.entity.Stat;
-import com.dicerealm.core.item.Dummy;
-import com.dicerealm.core.item.Helmet;
+
 
 /**
  * Factory for creating preset monsters
@@ -19,34 +19,22 @@ public class PresetMonsterFactory {
 		"Zombie",
 		"Thrall",
 		"Garold",
-		"Mindflayer",
+		"Mind Flayer",
 	};
 
 	public static String getRandomCharacterName() {
 		return CHARACTER_NAMES[(int) (Math.random() * CHARACTER_NAMES.length)];
 	}
 
-	public static final String[] CHARACTER_RACE = {
-			"Human",
-			"Dwarf",
-			"Elf",
-			"Tiefling",
-			"Demon",
-	};
+	public static final Race[] CHARACTER_RACE = Race.values();
 
-	public static String getRandomCharacterRace() {
+	public static Race getRandomCharacterRace() {
 		return CHARACTER_RACE[(int) (Math.random() * CHARACTER_RACE.length)];
 	}
 
-	public static final String[] CHARACTER_CLASS = {
-			"Warrior",
-			"Ranger",
-			"Rogue",
-			"Wizard",
-			"Cleric",
-	};
+	public static final EntityClass[] CHARACTER_CLASS = EntityClass.values();
 
-	public static String getRandomCharacterClass() {
+	public static EntityClass getRandomCharacterClass() {
 		return CHARACTER_CLASS[(int) (Math.random() * CHARACTER_CLASS.length)];
 	}
 

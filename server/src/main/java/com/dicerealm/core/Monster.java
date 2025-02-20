@@ -3,6 +3,8 @@ package com.dicerealm.core;
 import java.util.Map;
 
 import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 
@@ -12,7 +14,7 @@ import com.dicerealm.core.entity.StatsMap;
  */
 public class Monster extends Entity {
 	public Monster() {
-		super("Monster", "Race", "Class", new StatsMap(Map.of(
+		super("Monster", Race.DEMON, EntityClass.WIZARD, new StatsMap(Map.of(
 			Stat.MAX_HEALTH, 20,
 			Stat.ARMOUR_CLASS, 0,
 			Stat.STRENGTH, 0,
@@ -24,7 +26,7 @@ public class Monster extends Entity {
 		)));
 	}
 
-	public Monster(String name, String race, String entityClass, StatsMap baseStats) {
+	public Monster(String name, Race race, EntityClass entityClass, StatsMap baseStats) {
 		super(name, race, entityClass, baseStats);
 	}
 }

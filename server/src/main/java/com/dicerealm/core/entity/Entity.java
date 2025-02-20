@@ -16,16 +16,16 @@ import com.dicerealm.core.item.EquippableItem;
 public abstract class Entity {
 	private UUID id;
 	private String displayName;
-	private String race;
-	private String entityClass;
+	private Race race;
+	private EntityClass entityClass;
 	private int health;
 	private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();
 	private StatsMap baseStats = new StatsMap();
 	private StatsMap stats = new StatsMap();
 
-	private Inventory	inventory = new Inventory();
+	private Inventory inventory = new Inventory();
 
-	public Entity(String displayName, String race, String entityClass, StatsMap baseStats) {
+	public Entity(String displayName, Race race, EntityClass entityClass, StatsMap baseStats) {
 		this.id = UUID.randomUUID();
 		this.displayName = displayName;
 		this.race = race;
@@ -43,11 +43,11 @@ public abstract class Entity {
 		return displayName;
 	}
 
-	public String getRace() {
+	public Race getRace() {
 		return race;
 	}
 
-	public String getEntityClass() {
+	public EntityClass getEntityClass() {
 		return entityClass;
 	}
 
