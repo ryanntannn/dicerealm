@@ -1,11 +1,13 @@
 package com.dicerealm.core.item;
 
+import com.dicerealm.core.inventory.Identifiable;
+
 import java.util.UUID;
 
 /**
  * Base class for all items
  */
-public abstract class Item {
+public abstract class Item implements Identifiable {
 	private UUID id;
 	private String displayName;
 	private String description;
