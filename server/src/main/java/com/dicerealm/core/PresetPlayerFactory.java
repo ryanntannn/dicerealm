@@ -3,6 +3,8 @@ package com.dicerealm.core;
 import java.util.Map;
 
 import com.dicerealm.core.entity.BodyPart;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.item.Dummy;
@@ -26,6 +28,18 @@ public class PresetPlayerFactory {
 		return CHARACTER_NAMES[(int) (Math.random() * CHARACTER_NAMES.length)];
 	}
 
+	public static final Race[] CHARACTER_RACE = Race.values();
+
+	public static Race getRandomCharacterRace() {
+		return CHARACTER_RACE[(int) (Math.random() * CHARACTER_RACE.length)];
+	}
+
+	public static final EntityClass[] CHARACTER_CLASS = EntityClass.values();
+
+	public static EntityClass getRandomCharacterClass() {
+		return CHARACTER_CLASS[(int) (Math.random() * CHARACTER_CLASS.length)];
+	}
+
 	/**
 	 * Choose a random character preset and create a player with that preset
 	 * @return Player
@@ -42,12 +56,13 @@ public class PresetPlayerFactory {
 			Stat.WISDOM, 0,
 			Stat.CHARISMA, 0
 		));
-		Player player = new Player(getRandomCharacterName(), baseStats);
+		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
 		player.getInventory().addItem(new Dummy());
 		Helmet helmet = new Helmet("Iron Helmet", 1);
 		player.getInventory().addItem(helmet);
 		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
 		player.equipItem(BodyPart.HEAD, helmet);
+		player.displayStats();
 		return player;
 	}
 }

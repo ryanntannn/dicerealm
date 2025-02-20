@@ -9,12 +9,12 @@ import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 
 /**
- * Represents a player in the game
+ * Represents a Monster in the game
  * @see Entity
  */
-public class Player extends Entity {
-	public Player() {
-		super("Player", Race.HUMAN, EntityClass.WARRIOR, new StatsMap(Map.of(
+public class Monster extends Entity {
+	public Monster() {
+		super("Monster", Race.DEMON, EntityClass.WIZARD, new StatsMap(Map.of(
 			Stat.MAX_HEALTH, 20,
 			Stat.ARMOUR_CLASS, 0,
 			Stat.STRENGTH, 0,
@@ -26,7 +26,7 @@ public class Player extends Entity {
 		)));
 	}
 
-	public Player(String name, Race race, EntityClass entityClass, StatsMap baseStats) {
+	public Monster(String name, Race race, EntityClass entityClass, StatsMap baseStats) {
 		super(name, race, entityClass, baseStats);
 	}
 }

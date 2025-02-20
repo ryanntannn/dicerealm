@@ -24,4 +24,11 @@ public class Dice {
 			return Math.random();
 		}
 	}
+
+	public int getSides() { return sides; }
+
+	@Override
+	public String toString() { return "d" + sides; }
+
 }
+
