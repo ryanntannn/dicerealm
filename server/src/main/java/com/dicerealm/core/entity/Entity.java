@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.dicerealm.core.inventory.Inventory;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
@@ -14,7 +13,7 @@ import com.dicerealm.core.skills.Skill;
  * Base class for all entities in the game. Entities can be players, monsters, NPCs, etc.
  * 
  * @see EquippableItem - represents an item that can be worn by an entity
- * @see Inventory - represents the inventory of an entity
+ * @see InventoryOf - represents the inventory of an entity
  */
 public abstract class Entity {
 	private UUID id;
@@ -26,7 +25,7 @@ public abstract class Entity {
 	private StatsMap baseStats = new StatsMap();
 	private StatsMap stats = new StatsMap();
 
-	private Inventory<Item> inventory = new Inventory<Item>();
+	private InventoryOf<Item> inventory = new InventoryOf<Item>();
 
 	private InventoryOf<Skill> skillsInventory = new InventoryOf<Skill>(4);
 
@@ -60,7 +59,7 @@ public abstract class Entity {
 		return health;
 	}
 
-	public Inventory<Item> getInventory() {
+	public InventoryOf<Item> getInventory() {
 		return inventory;
 	}
 
