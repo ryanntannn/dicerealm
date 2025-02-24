@@ -9,6 +9,7 @@ import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.item.Dummy;
 import com.dicerealm.core.item.Helmet;
+import com.dicerealm.core.item.IronAxe;
 import com.dicerealm.core.item.IronSword;
 import com.dicerealm.core.skills.Fireball;
 
@@ -62,12 +63,15 @@ public class PresetPlayerFactory {
 		player.getInventory().addItem(new Dummy());
 		Helmet helmet = new Helmet("Iron Helmet", 1);
 		IronSword ironsword = new IronSword(1);
+		IronAxe ironaxe = new IronAxe(1);
 		player.getSkillsInventory().addItem(new Fireball());
 		player.getInventory().addItem(helmet);
 		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
 		player.getInventory().addItem(ironsword);
+		player.getInventory().addItem(ironaxe);
 		player.equipItem(BodyPart.HEAD, helmet);
 		player.equipItem(BodyPart.LEFT_HAND, ironsword);
+		player.equipItem(BodyPart.RIGHT_HAND, ironaxe);
 		player.displayStats();
 		return player;
 	}
