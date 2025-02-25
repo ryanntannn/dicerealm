@@ -3,11 +3,12 @@ package com.dicerealm.core.skills;
 import java.util.UUID;
 import com.dicerealm.core.dice.Dice;
 import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.inventory.Identifiable;
 
 /**
  * Base class for all skills
  */
-public abstract class Skill {
+public abstract class Skill implements Identifiable {
     private UUID id;
     private String displayName;
     private String description;
