@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
 
 export type TextMessageFormProps = {
   onSend: (message: string) => void;
@@ -22,18 +24,15 @@ export default function TextMessageForm({ onSend }: TextMessageFormProps) {
 
   return (
     <form
-      className="w-full flex flex-row gap-2 p-4"
+      className="w-full flex flex-row gap-2"
       onSubmit={form.handleSubmit(onSubmit)}>
-      <input
+      <Input
+        placeholder="Send a message..."
         className="flex-grow border border-gray-300 rounded p-2"
         type="text"
         {...form.register("message")}
       />
-      <button
-        className="bg-gray-100 px-4 rounded border border-gray-300"
-        type="submit">
-        Send
-      </button>
+      <Button type="submit">Send</Button>
     </form>
   );
 }

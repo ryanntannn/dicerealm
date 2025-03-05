@@ -23,6 +23,14 @@ public class RoomState {
 		private List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
 		private LocationGraph locationGraph = MockLocationGraph.makeLocationGraph();
 
+		public RoomState() {
+			// set some placeholder messages
+
+			messages.add(new Message("Welcome to the room!", "Server"));
+			messages.add(new Message("This is a text-based multiplayer game", "Server"));
+			messages.add(new Message("Type /help for a list of commands", "Server"));
+		}
+
 		public Player[] getPlayers() {
 			return playerMap.values().toArray(new Player[playerMap.size()]);
 		}
