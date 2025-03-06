@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class JsonSchemaHelper {
-	public static void makeAllFieldsRequiredRecursively(ObjectNode schemaNode, ObjectMapper mapper) {
+	private static void makeAllFieldsRequiredRecursively(ObjectNode schemaNode, ObjectMapper mapper) {
 		if (schemaNode.has("properties")) {
 				ObjectNode properties = (ObjectNode) schemaNode.get("properties");
 
@@ -40,6 +40,11 @@ public class JsonSchemaHelper {
 			}
 	}
 
+	/**
+	 * Make all fields required in a JSON schema string
+	 * @param jsonSchema - JSON schema string with optional fields
+	 * @return JSON schema string with all fields required
+	 */
 	public static String makeAllFieldsRequired(String jsonSchema) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
