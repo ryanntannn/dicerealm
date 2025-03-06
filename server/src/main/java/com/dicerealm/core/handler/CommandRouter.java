@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.dicerealm.core.RoomContext;
 import com.dicerealm.core.command.Command;
+import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 
 public class CommandRouter {

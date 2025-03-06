@@ -2,9 +2,9 @@ package com.dicerealm.core.handler;
 
 import java.util.UUID;
 
-import com.dicerealm.core.RoomContext;
-import com.dicerealm.core.RoomState;
 import com.dicerealm.core.command.StartGameCommand;
+import com.dicerealm.core.room.RoomContext;
+import com.dicerealm.core.room.RoomState;
 
 public class StartGameHandler extends CommandHandler<StartGameCommand> {
 	PlayerMessageHandler playerMessageHandler = new PlayerMessageHandler();

@@ -1,6 +1,6 @@
 package com.dicerealm.core.command;
 
-import com.dicerealm.core.Message;
+import com.dicerealm.core.message.Message;
 
 public class OutgoingMessageCommand extends Command {
 	public String message;

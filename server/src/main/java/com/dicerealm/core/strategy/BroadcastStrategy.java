@@ -1,7 +1,7 @@
 package com.dicerealm.core.strategy;
 
-import com.dicerealm.core.Player;
 import com.dicerealm.core.command.Command;
+import com.dicerealm.core.player.Player;
 
 public interface BroadcastStrategy {
 		public abstract void sendToAllPlayers(Command command);

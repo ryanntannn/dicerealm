@@ -1,4 +1,4 @@
-package com.dicerealm.core;
+package com.dicerealm.core.player;
 
 import java.util.Map;
 

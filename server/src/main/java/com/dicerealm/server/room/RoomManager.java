@@ -12,9 +12,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.dicerealm.core.Player;
-import com.dicerealm.core.PresetPlayerFactory;
-import com.dicerealm.core.Room;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.player.PresetPlayerFactory;
+import com.dicerealm.core.room.Room;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.server.strategy.GsonSerializer;
 import com.dicerealm.server.strategy.OpenAI;

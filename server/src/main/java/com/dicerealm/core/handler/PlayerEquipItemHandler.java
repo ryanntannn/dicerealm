@@ -2,12 +2,12 @@ package com.dicerealm.core.handler;
 
 import java.util.UUID;
 
-import com.dicerealm.core.Player;
-import com.dicerealm.core.RoomContext;
 import com.dicerealm.core.command.PlayerEquipItemRequest;
 import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomContext;
 
 public class PlayerEquipItemHandler extends CommandHandler<PlayerEquipItemRequest> {
 	public PlayerEquipItemHandler() {

@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.dicerealm.core.Message;
-import com.dicerealm.core.Player;
-import com.dicerealm.core.RoomContext;
 import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.MessageCommand;
 import com.dicerealm.core.command.OutgoingMessageCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.locations.Location;
+import com.dicerealm.core.message.Message;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomContext;
 
 public class PlayerMessageHandler extends CommandHandler<MessageCommand> {
 	public PlayerMessageHandler() {

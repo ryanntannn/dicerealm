@@ -1,4 +1,4 @@
-package com.dicerealm.core;
+package com.dicerealm.core.room;
 
 import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.strategy.BroadcastStrategy;

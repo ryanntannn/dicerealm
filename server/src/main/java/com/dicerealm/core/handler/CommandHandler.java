@@ -4,8 +4,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-import com.dicerealm.core.RoomContext;
 import com.dicerealm.core.command.Command;
+import com.dicerealm.core.room.RoomContext;
 
 public abstract class CommandHandler<C extends Command> {
 	private String type;

@@ -1,4 +1,4 @@
-package com.dicerealm.core;
+package com.dicerealm.core.room;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.dicerealm.core.locations.LocationGraph;
+import com.dicerealm.core.message.Message;
+import com.dicerealm.core.player.Player;
 import com.dicerealm.mock.MockLocationGraph;
 
 /**
@@ -30,7 +32,6 @@ public class RoomState {
 
 		public RoomState() {
 			// set some placeholder messages
-
 			messages.add(new Message("Welcome to the room!", "Server"));
 			messages.add(new Message("This is a text-based multiplayer game", "Server"));
 			messages.add(new Message("Type /help for a list of commands", "Server"));

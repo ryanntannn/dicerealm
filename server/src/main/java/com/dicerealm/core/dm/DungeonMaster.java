@@ -3,9 +3,9 @@ package com.dicerealm.core.dm;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.dicerealm.core.Message;
-import com.dicerealm.core.Player;
-import com.dicerealm.core.RoomState;
+import com.dicerealm.core.message.Message;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
 

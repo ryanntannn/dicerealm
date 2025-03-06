@@ -1,4 +1,4 @@
-package com.dicerealm.core;
+package com.dicerealm.core.message;
 
 import java.util.UUID;
 

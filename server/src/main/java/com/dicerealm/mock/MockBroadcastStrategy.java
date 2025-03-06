@@ -1,7 +1,7 @@
 package com.dicerealm.mock;
 
-import com.dicerealm.core.Player;
 import com.dicerealm.core.command.Command;
+import com.dicerealm.core.player.Player;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 
 public class MockBroadcastStrategy implements BroadcastStrategy {

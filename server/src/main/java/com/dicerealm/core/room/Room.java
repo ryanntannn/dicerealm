@@ -1,4 +1,4 @@
-package com.dicerealm.core;
+package com.dicerealm.core.room;
 
 import java.util.UUID;
 
@@ -12,6 +12,7 @@ import com.dicerealm.core.handler.PlayerActionHandler;
 import com.dicerealm.core.handler.PlayerEquipItemHandler;
 import com.dicerealm.core.handler.PlayerMessageHandler;
 import com.dicerealm.core.handler.StartGameHandler;
+import com.dicerealm.core.player.Player;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;

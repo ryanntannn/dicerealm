@@ -1,6 +1,6 @@
 package com.dicerealm.core.command;
 
-import com.dicerealm.core.Message;
+import com.dicerealm.core.message.Message;
 
 public class MessageHistoryCommand extends Command {
 	public OutgoingMessageCommand[] messages;

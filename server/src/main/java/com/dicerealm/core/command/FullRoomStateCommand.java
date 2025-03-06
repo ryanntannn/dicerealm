@@ -1,6 +1,6 @@
 package com.dicerealm.core.command;
 
-import com.dicerealm.core.RoomState;
+import com.dicerealm.core.room.RoomState;
 
 public class FullRoomStateCommand extends Command {
 	@SuppressWarnings("unused")
