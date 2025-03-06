@@ -6,15 +6,14 @@ import java.util.UUID;
 
 import com.dicerealm.core.RoomContext;
 import com.dicerealm.core.command.Command;
-import com.dicerealm.core.command.CommandDeserializer;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 
 public class CommandRouter {
 	private Map<String, CommandHandler<?>> handlers = new HashMap<>();
-	private CommandDeserializer deserializer;
+	private JsonSerializationStrategy strategy;
 
 	public CommandRouter(JsonSerializationStrategy strategy) {
-		this.deserializer = new CommandDeserializer(strategy);
+		this.strategy = strategy;
 	}
 
 	/**
@@ -24,11 +23,24 @@ public class CommandRouter {
 	public void handlePlayerCommand(UUID playerId, String json, RoomContext context) {
 		try {
 			// Deserialize the command
-			Command command = deserializer.deserialize(json);
+			Command command = strategy.deserialize(json, Command.class);
+
+			String commandType = command.type;
+
+			// Check if the command type is recognized
+			if (!handlers.containsKey(commandType)) {
+				throw new IllegalArgumentException("Command type not recognized: " + commandType);
+			}
 
 			// Get the handler
 			@SuppressWarnings("unchecked")
 			CommandHandler<Command> handler = (CommandHandler<Command>) handlers.get(command.type);
+
+			// Use reflection to find the command class from the handler
+			Class<? extends Command> commandClass = handler.getCommandClass();
+
+			// Deserialize the command into the appropriate command class
+			command = strategy.deserialize(json, commandClass);
 
 			// Handle the command
 			handler.handle(playerId, command, context);
