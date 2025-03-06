@@ -3,8 +3,9 @@ package com.dicerealm.core.command;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.google.gson.JsonSyntaxException;
 
-public class CommandDeserializer extends CommandMap {
+public class CommandDeserializer {
 	private JsonSerializationStrategy jsonSerializationStrategy;
+	private CommandMap commandMap = new CommandMap();
 
 	public CommandDeserializer(JsonSerializationStrategy jsonSerializationStrategy) {
 		this.jsonSerializationStrategy = jsonSerializationStrategy;

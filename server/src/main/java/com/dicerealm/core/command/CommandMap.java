@@ -1,10 +1,7 @@
 package com.dicerealm.core.command;
 
 import java.util.HashMap;
-import java.util.Map;
-
-public class CommandMap {
-	protected Map<String, Class<? extends Command>> commandMap = new HashMap<String, Class<? extends Command>>();
+public class CommandMap extends HashMap<String, Class<? extends Command>> {
 
 	/**
 	 * Register a command type with a command class
@@ -14,10 +11,10 @@ public class CommandMap {
 	 */
 	public void registerCommand(String type, Class<? extends Command> command) throws IllegalArgumentException {
 		// check if type is already registered
-		if (commandMap.containsKey(type)) {
+		if (containsKey(type)) {
 			throw new IllegalArgumentException("Command type already registered: " + type);
 		}
-		commandMap.put(type, command);
+		put(type, command);
 	}
 
 	public CommandMap() {

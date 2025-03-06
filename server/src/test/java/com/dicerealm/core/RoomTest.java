@@ -21,9 +21,10 @@ import com.dicerealm.server.strategy.GsonSerializer;
 
 public class RoomTest {
 
+	JsonSerializationStrategy serializer = new GsonSerializer();
+
 	RoomBuilder makeTestRoom() {
 		BroadcastStrategy broadcaster = new MockBroadcastStrategy();
-		JsonSerializationStrategy serializer = new GsonSerializer();
 		LLMStrategy llm = new MockLLMStrategy(serializer);
 		return Room.builder()
 			.setBroadcastStrategy(broadcaster)
@@ -99,9 +100,9 @@ public class RoomTest {
 		Player player = new Player();
 		room.addPlayer(player);
 
-		room.handlePlayerAction(player.getId(), new PlayerActionCommand("test action", new StatsMap(
+		room.handlePlayerCommand(player.getId(), serializer.serialize(new PlayerActionCommand("test action", new StatsMap(
 			Map.of(Stat.CHARISMA, 10)
-		)));
+		))));
 
 		assert(mockLLM.getLatestPrompt().contains("fail"));
 	}
@@ -116,9 +117,9 @@ public class RoomTest {
 		Player player = new Player();
 		room.addPlayer(player);
 
-		room.handlePlayerAction(player.getId(), new PlayerActionCommand("test action", new StatsMap(
+		room.handlePlayerCommand(player.getId(), serializer.serialize(new PlayerActionCommand("test action", new StatsMap(
 			Map.of(Stat.CHARISMA, 10)
-		)));
+		))));
 
 		assert(mockLLM.getLatestPrompt().contains("success"));
 	}
@@ -136,9 +137,9 @@ public class RoomTest {
 		player.getStats().put(Stat.CHARISMA, Integer.MAX_VALUE);
 		room.addPlayer(player);
 
-		room.handlePlayerAction(player.getId(), new PlayerActionCommand("test action", new StatsMap(
+		room.handlePlayerCommand(player.getId(), serializer.serialize(new PlayerActionCommand("test action", new StatsMap(
 			Map.of(Stat.CHARISMA, -Integer.MAX_VALUE)
-		)));
+		))));
 
 		assert(mockLLM.getLatestPrompt().contains("fail"));
 	}
@@ -156,9 +157,9 @@ public class RoomTest {
 		player.getStats().put(Stat.CHARISMA, -100);
 		room.addPlayer(player);
 
-		room.handlePlayerAction(player.getId(), new PlayerActionCommand("test action", new StatsMap(
+		room.handlePlayerCommand(player.getId(), serializer.serialize(new PlayerActionCommand("test action", new StatsMap(
 			Map.of(Stat.CHARISMA, Integer.MAX_VALUE)
-		)));
+		))));
 
 		assert(mockLLM.getLatestPrompt().contains("success"));
 	}

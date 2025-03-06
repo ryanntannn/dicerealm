@@ -1,5 +1,6 @@
 package com.dicerealm.core;
 
+import com.dicerealm.core.handler.CommandRouter;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
@@ -17,6 +18,7 @@ public class RoomBuilder {
 	private BroadcastStrategy broadcastStrategy;
 	private LLMStrategy llmStrategy;
 	private JsonSerializationStrategy jsonSerializationStrategy;
+	private CommandRouter commandRouter;
 	private RandomStrategy randomStrategy = new RandomStrategy() {
 		@Override
 		public double random() {
@@ -57,6 +59,7 @@ public class RoomBuilder {
 	 */
 	public RoomBuilder setJsonSerializationStrategy(JsonSerializationStrategy jsonSerializationStrategy) {
 		this.jsonSerializationStrategy = jsonSerializationStrategy;
+		this.commandRouter = new CommandRouter(jsonSerializationStrategy);
 		return this;
 	}
 
@@ -78,6 +81,6 @@ public class RoomBuilder {
 	 * @see Room
 	 */
 	public Room build() {
-		return new Room(broadcastStrategy, llmStrategy, jsonSerializationStrategy, randomStrategy);
+		return new Room(broadcastStrategy, llmStrategy, jsonSerializationStrategy, randomStrategy, commandRouter);
 	}
 }
