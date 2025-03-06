@@ -11,6 +11,7 @@ import RoomClientProvider, {
 } from "@/components/room-client-provider";
 import { Stats } from "./components/stats";
 import { SidebarTrigger } from "./components/ui/sidebar";
+import Lobby from "./lobby";
 
 function Message({
   message,
@@ -151,12 +152,16 @@ function Chat({ roomCode }: { roomCode: string }) {
 type ParamProps = z.infer<typeof paramsSchema>;
 
 function App({ roomCode }: ParamProps) {
+  const { state } = useRoomClientContext();
+
+  if (state === "LOBBY") {
+    return <Lobby roomCode={roomCode} />;
+  }
+
   return (
-    <RoomClientProvider roomId={roomCode}>
-      <Layout>
-        <Chat roomCode={roomCode} />
-      </Layout>
-    </RoomClientProvider>
+    <Layout>
+      <Chat roomCode={roomCode} />
+    </Layout>
   );
 }
 
@@ -169,7 +174,11 @@ function UnsafeApp() {
     return <div>Invalid room code</div>;
   }
 
-  return <App {...data} />;
+  return (
+    <RoomClientProvider roomId={data?.roomCode}>
+      <App {...data} />
+    </RoomClientProvider>
+  );
 }
 
 export default UnsafeApp;

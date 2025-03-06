@@ -20,6 +20,8 @@ export const statSchema = z.enum([
   "CHARISMA",
 ]);
 
+export const roomStateStateSchema = z.enum(["LOBBY", "DIALOGUE", "COMBAT"]);
+
 export const playerActionSchema = z.object({
   action: z.string(),
   skillCheck: z.record(z.number()),
@@ -49,6 +51,7 @@ export const playerSchema = z.object({
 });
 
 export const roomStateSchema = z.object({
+  state: roomStateStateSchema,
   playerMap: z.record(playerSchema),
   messages: z.array(
     z.object({
@@ -62,3 +65,4 @@ export const roomStateSchema = z.object({
 export type RoomState = z.infer<typeof roomStateSchema>;
 export type Player = z.infer<typeof playerSchema>;
 export type PlayerAction = z.infer<typeof playerActionSchema>;
+export type RoomStateState = z.infer<typeof roomStateStateSchema>;

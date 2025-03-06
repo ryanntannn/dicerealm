@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import com.dicerealm.core.command.PlayerActionCommand;
+import com.dicerealm.core.command.StartGameCommand;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.strategy.BroadcastStrategy;
@@ -162,6 +163,20 @@ public class RoomTest {
 		))));
 
 		assert(mockLLM.getLatestPrompt().contains("success"));
+	}
+
+	@Test 
+	void testStartGame() {
+		MockLLMStrategy mockLLM = new MockLLMStrategy(new GsonSerializer());
+		Room room = makeTestRoom().setLLMStrategy(mockLLM).build();
+
+		Player player = new Player();
+
+		room.addPlayer(player);
+
+		room.handlePlayerCommand(player.getId(), serializer.serialize(new StartGameCommand()));
+
+		assert(mockLLM.getLatestPrompt().contains("start"));
 	}
 	
 }

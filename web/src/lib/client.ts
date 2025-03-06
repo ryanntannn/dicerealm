@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { commandSchema } from "./command";
-import { Player, PlayerAction } from "./room-state";
+import { Player, PlayerAction, RoomStateState } from "./room-state";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL as string;
 
@@ -30,6 +30,7 @@ export function useRoomClient(
   const { sendJsonMessage, lastMessage, lastJsonMessage, readyState } =
     useWebSocket(wsUrl);
 
+  const [state, setState] = useState<RoomStateState | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [players, setPlayers] = useState<Record<string, Player>>({});
   const [myId, setMyId] = useState<string | null>(null);
@@ -57,6 +58,12 @@ export function useRoomClient(
       type: "PLAYER_ACTION",
       action,
       skillCheck,
+    });
+  };
+
+  const startGame = () => {
+    sendJsonMessage({
+      type: "START_GAME",
     });
   };
 
@@ -121,6 +128,7 @@ export function useRoomClient(
       case "FULL_ROOM_STATE":
         setMessages(command.state.messages);
         setPlayers(command.state.playerMap);
+        setState(command.state.state);
         setMyId(command.myId);
         break;
       case "SHOW_PLAYER_ACTIONS":
@@ -169,6 +177,9 @@ export function useRoomClient(
           },
         ]);
         break;
+      case "START_GAME":
+        setState("DIALOGUE");
+        break;
       default:
         console.warn("Unhandled command type", command);
     }
@@ -186,5 +197,7 @@ export function useRoomClient(
     actions,
     equipItemRequest,
     chooseAction,
+    state,
+    startGame,
   };
 }

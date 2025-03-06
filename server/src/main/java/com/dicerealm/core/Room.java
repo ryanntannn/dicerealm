@@ -12,6 +12,7 @@ import com.dicerealm.core.handler.CommandRouter;
 import com.dicerealm.core.handler.PlayerActionHandler;
 import com.dicerealm.core.handler.PlayerEquipItemHandler;
 import com.dicerealm.core.handler.PlayerMessageHandler;
+import com.dicerealm.core.handler.StartGameHandler;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
@@ -63,6 +64,7 @@ public class Room {
 		commandRouter.registerHandler(new PlayerMessageHandler());
 		commandRouter.registerHandler(new PlayerActionHandler());
 		commandRouter.registerHandler(new PlayerEquipItemHandler());
+		commandRouter.registerHandler(new StartGameHandler());
 	}
 
 	/**

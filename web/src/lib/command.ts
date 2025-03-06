@@ -61,6 +61,10 @@ export const changeLocationCommandSchema = z.object({
   }),
 });
 
+export const startGameCommandSchema = z.object({
+  type: z.literal("START_GAME"),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
@@ -70,4 +74,5 @@ export const commandSchema = z.discriminatedUnion("type", [
   showPlayerActionsCommandSchema,
   playerEquipItemResponseSchema,
   changeLocationCommandSchema,
+  startGameCommandSchema,
 ]);

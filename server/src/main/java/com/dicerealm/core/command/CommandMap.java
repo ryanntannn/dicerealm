@@ -22,5 +22,6 @@ public class CommandMap extends HashMap<String, Class<? extends Command>> {
 		registerCommand("MESSAGE", MessageCommand.class);
 		registerCommand("PLAYER_EQUIP_ITEM_REQUEST", PlayerEquipItemRequest.class);
 		registerCommand("PLAYER_ACTION", PlayerActionCommand.class);
+		registerCommand("START_GAME", StartGameCommand.class);
 	}
 }

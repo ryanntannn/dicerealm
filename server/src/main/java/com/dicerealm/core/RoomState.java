@@ -19,6 +19,11 @@ import com.dicerealm.mock.MockLocationGraph;
  * @see LocationGraph - represents the locations in the room
  */
 public class RoomState {
+		public enum State {
+			LOBBY, DIALOGUE, BATTLE
+		}
+
+		private State state = State.LOBBY;
 		private Map<UUID, Player> playerMap = new HashMap<UUID, Player>();
 		private List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
 		private LocationGraph locationGraph = MockLocationGraph.makeLocationGraph();
@@ -45,5 +50,13 @@ public class RoomState {
 
 		public LocationGraph getLocationGraph() {
 			return locationGraph;
+		}
+
+		public State getState() {
+			return state;
+		}
+
+		public void setState(State state) {
+			this.state = state;
 		}
 }
