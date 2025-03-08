@@ -2,6 +2,7 @@ package com.dicerealm.core.room;
 
 import java.util.UUID;
 
+import com.dicerealm.core.combat.CombatManager;
 import com.dicerealm.core.command.Command;
 import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.PlayerJoinCommand;
@@ -38,6 +39,7 @@ public class Room {
 	private DungeonMaster dungeonMaster;
 	private CommandRouter commandRouter;
 	private RandomStrategy randomStrategy;
+	private CombatManager combatManager;
 
 	/**
 	 * Create a new RoomBuilder for creating a Room
@@ -61,6 +63,7 @@ public class Room {
 		this.dungeonMaster = new DungeonMaster(llmStrategy, jsonSerializationStrategy, roomState);
 		this.commandRouter = commandRouter;
 		this.randomStrategy = randomStrategy;
+		this.combatManager = new CombatManager();
 
 		commandRouter.registerHandler(new PlayerMessageHandler());
 		commandRouter.registerHandler(new PlayerActionHandler());
@@ -113,6 +116,6 @@ public class Room {
 	 * @param json
 	 */
 	public void handlePlayerCommand(UUID playerId, String json) {
-		commandRouter.handlePlayerCommand(playerId, json, new RoomContext(roomState, dungeonMaster, broadcastStrategy, randomStrategy));
+		commandRouter.handlePlayerCommand(playerId, json, new RoomContext(roomState, dungeonMaster, broadcastStrategy, randomStrategy, combatManager));
 	}
 }
