@@ -67,6 +67,13 @@ export function useRoomClient(
     });
   };
 
+  const setPlayerDetails = (player: Player) => {
+    sendJsonMessage({
+      type: "UPDATE_PLAYER_DETAILS_REQUEST",
+      ...player,
+    });
+  };
+
   useEffect(() => {
     if (!lastMessage) return;
     console.log(lastMessage);
@@ -180,6 +187,18 @@ export function useRoomClient(
       case "START_GAME":
         setState("DIALOGUE");
         break;
+      case "UPDATE_PLAYER_DETAILS":
+        setPlayers((players) => {
+          const newPlayers = { ...players };
+          const player = newPlayers[command.player.id];
+          if (!player) {
+            console.error("Player not found", command.player.id, newPlayers);
+            return newPlayers;
+          }
+          newPlayers[command.player.id] = command.player;
+          return newPlayers;
+        });
+        break;
       default:
         console.warn("Unhandled command type", command);
     }
@@ -199,5 +218,6 @@ export function useRoomClient(
     chooseAction,
     state,
     startGame,
+    setPlayerDetails,
   };
 }

@@ -123,4 +123,8 @@ public abstract class Entity {
 	public StatsMap getStats() {
 		return stats;
 	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
 }

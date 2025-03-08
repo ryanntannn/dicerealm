@@ -20,6 +20,22 @@ export const statSchema = z.enum([
   "CHARISMA",
 ]);
 
+export const raceSchema = z.enum([
+  "HUMAN",
+  "ELF",
+  "DEMON",
+  "DWARF",
+  "TIEFLING",
+]);
+
+export const entityClassSchema = z.enum([
+  "WARRIOR",
+  "WIZARD",
+  "CLERIC",
+  "ROGUE",
+  "RANGER",
+]);
+
 export const roomStateStateSchema = z.enum(["LOBBY", "DIALOGUE", "COMBAT"]);
 
 export const playerActionSchema = z.object({
@@ -48,6 +64,8 @@ export const playerSchema = z.object({
   inventory: inventorySchema,
   baseStats: z.record(z.number()),
   stats: z.record(z.number()),
+  race: raceSchema,
+  entityClass: entityClassSchema,
 });
 
 export const roomStateSchema = z.object({

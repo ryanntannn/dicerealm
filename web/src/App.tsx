@@ -154,15 +154,15 @@ type ParamProps = z.infer<typeof paramsSchema>;
 function App({ roomCode }: ParamProps) {
   const { state } = useRoomClientContext();
 
-  if (state === "LOBBY") {
-    return <Lobby roomCode={roomCode} />;
+  if (state === "DIALOGUE") {
+    return (
+      <Layout>
+        <Chat roomCode={roomCode} />
+      </Layout>
+    );
   }
 
-  return (
-    <Layout>
-      <Chat roomCode={roomCode} />
-    </Layout>
-  );
+  return <Lobby roomCode={roomCode} />;
 }
 
 function UnsafeApp() {

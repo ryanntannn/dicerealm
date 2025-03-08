@@ -7,9 +7,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useRoomClientContext } from "./components/room-client-provider";
 import { useMemo } from "react";
 import QRCode from "react-qr-code";
+import CustomizeCharacterForm from "./customize-character-form";
 
 export default function Lobby({ roomCode }: { roomCode: string }) {
-  const { players, myId, startGame } = useRoomClientContext();
+  const { players, myPlayer, myId, startGame, setPlayerDetails } =
+    useRoomClientContext();
 
   const url = window.location.href;
 
@@ -20,7 +22,7 @@ export default function Lobby({ roomCode }: { roomCode: string }) {
   return (
     <main className="flex-1 container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold">Game Lobby ({roomCode})</h1>
             <p className="text-muted-foreground">
@@ -35,8 +37,8 @@ export default function Lobby({ roomCode }: { roomCode: string }) {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-4">
-          <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <Card className="lg:col-span-2">
             <CardHeader className="pb-3">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">
@@ -50,13 +52,13 @@ export default function Lobby({ roomCode }: { roomCode: string }) {
               <Separator />
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {localPlayers.map((player) => (
                   <div
                     key={player.id}
                     className={`flex items-center gap-4 p-3 rounded-lg border ${
                       player.id === myId
-                        ? "border-primary/50 bg-primary/5"
+                        ? "border-blue-500/50 bg-blue-500/5"
                         : "border-border"
                     }`}>
                     <Avatar className="h-12 w-12 border">
@@ -76,14 +78,17 @@ export default function Lobby({ roomCode }: { roomCode: string }) {
                           </Badge>
                         )}
                       </div>
+                      <div className="text-xs font-medium text-muted-foreground">
+                        {player.race}, {player.entityClass}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
-          <Card className="flex flex- row items-center p-4">
-            <QRCode value={url} />
+          <Card className="p-4 col-span-1 ">
+            <QRCode value={url} className="m-auto" />
             <div className="flex flex-col items-center text-muted-foreground">
               <p>Scan this QR code to join the lobby</p>
               <p className="text-sm">or</p>
@@ -95,6 +100,14 @@ export default function Lobby({ roomCode }: { roomCode: string }) {
               </code>
             </div>
           </Card>
+          {myPlayer && (
+            <Card className="lg:col-span-3 p-4">
+              <CustomizeCharacterForm
+                player={myPlayer}
+                onSubmit={setPlayerDetails}
+              />
+            </Card>
+          )}
         </div>
       </div>
     </main>

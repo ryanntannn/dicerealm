@@ -1,8 +1,10 @@
 import { z } from "zod";
 import {
+  entityClassSchema,
   itemSchema,
   playerActionSchema,
   playerSchema,
+  raceSchema,
   roomStateSchema,
 } from "./room-state";
 
@@ -65,6 +67,19 @@ export const startGameCommandSchema = z.object({
   type: z.literal("START_GAME"),
 });
 
+export const setPlayerDetailsCommandSchema = z.object({
+  type: z.literal("UPDATE_PLAYER_DETAILS_REQUEST"),
+  displayName: z.string(),
+  race: raceSchema,
+  entityClass: entityClassSchema,
+  baseStats: z.record(z.number()),
+});
+
+export const updatePlayerDetailsCommandSchema = z.object({
+  type: z.literal("UPDATE_PLAYER_DETAILS"),
+  player: playerSchema,
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
@@ -75,4 +90,6 @@ export const commandSchema = z.discriminatedUnion("type", [
   playerEquipItemResponseSchema,
   changeLocationCommandSchema,
   startGameCommandSchema,
+  setPlayerDetailsCommandSchema,
+  updatePlayerDetailsCommandSchema,
 ]);
