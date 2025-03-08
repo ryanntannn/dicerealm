@@ -22,8 +22,8 @@ public abstract class Entity {
 	private EntityClass entityClass;
 	private int health;
 	private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();
-	private StatsMap baseStats = new StatsMap();
-	private StatsMap stats = new StatsMap();
+	private StatsMap baseStats;
+	private StatsMap stats;
 
 	private InventoryOf<Item> inventory = new InventoryOf<Item>();
 
@@ -34,9 +34,15 @@ public abstract class Entity {
 		this.displayName = displayName;
 		this.race = race;
 		this.entityClass = entityClass;
-		this.baseStats = baseStats;
+
+		//Get base stats from ClassStats class
+		this.baseStats = ClassStats.getStatsForClass(entityClass);
 		this.health = baseStats.get(Stat.MAX_HEALTH);
+
+		// Initialize the stats map by copying baseStats initially
+		this.stats = new StatsMap(baseStats);
 		updateStats();
+		updateMaxHealth();
 	}
 
 	public UUID getId() {
@@ -71,6 +77,8 @@ public abstract class Entity {
 		return health > 0;
 	}
 
+
+
 	public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
 		// Check if item is in inventory
 		if (!inventory.containsItem(item)) {
@@ -94,6 +102,11 @@ public abstract class Entity {
 
 		return true;
 	}
+
+	public void updateMaxHealth() {
+		this.health = stats.get(Stat.MAX_HEALTH);
+	}
+
 
 	public void updateStats() {
 		stats.clear();
