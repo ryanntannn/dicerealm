@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { commandSchema } from "./command";
-import { Player, PlayerAction, RoomStateState } from "./room-state";
+import {
+  DialogueTurn,
+  Player,
+  PlayerAction,
+  RoomStateState,
+} from "./room-state";
+import { toast } from "sonner";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL as string;
 
@@ -35,6 +41,7 @@ export function useRoomClient(
   const [players, setPlayers] = useState<Record<string, Player>>({});
   const [myId, setMyId] = useState<string | null>(null);
   const [actions, setActions] = useState<PlayerAction[]>([]);
+  const [dialogueTurns, setDialogueTurns] = useState<DialogueTurn[]>([]);
 
   const myPlayer = useMemo(() => {
     if (!myId) return null;
@@ -42,7 +49,13 @@ export function useRoomClient(
   }, [myId, players]);
 
   const sendTextMessage = (message: string) => {
-    sendJsonMessage({ type: "MESSAGE", message });
+    sendJsonMessage({
+      type: "DIALOGUE_TURN_ACTION",
+      action: `Custom Action: ${message}`,
+      skillCheck: {},
+      playerId: myId,
+      turnNumber: dialogueTurns[dialogueTurns.length - 1].turnNumber,
+    });
   };
 
   const equipItemRequest = (itemId: string, bodyPart: string) => {
@@ -55,9 +68,11 @@ export function useRoomClient(
 
   const chooseAction = (action: string, skillCheck: Record<string, number>) => {
     sendJsonMessage({
-      type: "PLAYER_ACTION",
+      type: "DIALOGUE_TURN_ACTION",
       action,
       skillCheck,
+      playerId: myId,
+      turnNumber: dialogueTurns[dialogueTurns.length - 1].turnNumber,
     });
   };
 
@@ -102,30 +117,13 @@ export function useRoomClient(
         setMessages((messages) => [...messages, command]);
         break;
       case "PLAYER_JOIN":
-        setMessages((messages) => [
-          ...messages,
-          {
-            message: `Player joined: ${command.player.displayName}`,
-            senderName: "System",
-            messageId: crypto.randomUUID(),
-          },
-        ]);
-
+        toast(`${command.player.displayName} joined the room`);
         setPlayers((players) => ({
           ...players,
           [command.player.id]: command.player,
         }));
         break;
       case "PLAYER_LEAVE":
-        setMessages((messages) => [
-          ...messages,
-          {
-            message: "Player left",
-            senderName: "System",
-            messageId: crypto.randomUUID(),
-          },
-        ]);
-
         setPlayers((players) => {
           const newPlayers = { ...players };
           delete newPlayers[command.playerId];
@@ -137,6 +135,7 @@ export function useRoomClient(
         setPlayers(command.state.playerMap);
         setState(command.state.state);
         setMyId(command.myId);
+        setDialogueTurns(command.state.dialogueTurns);
         break;
       case "SHOW_PLAYER_ACTIONS":
         setActions(command.actions);
@@ -165,28 +164,38 @@ export function useRoomClient(
 
           return newPlayers;
         });
-        setMessages((messages) => [
-          ...messages,
-          {
-            message: `Player equipped item ${command.item.displayName} to ${command.bodyPart}`,
-            senderName: "System",
-            messageId: crypto.randomUUID(),
-          },
-        ]);
         break;
       case "CHANGE_LOCATION":
-        setMessages((messages) => [
-          ...messages,
-          {
-            message: `Party moved to ${command.location.displayName}`,
-            senderName: "System",
-            messageId: crypto.randomUUID(),
-          },
-        ]);
+        toast("Location changed");
         break;
       case "START_GAME":
-        setState("DIALOGUE");
+        setState("DIALOGUE_PROCESSING");
+        toast("Game started");
         break;
+      case "DIALOGUE_START_TURN":
+        setState("DIALOGUE_TURN");
+        setDialogueTurns((turns) => [...turns, command.dialogueTurn]);
+        break;
+      case "DIALOGUE_END_TURN":
+        setState("DIALOGUE_PROCESSING");
+        setActions([]);
+        break;
+      case "DIALOGUE_TURN_ACTION":
+        setDialogueTurns((turns) => {
+          const newTurns = [...turns];
+          const turn = newTurns[command.turnNumber];
+          if (!turn) {
+            console.error("Turn not found", command.turnNumber);
+            return newTurns;
+          }
+          turn.actions[command.playerId] = {
+            action: command.action,
+            skillCheck: command.skillCheck,
+          };
+          return newTurns;
+        });
+        break;
+
       case "UPDATE_PLAYER_DETAILS":
         setPlayers((players) => {
           const newPlayers = { ...players };
@@ -219,5 +228,6 @@ export function useRoomClient(
     state,
     startGame,
     setPlayerDetails,
+    dialogueTurns,
   };
 }

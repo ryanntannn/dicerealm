@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  dialogueTurnSchema,
   entityClassSchema,
   itemSchema,
   playerActionSchema,
@@ -80,6 +81,24 @@ export const updatePlayerDetailsCommandSchema = z.object({
   player: playerSchema,
 });
 
+export const dialogueStartTurnCommandSchema = z.object({
+  type: z.literal("DIALOGUE_START_TURN"),
+  dialogueTurn: dialogueTurnSchema,
+});
+
+export const dialogueEndTurnCommandSchema = z.object({
+  type: z.literal("DIALOGUE_END_TURN"),
+  turnNumber: z.number().int(),
+});
+
+export const dialogueTurnActionCommandSchema = z.object({
+  type: z.literal("DIALOGUE_TURN_ACTION"),
+  turnNumber: z.number().int(),
+  playerId: z.string(),
+  action: z.string(),
+  skillCheck: z.record(z.number()),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
@@ -92,4 +111,7 @@ export const commandSchema = z.discriminatedUnion("type", [
   startGameCommandSchema,
   setPlayerDetailsCommandSchema,
   updatePlayerDetailsCommandSchema,
+  dialogueStartTurnCommandSchema,
+  dialogueEndTurnCommandSchema,
+  dialogueTurnActionCommandSchema,
 ]);

@@ -11,6 +11,7 @@ public class DungeonMasterResponse{
 		public String displayText;
 		public PlayerAction[] actionChoices;
 		public String locationId;
+		public String contextSummary;
 
 		public class PlayerAction{
 			public String action;

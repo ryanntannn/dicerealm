@@ -36,7 +36,12 @@ export const entityClassSchema = z.enum([
   "RANGER",
 ]);
 
-export const roomStateStateSchema = z.enum(["LOBBY", "DIALOGUE", "COMBAT"]);
+export const roomStateStateSchema = z.enum([
+  "LOBBY",
+  "DIALOGUE_TURN",
+  "DIALOGUE_PROCESSING",
+  "COMBAT",
+]);
 
 export const playerActionSchema = z.object({
   action: z.string(),
@@ -68,6 +73,19 @@ export const playerSchema = z.object({
   entityClass: entityClassSchema,
 });
 
+export const dialogueTurnActionSchema = z.object({
+  action: z.string(),
+  skillCheck: z.record(z.number()),
+});
+
+export const dialogueTurnSchema = z.object({
+  turnNumber: z.number(),
+  actions: z.record(dialogueTurnActionSchema),
+  startTime: z.number(),
+  endTime: z.number(),
+  dungeonMasterText: z.string(),
+});
+
 export const roomStateSchema = z.object({
   state: roomStateStateSchema,
   playerMap: z.record(playerSchema),
@@ -78,9 +96,12 @@ export const roomStateSchema = z.object({
       senderName: z.string(),
     })
   ),
+  dialogueTurns: z.array(dialogueTurnSchema),
 });
 
 export type RoomState = z.infer<typeof roomStateSchema>;
 export type Player = z.infer<typeof playerSchema>;
 export type PlayerAction = z.infer<typeof playerActionSchema>;
 export type RoomStateState = z.infer<typeof roomStateStateSchema>;
+export type DialogueTurnAction = z.infer<typeof dialogueTurnActionSchema>;
+export type DialogueTurn = z.infer<typeof dialogueTurnSchema>;
