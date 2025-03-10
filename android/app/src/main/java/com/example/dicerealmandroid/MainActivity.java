@@ -13,9 +13,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import dev.gustavoavila.websocketclient.WebSocketClient;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
-
+    private Gson gson = new Gson();
     private WebSocketClient webSocketClient;
 
     private void createWebSocketClient() {
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             // replace this with your dev device's IP address (not localhost, as localhost will point to the emulator)
             uri = new URI("wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/test");
+            // uri = new URI("ws://192.168.18.69:8080/room/test");
         }
         catch (URISyntaxException e) {
             e.printStackTrace();
@@ -33,12 +35,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onOpen() {
                 System.out.println("onOpen");
-                webSocketClient.send("Hello, World!");
             }
 
             @Override
             public void onTextReceived(String message) {
                 System.out.println("onTextReceived: " + message);
+                Command command = gson.fromJson(message, Command.class);
+                System.out.println("Command is of type: " + command.getType());
             }
 
             @Override
