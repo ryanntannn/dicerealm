@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "./Home.tsx";
+import { Toaster } from "sonner";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -13,5 +14,6 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/room/:roomCode" element={<App />} />
       </Routes>
     </BrowserRouter>
+    <Toaster />
   </StrictMode>
 );

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.dicerealm.core.dialogue.DialogueTurn;
 import com.dicerealm.core.locations.LocationGraph;
 import com.dicerealm.core.message.Message;
 import com.dicerealm.core.player.Player;
@@ -22,13 +23,14 @@ import com.dicerealm.mock.MockLocationGraph;
  */
 public class RoomState {
 		public enum State {
-			LOBBY, DIALOGUE, BATTLE
+			LOBBY, DIALOGUE_TURN, DIALOGUE_PROCESSING, BATTLE
 		}
 
 		private State state = State.LOBBY;
 		private Map<UUID, Player> playerMap = new HashMap<UUID, Player>();
 		private List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
 		private LocationGraph locationGraph = MockLocationGraph.makeLocationGraph();
+		private List<DialogueTurn> dialogueTurns = new ArrayList<DialogueTurn>();
 
 		public RoomState() {
 			// set some placeholder messages
@@ -59,5 +61,22 @@ public class RoomState {
 
 		public void setState(State state) {
 			this.state = state;
+		}
+
+		public DialogueTurn getCurrentDialogueTurn() {
+			if (dialogueTurns.size() == 0) {
+				return null;
+			}
+			return dialogueTurns.get(dialogueTurns.size() - 1);
+		}
+
+		public int getCurrentDialogueTurnNumber() {
+			return dialogueTurns.size() - 1;
+		}
+
+		public DialogueTurn addDialogueTurn(String dungeonMasterText) {
+			DialogueTurn dialogueTurn = new DialogueTurn(dialogueTurns.size(), dungeonMasterText);
+			dialogueTurns.add(dialogueTurn);
+			return dialogueTurn;
 		}
 }

@@ -43,7 +43,7 @@ public class UpdatePlayerDetailsHandlerTest {
 
 		assert(updatedPlayer.getDisplayName().equals("Test"));
 
-		roomState.setState(RoomState.State.DIALOGUE);
+		roomState.setState(RoomState.State.DIALOGUE_TURN);
 
 		assertThrows(RuntimeException.class, () -> {
 			updatePlayerDetailsHandler.handle(playerId, updatePlayerDetailsRequestCommand, new RoomContext(roomState, null, broadcastStrategy, null, null));

@@ -1,7 +1,6 @@
 package com.dicerealm.core.room;
 
 import java.util.UUID;
-
 import com.dicerealm.core.combat.CombatManager;
 import com.dicerealm.core.command.Command;
 import com.dicerealm.core.command.FullRoomStateCommand;
@@ -9,9 +8,8 @@ import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.handler.CommandRouter;
-import com.dicerealm.core.handler.PlayerActionHandler;
+import com.dicerealm.core.handler.DialogueTurnActionHandler;
 import com.dicerealm.core.handler.PlayerEquipItemHandler;
-import com.dicerealm.core.handler.PlayerMessageHandler;
 import com.dicerealm.core.handler.UpdatePlayerDetailsHandler;
 import com.dicerealm.core.handler.StartGameHandler;
 import com.dicerealm.core.player.Player;
@@ -65,11 +63,10 @@ public class Room {
 		this.randomStrategy = randomStrategy;
 		this.combatManager = new CombatManager();
 
-		commandRouter.registerHandler(new PlayerMessageHandler());
-		commandRouter.registerHandler(new PlayerActionHandler());
-		commandRouter.registerHandler(new PlayerEquipItemHandler());
 		commandRouter.registerHandler(new StartGameHandler());
+		commandRouter.registerHandler(new PlayerEquipItemHandler());
 		commandRouter.registerHandler(new UpdatePlayerDetailsHandler());
+		commandRouter.registerHandler(new DialogueTurnActionHandler());
 	}
 
 	/**
