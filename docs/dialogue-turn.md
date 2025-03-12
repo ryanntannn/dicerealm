@@ -13,7 +13,6 @@ The following sequence diagram illustrates the flow of interactions between the 
 sequenceDiagram
 		participant Player
 		participant Room
-		participant GameWorld
 
 		Room->>Player: Send START_TURN command
 		Player->>Room: Player 1 sends PLAYER_ACTION command
