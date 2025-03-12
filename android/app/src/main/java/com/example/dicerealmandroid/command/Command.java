@@ -1,4 +1,4 @@
-package com.example.dicerealmandroid;
+package com.example.dicerealmandroid.command;
 
 public class Command {
     private final String type;
