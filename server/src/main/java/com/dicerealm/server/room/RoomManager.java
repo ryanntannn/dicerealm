@@ -16,6 +16,7 @@ import com.dicerealm.core.player.Player;
 import com.dicerealm.core.player.PresetPlayerFactory;
 import com.dicerealm.core.room.Room;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
+import com.dicerealm.mock.MockLLMStrategy;
 import com.dicerealm.server.strategy.GsonSerializer;
 import com.dicerealm.server.strategy.OpenAI;
 import com.dicerealm.server.strategy.WebsocketBroadcaster;
@@ -30,8 +31,8 @@ public class RoomManager {
 	private Map<String, UUID> sessionIdToPlayerIdMap = Collections.synchronizedMap(new HashMap<String, UUID>());
 	
 	// We use the OpenAI LLMStrategy and the WebsocketBroadcaster BroadcastStrategy for this room
-	// private MockLLMStrategy llm = new MockLLMStrategy("{\"displayText\": \"mock response\", \"actionChoices\":[]}");
 	private JsonSerializationStrategy serializer = new GsonSerializer();
+	// private MockLLMStrategy llm = new MockLLMStrategy(serializer);
 	private OpenAI llm = new OpenAI(serializer);
 	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions, serializer);
 
@@ -40,6 +41,10 @@ public class RoomManager {
 		.setLLMStrategy(llm)
 		.setJsonSerializationStrategy(serializer)
 		.build();
+
+	// public RoomManager() {
+	// 	llm.setResponse("{\"displayText\": \"This is a mock response\", \"actionChoices\":[]}");
+	// }
 
 	
 	public void onJoin(WebSocketSession session) {

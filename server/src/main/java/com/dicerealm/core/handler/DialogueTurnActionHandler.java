@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.dialogue.DialogueTurnAction;
+import com.dicerealm.core.dialogue.DialogueTurnHandler;
 import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.room.RoomState;
 
@@ -34,5 +35,11 @@ public class DialogueTurnActionHandler extends CommandHandler<DialogueTurnAction
 
 		// Broadcast the command to all players
 		context.getBroadcastStrategy().sendToAllPlayers(command);
+
+		// Check if all players have submitted their actions
+
+		if(context.getRoomState().getCurrentDialogueTurn().getNumberOfActions() == context.getRoomState().getPlayerMap().size()) {
+			DialogueTurnHandler.endDialogueTurn(context);
+		}
 	}
 }
