@@ -10,12 +10,10 @@
         <item name="buttonStyle">@style/StandardButtons</item>
         <item name="materialButtonStyle">@style/StandardButtons</item>
 
-
-
         <!-- Android -->
         <item name="android:textColor">@color/darkText</item>
-
         <item name="android:windowBackground">@color/black</item>
+
     </style>
 
     <style name="Theme.DicerealmAndroid" parent="Base.Theme.DicerealmAndroid" />

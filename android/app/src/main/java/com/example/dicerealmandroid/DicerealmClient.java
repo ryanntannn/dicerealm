@@ -16,6 +16,7 @@ public class DicerealmClient extends WebSocketClient {
     private Gson gson = new Gson();
 
     private RoomState roomState = new RoomState();
+    private String roomCode;
 
     private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
 
@@ -82,10 +83,20 @@ public class DicerealmClient extends WebSocketClient {
 
     public DicerealmClient (String roomCode) throws URISyntaxException {
         super(new URI(DicerealmClient.baseUrl + roomCode));
+        this.roomCode = roomCode;
         this.setConnectTimeout(10000);
         this.setReadTimeout(60000);
         this.addHeader("Origin", "http://developer.example.com");
         this.enableAutomaticReconnection(5000);
         this.connect();
     }
+
+    public RoomState getRoomState() {
+        return roomState;
+    }
+
+    public String getRoomCode() {
+        return roomCode;
+    }
+
 }

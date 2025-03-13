@@ -5,9 +5,14 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
         <!-- Set Globally -->
+        <!-- Set Globally -->
+
+        <!-- Material3 -->
         <item name="buttonStyle">@style/StandardButtons</item>
         <item name="materialButtonStyle">@style/StandardButtons</item>
-        <item name="textAppearanceBody1">@color/white</item>
+
+        <!-- Android -->
+        <item name="android:textColor">@color/lightText</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
 
