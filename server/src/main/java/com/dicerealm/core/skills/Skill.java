@@ -1,7 +1,7 @@
 package com.dicerealm.core.skills;
 
 import java.util.UUID;
-import com.dicerealm.core.dice.Dice;
+import com.dicerealm.core.dice.MultiDice;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.inventory.Identifiable;
 
@@ -13,14 +13,16 @@ public abstract class Skill implements Identifiable {
     private String displayName;
     private String description;
     private EntityClass entityClass;
-    private Dice damageDice;
+    private MultiDice damageDice;
+    private int spellSlotCost;
 
-    public Skill(String name, String description, EntityClass entityClass, int diceSides) {
+    public Skill(String name, String description, EntityClass entityClass, int spellSlotCost, int numDice, int diceSides) {
         this.id = UUID.randomUUID();
         this.displayName = name;
         this.description = description;
         this.entityClass = entityClass;
-        this.damageDice = new Dice(diceSides);
+        this.spellSlotCost = spellSlotCost;
+        this.damageDice = new MultiDice(numDice, diceSides);
     }
     public String getDisplayName() { return displayName; }
 
@@ -28,12 +30,14 @@ public abstract class Skill implements Identifiable {
 
     public EntityClass getEntityClass(){ return entityClass; }
 
-    public Dice getDamageDice(){ return damageDice; }
+    public int getSpellSlotCost() { return spellSlotCost; }
+
+    public MultiDice getDamageDice(){ return damageDice; }
 
     public int rollDamage(){ return damageDice.roll(); }
 
     public UUID getId() { return id; }
 
     @Override
-    public String toString() { return displayName + " (Damage: " + damageDice + ")"; }
+    public String toString() { return displayName + " (Spell Slot Cost: " + spellSlotCost + ", Damage: " + damageDice + ")"; }
 }
