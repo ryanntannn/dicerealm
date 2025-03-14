@@ -1,17 +1,14 @@
 package com.example.dicerealmandroid;
 
+import android.content.Context;
 import android.util.Log;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.FullRoomStateCommand;
 import com.example.dicerealmandroid.command.PlayerJoinCommand;
 import com.example.dicerealmandroid.core.Player;
 import com.example.dicerealmandroid.core.RoomState;
-import com.example.dicerealmandroid.player.PlayerRepo;
-import com.example.dicerealmandroid.player.PlayerStateHolder;
+import com.example.dicerealmandroid.util.Message;
 import com.google.gson.Gson;
 
 import java.net.URI;
@@ -24,6 +21,8 @@ public class DicerealmClient extends WebSocketClient {
 
     private RoomState roomState = new RoomState();
     private String roomCode;
+    private Context context;
+    private Player you;
 
 
     private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
@@ -45,7 +44,13 @@ public class DicerealmClient extends WebSocketClient {
             case "PLAYER_JOIN":
                 // TODO
                 Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
-                PlayerRepo.getInstance().setPlayer(player);
+                if(you == null){
+                    you = player;
+                    Message.showMessage("You have joined.");
+                }else{
+                    Message.showMessage("A player has joined.");
+                }
+//                PlayerRepo.getInstance().setPlayer(player);
                 break;
             case "PLAYER_LEAVE":
                 // TODO
@@ -108,6 +113,7 @@ public class DicerealmClient extends WebSocketClient {
     public String getRoomCode() {
         return roomCode;
     }
+
 
 
 }

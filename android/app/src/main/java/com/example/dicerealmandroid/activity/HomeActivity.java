@@ -38,7 +38,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 String roomId = textInputLayout.getEditText() != null ? textInputLayout.getEditText().getText().toString() : null;
-//                Log.d("info", "Room code entered: " + roomId);
                 if (roomId == null || roomId.isEmpty()){
                     Log.e("error", "No room code entered");
                     return;
