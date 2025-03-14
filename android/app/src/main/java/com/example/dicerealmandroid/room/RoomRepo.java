@@ -44,7 +44,7 @@ public class RoomRepo {
     }
 
     public void leaveRoom(){
-        dicerealmClient = null;
+        instance = null;
     }
 
 }
