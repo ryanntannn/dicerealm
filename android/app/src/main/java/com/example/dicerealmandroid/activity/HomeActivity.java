@@ -1,4 +1,4 @@
-package com.example.dicerealmandroid;
+package com.example.dicerealmandroid.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,13 +6,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.R;
+import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class HomeActivity extends AppCompatActivity {
@@ -44,7 +45,6 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 room_sh.createRoom(roomId);
                 Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 Log.d("Info", "Room created with code: " + roomId);
             }

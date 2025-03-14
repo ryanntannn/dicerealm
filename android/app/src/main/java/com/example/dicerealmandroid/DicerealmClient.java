@@ -2,9 +2,16 @@ package com.example.dicerealmandroid;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.FullRoomStateCommand;
+import com.example.dicerealmandroid.command.PlayerJoinCommand;
+import com.example.dicerealmandroid.core.Player;
 import com.example.dicerealmandroid.core.RoomState;
+import com.example.dicerealmandroid.player.PlayerRepo;
+import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.google.gson.Gson;
 
 import java.net.URI;
@@ -17,6 +24,7 @@ public class DicerealmClient extends WebSocketClient {
 
     private RoomState roomState = new RoomState();
     private String roomCode;
+
 
     private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
 
@@ -36,6 +44,8 @@ public class DicerealmClient extends WebSocketClient {
                 break;
             case "PLAYER_JOIN":
                 // TODO
+                Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
+                PlayerRepo.getInstance().setPlayer(player);
                 break;
             case "PLAYER_LEAVE":
                 // TODO
@@ -98,5 +108,6 @@ public class DicerealmClient extends WebSocketClient {
     public String getRoomCode() {
         return roomCode;
     }
+
 
 }

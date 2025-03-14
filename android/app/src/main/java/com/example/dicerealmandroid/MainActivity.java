@@ -2,15 +2,13 @@ package com.example.dicerealmandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.dicerealmandroid.core.DicerealmClientSingleton;
+import com.example.dicerealmandroid.activity.CharacterScreen;
+import com.example.dicerealmandroid.activity.HomeActivity;
+import com.example.dicerealmandroid.room.RoomStateHolder;
 
 public class MainActivity extends AppCompatActivity {
     private DicerealmClient dicerealmClient;
@@ -25,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        if (DicerealmClientSingleton.getInstance() == null){
+        RoomStateHolder roomStateHolder = new RoomStateHolder();
+
+        if (roomStateHolder.getRoomState() == null){
             // Set home as root activity
             Intent intent = new Intent(this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
