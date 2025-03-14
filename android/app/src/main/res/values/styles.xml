@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Standard button style -->
+    <style name="StandardButtons" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">#2C2C2C</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:padding">16dp</item>
+        <!-- Add other customizations here -->
+    </style>
+
+    <style name="CustomHintTextAppearance" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">14sp</item>  <!-- ✅ Increase floating hint size -->
+        <item name="android:textColor">@color/darkText</item>  <!-- ✅ Floating hint color -->
+    </style>
+</resources>
