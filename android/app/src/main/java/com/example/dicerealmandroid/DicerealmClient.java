@@ -43,7 +43,7 @@ public class DicerealmClient extends WebSocketClient {
                 UUID myId = UUID.fromString(fullRoomStateCommand.getMyId());
                 roomState = fullRoomStateCommand.getRoomState();
 
-                // If the player is not the one who joined the room, set the player
+                // Indicate that you (the player) has join the room
                 if(!PlayerRepo.getInstance().getPlayerId().equals(myId)){
                     Player myPlayer = roomState.getPlayerMap().get(UUID.fromString(fullRoomStateCommand.getMyId()));
                     PlayerRepo.getInstance().setPlayer(myPlayer);
@@ -52,9 +52,9 @@ public class DicerealmClient extends WebSocketClient {
 
                 break;
             case "PLAYER_JOIN":
-                // TODO
                 Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
 
+                // Show other players that a new player has join
                 if(!PlayerRepo.getInstance().getPlayerId().equals(player.getId())){
                     Message.showMessage(player.getDisplayName() + " has joined.");
                 }
