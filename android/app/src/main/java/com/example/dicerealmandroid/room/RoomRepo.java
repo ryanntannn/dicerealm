@@ -3,6 +3,7 @@ package com.example.dicerealmandroid.room;
 import android.util.Log;
 
 import com.example.dicerealmandroid.DicerealmClient;
+import com.example.dicerealmandroid.core.Player;
 import com.example.dicerealmandroid.core.RoomState;
 
 
@@ -42,6 +43,7 @@ public class RoomRepo {
     public RoomState getRoomState(){
         return roomState;
     }
+
 
     public void leaveRoom(){
         instance = null;

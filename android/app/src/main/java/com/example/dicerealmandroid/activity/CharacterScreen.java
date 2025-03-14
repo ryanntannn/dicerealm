@@ -28,11 +28,11 @@ public class CharacterScreen extends AppCompatActivity {
             return insets;
         });
 
-        PlayerStateHolder player_sh = new ViewModelProvider(this).get(PlayerStateHolder.class);
+        PlayerStateHolder playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
         TextView textView = findViewById(R.id.textView2);
 
 
-        player_sh.getPlayer().observe(this, new Observer<Player>() {
+        playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
             public void onChanged(Player player){
                 if (player != null){

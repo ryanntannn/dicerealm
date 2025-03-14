@@ -8,11 +8,13 @@ import com.example.dicerealmandroid.command.FullRoomStateCommand;
 import com.example.dicerealmandroid.command.PlayerJoinCommand;
 import com.example.dicerealmandroid.core.Player;
 import com.example.dicerealmandroid.core.RoomState;
+import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.util.Message;
 import com.google.gson.Gson;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 import dev.gustavoavila.websocketclient.WebSocketClient;
 
@@ -21,8 +23,6 @@ public class DicerealmClient extends WebSocketClient {
 
     private RoomState roomState = new RoomState();
     private String roomCode;
-    private Context context;
-    private Player you;
 
 
     private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
@@ -39,18 +39,25 @@ public class DicerealmClient extends WebSocketClient {
         System.out.println("Command is of type: " + command.getType());
         switch (command.getType()) {
             case "FULL_ROOM_STATE":
-                roomState = gson.fromJson(message, FullRoomStateCommand.class).getRoomState();
+                FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class);
+                UUID myId = UUID.fromString(fullRoomStateCommand.getMyId());
+                roomState = fullRoomStateCommand.getRoomState();
+
+                // If the player is not the one who joined the room, set the player
+                if(!PlayerRepo.getInstance().getPlayerId().equals(myId)){
+                    Player myPlayer = roomState.getPlayerMap().get(UUID.fromString(fullRoomStateCommand.getMyId()));
+                    PlayerRepo.getInstance().setPlayer(myPlayer);
+                    Message.showMessage("You joined the room.");
+                }
+
                 break;
             case "PLAYER_JOIN":
                 // TODO
                 Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
-                if(you == null){
-                    you = player;
-                    Message.showMessage("You have joined.");
-                }else{
-                    Message.showMessage("A player has joined.");
+
+                if(!PlayerRepo.getInstance().getPlayerId().equals(player.getId())){
+                    Message.showMessage(player.getDisplayName() + " has joined.");
                 }
-//                PlayerRepo.getInstance().setPlayer(player);
                 break;
             case "PLAYER_LEAVE":
                 // TODO

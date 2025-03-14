@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.dicerealmandroid.activity.CharacterScreen;
 import com.example.dicerealmandroid.activity.HomeActivity;
@@ -23,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        RoomStateHolder roomStateHolder = new RoomStateHolder();
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
-        if (roomStateHolder.getRoomState() == null){
+        if (roomSh.getRoomState() == null){
             // Set home as root activity
             Intent intent = new Intent(this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
