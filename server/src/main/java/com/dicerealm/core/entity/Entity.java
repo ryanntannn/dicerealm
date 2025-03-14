@@ -140,4 +140,9 @@ public abstract class Entity {
 	public void setId(UUID id) {
 		this.id = id;
 	}
+
+	public void takeDamage(int damage) {
+		this.health = Math.max(0, this.health - damage); // HP can't go below 0
+		System.out.println(getDisplayName() + " now has " + health + " HP remaining.");
+	}
 }
