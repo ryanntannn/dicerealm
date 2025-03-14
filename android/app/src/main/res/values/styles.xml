@@ -13,4 +13,10 @@
         <item name="android:textSize">14sp</item>  <!-- ✅ Increase floating hint size -->
         <item name="android:textColor">@color/darkText</item>  <!-- ✅ Floating hint color -->
     </style>
+
+<!--  Text Description Style  -->
+    <style name="TextDescription" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#501c10</item>
+    </style>
 </resources>

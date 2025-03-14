@@ -31,7 +31,6 @@ public class HomeActivity extends AppCompatActivity {
         Button join = findViewById(R.id.joinBtn);
         TextInputLayout textInputLayout = findViewById(R.id.textInputLayout2);
 
-
         RoomStateHolder room_sh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
         join.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 room_sh.createRoom(roomId);
                 Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 Log.d("Info", "Room created with code: " + roomId);
             }
