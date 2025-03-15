@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.dicerealmandroid.activity.CharacterScreen;
 import com.example.dicerealmandroid.activity.HomeActivity;
@@ -30,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
         // Force light mode only
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        RoomStateHolder roomStateHolder = new RoomStateHolder();
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
-        if (roomStateHolder.getRoomState() == null){
+        if (roomSh.getRoomState() == null){
             // Set home as root activity
             Intent intent = new Intent(this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

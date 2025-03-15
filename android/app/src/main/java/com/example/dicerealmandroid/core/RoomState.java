@@ -1,5 +1,7 @@
 package com.example.dicerealmandroid.core;
 
+import com.example.dicerealmandroid.core.player.Player;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

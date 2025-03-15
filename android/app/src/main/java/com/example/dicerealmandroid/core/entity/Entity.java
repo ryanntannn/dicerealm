@@ -1,8 +1,9 @@
-package com.example.dicerealmandroid.core;
+package com.example.dicerealmandroid.core.entity;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 
 public class Entity {
     public enum Race {
@@ -141,7 +142,7 @@ public class Entity {
         this.race = race;
         this.entityClass = entityClass;
 
-        //Get base stats from ClassStats class
+        // Get base stats from ClassStats class
         this.baseStats = ClassStats.getStatsForClass(entityClass);
         this.health = baseStats.get(Stat.MAX_HEALTH);
 
@@ -171,5 +172,67 @@ public class Entity {
 
     public boolean isAlive() {
         return health > 0;
+    }
+
+//    public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
+//        // Check if item is in inventory
+//        if (!inventory.containsItem(item)) {
+//            return false;
+//        }
+//
+//        if (!item.isSuitableFor(bodyPart)) {
+//            return false;
+//        }
+//
+//        inventory.removeItem(item);
+//
+//        // check if the body part is already equipped
+//        if (equippedItems.containsKey(bodyPart)) {
+//            // un-equip the item
+//            inventory.addItem(equippedItems.get(bodyPart));
+//        }
+//
+//        equippedItems.put(bodyPart, item);
+//        updateStats();
+//
+//        return true;
+//    }
+
+    public void updateMaxHealth() {
+        this.health = stats.get(Stat.MAX_HEALTH);
+    }
+
+
+//    public void updateStats() {
+//        stats.clear();
+//        for (Stat stat : baseStats.keySet()) {
+//            stats.put(stat, getStat(stat));
+//        }
+//    }
+//
+//    public int getStat(Stat stat) {
+//        int out = baseStats.get(stat);
+//        for (EquippableItem item : equippedItems.values()) {
+//            out += item.getStat(stat);
+//        }
+//        return out;
+//    }
+
+    public void displayStats(){
+        System.out.println("Name: " + getDisplayName());
+        System.out.println("Race: " + getRace());
+        System.out.println("Class: " + getEntityClass());
+        System.out.println("Entity Stats:");
+        for (Stat stat : getStats().keySet()) {
+            System.out.println(stat + ": " + getStats().get(stat));
+        }
+    }
+
+    public StatsMap getStats() {
+        return stats;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

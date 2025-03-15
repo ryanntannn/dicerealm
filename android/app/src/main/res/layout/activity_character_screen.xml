@@ -9,9 +9,10 @@
 
     <ImageButton
         android:id="@+id/backToLobby"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="14dp"
         android:background="@null"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,7 +34,6 @@
         app:layout_constraintVertical_bias="0.077" >
 
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="46dp"
         android:src="@drawable/sword2"
-        android:contentDescription="Character Icon"/>
+        android:contentDescription="Sword Icon"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,6 +72,7 @@
 
 <!--            First Container-->
             <LinearLayout
+                android:id="@+id/character1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -79,7 +80,6 @@
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:id="@+id/character1"
                 >
                 <ImageView
                     android:layout_width="150dp"
@@ -87,20 +87,24 @@
                     android:background="#DAD6D6"
                     android:src="@drawable/character_orc" />
                 <TextView
+                    android:id="@+id/chara_name1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Char 1" />
+                    android:text="Char1"
+                    />
                 <TextView
+                    android:id="@+id/chara_description1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     style="@style/TextDescription"
-                    android:text="Warrior" />
+                    android:text="Race+Class" />
             </LinearLayout>
 
 <!--            Second Container-->
             <LinearLayout
+                android:id="@+id/character2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -108,7 +112,6 @@
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:id="@+id/character2"
                 >
 
                 <ImageView
@@ -117,16 +120,19 @@
                     android:background="#DAD6D6"
                     android:src="@drawable/character_wizard" />
                 <TextView
+                    android:id="@+id/chara_name2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Char 2" />
+                    android:text="Char2"
+                    />
                 <TextView
+                    android:id="@+id/chara_description2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     style="@style/TextDescription"
-                    android:text="Wizard" />
+                    android:text="Race+Class" />
             </LinearLayout>
 
         </LinearLayout>
@@ -140,6 +146,7 @@
 
 <!--            Third Container-->
             <LinearLayout
+                android:id="@+id/character3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -147,27 +154,30 @@
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:id="@+id/character3"
-                >
+                               >
                 <ImageView
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:background="#DAD6D6"
                     android:src="@drawable/character_raptor" />
                 <TextView
+                    android:id="@+id/chara_name3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Char 3" />
+                    android:text="Char3"
+                    />
                 <TextView
+                    android:id="@+id/chara_description3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     style="@style/TextDescription"
-                    android:text="Rogue" />
+                    android:text="Race+Class" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/character4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -175,7 +185,6 @@
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:id="@+id/character4"
                 >
                 <ImageView
                     android:layout_width="150dp"
@@ -183,37 +192,68 @@
                     android:background="#DAD6D6"
                     android:src="@drawable/character_archer" />
                 <TextView
+                    android:id="@+id/chara_name4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Char 4" />
+                    android:text="Char4"
+                    />
                 <TextView
+                    android:id="@+id/chara_description4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     style="@style/TextDescription"
-                    android:text="Ranger" />
+                    android:text="Race+Class" />
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-<!-- Optional feature Button for Custom Character Building-->
-    <Button
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/roomCode"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginBottom="35dp"
-        android:paddingStart="40dp"
-        android:paddingEnd="40dp"
-        android:textAlignment="center"
-        android:text="Custom"
+        android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.8"
-         />
+        android:text="Room Code: -" />
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="40dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:textAlignment="center"
+        android:text="Next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        />
+
+<!-- Optional feature Button for Custom Character Building-->
+<!--    <Button-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_marginBottom="40dp"-->
+<!--        android:paddingStart="40dp"-->
+<!--        android:paddingEnd="40dp"-->
+<!--        android:textAlignment="center"-->
+<!--        android:text="Custom"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.8"-->
+<!--         />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

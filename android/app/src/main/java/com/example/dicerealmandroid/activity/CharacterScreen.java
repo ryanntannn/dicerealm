@@ -1,7 +1,6 @@
 package com.example.dicerealmandroid.activity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,11 +16,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.dicerealmandroid.R;
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.entity.Entity;
+import com.example.dicerealmandroid.core.player.Player;
+import com.example.dicerealmandroid.core.player.PresetPlayerFactory;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 
 
 public class CharacterScreen extends AppCompatActivity {
+    private Player selectedPlayer;
+    LinearLayout previousSelected = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,15 +37,35 @@ public class CharacterScreen extends AppCompatActivity {
             return insets;
         });
 
-        PlayerStateHolder player_sh = new ViewModelProvider(this).get(PlayerStateHolder.class);
-        TextView textView = findViewById(R.id.textView2);
+        // Access PlayerStateHolder
+        PlayerStateHolder playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
 
-        player_sh.getPlayer().observe(this, new Observer<Player>() {
+        TextView chara_name1 = findViewById(R.id.chara_name1);
+        TextView chara_name2 = findViewById(R.id.chara_name2);
+        TextView chara_name3 = findViewById(R.id.chara_name3);
+        TextView chara_name4 = findViewById(R.id.chara_name4);
+        TextView chara_description1 = findViewById(R.id.chara_description1);
+        TextView chara_description2 = findViewById(R.id.chara_description2);
+        TextView chara_description3 = findViewById(R.id.chara_description3);
+        TextView chara_description4 = findViewById(R.id.chara_description4);
+
+        // Randomized Preset Character Names
+        chara_name1.setText(PresetPlayerFactory.getRandomCharacterName());
+        chara_name2.setText(PresetPlayerFactory.getRandomCharacterName());
+        chara_name3.setText(PresetPlayerFactory.getRandomCharacterName());
+        chara_name4.setText(PresetPlayerFactory.getRandomCharacterName());
+        // Preset Character Races and Entity Classes
+        chara_description1.setText("DWARF" + " " + "WARRIOR");
+        chara_description2.setText("HUMAN" + " " + "WIZARD");
+        chara_description3.setText("TIEFLING" + " " + "ROGUE");
+        chara_description4.setText("ELF" + " " + "RANGER");
+
+
+        playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
             public void onChanged(Player player){
                 if (player != null){
-                    textView.setText(player.getDisplayName());
-
+                    Log.d("Player", "Player has been updated"+player.getId());
                 }
             }
         });
@@ -50,24 +73,50 @@ public class CharacterScreen extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.backToLobby);
         backButton.setOnClickListener(v -> finish());
 
-        // Loop through the character IDs and create the event listeners
+        // Create event listeners for clickable containers
         int[] characterIds = {R.id.character1, R.id.character2, R.id.character3, R.id.character4};
         for (int characterId : characterIds) {
             LinearLayout character = findViewById(characterId);
             character.setOnClickListener(v -> handleCharacterClick(characterId));
         }
+        // Event Listeners for Next button
+        Button nextButton = findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(v -> {
+            if (selectedPlayer != null) {
+                playerSh.updatePlayerRequest(selectedPlayer);
+                // TODO Navigate to lobby waiting screen when Next button is clicked
+
+            }
+        });
 
     }
-//    TODO Update Player Object with selected character
+    // Handle selected character clicked
     public void handleCharacterClick(int viewId) {
-        if (viewId == R.id.character1) {
-            Log.d("Character", "Character 1 clicked");
-        } else if (viewId == R.id.character2) {
-            Log.d("Character", "Character 2 clicked");
-        } else if (viewId == R.id.character3) {
-            Log.d("Character", "Character 3 clicked");
-        } else if (viewId == R.id.character4) {
-            Log.d("Character", "Character 4 clicked");
+        TextView chara_name1 = findViewById(R.id.chara_name1);
+        TextView chara_name2 = findViewById(R.id.chara_name2);
+        TextView chara_name3 = findViewById(R.id.chara_name3);
+        TextView chara_name4 = findViewById(R.id.chara_name4);
+
+        // If a character was previously selected, Remove the previous border
+        if (previousSelected != null) {
+            previousSelected.setBackgroundResource(0);
         }
+
+        LinearLayout selectedContainer = findViewById(viewId);
+        // Set the black border for the currently selected character
+        selectedContainer.setBackgroundResource(R.drawable.border);
+        // Update the previousSelected to the current one
+        previousSelected = selectedContainer;
+
+        if (viewId == R.id.character1) {
+            selectedPlayer = new Player(chara_name1.getText().toString(), Entity.Race.DWARF ,Entity.EntityClass.WARRIOR, Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR));
+        } else if (viewId == R.id.character2) {
+            selectedPlayer = new Player(chara_name2.getText().toString(), Entity.Race.HUMAN ,Entity.EntityClass.WIZARD, Entity.ClassStats.getStatsForClass(Entity.EntityClass.WIZARD));
+        } else if (viewId == R.id.character3) {
+            selectedPlayer = new Player(chara_name3.getText().toString(), Entity.Race.TIEFLING ,Entity.EntityClass.ROGUE, Entity.ClassStats.getStatsForClass(Entity.EntityClass.ROGUE));
+        } else if (viewId == R.id.character4) {
+            selectedPlayer = new Player(chara_name4.getText().toString(), Entity.Race.ELF ,Entity.EntityClass.RANGER, Entity.ClassStats.getStatsForClass(Entity.EntityClass.RANGER));
+        }
+        Log.d("CharacterScreen", "Selected Player: " + selectedPlayer.getDisplayName()+selectedPlayer.getRace()+selectedPlayer.getEntityClass());
     }
 }

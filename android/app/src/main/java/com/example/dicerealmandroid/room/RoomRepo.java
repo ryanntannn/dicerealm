@@ -3,6 +3,7 @@ package com.example.dicerealmandroid.room;
 import android.util.Log;
 
 import com.example.dicerealmandroid.DicerealmClient;
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.RoomState;
 
 
@@ -47,4 +48,7 @@ public class RoomRepo {
         instance = null;
     }
 
+    public DicerealmClient getDicerealmClient() {
+        return dicerealmClient;
+    }
 }

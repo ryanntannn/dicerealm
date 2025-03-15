@@ -2,8 +2,7 @@ package com.example.dicerealmandroid.room;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.dicerealmandroid.DicerealmClient;
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.RoomState;
 
 public class RoomStateHolder extends ViewModel {

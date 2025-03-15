@@ -1,5 +1,6 @@
 package com.example.dicerealmandroid;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -8,14 +9,16 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.FullRoomStateCommand;
 import com.example.dicerealmandroid.command.PlayerJoinCommand;
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.RoomState;
 import com.example.dicerealmandroid.player.PlayerRepo;
-import com.example.dicerealmandroid.player.PlayerStateHolder;
+import com.example.dicerealmandroid.util.Message;
 import com.google.gson.Gson;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 import dev.gustavoavila.websocketclient.WebSocketClient;
 
@@ -40,18 +43,32 @@ public class DicerealmClient extends WebSocketClient {
         System.out.println("Command is of type: " + command.getType());
         switch (command.getType()) {
             case "FULL_ROOM_STATE":
-                roomState = gson.fromJson(message, FullRoomStateCommand.class).getRoomState();
+                FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class);
+                UUID myId = UUID.fromString(fullRoomStateCommand.getMyId());
+                roomState = fullRoomStateCommand.getRoomState();
+
+                // Indicate that you (the player) has join the room
+                if(!PlayerRepo.getInstance().getPlayerId().equals(myId)){
+                    Player myPlayer = roomState.getPlayerMap().get(UUID.fromString(fullRoomStateCommand.getMyId()));
+                    PlayerRepo.getInstance().setPlayer(myPlayer);
+                    Message.showMessage("You joined the room.");
+                }
+
                 break;
             case "PLAYER_JOIN":
-                // TODO
                 Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
-                PlayerRepo.getInstance().setPlayer(player);
+
+                // Show other players that a new player has join
+                if(!PlayerRepo.getInstance().getPlayerId().equals(player.getId())){
+                    Message.showMessage(player.getDisplayName() + " has joined.");
+                }
                 break;
             case "PLAYER_LEAVE":
                 // TODO
                 break;
             case "UPDATE_PLAYER_DETAILS":
-                // TODO
+                Player updatedPlayer = gson.fromJson(message, UpdatePlayerDetailsCommand.class).player;
+                PlayerRepo.getInstance().setPlayer(updatedPlayer);
                 break;
             default:
                 System.out.println("Command Not Handled: " + command.getType());
