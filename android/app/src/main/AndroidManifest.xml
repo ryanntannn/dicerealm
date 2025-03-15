@@ -16,6 +16,9 @@
         android:theme="@style/Theme.DicerealmAndroid"
         tools:targetApi="31">
         <activity
+            android:name=".activity.RoomScreen"
+            android:exported="false" />
+        <activity
             android:name=".activity.CharacterScreen"
             android:exported="false" />
         <activity

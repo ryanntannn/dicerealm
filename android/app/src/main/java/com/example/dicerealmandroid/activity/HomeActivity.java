@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
         TextInputLayout textInputLayout = findViewById(R.id.textInputLayout2);
 
 
-        RoomStateHolder room_sh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,8 +42,8 @@ public class HomeActivity extends AppCompatActivity {
                     Log.e("error", "No room code entered");
                     return;
                 }
-                room_sh.createRoom(roomId);
-                Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
+                roomSh.createRoom(roomId);
+                Intent intent = new Intent(HomeActivity.this, RoomScreen.class);
                 startActivity(intent);
                 Log.d("Info", "Room created with code: " + roomId);
             }
