@@ -1,5 +1,6 @@
 package com.example.dicerealmandroid.room;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
@@ -29,9 +30,10 @@ public class RoomStateHolder extends ViewModel {
         return roomRepo.getRoomState().getPlayers();
     }
 
-    public MutableLiveData<Player[]> trackAllPlayers(){
-        // Downcast from LiveData to MutableLiveData
-        return (MutableLiveData<Player[]>) Transformations.map(roomRepo.subscribeToRoomState(), RoomState::getPlayers);
+    public LiveData<Player[]> trackAllPlayers(){
+        // Observe changes in roomState and return the players.
+        // If roomState changes but players don't, the observer will not be triggered.
+        return Transformations.map(roomRepo.subscribeToRoomState(), RoomState::getPlayers);
     }
 
     public RoomStateHolder createRoom(String roomCode){

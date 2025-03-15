@@ -40,7 +40,6 @@ public class RoomScreen extends AppCompatActivity {
     }
 
     private void trackPlayers(RoomStateHolder roomSh){
-        Player[] players;
         roomSh.trackAllPlayers().observe(this, new Observer<Player[]>() {
             @Override
             public void onChanged(Player[] players){
