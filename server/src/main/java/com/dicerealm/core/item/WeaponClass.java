@@ -1,6 +1,6 @@
 package com.dicerealm.core.item;
 
-public enum WeaponType {
+public enum WeaponClass {
     SWORD,
     AXE,
     SPEAR,
