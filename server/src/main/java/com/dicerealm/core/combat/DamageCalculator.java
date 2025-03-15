@@ -6,23 +6,37 @@ import com.dicerealm.core.skills.Skill;
 
 public class DamageCalculator {
 
-    public static void applyWeaponDamage(Entity attacker, Entity target, Weapon weapon) {
-        int baseDamage = weapon.rollDamage();
-        int totalDamage = Math.max(1, baseDamage); // Check just to ensure min is alw 1 damage
+    public static void applyWeaponDamage(Entity attacker, Entity target, Weapon weapon, boolean isCritHit) {
+        int damage = isCritHit ? calculateCritDamage(weapon) : calculateNormalDamage(weapon);
 
-        target.takeDamage(totalDamage); // Update target's HP see @Entity
+        target.takeDamage(damage); // Update target's HP see @Entity
         System.out.println(attacker.getDisplayName() + " hits " + target.getDisplayName() + " with " + weapon.getDisplayName() +
-                " for " + totalDamage + " damage!");
+                " for " + damage + " damage!");
     }
 
     //TODO: Probably best to split the SkillDamage into like Spells/Others
-    public static void applySkillDamage(Entity attacker, Entity target, Skill skill) {
-        int baseDamage = skill.rollDamage();
-        int totalDamage = Math.max(1, baseDamage);
+    public static void applySkillDamage(Entity attacker, Entity target, Skill skill, boolean isCritHit) {
+        int damage = isCritHit ? calculateCritDamage(skill) : calculateNormalDamage(skill);
 
-        target.takeDamage(totalDamage);
+        target.takeDamage(damage);
         System.out.println(attacker.getDisplayName() + " casts " + skill.getDisplayName() + " on " +
-                target.getDisplayName() + " for " + totalDamage + " damage!");
+                target.getDisplayName() + " for " + damage + " damage!");
+    }
+
+    private static int calculateNormalDamage(Weapon weapon) {
+        return weapon.rollDamage();
+    }
+
+    private static int calculateCritDamage(Weapon weapon) {
+        return weapon.rollDamage() + weapon.rollDamage(); // DND 5E Crit 2 x Die Roll
+    }
+
+    private static int calculateNormalDamage(Skill skill) {
+        return skill.rollDamage();
+    }
+
+    private static int calculateCritDamage(Skill skill) {
+        return skill.rollDamage() + skill.rollDamage(); // DND 5E Crit 2 x Die Roll
     }
 
 }
