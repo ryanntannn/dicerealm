@@ -6,9 +6,11 @@ import android.util.Log;
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.FullRoomStateCommand;
 import com.example.dicerealmandroid.command.PlayerJoinCommand;
+import com.example.dicerealmandroid.command.PlayerLeaveCommand;
 import com.example.dicerealmandroid.core.Player;
 import com.example.dicerealmandroid.core.RoomState;
 import com.example.dicerealmandroid.player.PlayerRepo;
+import com.example.dicerealmandroid.room.RoomRepo;
 import com.example.dicerealmandroid.util.Message;
 import com.google.gson.Gson;
 
@@ -21,9 +23,7 @@ import dev.gustavoavila.websocketclient.WebSocketClient;
 public class DicerealmClient extends WebSocketClient {
     private Gson gson = new Gson();
 
-    private RoomState roomState = new RoomState();
     private String roomCode;
-
 
     private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
 
@@ -41,7 +41,9 @@ public class DicerealmClient extends WebSocketClient {
             case "FULL_ROOM_STATE":
                 FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class);
                 UUID myId = UUID.fromString(fullRoomStateCommand.getMyId());
-                roomState = fullRoomStateCommand.getRoomState();
+                RoomState roomState = fullRoomStateCommand.getRoomState();
+
+                RoomRepo.getInstance().setRoomState(roomState);
 
                 // Indicate that you (the player) has join the room
                 if(!PlayerRepo.getInstance().getPlayerId().equals(myId)){
@@ -54,13 +56,13 @@ public class DicerealmClient extends WebSocketClient {
             case "PLAYER_JOIN":
                 Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
 
-                // Show other players that a new player has join
-                if(!PlayerRepo.getInstance().getPlayerId().equals(player.getId())){
-                    Message.showMessage(player.getDisplayName() + " has joined.");
-                }
+                RoomRepo.getInstance().addRoomStatePlayer(player);
+                Message.showMessage(player.getDisplayName() + " has joined.");
                 break;
             case "PLAYER_LEAVE":
-                // TODO
+                String playerId = gson.fromJson(message, PlayerLeaveCommand.class).getPlayerId();
+                RoomRepo.getInstance().removeRoomStatePlayer(playerId);
+                Message.showMessage("A player has left.");
                 break;
             case "UPDATE_PLAYER_DETAILS":
                 // TODO
@@ -93,6 +95,8 @@ public class DicerealmClient extends WebSocketClient {
     @Override
     public void onCloseReceived(int reason, String description) {
         System.out.println("onCloseReceived");
+        this.roomCode = null;
+        Message.showMessage("You left the room.");
     }
 
     public void connectToRoom(String roomCode) {
@@ -113,9 +117,6 @@ public class DicerealmClient extends WebSocketClient {
         this.connect();
     }
 
-    public RoomState getRoomState() {
-        return roomState;
-    }
 
     public String getRoomCode() {
         return roomCode;
