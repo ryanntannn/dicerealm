@@ -7,6 +7,14 @@ import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 public class HitCalculator {
     private D20 d20 = new D20();
+
+    private String hitLog = "";
+
+    // Custom D20 For Testing
+    public HitCalculator(D20 d20) {
+        this.d20 = d20;
+    }
+
     // TODO: Reorganise Weapon/Skill System to include ActionTypes
     // TODO: Possibly include Proficiencies
     public AttackResult doesAttackHit(Entity attacker, Entity target, ActionType actionType) {
@@ -16,20 +24,23 @@ public class HitCalculator {
         int totalRoll = attackRoll + attackBonus;
 
         if (attackRoll == 20) {
-            System.out.println(attacker.getDisplayName() + " rolls a NATURAL 20! CRITICAL HIT!");
+            hitLog = (attacker.getDisplayName() + " rolls a NATURAL 20! CRITICAL HIT!");
             return AttackResult.CRIT_HIT;
         }
 
         if (attackRoll == 1) {
-            System.out.println(attacker.getDisplayName() + " rolls a NATURAL 1! CRITICAL MISS!");
+            hitLog = (attacker.getDisplayName() + " rolls a NATURAL 1! CRITICAL MISS!");
             return AttackResult.CRIT_MISS;
         }
 
         boolean hit = totalRoll >= targetAC;
-        String HitLog = String.format("%s rolls a d20: %d + Attack Bonus (%d) = %d vs AC %d -> %s",
+        hitLog = String.format("%s rolls a d20: %d + Attack Bonus (%d) = %d vs AC %d -> %s",
                 attacker.getDisplayName(), attackRoll, attackBonus, totalRoll, targetAC,
                 (totalRoll >= targetAC ? "HIT!" : "MISS!"));
-        System.out.println(HitLog);
         return hit ? AttackResult.HIT : AttackResult.MISS;
+    }
+
+    public String readout() {
+        return hitLog;
     }
 }

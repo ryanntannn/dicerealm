@@ -8,7 +8,7 @@ import com.dicerealm.core.inventory.Identifiable;
 /**
  * Base class for all skills
  */
-public abstract class Skill implements Identifiable {
+public class Skill implements Identifiable {
     private UUID id;
     private String displayName;
     private String description;

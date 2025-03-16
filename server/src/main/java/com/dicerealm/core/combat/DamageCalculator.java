@@ -6,11 +6,13 @@ import com.dicerealm.core.skills.Skill;
 
 public class DamageCalculator {
 
+    private static String damageLog = "";
+
     public static void applyWeaponDamage(Entity attacker, Entity target, Weapon weapon, boolean isCritHit) {
         int damage = isCritHit ? calculateCritDamage(weapon) : calculateNormalDamage(weapon);
 
         target.takeDamage(damage); // Update target's HP see @Entity
-        System.out.println(attacker.getDisplayName() + " hits " + target.getDisplayName() + " with " + weapon.getDisplayName() +
+        damageLog = (attacker.getDisplayName() + " hits " + target.getDisplayName() + " with " + weapon.getDisplayName() +
                 " for " + damage + " damage!");
     }
 
@@ -19,7 +21,7 @@ public class DamageCalculator {
         int damage = isCritHit ? calculateCritDamage(skill) : calculateNormalDamage(skill);
 
         target.takeDamage(damage);
-        System.out.println(attacker.getDisplayName() + " casts " + skill.getDisplayName() + " on " +
+        damageLog = (attacker.getDisplayName() + " casts " + skill.getDisplayName() + " on " +
                 target.getDisplayName() + " for " + damage + " damage!");
     }
 
@@ -39,4 +41,7 @@ public class DamageCalculator {
         return skill.rollDamage() + skill.rollDamage(); // DND 5E Crit 2 x Die Roll
     }
 
+    public static String readout() {
+        return damageLog;
+    }
 }
