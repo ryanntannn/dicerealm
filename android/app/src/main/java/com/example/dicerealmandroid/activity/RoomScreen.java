@@ -1,6 +1,8 @@
 package com.example.dicerealmandroid.activity;
 
+
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.core.Player;
 import com.example.dicerealmandroid.room.RoomRepo;
@@ -29,6 +32,7 @@ public class RoomScreen extends AppCompatActivity {
             return insets;
         });
         RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        BackButtonHandler.setupBackImageButtonHandler(this, R.id.backBtn);
         this.setRoomCode(roomSh);
         this.trackPlayers(roomSh);
     }

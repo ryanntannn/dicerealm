@@ -50,5 +50,13 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    // If user navigates back to the home screen, leave the room.
+    @Override
+    public void onResume(){
+        super.onResume();
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        roomSh.leaveRoom();
+    }
+
 
 }

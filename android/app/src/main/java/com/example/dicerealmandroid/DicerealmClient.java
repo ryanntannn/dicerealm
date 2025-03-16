@@ -60,7 +60,6 @@ public class DicerealmClient extends WebSocketClient {
                 Message.showMessage(player.getDisplayName() + " has joined.");
                 break;
             case "PLAYER_LEAVE":
-                // TODO
                 String playerId = gson.fromJson(message, PlayerLeaveCommand.class).getPlayerId();
                 RoomRepo.getInstance().removeRoomStatePlayer(playerId);
                 Message.showMessage("A player has left.");
@@ -96,6 +95,8 @@ public class DicerealmClient extends WebSocketClient {
     @Override
     public void onCloseReceived(int reason, String description) {
         System.out.println("onCloseReceived");
+        this.roomCode = null;
+        Message.showMessage("You left the room.");
     }
 
     public void connectToRoom(String roomCode) {

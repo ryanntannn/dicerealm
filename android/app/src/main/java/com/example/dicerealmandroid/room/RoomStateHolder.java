@@ -40,4 +40,8 @@ public class RoomStateHolder extends ViewModel {
         roomRepo.createRoom(roomCode);
         return this;
     }
+
+    public void leaveRoom(){
+        roomRepo.leaveRoom();
+    }
 }

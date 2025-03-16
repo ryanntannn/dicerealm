@@ -78,7 +78,11 @@ public class RoomRepo {
 
 
     public void leaveRoom(){
-        instance = null;
+        if(dicerealmClient == null || instance == null){
+            return;
+        }
+        dicerealmClient.close(1000, 1000, "Leaving room");
+        dicerealmClient = null;
     }
 
 }
