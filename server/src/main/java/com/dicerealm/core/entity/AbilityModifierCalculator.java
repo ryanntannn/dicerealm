@@ -1,4 +1,5 @@
 package com.dicerealm.core.entity;
+
 public class AbilityModifierCalculator {
 
     // Calculates the modifier for a given ability score using the DND 5E formula: (Ability Score - 10) / 2

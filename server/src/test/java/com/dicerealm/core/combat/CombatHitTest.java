@@ -45,6 +45,7 @@ public class CombatHitTest {
 
     @Test
     void testCriticalHit() {
+        //Rigs dice for Nat 20
         hitCalculator = new HitCalculator(new FixedD20(20));
 
         AttackResult result = hitCalculator.doesAttackHit(player, monster, ActionType.MELEE);
@@ -55,6 +56,7 @@ public class CombatHitTest {
 
     @Test
     void testCriticalMiss() {
+        //Rigs dice for Nat 1
         hitCalculator = new HitCalculator(new FixedD20(1));
 
         AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
@@ -65,6 +67,7 @@ public class CombatHitTest {
 
     @Test
     void testNormalHit() {
+        //Rigs Dice to guarantee Hit
         hitCalculator = new HitCalculator(new FixedD20(19));
 
         AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
@@ -75,6 +78,7 @@ public class CombatHitTest {
 
     @Test
     void testMiss() {
+        //Rigs Dice to guarantee miss
         hitCalculator = new HitCalculator(new FixedD20(2));
 
         AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);

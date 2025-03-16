@@ -4,6 +4,19 @@ import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
 
+/**
+ * DamageCalculator has main 2 methods applyWeaponDamage & applySkillDamage w/ 4 Args attacker, target, weapon/skill, isCrit
+ * attacker is the entity performing the action, target is the who's being targeted, weapon/skill is the item/skill used, isCrit is a boolean for whether the attack Crit
+ * applyWeaponDamage is used for Weapons, applySkillDamage is used for Skills, both methods will switch from normal/crit depending on if isCritHit is True or False
+ * Actual DamageCalc is done using helper methods, which uses the inbuilt rollDamage() methods built into Weapons and SKill classes
+ * @see Weapon
+ * @see Skill
+ * each method updates target hp after damageCalc is done
+ * readout method for printing and logging
+ *
+ * @author Darren
+ */
+
 public class DamageCalculator {
 
     private static String damageLog = "";
@@ -25,6 +38,7 @@ public class DamageCalculator {
                 target.getDisplayName() + " for " + damage + " damage!");
     }
 
+    //Helper Methods to roll for each Damaage Type
     private static int calculateNormalDamage(Weapon weapon) {
         return weapon.rollDamage();
     }
@@ -41,6 +55,7 @@ public class DamageCalculator {
         return skill.rollDamage() + skill.rollDamage(); // DND 5E Crit 2 x Die Roll
     }
 
+    //Helper Method to print damageLog
     public static String readout() {
         return damageLog;
     }
