@@ -13,76 +13,67 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-/*
- * Singleton pattern to ensure only 1 instance of RoomRepo exists
- * */
-public class RoomRepo {
-    private static RoomRepo instance;
-    private DicerealmClient dicerealmClient;
-    private final MutableLiveData<RoomState> roomState = new MutableLiveData<>();
-    private RoomRepo(){};
 
-    public static RoomRepo getInstance(){
-        if (instance == null){
-            instance = new RoomRepo();
-        }
-        return instance;
-    }
+public class RoomRepo {
+    private final RoomDataSource roomDataSource;
+
+
+    public RoomRepo(){
+        roomDataSource = RoomDataSource.getInstance();
+    };
+
 
     public RoomRepo createRoom(String roomCode){
-        if (dicerealmClient == null){
-            try {
-                dicerealmClient = new DicerealmClient(roomCode);
-            } catch (Exception e){
-                Log.e("error", "Could not connect to room", e);
-                return null;
-            }
+        try {
+            roomDataSource.createRoom(roomCode);
+        } catch (Exception e){
+            Log.e("error", "Could not connect to room", e);
+            return null;
         }
-        return instance;
+        return this;
     }
 
     public String getRoomCode(){
-        return dicerealmClient.getRoomCode();
+        return roomDataSource.getRoomCode();
     }
 
     public RoomState getRoomState(){
-        return roomState.getValue();
+        return roomDataSource.getRoomState().getValue();
     }
 
     // LiveData: Ensure that the onChanged method is triggered only when the roomState changes from what it was before.
     public LiveData<RoomState> subscribeToRoomState(){
-        return roomState;
+        return roomDataSource.getRoomState();
     }
 
     public void setRoomState(RoomState roomState){
-        if (Objects.equals(this.roomState.getValue(), roomState)){
+        if (Objects.equals(this.getRoomState(), roomState)){
             Log.d("RoomRepo", "RoomState is the same, ignoring update.");
             return;
         }
-        this.roomState.postValue(roomState);
+        roomDataSource.setRoomState(roomState);
     }
 
     // This is to keep track on the number of players currently in the room (client-side)
     public void addRoomStatePlayer(Player player){
-        RoomState updatedRoomState = this.roomState.getValue();
+        RoomState updatedRoomState = this.getRoomState();
         updatedRoomState.addPlayer(player);
-        this.roomState.postValue(updatedRoomState); // Trigger observers
+        roomDataSource.setRoomState(updatedRoomState);
     }
 
     // This is to keep track on the number of players currently in the room (client-side)
     public void removeRoomStatePlayer(String playerId){
-        RoomState updatedRoomState = this.roomState.getValue();
+        RoomState updatedRoomState = this.getRoomState();
         updatedRoomState.removePlayer(UUID.fromString(playerId));
-        this.roomState.postValue(updatedRoomState); // Trigger observers
+        roomDataSource.setRoomState(updatedRoomState);
     }
 
 
     public void leaveRoom(){
-        if(dicerealmClient == null || instance == null){
+        if(roomDataSource.getDiceRealmClient() == null){
             return;
         }
-        dicerealmClient.close(1000, 1000, "Leaving room");
-        dicerealmClient = null;
+        roomDataSource.leaveRoom();
     }
 
 }

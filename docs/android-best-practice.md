@@ -67,6 +67,8 @@ erDiagram
 - Able to use multiple data sources
 - Where the main underlying business logic resides
 - 1 class per type of data (e.g. MovieRepo, ComicRepo)
+- Could have multiple layers (Specific Sub-repo)
+- Should be immutable, cannot change
 
 ###### Data Sources
 - Only accessible by repo

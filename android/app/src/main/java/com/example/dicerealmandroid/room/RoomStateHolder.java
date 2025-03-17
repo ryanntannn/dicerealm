@@ -12,7 +12,7 @@ public class RoomStateHolder extends ViewModel {
     private RoomRepo roomRepo;
 
     public RoomStateHolder(){
-        roomRepo = RoomRepo.getInstance();
+        roomRepo = new RoomRepo();
     }
 
     public String getRoomCode() {

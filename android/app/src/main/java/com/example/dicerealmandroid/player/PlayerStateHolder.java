@@ -10,7 +10,7 @@ public class PlayerStateHolder extends ViewModel{
 
 
     public PlayerStateHolder(){
-        this.playerRepo = PlayerRepo.getInstance();
+        this.playerRepo = new PlayerRepo();
     }
 
     public LiveData<Player> getPlayer(){

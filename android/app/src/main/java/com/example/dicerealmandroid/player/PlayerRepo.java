@@ -8,42 +8,34 @@ import com.example.dicerealmandroid.core.Player;
 
 import java.util.UUID;
 
-/*
-* Singleton pattern to ensure only 1 instance of PlayerRepo exists
-* */
 public class PlayerRepo {
-    private static PlayerRepo instance;
-    private final MutableLiveData<Player> player = new MutableLiveData<Player>(new Player("Default",
-                                                                                            Entity.Race.HUMAN,
-                                                                                            Entity.EntityClass.WARRIOR,
-                                                                                            Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR)));
 
-    private PlayerRepo(){};
+    private final PlayerDataSource playerDataSource;
 
-    public static PlayerRepo getInstance(){
-        if (instance == null){
-            instance = new PlayerRepo();
-        }
-        return instance;
-    }
+
+    public PlayerRepo(){
+        playerDataSource = PlayerDataSource.getInstance();
+    };
+
 
 
     public LiveData<Player> getPlayer(){
-        return player;
+        return playerDataSource.getPlayer();
     }
 
     public void setPlayer(Player player) throws IllegalArgumentException{
         if (player == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
-        this.player.postValue(player);
+        playerDataSource.setPlayer(player);
     }
 
+
     public UUID getPlayerId(){
-        if (player.getValue() == null){
+        if (this.getPlayer().getValue() == null){
             return null;
         }
-        return player.getValue().getId();
+        return playerDataSource.getPlayerId();
     }
 
 }
