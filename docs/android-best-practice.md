@@ -1,7 +1,9 @@
 # Android Best Practices Architecture
 
 ## Overview
-The architecture that we will be using in our android development is recommended by Android [Recommended App Architecture](https://developer.android.com/topic/architecture?gclid=CjwKCAjw6raYBhB7EiwABge5Klm_5PN8nJF0Jrb_ymrPP0JAEsbmemmGv_nsn0nBQKQtQMCBuvjehRoC7qcQAvD_BwE&gclsrc=aw.ds#recommended-app-arch). Allowing the seperation of purpose, ideal for medium to large scale projects. I didn't use Domain Layer in this project since its optional and I do not want to overcomplicate things. But feel free to use it if it fits your use case.
+The architecture that we will be using in our android development is recommended by Android [Recommended App Architecture](https://developer.android.com/topic/architecture?gclid=CjwKCAjw6raYBhB7EiwABge5Klm_5PN8nJF0Jrb_ymrPP0JAEsbmemmGv_nsn0nBQKQtQMCBuvjehRoC7qcQAvD_BwE&gclsrc=aw.ds#recommended-app-arch). Allowing the seperation of purpose, ideal for medium to large scale projects. I didn't use Domain Layer in this project since its optional and I do not want to overcomplicate things. But feel free to use it if it fits your use case. 
+
+Remember that all this are recommendations, you may not always follow this exactly (e.g. Having a handler, etc)
 
 
 ## MVVM + Repository Architecture
@@ -68,7 +70,7 @@ erDiagram
 - Where the main underlying business logic resides
 - 1 class per type of data (e.g. MovieRepo, ComicRepo)
 - Could have multiple layers (Specific Sub-repo)
-- Should be immutable, cannot change
+- Immutable, should not change values directly but rather delegate them to the Data Source
 
 ###### Data Sources
 - Only accessible by repo
