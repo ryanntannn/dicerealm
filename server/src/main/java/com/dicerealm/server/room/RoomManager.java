@@ -51,7 +51,7 @@ public class RoomManager {
 		Player newPlayer = PresetPlayerFactory.createPresetPlayer();
 		playerSessions.put(newPlayer.getId(), session);
 		sessionIdToPlayerIdMap.put(session.getId(), newPlayer.getId());
-		room.addPlayer(newPlayer);
+		room.addPlayer(newPlayer);	
 
 		logger.info("Player joined room: " + newPlayer.getId() + " with session: " + session.getId());
 	}

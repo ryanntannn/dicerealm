@@ -3,11 +3,16 @@ package com.example.dicerealmandroid;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.FullRoomStateCommand;
 import com.example.dicerealmandroid.command.PlayerJoinCommand;
+import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.command.PlayerLeaveCommand;
-import com.example.dicerealmandroid.core.Player;
+
 import com.example.dicerealmandroid.core.RoomState;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
@@ -65,7 +70,8 @@ public class DicerealmClient extends WebSocketClient {
                 Message.showMessage("A player has left.");
                 break;
             case "UPDATE_PLAYER_DETAILS":
-                // TODO
+                Player updatedPlayer = gson.fromJson(message, UpdatePlayerDetailsCommand.class).player;
+                PlayerRepo.getInstance().setPlayer(updatedPlayer);
                 break;
             default:
                 System.out.println("Command Not Handled: " + command.getType());
@@ -123,5 +129,5 @@ public class DicerealmClient extends WebSocketClient {
     }
 
 
-
 }
+

@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
                     return;
                 }
                 roomSh.createRoom(roomId);
-                Intent intent = new Intent(HomeActivity.this, RoomScreen.class);
+                Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
                 startActivity(intent);
                 Log.d("Info", "Room created with code: " + roomId);
             }

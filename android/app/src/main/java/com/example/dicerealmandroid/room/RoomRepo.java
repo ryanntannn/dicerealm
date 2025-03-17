@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.DicerealmClient;
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.RoomState;
 
 import java.util.Objects;
@@ -85,4 +85,7 @@ public class RoomRepo {
         dicerealmClient = null;
     }
 
+    public DicerealmClient getDicerealmClient() {
+        return dicerealmClient;
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.dicerealmandroid.command;
 
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.player.Player;
 
 public class PlayerJoinCommand extends Command {
     private Player player;

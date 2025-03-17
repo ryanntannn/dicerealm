@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.dicerealmandroid.BackButtonHandler;
 import com.example.dicerealmandroid.R;
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.room.RoomRepo;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 
