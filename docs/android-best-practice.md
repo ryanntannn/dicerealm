@@ -71,3 +71,10 @@ erDiagram
 ###### Data Sources
 - 1 class per source of data (e.g. File, Network)
 - Only accessible by repo
+
+-----
+##### General Best Practices
+- Don't store data in app entry points, anything that the user is able to directly call through the app
+- Reduce dependencies (Android framework SDK APIs) on android classes, only on app components
+- Try not to mix logic of multiple modules/responsibilities in 1 place.
+- Persist as much as possible
