@@ -24,6 +24,9 @@ public class HitCalculator {
 
     private String hitLog = "";
 
+    // Default Constructor
+    public HitCalculator(){}
+
     // Custom D20 For Testing
     public HitCalculator(D20 d20) {
         this.d20 = d20;
@@ -39,12 +42,15 @@ public class HitCalculator {
         // Case when a Nat 20 is rolled
         if (attackRoll == 20) {
             hitLog = (attacker.getDisplayName() + " rolls a NATURAL 20! CRITICAL HIT!");
+            CombatLog.log(hitLog);
             return AttackResult.CRIT_HIT;
+
         }
 
         // Case when a Nat 1 is rolled
         if (attackRoll == 1) {
             hitLog = (attacker.getDisplayName() + " rolls a NATURAL 1! CRITICAL MISS!");
+            CombatLog.log(hitLog);
             return AttackResult.CRIT_MISS;
         }
 
@@ -53,10 +59,13 @@ public class HitCalculator {
         hitLog = String.format("%s rolls a d20: %d + Attack Bonus (%d) = %d vs AC %d -> %s",
                 attacker.getDisplayName(), attackRoll, attackBonus, totalRoll, targetAC,
                 (totalRoll >= targetAC ? "HIT!" : "MISS!"));
+        CombatLog.log(hitLog);
         return hit ? AttackResult.HIT : AttackResult.MISS;
     }
 
-    //Helper Method to print damageLog
+
+
+    //Helper Method to print HitLog
     public String readout() {
         return hitLog;
     }

@@ -51,7 +51,7 @@ public class CombatHitTest {
         AttackResult result = hitCalculator.doesAttackHit(player, monster, ActionType.MELEE);
 
         assertEquals(AttackResult.CRIT_HIT, result);
-        assertEquals("Darren rolls a NATURAL 20! CRITICAL HIT!", hitCalculator.readout());
+        assertEquals("Darren rolls a NATURAL 20! CRITICAL HIT!", CombatLog.printLatestReadout());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class CombatHitTest {
         AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
 
         assertEquals(AttackResult.CRIT_MISS, result);
-        assertEquals("Darren rolls a NATURAL 1! CRITICAL MISS!", hitCalculator.readout());
+        assertEquals("Darren rolls a NATURAL 1! CRITICAL MISS!", CombatLog.printLatestReadout());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class CombatHitTest {
         AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
 
         assertEquals(AttackResult.HIT, result);
-        assertTrue(hitCalculator.readout().contains("HIT!"));
+        assertTrue(CombatLog.printLatestReadout().contains("HIT!"));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class CombatHitTest {
         AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
 
         assertEquals(AttackResult.MISS, result);
-        assertTrue(hitCalculator.readout().contains("MISS!"));
+        assertTrue(CombatLog.printLatestReadout().contains("MISS!"));
     }
 
 }

@@ -52,7 +52,7 @@ public class CombatDamageTest {
         DamageCalculator.applyWeaponDamage(player, monster, weapon, false);
 
         // The damage is based on the weapon's roll, which is 1 in this case
-        assertEquals("Darren hits Demon King with Sword for 1 damage!", DamageCalculator.readout());
+        assertEquals("Darren hits Demon King with Sword for 1 damage!", CombatLog.printLatestReadout());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class CombatDamageTest {
         DamageCalculator.applyWeaponDamage(player, monster, weapon, true);
 
         // Critical hit doubles the weapon damage (1 + 1)
-        assertEquals("Darren hits Demon King with Sword for 2 damage!", DamageCalculator.readout());
+        assertEquals("Darren hits Demon King with Sword for 2 damage!", CombatLog.printLatestReadout());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class CombatDamageTest {
         DamageCalculator.applySkillDamage(player, monster, skill, false);
 
         // The damage is based on the skill's roll, which is 2 in this case
-        assertEquals("Darren casts Fireball on Demon King for 2 damage!", DamageCalculator.readout());
+        assertEquals("Darren casts Fireball on Demon King for 2 damage!", CombatLog.printLatestReadout());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class CombatDamageTest {
         DamageCalculator.applySkillDamage(player, monster, skill, true);
 
         // Critical hit doubles the skill damage (2 + 2)
-        assertEquals("Darren casts Fireball on Demon King for 4 damage!", DamageCalculator.readout());
+        assertEquals("Darren casts Fireball on Demon King for 4 damage!", CombatLog.printLatestReadout());
     }
 
     @Test

@@ -27,6 +27,7 @@ public class DamageCalculator {
         target.takeDamage(damage); // Update target's HP see @Entity
         damageLog = (attacker.getDisplayName() + " hits " + target.getDisplayName() + " with " + weapon.getDisplayName() +
                 " for " + damage + " damage!");
+        CombatLog.log(damageLog);
     }
 
     //TODO: Probably best to split the SkillDamage into like Spells/Others
@@ -36,9 +37,10 @@ public class DamageCalculator {
         target.takeDamage(damage);
         damageLog = (attacker.getDisplayName() + " casts " + skill.getDisplayName() + " on " +
                 target.getDisplayName() + " for " + damage + " damage!");
+        CombatLog.log(damageLog);
     }
 
-    //Helper Methods to roll for each Damaage Type
+    //Helper Methods to roll for each Damage Type
     private static int calculateNormalDamage(Weapon weapon) {
         return weapon.rollDamage();
     }
