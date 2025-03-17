@@ -57,4 +57,8 @@ public class RoomDataSource {
         return dicerealmClient;
     }
 
+    public void sendMessageToServer(String message){
+        dicerealmClient.send(message);
+    }
+
 }

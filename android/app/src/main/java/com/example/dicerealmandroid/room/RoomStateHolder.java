@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.RoomState;
 
 public class RoomStateHolder extends ViewModel {

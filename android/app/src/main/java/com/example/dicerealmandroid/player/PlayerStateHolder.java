@@ -3,7 +3,7 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.player.Player;
 
 public class PlayerStateHolder extends ViewModel{
     private PlayerRepo playerRepo;
@@ -19,5 +19,8 @@ public class PlayerStateHolder extends ViewModel{
 
     public void setPlayer(Player player){
         playerRepo.setPlayer(player);
+    }
+    public void updatePlayerRequest(Player player){
+        playerRepo.updatePlayerRequest(player);
     }
 }

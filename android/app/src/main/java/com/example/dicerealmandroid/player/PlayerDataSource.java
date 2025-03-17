@@ -3,8 +3,8 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dicerealmandroid.core.Entity;
-import com.example.dicerealmandroid.core.Player;
+import com.example.dicerealmandroid.core.entity.Entity;
+import com.example.dicerealmandroid.core.player.Player;
 
 import java.util.UUID;
 
@@ -40,4 +40,5 @@ public class PlayerDataSource {
     public UUID getPlayerId(){
         return player.getValue().getId();
     }
+
 }
