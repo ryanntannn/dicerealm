@@ -1,5 +1,6 @@
 package com.example.dicerealmandroid.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -15,11 +16,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.core.entity.Entity;
 import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.player.PresetPlayerFactory;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
+import com.example.dicerealmandroid.room.RoomStateHolder;
 
 
 public class CharacterScreen extends AppCompatActivity {
@@ -39,6 +42,9 @@ public class CharacterScreen extends AppCompatActivity {
 
         // Access PlayerStateHolder
         PlayerStateHolder playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        BackButtonHandler.setupBackImageButtonHandler(this, R.id.backToLobby);
+        this.setRoomCode(roomSh);
 
         TextView chara_name1 = findViewById(R.id.chara_name1);
         TextView chara_name2 = findViewById(R.id.chara_name2);
@@ -70,9 +76,6 @@ public class CharacterScreen extends AppCompatActivity {
             }
         });
 
-        ImageButton backButton = findViewById(R.id.backToLobby);
-        backButton.setOnClickListener(v -> finish());
-
         // Create event listeners for clickable containers
         int[] characterIds = {R.id.character1, R.id.character2, R.id.character3, R.id.character4};
         for (int characterId : characterIds) {
@@ -81,15 +84,24 @@ public class CharacterScreen extends AppCompatActivity {
         }
         // Event Listeners for Next button
         Button nextButton = findViewById(R.id.nextButton);
+        // Disable the Next button initially until a character is selected
+        nextButton.setEnabled(false);
         nextButton.setOnClickListener(v -> {
             if (selectedPlayer != null) {
                 playerSh.updatePlayerRequest(selectedPlayer);
-                // TODO Navigate to lobby waiting screen when Next button is clicked
-
+                // Navigate to lobby waiting screen when Next button is clicked
+                Intent intent = new Intent(CharacterScreen.this, RoomScreen.class);
+                startActivity(intent);
             }
         });
 
     }
+    private void setRoomCode(RoomStateHolder roomSh){
+        TextView roomCode = findViewById(R.id.roomCode);
+        String roomCodeText = "Room Code: " + roomSh.getRoomCode();
+        roomCode.setText(roomCodeText);
+    }
+
     // Handle selected character clicked
     public void handleCharacterClick(int viewId) {
         TextView chara_name1 = findViewById(R.id.chara_name1);
@@ -100,6 +112,10 @@ public class CharacterScreen extends AppCompatActivity {
         // If a character was previously selected, Remove the previous border
         if (previousSelected != null) {
             previousSelected.setBackgroundResource(0);
+        }
+        else {
+            Button nextButton = findViewById(R.id.nextButton);
+            nextButton.setEnabled(true);
         }
 
         LinearLayout selectedContainer = findViewById(viewId);
@@ -117,6 +133,6 @@ public class CharacterScreen extends AppCompatActivity {
         } else if (viewId == R.id.character4) {
             selectedPlayer = new Player(chara_name4.getText().toString(), Entity.Race.ELF ,Entity.EntityClass.RANGER, Entity.ClassStats.getStatsForClass(Entity.EntityClass.RANGER));
         }
-        Log.d("CharacterScreen", "Selected Player: " + selectedPlayer.getDisplayName()+selectedPlayer.getRace()+selectedPlayer.getEntityClass());
+        Log.d("CharacterScreen", "Selected Player: " + selectedPlayer.getDisplayName()+" "+selectedPlayer.getRace()+" "+selectedPlayer.getEntityClass());
     }
 }

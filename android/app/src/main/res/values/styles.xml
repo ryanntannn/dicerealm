@@ -9,9 +9,10 @@
         <!-- Add other customizations here -->
     </style>
 
+    <!-- Custom hint text appearance -->
     <style name="CustomHintTextAppearance" parent="TextAppearance.Material3.BodyLarge">
-        <item name="android:textSize">14sp</item>  <!-- ✅ Increase floating hint size -->
-        <item name="android:textColor">@color/darkText</item>  <!-- ✅ Floating hint color -->
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/darkText</item>
     </style>
 
 <!--  Text Description Style  -->

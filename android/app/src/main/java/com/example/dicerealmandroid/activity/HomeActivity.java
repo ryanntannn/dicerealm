@@ -31,7 +31,8 @@ public class HomeActivity extends AppCompatActivity {
         Button join = findViewById(R.id.joinBtn);
         TextInputLayout textInputLayout = findViewById(R.id.textInputLayout2);
 
-        RoomStateHolder room_sh = new ViewModelProvider(this).get(RoomStateHolder.class);
+
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,13 +42,20 @@ public class HomeActivity extends AppCompatActivity {
                     Log.e("error", "No room code entered");
                     return;
                 }
-                room_sh.createRoom(roomId);
+                roomSh.createRoom(roomId);
                 Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 Log.d("Info", "Room created with code: " + roomId);
             }
         });
+    }
+
+    // If user navigates back to the home screen, leave the room.
+    @Override
+    public void onResume(){
+        super.onResume();
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        roomSh.leaveRoom();
     }
 
 

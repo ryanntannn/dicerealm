@@ -12,4 +12,5 @@ public class UpdatePlayerDetailsRequestCommand extends Command {
 	public UpdatePlayerDetailsRequestCommand() {
 		this.type = "UPDATE_PLAYER_DETAILS_REQUEST";
 	}
+	
 }

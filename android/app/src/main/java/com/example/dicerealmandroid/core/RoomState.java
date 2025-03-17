@@ -28,4 +28,12 @@ public class RoomState {
     public Map<UUID, Player> getPlayerMap() {
         return playerMap;
     }
+
+    public void addPlayer(Player player) {
+        playerMap.put(player.getId(), player);
+    }
+
+    public void removePlayer(UUID playerId) {
+        playerMap.remove(playerId);
+    }
 }
