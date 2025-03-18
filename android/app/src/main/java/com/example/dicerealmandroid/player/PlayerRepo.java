@@ -8,53 +8,49 @@ import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
 import com.example.dicerealmandroid.command.UpdatePlayerDetailsRequestCommand;
 import com.example.dicerealmandroid.core.entity.Entity;
 import com.example.dicerealmandroid.core.player.Player;
+import com.example.dicerealmandroid.room.RoomDataSource;
 import com.example.dicerealmandroid.room.RoomRepo;
 import com.google.gson.Gson;
 
 import java.util.UUID;
 
-/*
-* Singleton pattern to ensure only 1 instance of PlayerRepo exists
-* */
 public class PlayerRepo {
-    private static PlayerRepo instance;
-    private final MutableLiveData<Player> player = new MutableLiveData<Player>(new Player("Default",
-                                                                                            Entity.Race.HUMAN,
-                                                                                            Entity.EntityClass.WARRIOR,
-                                                                                            Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR)));
 
-    private Gson gson = new Gson();
+    private final PlayerDataSource playerDataSource;
+    private final RoomDataSource roomDataSource;
 
-    private PlayerRepo(){};
+    private final Gson gson = new Gson();
 
-    public static PlayerRepo getInstance(){
-        if (instance == null){
-            instance = new PlayerRepo();
-        }
-        return instance;
-    }
+
+    public PlayerRepo(){
+        playerDataSource = PlayerDataSource.getInstance();
+        roomDataSource = RoomDataSource.getInstance();
+    };
+
+
 
     public LiveData<Player> getPlayer(){
-        return player;
+        return playerDataSource.getPlayer();
     }
 
     public void setPlayer(Player player) throws IllegalArgumentException{
         if (player == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
-        this.player.postValue(player);
+        playerDataSource.setPlayer(player);
     }
 
+
     public UUID getPlayerId(){
-        if (player.getValue() == null){
+        if (this.getPlayer().getValue() == null){
             return null;
         }
-        return player.getValue().getId();
+        return playerDataSource.getPlayerId();
     }
 
     public void updatePlayerRequest(Player player){
         UpdatePlayerDetailsRequestCommand command = new UpdatePlayerDetailsRequestCommand(player.getDisplayName(), player.getRace(), player.getEntityClass(), player.getStats());
         String message = gson.toJson(command);
-        RoomRepo.getInstance().getDicerealmClient().send(message);
+        roomDataSource.sendMessageToServer(message);
     }
 }

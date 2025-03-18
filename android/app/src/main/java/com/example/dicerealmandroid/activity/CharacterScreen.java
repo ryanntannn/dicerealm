@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.dicerealmandroid.BackButtonHandler;
+import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.core.entity.Entity;
 import com.example.dicerealmandroid.core.player.Player;
