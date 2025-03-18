@@ -18,6 +18,8 @@ export OPENAI_API_KEY=<your-api-key>
 
 ## Running the server
 
+Before running the server, ensure that `lib` is built. You may refer to [lib/README.md](../lib/README.md) for instructions on how to build the library.
+
 To run the server, you need to have Java 23 installed on your machine. You can run the server using the following command:
 
 PC:
