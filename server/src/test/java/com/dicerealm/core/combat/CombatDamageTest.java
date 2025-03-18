@@ -23,6 +23,7 @@ public class CombatDamageTest {
     private Monster monster;
     private Weapon weapon;
     private Skill skill;
+    private CombatLog combatLog;
 
     @BeforeEach
     void setUp() {
@@ -40,7 +41,7 @@ public class CombatDamageTest {
 
         player = new Player("Darren", Race.HUMAN, EntityClass.WARRIOR, baseStats);
         monster = new Monster("Demon King", Race.DEMON, EntityClass.WARRIOR, baseStats);
-
+        combatLog = new CombatLog();
         // Initialize weapon and skill for testing
         weapon = new Weapon("Sword", "Iron Sword forged from the Great Dwarfen Forges", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 1)), 1);
         skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, 3,2,1);
@@ -50,36 +51,36 @@ public class CombatDamageTest {
     void testWeaponNormalDamage() {
         // Use a normal roll for weapon damage
         DamageCalculator.applyWeaponDamage(player, monster, weapon, false);
-
+        combatLog.log(DamageCalculator.readout());
         // The damage is based on the weapon's roll, which is 1 in this case
-        assertEquals("Darren hits Demon King with Sword for 1 damage!", CombatLog.printLatestReadout());
+        assertEquals("Darren hits Demon King with Sword for 1 damage!", combatLog.printLatestReadout());
     }
 
     @Test
     void testWeaponCritDamage() {
         // Apply a critical hit for weapon damage
         DamageCalculator.applyWeaponDamage(player, monster, weapon, true);
-
+        combatLog.log(DamageCalculator.readout());
         // Critical hit doubles the weapon damage (1 + 1)
-        assertEquals("Darren hits Demon King with Sword for 2 damage!", CombatLog.printLatestReadout());
+        assertEquals("Darren hits Demon King with Sword for 2 damage!", combatLog.printLatestReadout());
     }
 
     @Test
     void testSkillNormalDamage() {
         // Use a normal roll for skill damage
         DamageCalculator.applySkillDamage(player, monster, skill, false);
-
+        combatLog.log(DamageCalculator.readout());
         // The damage is based on the skill's roll, which is 2 in this case
-        assertEquals("Darren casts Fireball on Demon King for 2 damage!", CombatLog.printLatestReadout());
+        assertEquals("Darren casts Fireball on Demon King for 2 damage!", combatLog.printLatestReadout());
     }
 
     @Test
     void testSkillCritDamage() {
         // Apply a critical hit for skill damage
         DamageCalculator.applySkillDamage(player, monster, skill, true);
-
+        combatLog.log(DamageCalculator.readout());
         // Critical hit doubles the skill damage (2 + 2)
-        assertEquals("Darren casts Fireball on Demon King for 4 damage!", CombatLog.printLatestReadout());
+        assertEquals("Darren casts Fireball on Demon King for 4 damage!", combatLog.printLatestReadout());
     }
 
     @Test

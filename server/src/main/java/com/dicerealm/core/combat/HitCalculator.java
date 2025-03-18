@@ -14,7 +14,6 @@ import com.dicerealm.core.entity.Stat;
  * HitCalculator will output 1 of 4 possible enum outcomes, CRIT_HIT, HIT, CRIT_MISS, MISS
  * @see AttackResult
  * System uses DND5E rules for calculation, ie attackRoll => targetArmor_Class
- * readout method for printing and logging
  *
  * @author Darren
  */
@@ -22,10 +21,9 @@ import com.dicerealm.core.entity.Stat;
 public class HitCalculator {
     private D20 d20 = new D20();
 
-    private String hitLog = "";
-
     // Default Constructor
-    public HitCalculator(){}
+    public HitCalculator() {
+    }
 
     // Custom D20 For Testing
     public HitCalculator(D20 d20) {
@@ -33,40 +31,37 @@ public class HitCalculator {
     }
 
     // TODO: Possibly include Proficiencies
-    public AttackResult doesAttackHit(Entity attacker, Entity target, ActionType actionType) {
+    public HitResult doesAttackHit(Entity attacker, Entity target, ActionType actionType) {
         int attackRoll = d20.roll();
         int attackBonus = getAttackBonus(attacker, actionType);
         int targetAC = target.getStat(Stat.ARMOUR_CLASS);
         int totalRoll = attackRoll + attackBonus; // Takes into account player modifiers see @AttackBonusCalculator
 
+        AttackResult attackResult;
+        String hitLog;
+
         // Case when a Nat 20 is rolled
         if (attackRoll == 20) {
-            hitLog = (attacker.getDisplayName() + " rolls a NATURAL 20! CRITICAL HIT!");
-            CombatLog.log(hitLog);
-            return AttackResult.CRIT_HIT;
-
+            attackResult = AttackResult.CRIT_HIT;
+            hitLog = attacker.getDisplayName() + " rolls a NATURAL 20! CRITICAL HIT!";
         }
-
         // Case when a Nat 1 is rolled
-        if (attackRoll == 1) {
-            hitLog = (attacker.getDisplayName() + " rolls a NATURAL 1! CRITICAL MISS!");
-            CombatLog.log(hitLog);
-            return AttackResult.CRIT_MISS;
+        else if (attackRoll == 1) {
+            attackResult = AttackResult.CRIT_MISS;
+            hitLog = attacker.getDisplayName() + " rolls a NATURAL 1! CRITICAL MISS!";
+        }
+        // General case for normal hits or misses
+        else {
+            boolean hit = totalRoll >= targetAC;
+            attackResult = hit ? AttackResult.HIT : AttackResult.MISS;
+            hitLog = String.format("%s rolls a d20: %d + Attack Bonus (%d) = %d vs AC %d -> %s",
+                    attacker.getDisplayName(), attackRoll, attackBonus, totalRoll, targetAC,
+                    (hit ? "HIT!" : "MISS!"));
+
         }
 
-        //Case for General Rolls
-        boolean hit = totalRoll >= targetAC;
-        hitLog = String.format("%s rolls a d20: %d + Attack Bonus (%d) = %d vs AC %d -> %s",
-                attacker.getDisplayName(), attackRoll, attackBonus, totalRoll, targetAC,
-                (totalRoll >= targetAC ? "HIT!" : "MISS!"));
-        CombatLog.log(hitLog);
-        return hit ? AttackResult.HIT : AttackResult.MISS;
+        return new HitResult(attackResult, hitLog);
+
     }
 
-
-
-    //Helper Method to print HitLog
-    public String readout() {
-        return hitLog;
-    }
 }

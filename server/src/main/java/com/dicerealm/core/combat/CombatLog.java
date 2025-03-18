@@ -4,20 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CombatLog {
-    private static List<String> logEntries = new ArrayList<>();
+    private List<String> logEntries;
 
+    // Default Log Constructor
+    public CombatLog() {
+         logEntries = new ArrayList<>();
+    }
     // Logs a message and prints it immediately
-    public static void log(String message) {
+    public void log(String message) {
         logEntries.add(message);
     }
 
     // Retrieve all combat log entries
-    public static List<String> getAllLogs() {
+    public List<String> getAllLogs() {
         return new ArrayList<>(logEntries);
     }
 
     // Print all combat logs
-    public static void printAllLogs() {
+    public void printAllLogs() {
         if (logEntries.isEmpty()) {
             System.out.println("No combat logs available.");
         } else {
@@ -25,7 +29,7 @@ public class CombatLog {
         }
     }
 
-    public static String printLatestReadout() {
+    public String printLatestReadout() {
         if (!logEntries.isEmpty()) {
             return logEntries.get(logEntries.size() - 1);  // Print the latest log entry
         } else {
@@ -34,7 +38,7 @@ public class CombatLog {
     }
 
     // Retrieve a specific combat log entry by index
-    public static String getLogByIndex(int index) {
+    public String getLogByIndex(int index) {
         if (index < 0 || index >= logEntries.size()) {
             return "Invalid log index.";
         }
@@ -42,7 +46,7 @@ public class CombatLog {
     }
 
     // Clear Combat log
-    public static void clearLog() {
+    public void clearLog() {
         logEntries.clear();
     }
 }

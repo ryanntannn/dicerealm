@@ -21,6 +21,7 @@ public class CombatHitTest {
     private Player player;
     private Monster monster;
 
+    private CombatLog combatLog;
     private HitCalculator hitCalculator;
 
     // Custom D20 implementation for testing
@@ -40,6 +41,7 @@ public class CombatHitTest {
 
         player = new Player("Darren", Race.HUMAN, EntityClass.WARRIOR, baseStats);
         monster = new Monster("Demon King", Race.DEMON, EntityClass.WARRIOR, baseStats);
+        combatLog = new CombatLog();
 
     }
 
@@ -48,43 +50,40 @@ public class CombatHitTest {
         //Rigs dice for Nat 20
         hitCalculator = new HitCalculator(new FixedD20(20));
 
-        AttackResult result = hitCalculator.doesAttackHit(player, monster, ActionType.MELEE);
-
-        assertEquals(AttackResult.CRIT_HIT, result);
-        assertEquals("Darren rolls a NATURAL 20! CRITICAL HIT!", CombatLog.printLatestReadout());
+        HitResult hitResult = hitCalculator.doesAttackHit(player, monster, ActionType.MELEE);
+        combatLog.log(hitResult.getLogMessage());
+        assertEquals(AttackResult.CRIT_HIT, hitResult.getAttackResult());
+        assertEquals("Darren rolls a NATURAL 20! CRITICAL HIT!", combatLog.printLatestReadout());
     }
 
     @Test
     void testCriticalMiss() {
         //Rigs dice for Nat 1
         hitCalculator = new HitCalculator(new FixedD20(1));
-
-        AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
-
-        assertEquals(AttackResult.CRIT_MISS, result);
-        assertEquals("Darren rolls a NATURAL 1! CRITICAL MISS!", CombatLog.printLatestReadout());
+        HitResult hitResult = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
+        combatLog.log(hitResult.getLogMessage());
+        assertEquals(AttackResult.CRIT_MISS, hitResult.getAttackResult());
+        assertEquals("Darren rolls a NATURAL 1! CRITICAL MISS!", combatLog.printLatestReadout());
     }
 
     @Test
     void testNormalHit() {
         //Rigs Dice to guarantee Hit
         hitCalculator = new HitCalculator(new FixedD20(19));
-
-        AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
-
-        assertEquals(AttackResult.HIT, result);
-        assertTrue(CombatLog.printLatestReadout().contains("HIT!"));
+        HitResult hitResult = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
+        combatLog.log(hitResult.getLogMessage());
+        assertEquals(AttackResult.HIT, hitResult.getAttackResult());
+        assertTrue(combatLog.printLatestReadout().contains("HIT!"));
     }
 
     @Test
     void testMiss() {
         //Rigs Dice to guarantee miss
         hitCalculator = new HitCalculator(new FixedD20(2));
-
-        AttackResult result = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
-
-        assertEquals(AttackResult.MISS, result);
-        assertTrue(CombatLog.printLatestReadout().contains("MISS!"));
+        HitResult hitResult = hitCalculator.doesAttackHit(player, monster,  ActionType.MELEE);
+        combatLog.log(hitResult.getLogMessage());
+        assertEquals(AttackResult.MISS, hitResult.getAttackResult());
+        assertTrue(combatLog.printLatestReadout().contains("MISS!"));
     }
 
 }
