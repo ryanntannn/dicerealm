@@ -13,9 +13,20 @@ RUN npm install
 # build the app
 RUN npm run build
 
+FROM openjdk:23-jdk AS build-lib
+
+COPY lib /lib
+
+RUN microdnf install findutils
+
+WORKDIR /lib
+# build the app
+RUN ./gradlew build
+
 FROM openjdk:23-jdk AS build-server
 
 COPY --from=build-web /server/src/main/resources/static /server/src/main/resources/static
+COPY --from=build-lib /lib/lib/build /lib/lib/build
 COPY server /server
 
 RUN microdnf install findutils

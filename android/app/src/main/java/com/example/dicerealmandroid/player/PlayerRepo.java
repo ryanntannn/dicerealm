@@ -3,11 +3,11 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dicerealmandroid.command.Command;
-import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
-import com.example.dicerealmandroid.command.UpdatePlayerDetailsRequestCommand;
-import com.example.dicerealmandroid.core.entity.Entity;
-import com.example.dicerealmandroid.core.player.Player;
+import com.dicerealm.core.command.UpdatePlayerDetailsRequestCommand;
+import com.dicerealm.core.entity.ClassStats;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.player.Player;
 import com.example.dicerealmandroid.room.RoomDataSource;
 import com.example.dicerealmandroid.room.RoomRepo;
 import com.google.gson.Gson;
@@ -21,13 +21,10 @@ public class PlayerRepo {
 
     private final Gson gson = new Gson();
 
-
     public PlayerRepo(){
         playerDataSource = PlayerDataSource.getInstance();
         roomDataSource = RoomDataSource.getInstance();
     };
-
-
 
     public LiveData<Player> getPlayer(){
         return playerDataSource.getPlayer();

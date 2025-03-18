@@ -3,8 +3,11 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dicerealmandroid.core.entity.Entity;
-import com.example.dicerealmandroid.core.player.Player;
+import com.dicerealm.core.entity.ClassStats;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.player.Player;
 
 import java.util.UUID;
 
@@ -17,9 +20,9 @@ public class PlayerDataSource {
     private PlayerDataSource(){}
 
     private final MutableLiveData<Player> player = new MutableLiveData<Player>(new Player("Default",
-            Entity.Race.HUMAN,
-            Entity.EntityClass.WARRIOR,
-            Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR)));
+            Race.HUMAN,
+            EntityClass.WARRIOR,
+            ClassStats.getStatsForClass(EntityClass.WARRIOR)));
 
 
     public static PlayerDataSource getInstance(){

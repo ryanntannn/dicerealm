@@ -8,4 +8,8 @@ public class PlayerLeaveCommand extends Command {
 		super.type = "PLAYER_LEAVE";
 		this.playerId = player.getId().toString();
 	}
+
+	public String getPlayerId() {
+		return playerId;
+	}
 }

@@ -8,4 +8,8 @@ public class PlayerJoinCommand extends Command {
 		super.type = "PLAYER_JOIN";
 		this.player = player;
 	}
+
+	public Player getPlayer() {
+		return player;
+	}
 }

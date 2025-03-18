@@ -47,6 +47,14 @@ public class RoomState {
 			return playerMap;
 		}
 
+		public void addPlayer(Player player) {
+			playerMap.put(player.getId(), player);
+		}
+
+		public void removePlayer(UUID playerId) {
+			playerMap.remove(playerId);
+		}
+
 		public List<Message> getMessages() {
 			return messages;
 		}

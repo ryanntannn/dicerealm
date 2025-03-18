@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.DicerealmClient;
-import com.example.dicerealmandroid.core.player.Player;
-import com.example.dicerealmandroid.core.RoomState;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomState;
 
 import java.util.Objects;
 import java.util.UUID;

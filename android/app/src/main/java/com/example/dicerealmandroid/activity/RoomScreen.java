@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
-import com.example.dicerealmandroid.core.player.Player;
+import com.dicerealm.core.player.Player;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 
 public class RoomScreen extends AppCompatActivity {

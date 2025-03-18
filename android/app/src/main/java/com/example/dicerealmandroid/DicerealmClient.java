@@ -6,14 +6,14 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dicerealmandroid.command.Command;
-import com.example.dicerealmandroid.command.FullRoomStateCommand;
-import com.example.dicerealmandroid.command.PlayerJoinCommand;
-import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
-import com.example.dicerealmandroid.core.player.Player;
-import com.example.dicerealmandroid.command.PlayerLeaveCommand;
+import com.dicerealm.core.command.Command;
+import com.dicerealm.core.command.FullRoomStateCommand;
+import com.dicerealm.core.command.PlayerJoinCommand;
+import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.command.PlayerLeaveCommand;
 
-import com.example.dicerealmandroid.core.RoomState;
+import com.dicerealm.core.room.RoomState;
 import com.example.dicerealmandroid.player.PlayerDataSource;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
