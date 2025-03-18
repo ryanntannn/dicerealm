@@ -19,9 +19,9 @@ import com.dicerealm.core.skills.Skill;
 
 public class DamageCalculator {
 
-    private static String damageLog = "";
+    private String damageLog = "";
 
-    public static String applyWeaponDamage(Entity attacker, Entity target, Weapon weapon, boolean isCritHit) {
+    public String applyWeaponDamage(Entity attacker, Entity target, Weapon weapon, boolean isCritHit) {
         int damage = isCritHit ? calculateCritDamage(weapon) : calculateNormalDamage(weapon);
 
         target.takeDamage(damage); // Update target's HP see @Entity
@@ -31,7 +31,7 @@ public class DamageCalculator {
     }
 
     //TODO: Probably best to split the SkillDamage into like Spells/Others
-    public static String applySkillDamage(Entity attacker, Entity target, Skill skill, boolean isCritHit) {
+    public String applySkillDamage(Entity attacker, Entity target, Skill skill, boolean isCritHit) {
         int damage = isCritHit ? calculateCritDamage(skill) : calculateNormalDamage(skill);
 
         target.takeDamage(damage);
@@ -58,7 +58,7 @@ public class DamageCalculator {
     }
 
     //Helper Method to print damageLog
-    public static String readout() {
+    public String readout() {
         return damageLog;
     }
 }
