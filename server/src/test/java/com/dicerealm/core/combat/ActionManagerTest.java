@@ -22,6 +22,7 @@ public class ActionManagerTest {
     private CombatLog combatLog;
     private Weapon weapon;
     private Skill skill;
+    private CombatResult combatResult;
 
     @BeforeEach
     void setUp() {
@@ -52,54 +53,54 @@ public class ActionManagerTest {
     @Test
     void testPerformAttack_Hit() {
         actionManager.rigDice(new FixedD20(19)); // Rolls 19, which should be a hit
-        actionManager.performAttack(player, monster, weapon);
+        combatResult = actionManager.performAttack(player, monster, weapon);
 
-        assertEquals("Darren hits Demon King with Sword for 1 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren hits Demon King with Sword for 1 damage!", combatResult.getDamageLog());
         assertEquals(23, monster.getHealth());
     }
 
     @Test
     void testPerformAttack_CriticalHit() {
         actionManager.rigDice(new FixedD20(20));  // Rolls 20, which should be a crit
-        actionManager.performAttack(player, monster, weapon);
+        combatResult = actionManager.performAttack(player, monster, weapon);
 
-        assertEquals("Darren hits Demon King with Sword for 2 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren hits Demon King with Sword for 2 damage!", combatResult.getDamageLog());
         assertEquals(22, monster.getHealth());
     }
 
     @Test
     void testPerformAttack_Miss() {
         actionManager.rigDice(new FixedD20(2)); // Rolls 2, which should be a miss
-        actionManager.performAttack(player, monster, weapon);
+        combatResult = actionManager.performAttack(player, monster, weapon);
 
-        String log = combatLog.printLatestReadout();
+        String log = combatResult.getHitLog();
         assertTrue(log.contains("MISS"), "Expected log to contain 'MISS'");
     }
 
     @Test
     void testPerformSkillAttack_Hit() {
         actionManager.rigDice(new FixedD20(19)); // Rolls 18, should hit
-        actionManager.performSkillAttack(player, monster, skill);
+        combatResult = actionManager.performSkillAttack(player, monster, skill);
 
-        assertEquals("Darren casts Fireball on Demon King for 2 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren casts Fireball on Demon King for 2 damage!", combatResult.getDamageLog());
         assertEquals(22, monster.getHealth());
     }
 
     @Test
     void testPerformSkillAttack_CriticalHit() {
         actionManager.rigDice(new FixedD20(20)); // Rolls 20, should be a crit
-        actionManager.performSkillAttack(player, monster, skill);
+        combatResult = actionManager.performSkillAttack(player, monster, skill);
 
-        assertEquals("Darren casts Fireball on Demon King for 4 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren casts Fireball on Demon King for 4 damage!", combatResult.getDamageLog());
         assertEquals(20, monster.getHealth());
     }
 
     @Test
     void testPerformSkillAttack_Miss() {
         actionManager.rigDice(new FixedD20(2)); // Rolls 3, should miss
-        actionManager.performSkillAttack(player, monster, skill);
+        combatResult = actionManager.performSkillAttack(player, monster, skill);
 
-        String log = combatLog.printLatestReadout();
+        String log = combatResult.getHitLog();
         assertTrue(log.contains("MISS"), "Expected log to contain 'MISS'");
     }
 }

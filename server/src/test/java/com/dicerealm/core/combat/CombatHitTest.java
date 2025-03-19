@@ -24,9 +24,10 @@ import java.util.Map;
 public class CombatHitTest {
     private Player player;
     private Monster monster;
-
     private CombatLog combatLog;
     private HitCalculator hitCalculator;
+
+
 
     // Custom D20 implementation for testing
     @BeforeEach

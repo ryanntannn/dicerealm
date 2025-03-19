@@ -16,7 +16,7 @@ import com.dicerealm.core.skills.Skill;
 //TODO:Currently Incomplete Pushing Old Version with CombatLog to test if Logger Works Properly
 public class ActionManager {
     private CombatLog combatLog;
-    private CombatResult combatResult = new CombatResult();
+    private CombatResult combatResult;
     private HitCalculator hitCalculator;
     private DamageCalculator damageCalculator = new DamageCalculator();
 
@@ -34,10 +34,11 @@ public class ActionManager {
     /**
      * Handles a basic melee or ranged attack action.
      */
-    public void performAttack(Entity attacker, Entity target, Weapon weapon) {
+    public CombatResult performAttack(Entity attacker, Entity target, Weapon weapon) {
         ActionType actionType = determineWeaponActionType(weapon);
         HitResult hitResult = hitCalculator.doesAttackHit(attacker, target, actionType);
         combatLog.log(hitResult.getHitLog());
+        combatResult = new CombatResult(attacker, target, weapon);
         combatResult.fromHitResult(hitResult);
 
         if (hitResult.getAttackResult() == AttackResult.HIT || hitResult.getAttackResult() == AttackResult.CRIT_HIT) {
@@ -46,14 +47,17 @@ public class ActionManager {
             combatResult.fromDamageResult(damageResult);
             combatLog.log(damageCalculator.readout());
         }
+
+        return combatResult;
     }
 
     /**
      * Handles skill-based attacks.
      */
-    public void performSkillAttack(Entity caster, Entity target, Skill skill) {
+    public CombatResult performSkillAttack(Entity caster, Entity target, Skill skill) {
         ActionType actionType = ActionType.SKILL; // All skills are of type Skill attack
         HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
+        combatResult = new CombatResult(caster, target, skill);
         combatLog.log(hitResult.getHitLog());
         combatResult.fromHitResult(hitResult);
 
@@ -64,6 +68,8 @@ public class ActionManager {
             combatResult.fromDamageResult(damageResult);
             combatLog.log(damageCalculator.readout());
         }
+
+        return combatResult;
     }
 
     /**
