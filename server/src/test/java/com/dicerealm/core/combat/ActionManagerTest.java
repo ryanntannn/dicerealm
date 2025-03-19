@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.dicerealm.core.combat.managers.ActionManager;
 import com.dicerealm.core.dice.FixedD20;
 import com.dicerealm.core.entity.*;
 import com.dicerealm.core.item.Weapon;

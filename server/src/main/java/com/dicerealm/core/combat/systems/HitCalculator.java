@@ -1,7 +1,8 @@
-package com.dicerealm.core.combat;
+package com.dicerealm.core.combat.systems;
 
-import static com.dicerealm.core.combat.AttackBonusCalculator.getAttackBonus;
+import static com.dicerealm.core.combat.systems.AttackBonusCalculator.getAttackBonus;
 
+import com.dicerealm.core.combat.ActionType;
 import com.dicerealm.core.dice.D20;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
