@@ -8,6 +8,7 @@ import com.dicerealm.core.skills.Skill;
 //TODO:Currently Incomplete Pushing Old Version with CombatLog to test if Logger Works Properly
 public class ActionManager {
     private CombatLog combatLog;
+    private CombatResult combatResult = new CombatResult();
     private HitCalculator hitCalculator;
     private DamageCalculator damageCalculator = new DamageCalculator();
 
@@ -28,11 +29,13 @@ public class ActionManager {
     public void performAttack(Entity attacker, Entity target, Weapon weapon) {
         ActionType actionType = determineWeaponActionType(weapon);
         HitResult hitResult = hitCalculator.doesAttackHit(attacker, target, actionType);
-        combatLog.log(hitResult.getLogMessage());
+        combatLog.log(hitResult.getHitLog());
+        combatResult.fromHitResult(hitResult);
 
         if (hitResult.getAttackResult() == AttackResult.HIT || hitResult.getAttackResult() == AttackResult.CRIT_HIT) {
             boolean isCritical = hitResult.getAttackResult() == AttackResult.CRIT_HIT;
-            damageCalculator.applyWeaponDamage(attacker, target, weapon, isCritical);
+            DamageResult damageResult = damageCalculator.applyWeaponDamage(attacker, target, weapon, isCritical);
+            combatResult.fromDamageResult(damageResult);
             combatLog.log(damageCalculator.readout());
         }
     }
@@ -43,11 +46,14 @@ public class ActionManager {
     public void performSkillAttack(Entity caster, Entity target, Skill skill) {
         ActionType actionType = ActionType.SKILL; // All skills are of type Skill attack
         HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
-        combatLog.log(hitResult.getLogMessage());
+        combatLog.log(hitResult.getHitLog());
+        combatResult.fromHitResult(hitResult);
+
 
         if (hitResult.getAttackResult() == AttackResult.HIT || hitResult.getAttackResult() == AttackResult.CRIT_HIT) {
             boolean isCritical = hitResult.getAttackResult() == AttackResult.CRIT_HIT;
-            damageCalculator.applySkillDamage(caster, target, skill, isCritical);
+            DamageResult damageResult = damageCalculator.applySkillDamage(caster, target, skill, isCritical);
+            combatResult.fromDamageResult(damageResult);
             combatLog.log(damageCalculator.readout());
         }
     }

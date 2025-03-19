@@ -5,18 +5,25 @@ package com.dicerealm.core.combat;
  */
 public class HitResult {
     private AttackResult attackResult;
-    private String logMessage;
+    private int attackRoll;
+    private int attackBonus;
+    private String hitLog;
 
-    public HitResult(AttackResult attackResult, String logMessage) {
+    public HitResult(AttackResult attackResult, int attackRoll, int attackBonus, String hitLog) {
         this.attackResult = attackResult;
-        this.logMessage = logMessage;
+        this.attackRoll = attackRoll;
+        this.attackBonus = attackBonus;
+        this.hitLog = hitLog;
     }
+
 
     public AttackResult getAttackResult() {
         return attackResult;
     }
-
-    public String getLogMessage() {
-        return logMessage;
+    public int getAttackRoll(){ return attackRoll;}
+    public int getAttackBonus(){ return attackBonus;}
+    public String getHitLog() {
+        return hitLog;
     }
+
 }

@@ -60,7 +60,7 @@ public class HitCalculator {
 
         }
 
-        return new HitResult(attackResult, hitLog);
+        return new HitResult(attackResult, attackRoll, attackBonus, hitLog);
 
     }
 

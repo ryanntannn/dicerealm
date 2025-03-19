@@ -21,23 +21,23 @@ public class DamageCalculator {
 
     private String damageLog = "";
 
-    public String applyWeaponDamage(Entity attacker, Entity target, Weapon weapon, boolean isCritHit) {
+    public DamageResult applyWeaponDamage(Entity attacker, Entity target, Weapon weapon, boolean isCritHit) {
         int damage = isCritHit ? calculateCritDamage(weapon) : calculateNormalDamage(weapon);
 
         target.takeDamage(damage); // Update target's HP see @Entity
         damageLog = (attacker.getDisplayName() + " hits " + target.getDisplayName() + " with " + weapon.getDisplayName() +
                 " for " + damage + " damage!");
-        return damageLog;
+        return new DamageResult(damage, damageLog);
     }
 
     //TODO: Probably best to split the SkillDamage into like Spells/Others
-    public String applySkillDamage(Entity attacker, Entity target, Skill skill, boolean isCritHit) {
+    public DamageResult applySkillDamage(Entity attacker, Entity target, Skill skill, boolean isCritHit) {
         int damage = isCritHit ? calculateCritDamage(skill) : calculateNormalDamage(skill);
 
         target.takeDamage(damage);
         damageLog = (attacker.getDisplayName() + " casts " + skill.getDisplayName() + " on " +
                 target.getDisplayName() + " for " + damage + " damage!");
-        return damageLog;
+        return new DamageResult(damage, damageLog);
     }
 
     //Helper Methods to roll for each Damage Type
