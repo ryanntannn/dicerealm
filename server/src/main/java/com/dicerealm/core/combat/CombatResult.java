@@ -1,5 +1,8 @@
 package com.dicerealm.core.combat;
 
+import com.dicerealm.core.combat.systems.AttackResult;
+import com.dicerealm.core.combat.systems.DamageResult;
+import com.dicerealm.core.combat.systems.HitResult;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 

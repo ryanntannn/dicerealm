@@ -1,4 +1,4 @@
-package com.dicerealm.core.combat;
+package com.dicerealm.core.combat.systems;
 
 public class DamageResult {
     private int damageRoll;
