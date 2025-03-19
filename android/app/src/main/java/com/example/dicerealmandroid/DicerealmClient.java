@@ -1,19 +1,24 @@
 package com.example.dicerealmandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.dicerealmandroid.activity.DialogScreen;
+import com.example.dicerealmandroid.activity.HomeActivity;
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.FullRoomStateCommand;
 import com.example.dicerealmandroid.command.PlayerJoinCommand;
 import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
+import com.example.dicerealmandroid.command.dialogue.StartTurnCommand;
 import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.command.PlayerLeaveCommand;
 
 import com.example.dicerealmandroid.core.RoomState;
+import com.example.dicerealmandroid.game.dialog.DialogRepo;
 import com.example.dicerealmandroid.player.PlayerDataSource;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
@@ -46,6 +51,7 @@ public class DicerealmClient extends WebSocketClient {
 
         PlayerRepo playerRepo = new PlayerRepo();
         RoomRepo roomRepo = new RoomRepo();
+        DialogRepo dialogRepo = new DialogRepo();
 
         switch (command.getType()) {
             case "FULL_ROOM_STATE":
@@ -78,6 +84,16 @@ public class DicerealmClient extends WebSocketClient {
                 Player updatedPlayer = gson.fromJson(message, UpdatePlayerDetailsCommand.class).player;
                 playerRepo.setPlayer(updatedPlayer);
                 break;
+
+            case "START_GAME":
+                Message.showMessage("Game started.");
+                break;
+
+            case "DIALOGUE_START_TURN":
+                StartTurnCommand startTurnCommand = gson.fromJson(message, StartTurnCommand.class);
+                dialogRepo.addNewTurn(startTurnCommand);
+                break;
+
             default:
                 System.out.println("Command Not Handled: " + command.getType());
         }
