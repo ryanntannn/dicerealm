@@ -1,4 +1,4 @@
-package com.dicerealm.core.combat.systems;
+package com.dicerealm.core.combat;
 
 /**
  * Stores the attack result and log message from HitCalculator.

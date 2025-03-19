@@ -1,10 +1,6 @@
 package com.dicerealm.core.combat;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import com.dicerealm.core.combat.systems.AttackResult;
-import com.dicerealm.core.combat.systems.HitCalculator;
-import com.dicerealm.core.combat.systems.HitResult;
 import com.dicerealm.core.dice.FixedD20;
 import com.dicerealm.core.entity.Stat;
 

@@ -1,6 +1,6 @@
 package com.dicerealm.core.room;
 
-import com.dicerealm.core.combat.managers.CombatManager;
+import com.dicerealm.core.combat.CombatManager;
 import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.RandomStrategy;

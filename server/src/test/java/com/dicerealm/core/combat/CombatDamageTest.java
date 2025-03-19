@@ -1,6 +1,5 @@
 package com.dicerealm.core.combat;
 
-import com.dicerealm.core.combat.systems.DamageCalculator;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.StatsMap;

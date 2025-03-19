@@ -1,6 +1,5 @@
-package com.dicerealm.core.combat.systems;
+package com.dicerealm.core.combat;
 
-import com.dicerealm.core.combat.ActionType;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.AbilityModifierCalculator;
 public class AttackBonusCalculator {
