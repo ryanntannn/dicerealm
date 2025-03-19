@@ -1,5 +1,6 @@
-package com.dicerealm.core.combat;
+package com.dicerealm.core.combat.managers;
 
+import com.dicerealm.core.combat.CombatLog;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.util.queue.Queue;
 import java.util.List;

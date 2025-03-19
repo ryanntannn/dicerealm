@@ -1,4 +1,4 @@
-package com.dicerealm.core.combat;
+package com.dicerealm.core.combat.systems;
 
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.item.Weapon;

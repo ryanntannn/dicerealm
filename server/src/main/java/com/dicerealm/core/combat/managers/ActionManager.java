@@ -1,5 +1,13 @@
-package com.dicerealm.core.combat;
+package com.dicerealm.core.combat.managers;
 
+import com.dicerealm.core.combat.ActionType;
+import com.dicerealm.core.combat.systems.AttackResult;
+import com.dicerealm.core.combat.CombatLog;
+import com.dicerealm.core.combat.systems.CombatResult;
+import com.dicerealm.core.combat.systems.DamageCalculator;
+import com.dicerealm.core.combat.systems.DamageResult;
+import com.dicerealm.core.combat.systems.HitCalculator;
+import com.dicerealm.core.combat.systems.HitResult;
 import com.dicerealm.core.dice.D20;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.item.Weapon;
