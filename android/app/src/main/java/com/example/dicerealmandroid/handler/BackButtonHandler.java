@@ -1,4 +1,4 @@
-package com.example.dicerealmandroid;
+package com.example.dicerealmandroid.handler;
 
 import android.app.Activity;
 import android.view.View;

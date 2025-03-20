@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.dicerealmandroid.BackButtonHandler;
+import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.core.entity.Entity;
 import com.example.dicerealmandroid.core.player.Player;
@@ -108,12 +108,12 @@ public class CharacterScreen extends AppCompatActivity {
         TextView chara_name3 = findViewById(R.id.chara_name3);
         TextView chara_name4 = findViewById(R.id.chara_name4);
 
+        Button nextButton = findViewById(R.id.nextButton);
         // If a character was previously selected, Remove the previous border
         if (previousSelected != null) {
             previousSelected.setBackgroundResource(0);
         }
         else {
-            Button nextButton = findViewById(R.id.nextButton);
             nextButton.setEnabled(true);
         }
 
