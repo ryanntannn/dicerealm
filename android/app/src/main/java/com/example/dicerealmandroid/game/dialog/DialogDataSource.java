@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.dicerealmandroid.command.dialogue.StartTurnCommand;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /*
@@ -15,7 +16,8 @@ import java.util.Queue;
 public class DialogDataSource {
     private static DialogDataSource instance;
 
-    private MutableLiveData<Queue<StartTurnCommand>> turnHistory = new MutableLiveData<>(new LinkedList<>());
+    private List<StartTurnCommand> turnHistory = new LinkedList<>();
+    private MutableLiveData<StartTurnCommand> currentTurn = new MutableLiveData<>();
     private boolean turnEnd = false;
     private DialogDataSource(){}
 
@@ -26,13 +28,16 @@ public class DialogDataSource {
         return instance;
     }
 
-    public LiveData<Queue<StartTurnCommand>> subscribeTurnHistory(){
-        return turnHistory;
+    public LiveData<StartTurnCommand> subscribeLatestTurn(){
+        return currentTurn;
     }
 
-    public void addNewTurn(StartTurnCommand currentTurn){
-        Queue<StartTurnCommand> currentHistory = this.turnHistory.getValue();
-        currentHistory.add(currentTurn);
-        this.turnHistory.postValue(currentHistory);
+    public void updateTurnHistory(StartTurnCommand currentTurn){
+        turnHistory.add(currentTurn);
+        this.currentTurn.postValue(currentTurn);
+    }
+
+    public List<StartTurnCommand> getTurnHistory(){
+        return turnHistory;
     }
 }

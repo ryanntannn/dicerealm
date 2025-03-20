@@ -1,5 +1,7 @@
 package com.example.dicerealmandroid.game;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -7,6 +9,7 @@ import com.example.dicerealmandroid.command.dialogue.StartTurnCommand;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
 
+import java.util.List;
 import java.util.Queue;
 
 public class GameStateHolder extends ViewModel {
@@ -23,7 +26,11 @@ public class GameStateHolder extends ViewModel {
         gameRepo.startGame();
     }
 
-    public LiveData<Queue<StartTurnCommand>> subscribeDialogueTurnHistory(){
-        return dialogRepo.subscribeTurnHistory();
+    public List<StartTurnCommand> getDialogTurnHistory(){
+        return dialogRepo.getTurnHistory();
+    }
+
+    public LiveData<StartTurnCommand> subscribeDialogLatestTurn(){
+        return dialogRepo.subscribeLatestTurn();
     }
 }

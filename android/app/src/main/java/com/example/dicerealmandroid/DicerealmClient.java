@@ -91,7 +91,7 @@ public class DicerealmClient extends WebSocketClient {
 
             case "DIALOGUE_START_TURN":
                 StartTurnCommand startTurnCommand = gson.fromJson(message, StartTurnCommand.class);
-                dialogRepo.addNewTurn(startTurnCommand);
+                dialogRepo.updateHistory(startTurnCommand);
                 break;
 
             default:

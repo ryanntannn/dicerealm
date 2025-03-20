@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.dicerealmandroid.command.dialogue.StartTurnCommand;
 
+import java.util.List;
 import java.util.Queue;
 
 public class DialogRepo {
@@ -13,11 +14,16 @@ public class DialogRepo {
         this.dialogDataSource = DialogDataSource.getInstance();
     }
 
-    public void addNewTurn(StartTurnCommand message){
-        dialogDataSource.addNewTurn(message);
+
+    public LiveData<StartTurnCommand> subscribeLatestTurn(){
+        return dialogDataSource.subscribeLatestTurn();
     }
 
-    public LiveData<Queue<StartTurnCommand>> subscribeTurnHistory(){
-        return dialogDataSource.subscribeTurnHistory();
+    public List<StartTurnCommand> getTurnHistory(){
+        return dialogDataSource.getTurnHistory();
+    }
+
+    public void updateHistory(StartTurnCommand turn){
+        dialogDataSource.updateTurnHistory(turn);
     }
 }
