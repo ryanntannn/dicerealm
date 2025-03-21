@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -33,7 +34,6 @@ import java.util.UUID;
 // TODO: Add player inventory interface
 // TODO: Add player stats interface popup
 
-// TODO: Add a count down timer for the player's turn
 
 public class DialogScreen extends AppCompatActivity {
     private CardView selectedCardView;
@@ -116,7 +116,7 @@ public class DialogScreen extends AppCompatActivity {
                     currentTurnView = new TextView(DialogScreen.this);
                     ownerView = new TextView(DialogScreen.this);
 
-                    turnContainer.setCardBackgroundColor(Color.parseColor("#D9D9D9"));  // Set background color
+                    turnContainer.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
                     turnContainer.setRadius(20);
                     turnContainer.setPadding(0, 20, 0, 0);
 
@@ -145,7 +145,6 @@ public class DialogScreen extends AppCompatActivity {
                         ownerView.setGravity(Gravity.END); // flush right
 
                         if(playerId.orElse(null).equals(playerSh.getPlayerId())){
-                            // You
                             ownerView.setText("You");
                         }else{
                             ownerView.setText("Other player");
@@ -169,6 +168,7 @@ public class DialogScreen extends AppCompatActivity {
     }
 
     private void displayMessageStream(String message, TextView currentTurnView){
+        ScrollView messagesScroll = findViewById(R.id.messages);
         // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
         Thread backgroundThread = new Thread(() ->{
             for(int i = 0; i < message.length(); i++){
@@ -180,7 +180,10 @@ public class DialogScreen extends AppCompatActivity {
                     return;
                 }
                 // Important to run on UI thread
-                runOnUiThread(() -> currentTurnView.append(String.valueOf(currChar)));
+                runOnUiThread(() ->{
+                    currentTurnView.append(String.valueOf(currChar));
+                    messagesScroll.fullScroll(ScrollView.FOCUS_DOWN);
+                });
             }
         });
         backgroundThread.start();
