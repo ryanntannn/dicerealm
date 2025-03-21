@@ -33,6 +33,21 @@ public class RoomScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Observe if game has started
+        GameStateHolder gameStateHolder = new ViewModelProvider(this).get(GameStateHolder.class);
+        gameStateHolder.isGameRunning().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isGameRunning) {
+                if (isGameRunning) {
+                    Intent intent = new Intent(RoomScreen.this, DialogScreen.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
         RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         GameStateHolder gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
 
@@ -66,9 +81,6 @@ public class RoomScreen extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 gameSh.startGame();
-                Intent intent = new Intent(RoomScreen.this, DialogScreen.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
             }
         });
     }

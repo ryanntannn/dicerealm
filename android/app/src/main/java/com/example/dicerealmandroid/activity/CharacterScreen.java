@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.core.entity.Entity;
@@ -38,6 +39,18 @@ public class CharacterScreen extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+        // Observe if game has started
+        GameStateHolder gameStateHolder = new ViewModelProvider(this).get(GameStateHolder.class);
+        gameStateHolder.isGameRunning().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isGameRunning) {
+                if (isGameRunning) {
+                    Intent intent = new Intent(CharacterScreen.this, DialogScreen.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
         });
 
         // Access PlayerStateHolder

@@ -1,4 +1,4 @@
-package com.example.dicerealmandroid.command.dialogue;
+package com.example.dicerealmandroid.core;
 
 import com.example.dicerealmandroid.core.entity.Entity;
 

@@ -1,6 +1,7 @@
 package com.example.dicerealmandroid.command.dialogue;
 
 import com.example.dicerealmandroid.command.Command;
+import com.example.dicerealmandroid.core.DialogueTurn;
 
 public class StartTurnCommand extends Command {
     private DialogueTurn dialogueTurn;

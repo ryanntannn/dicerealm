@@ -5,4 +5,8 @@
 
     <color name="darkText">#000000</color>
     <color name="lightText">#000000</color>
+
+
+    <!--  Messages background  -->
+    <color name="messageBackground">#FAFAFA</color>
 </resources>

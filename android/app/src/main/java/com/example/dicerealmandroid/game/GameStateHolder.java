@@ -1,21 +1,22 @@
 package com.example.dicerealmandroid.game;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dicerealmandroid.command.dialogue.StartTurnCommand;
+import com.example.dicerealmandroid.game.dialog.DialogueClass;
+import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
+import com.example.dicerealmandroid.core.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
-import com.example.dicerealmandroid.room.RoomRepo;
 
 import java.util.List;
-import java.util.Queue;
 
 public class GameStateHolder extends ViewModel {
 
     private GameRepo gameRepo;
     private DialogRepo dialogRepo;
+
+    private long timeLeftMillis = 30000;
+    private long interval = 1000;
 
     public GameStateHolder(){
         gameRepo = new GameRepo();
@@ -26,11 +27,52 @@ public class GameStateHolder extends ViewModel {
         gameRepo.startGame();
     }
 
-    public List<StartTurnCommand> getDialogTurnHistory(){
+    public LiveData<Boolean> isGameRunning(){
+        return gameRepo.isGameRunning();
+    }
+
+
+
+
+    // Dialog related methods
+    public List<DialogueClass> getDialogTurnHistory(){
         return dialogRepo.getTurnHistory();
     }
 
-    public LiveData<StartTurnCommand> subscribeDialogLatestTurn(){
+    public LiveData<DialogueClass> subscribeDialogLatestTurn(){
         return dialogRepo.subscribeLatestTurn();
     }
+
+    public LiveData<ShowPlayerActionsCommand> subscribeDialogPlayerActions(){
+        return dialogRepo.subscribePlayerActions();
+    }
+
+    public void sendPlayerDialogAction(DungeonMasterResponse.PlayerAction action){
+        dialogRepo.sendPlayerAction(action);
+    }
+
+    public int getDialogLatestTurn(){
+        return dialogRepo.getLatestTurn();
+    }
+
+
+
+    // Timer related methods
+    public long getTimeLeftInMillis(){
+        // Reset the timer if it reaches 0
+        if(timeLeftMillis <= 0){
+            timeLeftMillis = 30000;
+        }
+        return timeLeftMillis;
+    }
+
+    public void setTimeLeftInMillis(long timeLeftMillis){
+        this.timeLeftMillis = timeLeftMillis;
+    }
+
+    public long getIntervalInMillis(){
+        return interval;
+    }
+
+
 }

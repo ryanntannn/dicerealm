@@ -1,4 +1,4 @@
-package com.example.dicerealmandroid.command.dialogue;
+package com.example.dicerealmandroid.core;
 
 import java.util.HashMap;
 import java.util.UUID;

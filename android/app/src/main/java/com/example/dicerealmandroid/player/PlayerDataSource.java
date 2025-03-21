@@ -14,12 +14,12 @@ import java.util.UUID;
  * */
 public class PlayerDataSource {
     private static PlayerDataSource instance;
-    private PlayerDataSource(){}
-
     private final MutableLiveData<Player> player = new MutableLiveData<Player>(new Player("Default",
             Entity.Race.HUMAN,
             Entity.EntityClass.WARRIOR,
             Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR)));
+
+    private PlayerDataSource(){}
 
 
     public static PlayerDataSource getInstance(){

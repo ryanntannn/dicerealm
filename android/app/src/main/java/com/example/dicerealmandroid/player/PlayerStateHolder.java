@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.dicerealmandroid.core.player.Player;
 
+import java.util.UUID;
+
 public class PlayerStateHolder extends ViewModel{
     private PlayerRepo playerRepo;
 
@@ -22,5 +24,9 @@ public class PlayerStateHolder extends ViewModel{
     }
     public void updatePlayerRequest(Player player){
         playerRepo.updatePlayerRequest(player);
+    }
+
+    public UUID getPlayerId(){
+        return playerRepo.getPlayerId();
     }
 }
