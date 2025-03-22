@@ -80,7 +80,7 @@ public class DicerealmClient extends WebSocketClient {
                 break;
 
             case "UPDATE_PLAYER_DETAILS":
-                // Update player details while keeping the inventory and skills inventory intact
+                // Update player details while keeping the item inventory and skills inventory intact
                 UpdatePlayerDetailsCommand updatePlayerDetailsCommand = gson.fromJson(message, UpdatePlayerDetailsCommand.class);
                 updatePlayerDetailsCommand.player.updateInventory(playerRepo.getPlayer().getValue().getInventory());
                 updatePlayerDetailsCommand.player.updateSkillsInventory(playerRepo.getPlayer().getValue().getSkillsInventory());

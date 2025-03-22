@@ -24,8 +24,6 @@ public class PlayerStateHolder extends ViewModel{
         playerRepo.setPlayer(player);
     }
     public void updatePlayerRequest(Player player){
-        // Get player's inventory and skill inventory
-
         playerRepo.updatePlayerRequest(player);
     }
 

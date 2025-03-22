@@ -58,4 +58,8 @@ public class InventoryOf<T extends Identifiable> {
         }
         return null;
     }
+
+    public List<T> getItems() {
+        return items;
+    }
 }

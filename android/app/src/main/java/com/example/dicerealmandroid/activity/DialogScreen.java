@@ -1,10 +1,17 @@
 package com.example.dicerealmandroid.activity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -13,12 +20,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.core.item.Item;
 import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.game.dialog.DialogueClass;
 import com.example.dicerealmandroid.R;
@@ -26,6 +35,11 @@ import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
 import com.example.dicerealmandroid.core.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
+import com.example.dicerealmandroid.util.ScreenDimensions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -55,13 +69,18 @@ public class DialogScreen extends AppCompatActivity {
         LinearLayout actionLayout = findViewById(R.id.playerActionsContainer);
         TextView timerView = findViewById(R.id.timer);
 
+        BottomSheetDialog itemInventoryModal = new BottomSheetDialog(DialogScreen.this);
+        View itemInventoryView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.modal_item_inventory, null);
+
+
 
         GameStateHolder gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
         PlayerStateHolder playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
 
         this.getTurnHistory(gameSh, messageLayout);
         this.trackTurns(gameSh, messageLayout, actionLayout, timerView, playerSh);
-        this.displayPlayerDetails(playerSh);
+        this.displayPlayerDetails(playerSh, itemInventoryView);
+        this.openItemInventory(itemInventoryModal, itemInventoryView);
     }
 
     private void getTurnHistory(GameStateHolder gameSh, LinearLayout messageLayout){
@@ -207,9 +226,9 @@ public class DialogScreen extends AppCompatActivity {
 
                     // Set LayoutParams for CardView
                     LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
-                            450, LinearLayout.LayoutParams.MATCH_PARENT
+                            600, LinearLayout.LayoutParams.MATCH_PARENT
                     );
-                    cardLayoutParams.setMargins(40, 10, 40, 10);
+                    cardLayoutParams.setMargins(40, 20, 40, 20);
 
                     // Get ripple effect attribute when a view is clicked and store in outValue
                     TypedValue outValue = new TypedValue();
@@ -267,13 +286,14 @@ public class DialogScreen extends AppCompatActivity {
     }
 
 
-    private void displayPlayerDetails(PlayerStateHolder playerSh){
+    private void displayPlayerDetails(PlayerStateHolder playerSh, View itemInventoryView){
         TextView username = findViewById(R.id.username);
         TextView stats = findViewById(R.id.stats);
 
         // Initialize player details
         username.setText(playerSh.getPlayer().getValue().getDisplayName());
         stats.setText(playerSh.getPlayer().getValue().getStats().toString());
+        displayItemInventory(playerSh.getPlayer().getValue(), itemInventoryView);
 
         playerSh.getPlayer().observe(this, new Observer<Player>() {
            @Override
@@ -281,6 +301,7 @@ public class DialogScreen extends AppCompatActivity {
                // When player details change, update the UI
                username.setText(player.getDisplayName());
                stats.setText(player.getStats().toString());
+               displayItemInventory(player, itemInventoryView);
             }
         });
     }
@@ -308,4 +329,36 @@ public class DialogScreen extends AppCompatActivity {
         });
         backgroundThread.start();
     }
+
+    private void openItemInventory(BottomSheetDialog itemInventoryModal, View bottomSheetView){
+        FloatingActionButton itemInventory= findViewById(R.id.itemInventory);
+        // Open player inventory
+        itemInventory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+
+                // Set fixed height
+                bottomSheetView.setLayoutParams(new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        ScreenDimensions.getScreenHeight() / 2
+                ));
+                itemInventoryModal.setContentView(bottomSheetView);
+                itemInventoryModal.show();
+            }
+        });
+    }
+
+    private void displayItemInventory(Player player, View itemInventoryView){
+
+        // Show item inventory
+        LinearLayout itemInventoryLayout = itemInventoryView.findViewById(R.id.itemInventoryList);
+        itemInventoryLayout.removeAllViews();
+
+        TextView itemInventoryTitle = new TextView(DialogScreen.this);
+        itemInventoryLayout.addView(itemInventoryTitle);
+        for(Item item : player.getInventory().getItems()){
+            itemInventoryTitle.append(item.getDisplayName() + "\n");
+        }
+    }
+
 }

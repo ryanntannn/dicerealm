@@ -10,7 +10,7 @@
     <ScrollView
         android:id="@+id/messages"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="430dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_marginTop="10dp"
@@ -37,7 +37,7 @@
     <HorizontalScrollView
         android:id="@+id/playerActions"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,13 +73,27 @@
 
     <TextView
         android:id="@+id/stats"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerActions" />
+        app:layout_constraintTop_toBottomOf="@+id/playerActions"
+        app:layout_constraintVertical_bias="0.097" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/itemInventory"
+        android:layout_width="50dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="60dp"
+        app:srcCompat="@drawable/sword2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

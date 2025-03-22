@@ -40,13 +40,6 @@ public class PlayerDataSource {
         this.player.postValue(player);
     }
 
-    public void updatePlayer(Entity.Stats stats, InventoryOf<Item> inventory, InventoryOf<Skill> skillsInventory){
-        Player currentPlayer = player.getValue();
-        currentPlayer.updateInventory(inventory);
-        currentPlayer.updateSkillsInventory(skillsInventory);
-        currentPlayer.updateEntityStats(stats);
-        player.postValue(currentPlayer);
-    }
 
     public UUID getPlayerId(){
         return player.getValue().getId();
