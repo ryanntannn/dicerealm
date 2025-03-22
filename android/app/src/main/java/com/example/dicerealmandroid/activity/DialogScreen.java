@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.game.dialog.DialogueClass;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
@@ -54,11 +55,13 @@ public class DialogScreen extends AppCompatActivity {
         LinearLayout actionLayout = findViewById(R.id.playerActionsContainer);
         TextView timerView = findViewById(R.id.timer);
 
+
         GameStateHolder gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
         PlayerStateHolder playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
 
         this.getTurnHistory(gameSh, messageLayout);
         this.trackTurns(gameSh, messageLayout, actionLayout, timerView, playerSh);
+        this.displayPlayerDetails(playerSh);
     }
 
     private void getTurnHistory(GameStateHolder gameSh, LinearLayout messageLayout){
@@ -250,7 +253,7 @@ public class DialogScreen extends AppCompatActivity {
         });
     }
 
-    public void setSelectedActon(GameStateHolder gameSh, CardView selectedCardView, DungeonMasterResponse.PlayerAction action){
+    private void setSelectedActon(GameStateHolder gameSh, CardView selectedCardView, DungeonMasterResponse.PlayerAction action){
         // Unselect prev card
         if(!selectedCardView.equals(this.selectedCardView) && this.selectedCardView != null){
             this.selectedCardView.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
@@ -264,7 +267,25 @@ public class DialogScreen extends AppCompatActivity {
     }
 
 
-    public void timer(GameStateHolder gameSh, LinearLayout messageLayout, TextView timerView){
+    private void displayPlayerDetails(PlayerStateHolder playerSh){
+        TextView username = findViewById(R.id.username);
+        TextView stats = findViewById(R.id.stats);
+
+        // Initialize player details
+        username.setText(playerSh.getPlayer().getValue().getDisplayName());
+        stats.setText(playerSh.getPlayer().getValue().getStats().toString());
+
+        playerSh.getPlayer().observe(this, new Observer<Player>() {
+           @Override
+           public void onChanged(Player player){
+               // When player details change, update the UI
+               username.setText(player.getDisplayName());
+               stats.setText(player.getStats().toString());
+            }
+        });
+    }
+
+    private void timer(GameStateHolder gameSh, LinearLayout messageLayout, TextView timerView){
 
         // Timer for player's turn
         timerView.setPadding(20, 20, 20, 20);

@@ -1,11 +1,26 @@
 package com.example.dicerealmandroid.core.entity;
 
+import com.example.dicerealmandroid.core.item.EquippableItem;
+import com.example.dicerealmandroid.core.item.InventoryOf;
+import com.example.dicerealmandroid.core.item.Item;
+import com.example.dicerealmandroid.core.skill.Skill;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 
 public class Entity {
+
+    public enum BodyPart {
+        HEAD,
+        NECK,
+        TORSO,
+        LEGS,
+        LEFT_HAND,
+        RIGHT_HAND,
+    }
+
     public enum Race {
         HUMAN,
         ELF,
@@ -133,8 +148,13 @@ public class Entity {
     private Race race;
     private EntityClass entityClass;
     private int health;
+    private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();
     private StatsMap baseStats;
     private StatsMap stats;
+
+    private InventoryOf<Item> inventory = new InventoryOf<>();
+    private InventoryOf<Skill> skillsInventory = new InventoryOf<>(4);
+
 
     public Entity(String displayName, Race race, EntityClass entityClass, StatsMap baseStats) {
         this.id = UUID.randomUUID();
@@ -174,49 +194,71 @@ public class Entity {
         return health > 0;
     }
 
-//    public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
-//        // Check if item is in inventory
-//        if (!inventory.containsItem(item)) {
-//            return false;
-//        }
-//
-//        if (!item.isSuitableFor(bodyPart)) {
-//            return false;
-//        }
-//
-//        inventory.removeItem(item);
-//
-//        // check if the body part is already equipped
-//        if (equippedItems.containsKey(bodyPart)) {
-//            // un-equip the item
-//            inventory.addItem(equippedItems.get(bodyPart));
-//        }
-//
-//        equippedItems.put(bodyPart, item);
-//        updateStats();
-//
-//        return true;
-//    }
+    public InventoryOf<Item> getInventory() {
+        return inventory;
+    }
+
+    public void updateInventory(InventoryOf<Item> inventory){
+        this.inventory = inventory;
+    }
+
+    public InventoryOf<Skill> getSkillsInventory(){
+        return skillsInventory;
+    }
+
+    public void updateSkillsInventory(InventoryOf<Skill> skillsInventory){
+        this.skillsInventory = skillsInventory;
+    }
+
+    public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
+        // Check if item is in inventory
+        if (!inventory.containsItem(item)) {
+            return false;
+        }
+
+        if (!item.isSuitableFor(bodyPart)) {
+            return false;
+        }
+
+        inventory.removeItem(item);
+
+        // check if the body part is already equipped
+        if (equippedItems.containsKey(bodyPart)) {
+            // un-equip the item
+            inventory.addItem(equippedItems.get(bodyPart));
+        }
+
+        equippedItems.put(bodyPart, item);
+        updateStats();
+
+        return true;
+    }
 
     public void updateMaxHealth() {
         this.health = stats.get(Stat.MAX_HEALTH);
     }
 
+    public void updateEntityStats(Stats stats){
+        this.stats.clear();
+        for(Stat stat: baseStats.keySet()){
+            this.stats.put(stat, stats.getStat(stat));
+        }
+    }
 
-//    public void updateStats() {
-//        stats.clear();
-//        for (Stat stat : baseStats.keySet()) {
-//            stats.put(stat, getStat(stat));
-//        }
-//    }
-//
-//    public int getStat(Stat stat) {
-//        int out = baseStats.get(stat);
-//        for (EquippableItem item : equippedItems.values()) {
-//            out += item.getStat(stat);
-//        }
-//        return out;
-//    }
+    public void updateStats() {
+        stats.clear();
+        for (Stat stat : baseStats.keySet()) {
+            stats.put(stat, getStat(stat));
+        }
+    }
+
+    public int getStat(Stat stat) {
+        int out = baseStats.get(stat);
+        for (EquippableItem item : equippedItems.values()) {
+            out += item.getStat(stat);
+        }
+        return out;
+    }
 
     public void displayStats(){
         System.out.println("Name: " + getDisplayName());

@@ -3,6 +3,7 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
 import com.example.dicerealmandroid.core.player.Player;
 
 import java.util.UUID;
@@ -23,10 +24,13 @@ public class PlayerStateHolder extends ViewModel{
         playerRepo.setPlayer(player);
     }
     public void updatePlayerRequest(Player player){
+        // Get player's inventory and skill inventory
+
         playerRepo.updatePlayerRequest(player);
     }
 
     public UUID getPlayerId(){
         return playerRepo.getPlayerId();
     }
+
 }

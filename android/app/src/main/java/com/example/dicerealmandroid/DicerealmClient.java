@@ -52,7 +52,8 @@ public class DicerealmClient extends WebSocketClient {
 
         switch (command.getType()) {
             case "FULL_ROOM_STATE":
-                FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class);
+                FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class); // crash here
+                System.out.println("FULL_ROOM_STATE:");
                 UUID myId = UUID.fromString(fullRoomStateCommand.getMyId());
                 RoomState roomState = fullRoomStateCommand.getRoomState();
 
@@ -79,8 +80,11 @@ public class DicerealmClient extends WebSocketClient {
                 break;
 
             case "UPDATE_PLAYER_DETAILS":
-                Player updatedPlayer = gson.fromJson(message, UpdatePlayerDetailsCommand.class).player;
-                playerRepo.setPlayer(updatedPlayer);
+                // Update player details while keeping the inventory and skills inventory intact
+                UpdatePlayerDetailsCommand updatePlayerDetailsCommand = gson.fromJson(message, UpdatePlayerDetailsCommand.class);
+                updatePlayerDetailsCommand.player.updateInventory(playerRepo.getPlayer().getValue().getInventory());
+                updatePlayerDetailsCommand.player.updateSkillsInventory(playerRepo.getPlayer().getValue().getSkillsInventory());
+                playerRepo.setPlayer(updatePlayerDetailsCommand.player);
                 break;
 
             case "START_GAME":
