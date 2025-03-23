@@ -39,8 +39,8 @@ public class MockLLMStrategy implements LLMStrategy {
 		}
 
 		@Override
-		public <T> T promptSchema(String prompt, Class<T> schema) {
-			latestPrompt = prompt;
+		public <T> T promptSchema(String systemPrompt, String userPrompt, Class<T> schema) {
+			latestPrompt = systemPrompt;
 			return jsonSerializationStrategy.deserialize(response, schema);
 		}
 }

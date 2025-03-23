@@ -16,7 +16,7 @@ public class DialogueTurn {
 		this.dungeonMasterText = dungeonMasterText;
 		this.turnNumber = turnNumber;
 		startTime = new Date().getTime();
-		endTime = startTime + 60000;//Temporary value
+		endTime = startTime + 30000;//Temporary value
 	}
 
 	public DialogueTurn(int turnNumber, String dungeonMasterText, long deltaTime) {
