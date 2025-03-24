@@ -23,7 +23,9 @@
             android:exported="false" />
         <activity
             android:name=".activity.CharacterScreen"
-            android:exported="false" />
+            android:exported="false"
+
+            />
         <activity
             android:name=".activity.HomeActivity"
             android:exported="false" />

@@ -67,18 +67,19 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="16dp">
 
 <!--            First Container-->
             <LinearLayout
                 android:id="@+id/character1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
+                android:background="@drawable/border_default"
                 >
                 <ImageView
                     android:layout_width="150dp"
@@ -106,11 +107,12 @@
                 android:id="@+id/character2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
+                android:background="@drawable/border_default"
                 >
 
                 <ImageView
@@ -148,12 +150,13 @@
                 android:id="@+id/character3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
-                               >
+                android:background="@drawable/border_default"
+                >
                 <ImageView
                     android:layout_width="150dp"
                     android:layout_height="150dp"
@@ -175,15 +178,17 @@
                     android:text="Race+Class" />
             </LinearLayout>
 
+            <!--            Fourth Container-->
             <LinearLayout
                 android:id="@+id/character4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
+                android:background="@drawable/border_default"
                 >
                 <ImageView
                     android:layout_width="150dp"
@@ -231,11 +236,15 @@
         android:paddingStart="40dp"
         android:paddingEnd="40dp"
         android:textAlignment="center"
-        android:text="Next"
+
+        android:backgroundTint="@drawable/button_bg_selector"
+        android:textColor="@drawable/button_textcolour_selector"
+        style="@style/StandardButtons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.8"
+        android:text="Next"
         />
 
 <!-- Optional feature Button for Custom Character Building-->

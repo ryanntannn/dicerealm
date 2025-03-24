@@ -12,7 +12,7 @@
         <item name="materialButtonStyle">@style/StandardButtons</item>
 
         <!-- Android -->
-        <item name="android:textColor">@color/lightText</item>
+        <item name="android:textColor">@color/darkText</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
 

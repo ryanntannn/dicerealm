@@ -1,7 +1,11 @@
 package com.dicerealm.server.strategy;
 
+import java.util.List;
 import java.util.stream.Stream;
 
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -25,8 +29,9 @@ public class OpenAI implements LLMStrategy {
 			.build();
 
 	OpenAiChatOptions options = OpenAiChatOptions.builder()
-		.model(ChatModel.GPT_3_5_TURBO)
-		.temperature(0.4)
+		.model(ChatModel.GPT_4_O)
+		.temperature(0.7)
+		.topP(0.8)
 		.maxTokens(200)
 		.build();
 
@@ -56,12 +61,14 @@ public class OpenAI implements LLMStrategy {
 	}
 
 	
-	public <T> T promptSchema(String prompt, Class<T> schema) {
+	public <T> T promptSchema(String systemPrompt, String userPrompt, Class<T> schema) {
 		// OpenAI's Structured Response API requires all fields to be required in the JSON schema
 		String jsonSchema = JsonSchemaHelper.makeAllFieldsRequired(serializer.makeJsonSchema(schema));
 
-		Prompt promptObj = new Prompt(prompt, OpenAiChatOptions.builder()
-			.model(ChatModel.GPT_4_O)
+		Message userMessage = new UserMessage(userPrompt);
+		Message systemMessage = new SystemMessage(systemPrompt);
+
+		Prompt promptObj = new Prompt(List.of(userMessage, systemMessage), OpenAiChatOptions.builder()
 			.responseFormat(new ResponseFormat(ResponseFormat.Type.JSON_SCHEMA, jsonSchema))
 			.maxTokens(MAX_TOKENS)
 			.build()
