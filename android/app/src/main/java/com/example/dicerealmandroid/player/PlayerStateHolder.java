@@ -32,8 +32,11 @@ public class PlayerStateHolder extends ViewModel{
         return playerRepo.getPlayerId();
     }
 
-    public void equipItem(UUID itemId, Entity.BodyPart bodyPart){
-        playerRepo.equipItem(itemId, bodyPart);
+    public void equipItemRequest(UUID itemId, Entity.BodyPart bodyPart){
+        playerRepo.equipItemRequest(itemId, bodyPart);
     }
 
+    public String remainingHealth() {
+        return "Remaining Health: " + playerRepo.getPlayer().getValue().getHealth() + "/" + playerRepo.getPlayer().getValue().getStat(Entity.Stat.MAX_HEALTH);
+    }
 }

@@ -53,7 +53,7 @@ public class DicerealmClient extends WebSocketClient {
 
         switch (command.getType()) {
             case "FULL_ROOM_STATE":
-                FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class); // crash here
+                FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class);
                 RoomState roomState = fullRoomStateCommand.getRoomState();
                 Player myPlayer = roomState.getPlayerMap().get(UUID.fromString(fullRoomStateCommand.getMyId()));
 
@@ -77,8 +77,6 @@ public class DicerealmClient extends WebSocketClient {
             case "UPDATE_PLAYER_DETAILS":
                 // Update player details while keeping the item inventory and skills inventory intact
                 UpdatePlayerDetailsCommand updatePlayerDetailsCommand = gson.fromJson(message, UpdatePlayerDetailsCommand.class);
-                updatePlayerDetailsCommand.player.updateInventory(playerRepo.getPlayer().getValue().getInventory());
-                updatePlayerDetailsCommand.player.updateSkillsInventory(playerRepo.getPlayer().getValue().getSkillsInventory());
                 playerRepo.setPlayer(updatePlayerDetailsCommand.player);
                 break;
 
@@ -116,7 +114,14 @@ public class DicerealmClient extends WebSocketClient {
                 break;
 
             case "PLAYER_EQUIP_ITEM_RESPONSE":
-                PlayerEquipItemResponse playerEquipItemResponse = gson.fromJson(message, PlayerEquipItemResponse.class);
+                try {
+                    PlayerEquipItemResponse playerEquipItemResponse = gson.fromJson(message, PlayerEquipItemResponse.class);
+                    playerRepo.equipItem(playerEquipItemResponse);
+                    Message.showMessage("Equipped " + playerEquipItemResponse.getItem().getDisplayName() + " to " + playerEquipItemResponse.getBodyPart());
+                }catch(IllegalArgumentException e){
+                    Message.showMessage(e.getMessage());
+                    break;
+                }
                 break;
 
             default:

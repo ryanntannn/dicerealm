@@ -30,6 +30,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.dicerealmandroid.core.entity.Entity;
+import com.example.dicerealmandroid.core.item.EquippableItem;
 import com.example.dicerealmandroid.core.item.Item;
 import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.game.dialog.DialogueClass;
@@ -291,6 +292,7 @@ public class DialogScreen extends AppCompatActivity {
     private void displayPlayerDetails(View itemInventoryView){
         TextView username = findViewById(R.id.username);
         TextView stats = findViewById(R.id.stats);
+        TextView health = findViewById(R.id.health);
 
         // Initialize player details
         username.setText(playerSh.getPlayer().getValue().getDisplayName());
@@ -303,6 +305,7 @@ public class DialogScreen extends AppCompatActivity {
                // When player details change, update the UI
                username.setText(player.getDisplayName());
                stats.setText(player.getStats().toString());
+               health.setText(playerSh.remainingHealth());
                displayItemInventory(player, itemInventoryView);
             }
         });
@@ -362,12 +365,29 @@ public class DialogScreen extends AppCompatActivity {
         );
         cardLayoutParams.setMargins(40, 40, 40, 40);
 
+
         LinearLayout.LayoutParams btnLayoutParams = new LinearLayout.LayoutParams(
                 300, 100
         );
         btnLayoutParams.setLayoutDirection(LinearLayout.HORIZONTAL);
 
+        // Display player equipped items
+        for(Entity.BodyPart bodypart : player.getEquippedItems().keySet()){
+            EquippableItem item = player.getEquippedItems().get(bodypart);
 
+            TextView itemView = new TextView(DialogScreen.this);
+            CardView itemCard = new CardView(DialogScreen.this);
+
+            itemCard.setLayoutParams(cardLayoutParams);
+
+            itemView.append(item.getDisplayName() + " equipped on " + bodypart);
+            itemView.append("\n" + item.getDescription());
+
+            itemCard.addView(itemView);
+            itemInventoryLayout.addView(itemCard);
+        }
+
+        // Display player unequipped items
         for(Item item : player.getInventory().getItems()){
             TextView itemTitle = new TextView(DialogScreen.this);
             TextView itemDescription = new TextView(DialogScreen.this);
@@ -395,7 +415,7 @@ public class DialogScreen extends AppCompatActivity {
             // Hardcode the body part for now
             equipButton.setOnClickListener(v -> {
                 Log.d("info", "Equip button clicked");
-                playerSh.equipItem(item.getId(), Entity.BodyPart.HEAD);
+                playerSh.equipItemRequest(item.getId(), Entity.BodyPart.HEAD);
             });
 
             itemCardLayout.addView(itemTitle);
