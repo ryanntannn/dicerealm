@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.command.Command;
+import com.example.dicerealmandroid.command.PlayerEquipItemRequest;
 import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
 import com.example.dicerealmandroid.command.UpdatePlayerDetailsRequestCommand;
 import com.example.dicerealmandroid.core.entity.Entity;
@@ -21,16 +22,12 @@ public class PlayerRepo {
 
     private final PlayerDataSource playerDataSource;
     private final RoomDataSource roomDataSource;
-
     private final Gson gson = new Gson();
-
 
     public PlayerRepo(){
         playerDataSource = PlayerDataSource.getInstance();
         roomDataSource = RoomDataSource.getInstance();
     };
-
-
 
     public LiveData<Player> getPlayer(){
         return playerDataSource.getPlayer();
@@ -44,7 +41,6 @@ public class PlayerRepo {
     }
 
 
-
     public UUID getPlayerId(){
         if (this.getPlayer().getValue() == null){
             return null;
@@ -54,6 +50,12 @@ public class PlayerRepo {
 
     public void updatePlayerRequest(Player player){
         UpdatePlayerDetailsRequestCommand command = new UpdatePlayerDetailsRequestCommand(player.getDisplayName(), player.getRace(), player.getEntityClass(), player.getStats());
+        String message = gson.toJson(command);
+        roomDataSource.sendMessageToServer(message);
+    }
+
+    public void equipItem(UUID itemId, Entity.BodyPart bodypart){
+        PlayerEquipItemRequest command = new PlayerEquipItemRequest(itemId.toString(), bodypart);
         String message = gson.toJson(command);
         roomDataSource.sendMessageToServer(message);
     }

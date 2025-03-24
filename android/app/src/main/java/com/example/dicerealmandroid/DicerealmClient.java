@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.FullRoomStateCommand;
+import com.example.dicerealmandroid.command.PlayerEquipItemResponse;
 import com.example.dicerealmandroid.command.PlayerJoinCommand;
 import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
 import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
@@ -53,18 +54,12 @@ public class DicerealmClient extends WebSocketClient {
         switch (command.getType()) {
             case "FULL_ROOM_STATE":
                 FullRoomStateCommand fullRoomStateCommand  = gson.fromJson(message, FullRoomStateCommand.class); // crash here
-                System.out.println("FULL_ROOM_STATE:");
-                UUID myId = UUID.fromString(fullRoomStateCommand.getMyId());
                 RoomState roomState = fullRoomStateCommand.getRoomState();
+                Player myPlayer = roomState.getPlayerMap().get(UUID.fromString(fullRoomStateCommand.getMyId()));
 
                 roomRepo.setRoomState(roomState);
-
-                // Indicate that you (the player) has join the room
-                if(!playerRepo.getPlayerId().equals(myId)){
-                    Player myPlayer = roomState.getPlayerMap().get(UUID.fromString(fullRoomStateCommand.getMyId()));
-                    playerRepo.setPlayer(myPlayer);
-                    Message.showMessage("You joined the room.");
-                }
+                playerRepo.setPlayer(myPlayer);
+                Message.showMessage("You joined the room.");
                 break;
 
             case "PLAYER_JOIN":
@@ -118,6 +113,10 @@ public class DicerealmClient extends WebSocketClient {
             case "DIALOGUE_END_TURN":
                 // Send whatever the player selected to the server
                 Message.showMessage("Turn ended.");
+                break;
+
+            case "PLAYER_EQUIP_ITEM_RESPONSE":
+                PlayerEquipItemResponse playerEquipItemResponse = gson.fromJson(message, PlayerEquipItemResponse.class);
                 break;
 
             default:

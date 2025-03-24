@@ -31,6 +31,8 @@ import com.example.dicerealmandroid.room.RoomStateHolder;
 
 public class CharacterScreen extends AppCompatActivity {
     private Player selectedPlayer;
+    private PlayerStateHolder playerSh;
+    private RoomStateHolder roomSh;
     LinearLayout previousSelected = null;
 
     @Override
@@ -57,10 +59,10 @@ public class CharacterScreen extends AppCompatActivity {
         });
 
         // Access PlayerStateHolder
-        PlayerStateHolder playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
-        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
+        roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         BackButtonHandler.setupBackImageButtonHandler(this, R.id.backToLobby);
-        this.setRoomCode(roomSh);
+        this.setRoomCode();
 
         TextView chara_name1 = findViewById(R.id.chara_name1);
         TextView chara_name2 = findViewById(R.id.chara_name2);
@@ -118,7 +120,7 @@ public class CharacterScreen extends AppCompatActivity {
         });
 
     }
-    private void setRoomCode(RoomStateHolder roomSh){
+    private void setRoomCode(){
         TextView roomCode = findViewById(R.id.roomCode);
         String roomCodeText = "Room Code: " + roomSh.getRoomCode();
         roomCode.setText(roomCodeText);

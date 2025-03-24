@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -27,6 +29,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.core.entity.Entity;
 import com.example.dicerealmandroid.core.item.Item;
 import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.game.dialog.DialogueClass;
@@ -49,9 +52,10 @@ import java.util.UUID;
 // TODO: Add player inventory interface
 // TODO: Add player stats interface popup
 
-
 public class DialogScreen extends AppCompatActivity {
     private CardView selectedCardView;
+    private GameStateHolder gameSh;
+    private PlayerStateHolder playerSh;
     private CountDownTimer countDownTimer;
 
     @Override
@@ -72,18 +76,16 @@ public class DialogScreen extends AppCompatActivity {
         BottomSheetDialog itemInventoryModal = new BottomSheetDialog(DialogScreen.this);
         View itemInventoryView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.modal_item_inventory, null);
 
+        gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
+        playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
 
-
-        GameStateHolder gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
-        PlayerStateHolder playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
-
-        this.getTurnHistory(gameSh, messageLayout);
-        this.trackTurns(gameSh, messageLayout, actionLayout, timerView, playerSh);
-        this.displayPlayerDetails(playerSh, itemInventoryView);
+        this.getTurnHistory(messageLayout);
+        this.trackTurns(messageLayout, actionLayout, timerView);
+        this.displayPlayerDetails(itemInventoryView);
         this.openItemInventory(itemInventoryModal, itemInventoryView);
     }
 
-    private void getTurnHistory(GameStateHolder gameSh, LinearLayout messageLayout){
+    private void getTurnHistory(LinearLayout messageLayout){
         for(DialogueClass turn : gameSh.getDialogTurnHistory()){
             // Each turn number
             TextView numberOfTurns = new TextView(DialogScreen.this);
@@ -111,7 +113,7 @@ public class DialogScreen extends AppCompatActivity {
 
 
     // Keeps track of the dialog latest turn only, type out the message character by character
-    private void trackTurns(GameStateHolder gameSh, LinearLayout messageLayout, LinearLayout actionLayout, TextView timerView, PlayerStateHolder playerSh){
+    private void trackTurns(LinearLayout messageLayout, LinearLayout actionLayout, TextView timerView){
 
         gameSh.subscribeDialogLatestTurn().observe(this, new Observer<DialogueClass>() {
 
@@ -182,8 +184,8 @@ public class DialogScreen extends AppCompatActivity {
 
                     // Add each turn to the message layout, action layout and start the timer
                     displayMessageStream(turn.getMessage(), currentTurnView);
-                    displayActionButtons(gameSh, actionLayout);
-                    timer(gameSh, messageLayout, timerView);
+                    displayActionButtons(actionLayout);
+                    timer(messageLayout, timerView);
                 }
             }
         });
@@ -212,7 +214,7 @@ public class DialogScreen extends AppCompatActivity {
     }
 
 
-    private void displayActionButtons(GameStateHolder gameSh, LinearLayout actionLayout) {
+    private void displayActionButtons(LinearLayout actionLayout) {
 
         gameSh.subscribeDialogPlayerActions().observe(this, new Observer<ShowPlayerActionsCommand>() {
             @Override
@@ -243,7 +245,7 @@ public class DialogScreen extends AppCompatActivity {
                     actionContainer.setRadius(20);
                     actionContainer.setFocusable(true);
                     actionContainer.setOnClickListener(v -> {
-                        setSelectedActon(gameSh, actionContainer, action);
+                        setSelectedActon(actionContainer, action);
                     });
 
                     // TextView to display the action text
@@ -272,7 +274,7 @@ public class DialogScreen extends AppCompatActivity {
         });
     }
 
-    private void setSelectedActon(GameStateHolder gameSh, CardView selectedCardView, DungeonMasterResponse.PlayerAction action){
+    private void setSelectedActon(CardView selectedCardView, DungeonMasterResponse.PlayerAction action){
         // Unselect prev card
         if(!selectedCardView.equals(this.selectedCardView) && this.selectedCardView != null){
             this.selectedCardView.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
@@ -286,7 +288,7 @@ public class DialogScreen extends AppCompatActivity {
     }
 
 
-    private void displayPlayerDetails(PlayerStateHolder playerSh, View itemInventoryView){
+    private void displayPlayerDetails(View itemInventoryView){
         TextView username = findViewById(R.id.username);
         TextView stats = findViewById(R.id.stats);
 
@@ -306,7 +308,7 @@ public class DialogScreen extends AppCompatActivity {
         });
     }
 
-    private void timer(GameStateHolder gameSh, LinearLayout messageLayout, TextView timerView){
+    private void timer(LinearLayout messageLayout, TextView timerView){
 
         // Timer for player's turn
         timerView.setPadding(20, 20, 20, 20);
@@ -350,15 +352,57 @@ public class DialogScreen extends AppCompatActivity {
 
     private void displayItemInventory(Player player, View itemInventoryView){
 
-        // Show item inventory
+        // Display player items in modal
         LinearLayout itemInventoryLayout = itemInventoryView.findViewById(R.id.itemInventoryList);
         itemInventoryLayout.removeAllViews();
 
-        TextView itemInventoryTitle = new TextView(DialogScreen.this);
-        itemInventoryLayout.addView(itemInventoryTitle);
+        // Set LayoutParams for CardView
+        LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 200
+        );
+        cardLayoutParams.setMargins(40, 40, 40, 40);
+
+        LinearLayout.LayoutParams btnLayoutParams = new LinearLayout.LayoutParams(
+                300, 100
+        );
+        btnLayoutParams.setLayoutDirection(LinearLayout.HORIZONTAL);
+
+
         for(Item item : player.getInventory().getItems()){
-            itemInventoryTitle.append(item.getDisplayName() + "\n");
+            TextView itemTitle = new TextView(DialogScreen.this);
+            TextView itemDescription = new TextView(DialogScreen.this);
+            Button equipButton = new Button(DialogScreen.this);
+            LinearLayout itemCardLayout = new LinearLayout(DialogScreen.this);
+            CardView itemCard = new CardView(DialogScreen.this);
+
+            // item card layout
+            itemCardLayout.setOrientation(LinearLayout.VERTICAL);
+
+            // Card properties
+            itemCard.setLayoutParams(cardLayoutParams);
+
+            // title properties
+            itemTitle.setText(item.getDisplayName());
+
+            // desc properties
+            itemDescription.setText(item.getDescription());
+
+            // btn properties
+            equipButton.setText("Equip");
+            equipButton.setGravity(Gravity.RIGHT);
+            equipButton.setLayoutParams(btnLayoutParams);
+
+            // Hardcode the body part for now
+            equipButton.setOnClickListener(v -> {
+                Log.d("info", "Equip button clicked");
+                playerSh.equipItem(item.getId(), Entity.BodyPart.HEAD);
+            });
+
+            itemCardLayout.addView(itemTitle);
+            itemCardLayout.addView(itemDescription);
+            itemCardLayout.addView(equipButton);
+            itemCard.addView(itemCardLayout);
+            itemInventoryLayout.addView(itemCard);
         }
     }
-
 }

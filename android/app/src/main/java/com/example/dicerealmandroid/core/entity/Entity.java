@@ -210,29 +210,29 @@ public class Entity {
         this.skillsInventory = skillsInventory;
     }
 
-    public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
-        // Check if item is in inventory
-        if (!inventory.containsItem(item)) {
-            return false;
-        }
-
-        if (!item.isSuitableFor(bodyPart)) {
-            return false;
-        }
-
-        inventory.removeItem(item);
-
-        // check if the body part is already equipped
-        if (equippedItems.containsKey(bodyPart)) {
-            // un-equip the item
-            inventory.addItem(equippedItems.get(bodyPart));
-        }
-
-        equippedItems.put(bodyPart, item);
-        updateStats();
-
-        return true;
-    }
+//    public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
+//        // Check if item is in inventory
+//        if (!inventory.containsItem(item)) {
+//            return false;
+//        }
+//
+//        if (!item.isSuitableFor(bodyPart)) {
+//            return false;
+//        }
+//
+//        inventory.removeItem(item);
+//
+//        // check if the body part is already equipped
+//        if (equippedItems.containsKey(bodyPart)) {
+//            // un-equip the item
+//            inventory.addItem(equippedItems.get(bodyPart));
+//        }
+//
+//        equippedItems.put(bodyPart, item);
+//        updateStats();
+//
+//        return true;
+//    }
 
     public void updateMaxHealth() {
         this.health = stats.get(Stat.MAX_HEALTH);
