@@ -9,11 +9,11 @@ To run the server, you need to have Java 23 installed on your machine. You can r
 PC:
 
 ```
-.\gradlew.bat bootRun
+.\gradlew.bat build
 ```
 
 Mac/Linux:
 
 ```bash
-./gradlew bootRun
+./gradlew build
 ```
