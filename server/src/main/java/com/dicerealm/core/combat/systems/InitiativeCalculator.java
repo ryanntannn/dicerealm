@@ -20,7 +20,7 @@ public class InitiativeCalculator {
         int totalInitiative = initiativeRoll + initiativeModifier;
         String initiativeLog = String.format("%s rolls a d20: %d + Dex Modifier (%d) = %d Total Initiative! ",
                 entity.getDisplayName(), initiativeRoll, initiativeModifier, totalInitiative);
-        return new InitiativeResult(totalInitiative, initiativeRoll, initiativeModifier, initiativeLog);
+        return new InitiativeResult(entity, totalInitiative, initiativeRoll, initiativeModifier, initiativeLog);
 
     }
 

@@ -159,4 +159,9 @@ public abstract class Entity {
 		return null; // No weapon equipped
 	}
 
+	public void addSkill(Skill skill) {
+		skillsInventory.addItem(skill);
+	}
+
 }
+
