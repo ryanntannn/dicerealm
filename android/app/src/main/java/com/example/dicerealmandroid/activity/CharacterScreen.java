@@ -45,6 +45,7 @@ public class CharacterScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         // Observe if game has started
         GameStateHolder gameStateHolder = new ViewModelProvider(this).get(GameStateHolder.class);
         gameStateHolder.isGameRunning().observe(this, new Observer<Boolean>() {
@@ -78,6 +79,7 @@ public class CharacterScreen extends AppCompatActivity {
         chara_name2.setText(PresetPlayerFactory.getRandomCharacterName());
         chara_name3.setText(PresetPlayerFactory.getRandomCharacterName());
         chara_name4.setText(PresetPlayerFactory.getRandomCharacterName());
+
         // Preset Character Races and Entity Classes
         chara_description1.setText("DWARF" + " " + "WARRIOR");
         chara_description2.setText("HUMAN" + " " + "WIZARD");
