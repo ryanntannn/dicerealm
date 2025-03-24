@@ -7,7 +7,6 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.entity.Stat;
-import com.dicerealm.core.item.Dummy;
 import com.dicerealm.core.item.Helmet;
 import com.dicerealm.core.item.IronAxe;
 import com.dicerealm.core.item.IronSword;
@@ -60,7 +59,15 @@ public class PresetPlayerFactory {
 			Stat.CHARISMA, 0
 		));
 		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
-		player.getInventory().addItem(new Dummy());
+		addDefaultItems(player);
+		return player;
+	}
+
+	/**
+	 * Add default items to the player
+	 * @param player
+	 */
+	public static void addDefaultItems(Player player) {
 		Helmet helmet = new Helmet("Iron Helmet", 1);
 		IronSword ironsword = new IronSword(1);
 		IronAxe ironaxe = new IronAxe(1);
@@ -72,7 +79,5 @@ public class PresetPlayerFactory {
 		player.equipItem(BodyPart.HEAD, helmet);
 		player.equipItem(BodyPart.LEFT_HAND, ironsword);
 		player.equipItem(BodyPart.RIGHT_HAND, ironaxe);
-		player.displayStats();
-		return player;
 	}
 }
