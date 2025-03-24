@@ -3,7 +3,6 @@ package com.example.dicerealmandroid.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -109,12 +108,12 @@ public class CharacterScreen extends AppCompatActivity {
         TextView chara_name3 = findViewById(R.id.chara_name3);
         TextView chara_name4 = findViewById(R.id.chara_name4);
 
+        Button nextButton = findViewById(R.id.nextButton);
         // If a character was previously selected, Remove the previous border
         if (previousSelected != null) {
             previousSelected.setBackgroundResource(0);
         }
         else {
-            Button nextButton = findViewById(R.id.nextButton);
             nextButton.setEnabled(true);
         }
 

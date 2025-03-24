@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FAFAFA</color>
+    <color name="black">#000000</color>
     <color name="white">#FAFAFA</color>
 
     <color name="darkText">#000000</color>
-    <color name="lightText">#000000</color>
+    <color name="lightText">#FAFAFA</color>
+
+    <color name="darkgray">#5B5B5B</color>
+    <color name="gray">#666666</color>
+    <color name="lightgrayText">#C8C8C8</color>
 </resources>

@@ -33,18 +33,16 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout2"
         android:layout_width="300dp"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Room ID"
-
+        android:textColorHint="@color/darkText"
 
         app:hintEnabled="true"
         app:hintAnimationEnabled="true"
-        android:textColorHint="@color/darkText"
         app:hintTextAppearance="@style/CustomHintTextAppearance"
         app:hintTextColor="@color/darkText"
         app:boxStrokeColor="@color/darkText"
-
         app:boxBackgroundColor="#D9D9D9"
         app:boxStrokeWidth="0dp"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -56,6 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:maxLines="1"
             android:layout_width="match_parent"
             android:textColor="@color/darkText"
             android:textSize="16sp"
@@ -67,10 +66,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="JOIN"
+
+        android:backgroundTint="@drawable/button_bg_selector"
+        android:textColor="@drawable/button_textcolour_selector"
+        style="@style/StandardButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+        android:text="JOIN"
+        />
 
 
 
