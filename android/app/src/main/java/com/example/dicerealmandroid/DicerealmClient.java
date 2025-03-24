@@ -16,7 +16,7 @@ import com.example.dicerealmandroid.command.PlayerLeaveCommand;
 import com.example.dicerealmandroid.core.RoomState;
 import com.example.dicerealmandroid.game.GameRepo;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
-import com.example.dicerealmandroid.game.dialog.DialogueClass;
+import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
 import com.example.dicerealmandroid.util.Message;
@@ -91,7 +91,7 @@ public class DicerealmClient extends WebSocketClient {
                 int turnNumber = startTurnCommand.getDialogueTurn().getTurnNumber();
                 String dialog_msg = startTurnCommand.getDialogueTurn().getDungeonMasterText();
 
-                DialogueClass dialogueTurn = new DialogueClass(dialog_msg, null, turnNumber);
+                Dialog dialogueTurn = new Dialog(dialog_msg, null, turnNumber);
                 dialogRepo.updateTurnHistory(dialogueTurn);
                 break;
 
@@ -104,7 +104,7 @@ public class DicerealmClient extends WebSocketClient {
                 // Get all messages/actions by other players as well
                 DialogueTurnActionCommand dialogueTurnActionCommand = gson.fromJson(message, DialogueTurnActionCommand.class);
 
-                DialogueClass dialogueTurnAction = new DialogueClass(dialogueTurnActionCommand.getAction(), dialogueTurnActionCommand.getPlayerId(), dialogueTurnActionCommand.getTurnNumber());
+                Dialog dialogueTurnAction = new Dialog(dialogueTurnActionCommand.getAction(), dialogueTurnActionCommand.getPlayerId(), dialogueTurnActionCommand.getTurnNumber());
                 dialogRepo.updateTurnHistory(dialogueTurnAction);
                 break;
 

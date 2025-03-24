@@ -1,17 +1,14 @@
 package com.example.dicerealmandroid.activity;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -22,7 +19,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -33,17 +29,15 @@ import com.example.dicerealmandroid.core.entity.Entity;
 import com.example.dicerealmandroid.core.item.EquippableItem;
 import com.example.dicerealmandroid.core.item.Item;
 import com.example.dicerealmandroid.core.player.Player;
-import com.example.dicerealmandroid.game.dialog.DialogueClass;
+import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
 import com.example.dicerealmandroid.core.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.util.ScreenDimensions;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -87,7 +81,7 @@ public class DialogScreen extends AppCompatActivity {
     }
 
     private void getTurnHistory(LinearLayout messageLayout){
-        for(DialogueClass turn : gameSh.getDialogTurnHistory()){
+        for(Dialog turn : gameSh.getDialogTurnHistory()){
             // Each turn number
             TextView numberOfTurns = new TextView(DialogScreen.this);
             numberOfTurns.setText("Turn " + turn.getTurnNumber());
@@ -116,10 +110,10 @@ public class DialogScreen extends AppCompatActivity {
     // Keeps track of the dialog latest turn only, type out the message character by character
     private void trackTurns(LinearLayout messageLayout, LinearLayout actionLayout, TextView timerView){
 
-        gameSh.subscribeDialogLatestTurn().observe(this, new Observer<DialogueClass>() {
+        gameSh.subscribeDialogLatestTurn().observe(this, new Observer<Dialog>() {
 
             @Override
-            public void onChanged(DialogueClass turn){
+            public void onChanged(Dialog turn){
                 int currTurn = turn.getTurnNumber();
                 Optional<UUID> playerId = turn.getSender();
                 String id = currTurn + playerId.toString();
@@ -367,7 +361,7 @@ public class DialogScreen extends AppCompatActivity {
 
 
         LinearLayout.LayoutParams btnLayoutParams = new LinearLayout.LayoutParams(
-                300, 100
+                500, 100
         );
         btnLayoutParams.setLayoutDirection(LinearLayout.HORIZONTAL);
 
@@ -388,10 +382,10 @@ public class DialogScreen extends AppCompatActivity {
         }
 
         // Display player unequipped items
-        for(Item item : player.getInventory().getItems()){
+        for(EquippableItem item : player.getInventory().getItems()){
             TextView itemTitle = new TextView(DialogScreen.this);
             TextView itemDescription = new TextView(DialogScreen.this);
-            Button equipButton = new Button(DialogScreen.this);
+
             LinearLayout itemCardLayout = new LinearLayout(DialogScreen.this);
             CardView itemCard = new CardView(DialogScreen.this);
 
@@ -408,19 +402,24 @@ public class DialogScreen extends AppCompatActivity {
             itemDescription.setText(item.getDescription());
 
             // btn properties
-            equipButton.setText("Equip");
-            equipButton.setGravity(Gravity.RIGHT);
-            equipButton.setLayoutParams(btnLayoutParams);
+            for(Entity.BodyPart bodyPart : item.getSuitableBodyParts()){
+                Button equipButton = new Button(DialogScreen.this);
+                equipButton.setText("Equip to " +  bodyPart);
+                equipButton.setGravity(Gravity.RIGHT);
+                equipButton.setLayoutParams(btnLayoutParams);
 
-            // Hardcode the body part for now
-            equipButton.setOnClickListener(v -> {
-                Log.d("info", "Equip button clicked");
-                playerSh.equipItemRequest(item.getId(), Entity.BodyPart.HEAD);
-            });
+                // Hardcode the body part for now, make it more dynamic later
+                equipButton.setOnClickListener(v -> {
+                    Log.d("info", "Equip button clicked");
+                    playerSh.equipItemRequest(item.getId(), bodyPart);
+                });
+
+                itemCardLayout.addView(equipButton);
+            }
 
             itemCardLayout.addView(itemTitle);
             itemCardLayout.addView(itemDescription);
-            itemCardLayout.addView(equipButton);
+
             itemCard.addView(itemCardLayout);
             itemInventoryLayout.addView(itemCard);
         }

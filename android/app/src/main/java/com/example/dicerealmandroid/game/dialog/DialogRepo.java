@@ -26,11 +26,11 @@ public class DialogRepo {
     }
 
 
-    public LiveData<DialogueClass> subscribeLatestTurn(){
+    public LiveData<Dialog> subscribeLatestTurn(){
         return dialogDataSource.subscribeLatestTurn();
     }
 
-    public List<DialogueClass> getTurnHistory(){
+    public List<Dialog> getTurnHistory(){
         return dialogDataSource.getTurnHistory();
     }
 
@@ -39,7 +39,7 @@ public class DialogRepo {
     }
 
 
-    public void updateTurnHistory(DialogueClass currentTurn){
+    public void updateTurnHistory(Dialog currentTurn){
         dialogDataSource.updateTurnHistory(currentTurn);
     }
 

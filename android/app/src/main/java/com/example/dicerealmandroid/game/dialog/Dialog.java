@@ -3,12 +3,12 @@ package com.example.dicerealmandroid.game.dialog;
 import java.util.Optional;
 import java.util.UUID;
 
-public class DialogueClass {
+public class Dialog {
     private String message;
     private Optional<UUID> sender;
     private int turnNumber;
 
-    public DialogueClass(String message, UUID sender, int turnNumber) {
+    public Dialog(String message, UUID sender, int turnNumber) {
         this.message = message;
         this.sender = Optional.ofNullable(sender);
         this.turnNumber = turnNumber;

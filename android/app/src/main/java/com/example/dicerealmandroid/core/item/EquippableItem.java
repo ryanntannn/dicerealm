@@ -25,4 +25,9 @@ public class EquippableItem extends Item {
     public int getStat(Entity.Stat stat) {
         return stats.getOrDefault(stat, 0);
     }
+
+
+    public Entity.BodyPart[] getSuitableBodyParts() {
+        return suitableBodyParts;
+    }
 }

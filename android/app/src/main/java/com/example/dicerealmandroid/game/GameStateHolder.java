@@ -3,7 +3,7 @@ package com.example.dicerealmandroid.game;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dicerealmandroid.game.dialog.DialogueClass;
+import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
 import com.example.dicerealmandroid.core.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
@@ -35,11 +35,11 @@ public class GameStateHolder extends ViewModel {
 
 
     // Dialog related methods
-    public List<DialogueClass> getDialogTurnHistory(){
+    public List<Dialog> getDialogTurnHistory(){
         return dialogRepo.getTurnHistory();
     }
 
-    public LiveData<DialogueClass> subscribeDialogLatestTurn(){
+    public LiveData<Dialog> subscribeDialogLatestTurn(){
         return dialogRepo.subscribeLatestTurn();
     }
 

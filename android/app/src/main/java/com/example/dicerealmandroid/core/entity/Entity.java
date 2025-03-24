@@ -154,7 +154,7 @@ public class Entity {
     private StatsMap baseStats;
     private StatsMap stats;
 
-    private InventoryOf<Item> inventory = new InventoryOf<>();
+    private InventoryOf<EquippableItem> inventory = new InventoryOf<>();
     private InventoryOf<Skill> skillsInventory = new InventoryOf<>(4);
 
 
@@ -196,11 +196,11 @@ public class Entity {
         return health > 0;
     }
 
-    public InventoryOf<Item> getInventory() {
+    public InventoryOf<EquippableItem> getInventory() {
         return inventory;
     }
 
-    public void updateInventory(InventoryOf<Item> inventory){
+    public void updateInventory(InventoryOf<EquippableItem> inventory){
         this.inventory = inventory;
     }
 
@@ -218,7 +218,7 @@ public class Entity {
 //        inventory.removeItem(item);
 
         // Remove item from inventory by checking the ID of the existing items vs equipping item
-        for (Item i : inventory.getItems()) {
+        for (EquippableItem i : inventory.getItems()) {
             if (i.getId().equals(item.getId())) {
                 inventory.removeItem(i);
                 break;
