@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.core.entity.Entity;
+import com.example.dicerealmandroid.core.item.InventoryOf;
+import com.example.dicerealmandroid.core.item.Item;
 import com.example.dicerealmandroid.core.player.Player;
+import com.example.dicerealmandroid.core.skill.Skill;
 
 import java.util.UUID;
 
@@ -14,12 +17,12 @@ import java.util.UUID;
  * */
 public class PlayerDataSource {
     private static PlayerDataSource instance;
-    private PlayerDataSource(){}
-
     private final MutableLiveData<Player> player = new MutableLiveData<Player>(new Player("Default",
             Entity.Race.HUMAN,
             Entity.EntityClass.WARRIOR,
             Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR)));
+
+    private PlayerDataSource(){}
 
 
     public static PlayerDataSource getInstance(){
@@ -36,6 +39,7 @@ public class PlayerDataSource {
     public void setPlayer(Player player) throws IllegalArgumentException{
         this.player.postValue(player);
     }
+
 
     public UUID getPlayerId(){
         return player.getValue().getId();

@@ -1,5 +1,7 @@
 package com.dicerealm.core.combat;
 
+import com.dicerealm.core.combat.systems.DamageCalculator;
+import com.dicerealm.core.combat.systems.DamageResult;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.StatsMap;
@@ -23,6 +25,9 @@ public class CombatDamageTest {
     private Monster monster;
     private Weapon weapon;
     private Skill skill;
+    private CombatLog combatLog;
+    private DamageCalculator damageCalculator;
+    private DamageResult damageResult;
 
     @BeforeEach
     void setUp() {
@@ -40,7 +45,8 @@ public class CombatDamageTest {
 
         player = new Player("Darren", Race.HUMAN, EntityClass.WARRIOR, baseStats);
         monster = new Monster("Demon King", Race.DEMON, EntityClass.WARRIOR, baseStats);
-
+        combatLog = new CombatLog();
+        damageCalculator = new DamageCalculator();
         // Initialize weapon and skill for testing
         weapon = new Weapon("Sword", "Iron Sword forged from the Great Dwarfen Forges", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 1)), 1);
         skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, 3,2,1);
@@ -49,55 +55,57 @@ public class CombatDamageTest {
     @Test
     void testWeaponNormalDamage() {
         // Use a normal roll for weapon damage
-        DamageCalculator.applyWeaponDamage(player, monster, weapon, false);
-
+        damageResult = damageCalculator.applyWeaponDamage(player, monster, weapon, false);
+        combatLog.log(damageResult.getDamageLog());
         // The damage is based on the weapon's roll, which is 1 in this case
-        assertEquals("Darren hits Demon King with Sword for 1 damage!", DamageCalculator.readout());
+        assertEquals("Darren hits Demon King with Sword for 1 damage!", combatLog.printLatestReadout());
     }
 
     @Test
     void testWeaponCritDamage() {
         // Apply a critical hit for weapon damage
-        DamageCalculator.applyWeaponDamage(player, monster, weapon, true);
-
+        damageResult = damageCalculator.applyWeaponDamage(player, monster, weapon, true);
+        combatLog.log(damageResult.getDamageLog());
         // Critical hit doubles the weapon damage (1 + 1)
-        assertEquals("Darren hits Demon King with Sword for 2 damage!", DamageCalculator.readout());
+        assertEquals("Darren hits Demon King with Sword for 2 damage!", combatLog.printLatestReadout());
     }
 
     @Test
     void testSkillNormalDamage() {
         // Use a normal roll for skill damage
-        DamageCalculator.applySkillDamage(player, monster, skill, false);
-
+        damageResult = damageCalculator.applySkillDamage(player, monster, skill, false);
+        combatLog.log(damageResult.getDamageLog());
         // The damage is based on the skill's roll, which is 2 in this case
-        assertEquals("Darren casts Fireball on Demon King for 2 damage!", DamageCalculator.readout());
+        assertEquals("Darren casts Fireball on Demon King for 2 damage!", combatLog.printLatestReadout());
     }
 
     @Test
     void testSkillCritDamage() {
         // Apply a critical hit for skill damage
-        DamageCalculator.applySkillDamage(player, monster, skill, true);
-
+        damageResult = damageCalculator.applySkillDamage(player, monster, skill, true);
+        combatLog.log(damageResult.getDamageLog());
         // Critical hit doubles the skill damage (2 + 2)
-        assertEquals("Darren casts Fireball on Demon King for 4 damage!", DamageCalculator.readout());
+        assertEquals("Darren casts Fireball on Demon King for 4 damage!", combatLog.printLatestReadout());
     }
 
     @Test
     void testWeaponDamageWithTargetTakingDamage() {
         // Let's assume the weapon rolls for 1 damage (1d1)
-        DamageCalculator.applyWeaponDamage(player, monster, weapon, false);
+        damageResult = damageCalculator.applyWeaponDamage(player, monster, weapon, false);
 
         // Verifying that the target (monster) received the expected damage
         // In this case, the monster should have taken 1 damage
         assertEquals(23, monster.getHealth()); // Monster's health should reduce by 1
+        assertEquals(1, damageResult.getDamageRoll()); // DamageRoll should be 1
     }
 
     @Test
     void testSkillDamageWithTargetTakingDamage() {
         // Let's assume the skill rolls for 2 damage (2d1)
-        DamageCalculator.applySkillDamage(player, monster, skill, false);
+        damageResult = damageCalculator.applySkillDamage(player, monster, skill, false);
 
         // Verifying that the target (monster) received the expected damage
         assertEquals(22, monster.getHealth()); // Monster's health should reduce by 2
+        assertEquals(2, damageResult.getDamageRoll()); // DamageRoll should be 2
     }
 }

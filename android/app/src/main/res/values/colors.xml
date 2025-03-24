@@ -9,4 +9,7 @@
     <color name="darkgray">#5B5B5B</color>
     <color name="gray">#666666</color>
     <color name="lightgrayText">#C8C8C8</color>
+
+    <!--  Messages background  -->
+    <color name="messageBackground">#FAFAFA</color>
 </resources>

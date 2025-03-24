@@ -10,6 +10,7 @@ public class Player extends Entity {
 
     public Player(String name, Entity.Race race, Entity.EntityClass entityClass, Entity.StatsMap baseStats) {
         super(name, race, entityClass, baseStats);
+
     }
 
 }
