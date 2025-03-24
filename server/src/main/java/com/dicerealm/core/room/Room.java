@@ -1,7 +1,7 @@
 package com.dicerealm.core.room;
 
 import java.util.UUID;
-import com.dicerealm.core.combat.CombatManager;
+import com.dicerealm.core.combat.managers.CombatManager;
 import com.dicerealm.core.command.Command;
 import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.PlayerJoinCommand;

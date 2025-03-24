@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
 
 /**
@@ -144,4 +145,18 @@ public abstract class Entity {
 	public void takeDamage(int damage) {
 		this.health = Math.max(0, this.health - damage); // HP can't go below 0
 	}
+
+	public Weapon getWeapon() {
+		EquippableItem rightHandWeapon = equippedItems.get(BodyPart.RIGHT_HAND);
+		EquippableItem leftHandWeapon = equippedItems.get(BodyPart.LEFT_HAND);
+
+		if (rightHandWeapon != null) {
+			return (Weapon) rightHandWeapon;
+		} else if (leftHandWeapon != null) {
+			return (Weapon) leftHandWeapon;
+		}
+
+		return null; // No weapon equipped
+	}
+
 }
