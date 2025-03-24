@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.RoomState;
 
+import java.util.ArrayList;
+
 public class RoomStateHolder extends ViewModel {
     private RoomRepo roomRepo;
 
@@ -45,6 +47,8 @@ public class RoomStateHolder extends ViewModel {
         roomRepo.leaveRoom();
     }
 
-
+    public ArrayList<String> validateRoomCode(String roomcode){
+        return roomRepo.validateRoomCode(roomcode);
+    }
 
 }

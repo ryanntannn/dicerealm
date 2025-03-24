@@ -18,6 +18,7 @@ import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
@@ -37,7 +38,10 @@ public class HomeActivity extends AppCompatActivity {
         join.setEnabled(false);
         TextInputLayout textInputLayout = findViewById(R.id.textInputLayout2);
 
-        // Enable join button when input is in focus and code is entered
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+
+
+        // Enable join button when input is in focus and valid code is entered
         textInputLayout.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 textInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
@@ -49,23 +53,17 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         String input = s.toString().trim();
-                        boolean isSingleLine = !input.contains("\n");
-                        boolean isNotEmpty = !input.isEmpty();
-                        // Update join button state when code is entered and is single line
-                        if (isNotEmpty && isSingleLine) {
-                            join.setEnabled(true);
+                        ArrayList<String> validatedResult = roomSh.validateRoomCode(input);
+                        Boolean isValid = Boolean.parseBoolean(validatedResult.get(0));
+                        String errorMessage = validatedResult.get(1);
+
+                        // Update join button state when code is valid
+                        if (isValid) {
                             textInputLayout.setError(null); // Clear error
                         } else {
-                            join.setEnabled(false);
                             Log.d("Error", "Invalid room code");
                         }
-                        // Display error message if room code is invalid
-                        String errorMessage = null;
-                        if (!isSingleLine) {
-                            errorMessage = "Room code must be a single line";
-                        } else if (!isNotEmpty) {
-                            errorMessage = "Room code cannot be empty";
-                        }
+                        join.setEnabled(isValid);
                         textInputLayout.setError(errorMessage);
                     }
 
@@ -81,7 +79,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
