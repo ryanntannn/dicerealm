@@ -2,9 +2,9 @@
 
 This is the monorepo for the dicerealm project. It contains the following packages:
 
-- [server](server/README.md) - The websocket server
-- [android-client](android-client/README.md) - The android-client application
-- [web](web/README.md) - The web client application written in React
+- [server](server/README.md) - The websocket server written in Java
+- [android](android/README.md) - The android application written in Java
+- [web](web/README.md) - The web client application written in Vite + React + TS
 
 ## Contributing
 

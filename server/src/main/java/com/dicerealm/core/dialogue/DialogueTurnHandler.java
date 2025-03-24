@@ -3,8 +3,6 @@ package com.dicerealm.core.dialogue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
@@ -21,23 +19,10 @@ import com.dicerealm.core.room.RoomState;
 
 
 public class DialogueTurnHandler {
-	private static ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 	public static DialogueTurn startNewDialogueTurn(String dungeonMasterText, RoomContext context) {
 		DialogueTurn turn = context.getRoomState().addDialogueTurn(dungeonMasterText);
 		context.getBroadcastStrategy().sendToAllPlayers(new StartTurnCommand(turn));
-
-		long deltaTime = turn.getEndTime() - turn.getStartTime();
-
-		// Schedule the end of the turn
-		executorService.schedule(() -> {
-			DialogueTurn currentTurn = context.getRoomState().getCurrentDialogueTurn();
-			// If the current turn is the same as the turn that was scheduled to end, then end the turn
-			if (currentTurn.getTurnNumber() == turn.getTurnNumber()) {
-				endDialogueTurn(context);
-			}
-		}, deltaTime, java.util.concurrent.TimeUnit.MILLISECONDS);
-
 		return turn;
 	}
 

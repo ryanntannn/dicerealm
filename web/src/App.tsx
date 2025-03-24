@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import TextMessageForm from "./TextMessageForm";
 import cn from "./lib/cn";
 import { ReadyState } from "react-use-websocket";
@@ -12,7 +12,6 @@ import RoomClientProvider, {
 import { Stats } from "./components/stats";
 import { SidebarTrigger } from "./components/ui/sidebar";
 import Lobby from "./lobby";
-import { Progress } from "./components/ui/progress";
 import { Card, CardContent, CardHeader } from "./components/ui/card";
 import { Brain } from "lucide-react";
 
@@ -117,44 +116,15 @@ const paramsSchema = z.object({
 });
 
 function DialogueTurnRenderer({ turn }: { turn: DialogueTurn }) {
-  const [progress, setProgress] = useState(0);
-
-  const isEnded = useMemo(() => {
-    return Date.now() > turn.endTime;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [turn, progress]);
-
-  const updateProgress = useCallback(() => {
-    const now = Date.now();
-    const total = turn.endTime - turn.startTime;
-    const elapsed = now - turn.startTime;
-    const progress = (elapsed / total) * 100;
-    console.log(progress);
-    setProgress(progress);
-  }, [turn]);
-
-  useEffect(() => {
-    if (isEnded) {
-      setProgress(100);
-      return;
-    }
-    const interval = setInterval(updateProgress, 1000);
-    return () => clearInterval(interval);
-  }, [updateProgress, isEnded]);
-
   return (
-    <Card className={cn(isEnded && "bg-gray-100 text-gray-600")}>
+    <Card>
       <CardHeader>
         <p>Turn {turn.turnNumber}</p>
         <p>Dungeon Master: {turn.dungeonMasterText}</p>
-        {isEnded && <p>Turn Ended</p>}
-        {!isEnded && <Progress value={progress} />}
       </CardHeader>
       <CardContent className="grid grid-cols-3 gap-2">
         {Object.entries(turn.actions).map(([playerId, action]) => (
-          <Card
-            key={playerId}
-            className={cn(isEnded && "bg-gray-200 text-gray-600")}>
+          <Card key={playerId}>
             <CardHeader>{playerId} is going to</CardHeader>
             <CardContent>
               {action.action}

@@ -1,4 +1,4 @@
-package com.example.dicerealmandroid;
+package com.example.dicerealmandroid.command;
 
 public class Command {
     private final String type;
@@ -6,7 +6,6 @@ public class Command {
     public Command(String type){
         this.type = type;
     }
-
     public String getType(){
         return type;
     }

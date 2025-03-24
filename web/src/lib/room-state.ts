@@ -81,8 +81,6 @@ export const dialogueTurnActionSchema = z.object({
 export const dialogueTurnSchema = z.object({
   turnNumber: z.number(),
   actions: z.record(dialogueTurnActionSchema),
-  startTime: z.number(),
-  endTime: z.number(),
   dungeonMasterText: z.string(),
 });
 

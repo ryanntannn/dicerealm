@@ -75,7 +75,7 @@ public class Room {
 	 */
 	public void addPlayer(Player player) {
 		roomState.getPlayerMap().put(player.getId(), player);
-		broadcastStrategy.sendToAllPlayers(new PlayerJoinCommand(player));
+		broadcastStrategy.sendToAllPlayersExcept(new PlayerJoinCommand(player), player);
 		broadcastStrategy.sendToPlayer(new FullRoomStateCommand(roomState, player.getId().toString()), player);
 	}
 

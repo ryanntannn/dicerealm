@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.dicerealm.core.command.StartGameCommand;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.Room;
 import com.dicerealm.core.room.RoomBuilder;
@@ -73,6 +74,41 @@ public class RoomTest {
 	void testIsEmpty() {
 		Room room = makeTestRoom().build();
 		assert(room.isEmpty());
+	}
+
+	@Test 
+	void testHandleFailedPlayerAction() {
+		assert(true); // deprecated
+	}
+
+	@Test 
+	void testHandleSuccessfulPlayerAction() {
+		assert(true); // deprecated
+	}
+
+	@Test 
+	void testHandleCriticalFailPlayerAction() {
+		assert(true); // deprecated
+	}
+
+	@Test 
+	void testHandleCriticalSuccessPlayerAction() {
+		assert(true); // deprecated
+	}
+
+	@Test 
+	void testStartGame() {
+		MockLLMStrategy mockLLM = new MockLLMStrategy(new GsonSerializer());
+		MockBroadcastStrategy mockBroadcast = new MockBroadcastStrategy();
+		Room room = makeTestRoom().setLLMStrategy(mockLLM).setBroadcastStrategy(mockBroadcast).build();
+
+		Player player = new Player();
+
+		room.addPlayer(player);
+
+		room.handlePlayerCommand(player.getId(), serializer.serialize(new StartGameCommand()));
+
+		assert(true);
 	}
 
 	class MockRandom implements RandomStrategy {

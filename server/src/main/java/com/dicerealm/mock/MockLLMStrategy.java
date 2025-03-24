@@ -10,7 +10,7 @@ import com.dicerealm.core.strategy.LLMStrategy;
  */
 public class MockLLMStrategy implements LLMStrategy {
 
-	private String response = "{\"displayText\": \"mock response\", \"actionChoices\":[]}";
+		private String response = "{\"displayText\": \"mock response\", \"actionChoices\":[]}";
 		private JsonSerializationStrategy jsonSerializationStrategy;
 		private String latestPrompt = null;
 

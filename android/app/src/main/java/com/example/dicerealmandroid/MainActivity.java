@@ -1,95 +1,50 @@
 package com.example.dicerealmandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import dev.gustavoavila.websocketclient.WebSocketClient;
-import com.google.gson.Gson;
+import com.example.dicerealmandroid.activity.CharacterScreen;
+import com.example.dicerealmandroid.activity.HomeActivity;
+import com.example.dicerealmandroid.room.RoomStateHolder;
 
 public class MainActivity extends AppCompatActivity {
-    private Gson gson = new Gson();
-    private WebSocketClient webSocketClient;
+    private DicerealmClient dicerealmClient;
 
-    private void createWebSocketClient() {
-        URI uri;
-        try {
-            // replace this with your dev device's IP address (not localhost, as localhost will point to the emulator)
-            uri = new URI("wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/test");
-            // uri = new URI("ws://192.168.18.69:8080/room/test");
-        }
-        catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
-        }
+    // TODO: 1. Add Lobby Interface (User connects to lobby)
 
-        webSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen() {
-                System.out.println("onOpen");
-            }
-
-            @Override
-            public void onTextReceived(String message) {
-                System.out.println("onTextReceived: " + message);
-                Command command = gson.fromJson(message, Command.class);
-                System.out.println("Command is of type: " + command.getType());
-            }
-
-            @Override
-            public void onBinaryReceived(byte[] data) {
-                System.out.println("onBinaryReceived");
-            }
-
-            @Override
-            public void onPingReceived(byte[] data) {
-                System.out.println("onPingReceived");
-            }
-
-            @Override
-            public void onPongReceived(byte[] data) {
-                System.out.println("onPongReceived");
-            }
-
-            @Override
-            public void onException(Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            @Override
-            public void onCloseReceived(int reason, String description) {
-                System.out.println("onCloseReceived");
-            }
-        };
-
-        webSocketClient.setConnectTimeout(10000);
-        webSocketClient.setReadTimeout(60000);
-        webSocketClient.addHeader("Origin", "http://developer.example.com");
-        webSocketClient.enableAutomaticReconnection(5000);
-        webSocketClient.connect();
-    }
-
+    /*
+    * Used as the app entry point
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        Log.d("info", "Hello!");
+        // Force light mode only
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        createWebSocketClient();
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+
+        if (roomSh.getRoomState() == null){
+            // Set home as root activity
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }else{
+            // Set character screen as root activity
+            Intent intent = new Intent(this, CharacterScreen.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
+
     }
 }
