@@ -9,6 +9,7 @@ import com.example.dicerealmandroid.DicerealmClient;
 import com.example.dicerealmandroid.core.player.Player;
 import com.example.dicerealmandroid.core.RoomState;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -68,11 +69,33 @@ public class RoomRepo {
         roomDataSource.setRoomState(updatedRoomState);
     }
 
-
     public void leaveRoom(){
         if(roomDataSource.getDiceRealmClient() == null){
             return;
         }
         roomDataSource.leaveRoom();
+    }
+
+    // Room Code input validation: Returns list with boolean and error message
+    public ArrayList<String> validateRoomCode(String input){
+        ArrayList<String> result = new ArrayList<String>();
+
+        boolean isSingleLine = !input.contains("\n");
+        boolean isNotEmpty = !input.isEmpty();
+
+        boolean isValid = isSingleLine && isNotEmpty;
+        String errorMessage = null;
+
+        // Display error message if room code is invalid
+        if (!isValid){
+            if (!isSingleLine) {
+                errorMessage = "Room code must be a single line";
+            } else if (!isNotEmpty) {
+                errorMessage = "Room code cannot be empty";
+            }
+        }
+        result.add(String.valueOf(isValid));
+        result.add(errorMessage);
+        return result;
     }
 }
