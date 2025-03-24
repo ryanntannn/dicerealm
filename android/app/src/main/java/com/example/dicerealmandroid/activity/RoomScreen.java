@@ -1,7 +1,10 @@
 package com.example.dicerealmandroid.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.core.player.Player;
@@ -29,8 +33,27 @@ public class RoomScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Observe if game has started
+        GameStateHolder gameStateHolder = new ViewModelProvider(this).get(GameStateHolder.class);
+        gameStateHolder.isGameRunning().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isGameRunning) {
+                if (isGameRunning) {
+                    Intent intent = new Intent(RoomScreen.this, DialogScreen.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
         RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        GameStateHolder gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
+
         BackButtonHandler.setupBackImageButtonHandler(this, R.id.backBtn);
+
+        this.startGame(R.id.startGameBtn, gameSh);
         this.setRoomCode(roomSh);
         this.trackPlayers(roomSh);
     }
@@ -48,6 +71,16 @@ public class RoomScreen extends AppCompatActivity {
                 TextView playerCount = findViewById(R.id.amtOfPlayers);
                 String counter = players.length + "/4";
                 playerCount.setText(counter);
+            }
+        });
+    }
+
+    private void startGame(int id, GameStateHolder gameSh){
+        Button startGame = findViewById(id);
+        startGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                gameSh.startGame();
             }
         });
     }

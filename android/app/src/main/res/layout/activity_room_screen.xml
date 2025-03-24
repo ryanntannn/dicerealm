@@ -67,11 +67,10 @@
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/startGameBtn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Start Game"
-
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
