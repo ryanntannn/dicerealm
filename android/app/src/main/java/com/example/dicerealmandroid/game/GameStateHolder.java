@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.dicerealmandroid.game.dialog.Dialog;
-import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
-import com.example.dicerealmandroid.core.DungeonMasterResponse;
+import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
 
 import java.util.List;

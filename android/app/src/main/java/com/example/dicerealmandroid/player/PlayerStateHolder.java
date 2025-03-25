@@ -3,9 +3,11 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
-import com.example.dicerealmandroid.core.entity.Entity;
-import com.example.dicerealmandroid.core.player.Player;
+import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.entity.BodyPart;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.player.Player;
 
 import java.util.UUID;
 
@@ -32,11 +34,11 @@ public class PlayerStateHolder extends ViewModel{
         return playerRepo.getPlayerId();
     }
 
-    public void equipItemRequest(UUID itemId, Entity.BodyPart bodyPart){
+    public void equipItemRequest(UUID itemId, BodyPart bodyPart){
         playerRepo.equipItemRequest(itemId, bodyPart);
     }
 
     public String remainingHealth() {
-        return "Remaining Health: " + playerRepo.getPlayer().getValue().getHealth() + "/" + playerRepo.getPlayer().getValue().getStat(Entity.Stat.MAX_HEALTH);
+        return "Remaining Health: " + playerRepo.getPlayer().getValue().getHealth() + "/" + playerRepo.getPlayer().getValue().getStat(Stat.MAX_HEALTH);
     }
 }

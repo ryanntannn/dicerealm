@@ -8,6 +8,7 @@ import java.util.UUID;
  * Base class for all items
  */
 public abstract class Item implements Identifiable {
+	protected String type = "ITEM";
 	private UUID id;
 	private String displayName;
 	private String description;
@@ -28,5 +29,10 @@ public abstract class Item implements Identifiable {
 
 	public UUID getId() {
 		return id;
+	}
+
+	@Override
+	public String getType() {
+		return type;
 	}
 }

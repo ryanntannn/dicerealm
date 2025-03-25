@@ -15,15 +15,18 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.dicerealmandroid.core.item.InventoryOf;
-import com.example.dicerealmandroid.core.item.Item;
-import com.example.dicerealmandroid.core.skill.Skill;
+import com.dicerealm.core.entity.ClassStats;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.inventory.InventoryOf;
+import com.dicerealm.core.item.Item;
+import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
-import com.example.dicerealmandroid.core.entity.Entity;
-import com.example.dicerealmandroid.core.player.Player;
-import com.example.dicerealmandroid.core.player.PresetPlayerFactory;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.player.PresetPlayerFactory;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 
@@ -147,28 +150,28 @@ public class CharacterScreen extends AppCompatActivity {
 
         if (viewId == R.id.character1) {
             selectedPlayer = new Player(chara_name1.getText().toString(),
-                    Entity.Race.DWARF ,
-                    Entity.EntityClass.WARRIOR,
-                    Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR));
+                    Race.DWARF ,
+                    EntityClass.WARRIOR,
+                    ClassStats.getStatsForClass(EntityClass.WARRIOR));
 
         } else if (viewId == R.id.character2) {
             selectedPlayer = new Player(chara_name2.getText().toString(),
-                    Entity.Race.HUMAN ,
-                    Entity.EntityClass.WIZARD,
-                    Entity.ClassStats.getStatsForClass(Entity.EntityClass.WIZARD));
+                    Race.HUMAN ,
+                    EntityClass.WIZARD,
+                    ClassStats.getStatsForClass(EntityClass.WIZARD));
 
         } else if (viewId == R.id.character3) {
             selectedPlayer = new Player(chara_name3.getText().toString(),
-                    Entity.Race.TIEFLING ,
-                    Entity.EntityClass.ROGUE,
-                    Entity.ClassStats.getStatsForClass(Entity.EntityClass.ROGUE));
+                    Race.TIEFLING ,
+                    EntityClass.ROGUE,
+                    ClassStats.getStatsForClass(EntityClass.ROGUE));
 
         } else if (viewId == R.id.character4) {
             // Archer
             selectedPlayer = new Player(chara_name4.getText().toString(),
-                    Entity.Race.ELF ,
-                    Entity.EntityClass.RANGER,
-                    Entity.ClassStats.getStatsForClass(Entity.EntityClass.RANGER));
+                    Race.ELF ,
+                    EntityClass.RANGER,
+                    ClassStats.getStatsForClass(EntityClass.RANGER));
         }
         Log.d("CharacterScreen", "Selected Player: " + selectedPlayer.getDisplayName()+" "+selectedPlayer.getRace()+" "+selectedPlayer.getEntityClass());
     }

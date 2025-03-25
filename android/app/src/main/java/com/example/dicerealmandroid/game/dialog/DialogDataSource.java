@@ -3,7 +3,7 @@ package com.example.dicerealmandroid.game.dialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.command.ShowPlayerActionsCommand;
 
 import java.util.LinkedList;
 import java.util.List;

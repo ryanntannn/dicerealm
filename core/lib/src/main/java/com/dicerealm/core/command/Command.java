@@ -9,4 +9,8 @@ package com.dicerealm.core.command;
  */
 public class Command {
 		public String type;
+
+		public String getType(){
+			return type;
+		}
 }

@@ -13,4 +13,12 @@ public class FullRoomStateCommand extends Command {
 		this.state = state;
 		this.myId = myId;
 	}
+
+	public RoomState getRoomState() {
+		return state;
+	}
+
+	public String getMyId() {
+		return myId;
+	}
 }

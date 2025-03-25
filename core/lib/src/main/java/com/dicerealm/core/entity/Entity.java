@@ -26,9 +26,9 @@ public abstract class Entity {
 	private StatsMap baseStats;
 	private StatsMap stats;
 
-	private InventoryOf<Item> inventory = new InventoryOf<Item>();
+	private InventoryOf<Item> inventory = new InventoryOf<Item>("ITEM");
 
-	private InventoryOf<Skill> skillsInventory = new InventoryOf<Skill>(4);
+	private InventoryOf<Skill> skillsInventory = new InventoryOf<Skill>("SKILL",4);
 
 	public Entity(String displayName, Race race, EntityClass entityClass, StatsMap baseStats) {
 		this.id = UUID.randomUUID();
@@ -161,6 +161,10 @@ public abstract class Entity {
 
 	public void addSkill(Skill skill) {
 		skillsInventory.addItem(skill);
+	}
+
+	public Map<BodyPart, EquippableItem> getEquippedItems() {
+		return equippedItems;
 	}
 
 }

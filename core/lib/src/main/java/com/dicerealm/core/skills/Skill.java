@@ -9,6 +9,7 @@ import com.dicerealm.core.inventory.Identifiable;
  * Base class for all skills
  */
 public class Skill implements Identifiable {
+		private String type = "SKILL";
     private UUID id;
     private String displayName;
     private String description;
@@ -40,4 +41,9 @@ public class Skill implements Identifiable {
 
     @Override
     public String toString() { return displayName + " (Spell Slot Cost: " + spellSlotCost + ", Damage: " + damageDice + ")"; }
+
+		@Override
+		public String getType() {
+			return type;
+		}
 }

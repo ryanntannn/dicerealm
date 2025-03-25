@@ -12,5 +12,10 @@ public class UpdatePlayerDetailsRequestCommand extends Command {
 	public UpdatePlayerDetailsRequestCommand() {
 		this.type = "UPDATE_PLAYER_DETAILS_REQUEST";
 	}
-	
+	public UpdatePlayerDetailsRequestCommand(String displayName, Race race, EntityClass entityClass, StatsMap baseStats) {
+		this.type = "UPDATE_PLAYER_DETAILS_REQUEST";
+		this.displayName = displayName;
+		this.entityClass = entityClass;
+		this.baseStats = baseStats;
+	}
 }

@@ -2,10 +2,11 @@ package com.example.dicerealmandroid.game.dialog;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
-import com.example.dicerealmandroid.command.dialogue.DialogueTurnActionCommand;
-import com.example.dicerealmandroid.core.DungeonMasterResponse;
-import com.example.dicerealmandroid.core.entity.Entity;
+import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
+import com.dicerealm.core.dm.DungeonMasterResponse;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.StatsMap;
 import com.example.dicerealmandroid.player.PlayerDataSource;
 import com.example.dicerealmandroid.room.RoomDataSource;
 import com.google.gson.Gson;
@@ -52,7 +53,7 @@ public class DialogRepo {
     }
 
     public void sendPlayerAction(DungeonMasterResponse.PlayerAction action){
-        Entity.StatsMap playerStats = playerDataSource.getPlayer().getValue().getStats();
+        StatsMap playerStats = playerDataSource.getPlayer().getValue().getStats();
         int turn = dialogDataSource.subscribeLatestTurn().getValue().getTurnNumber();
 
         DialogueTurnActionCommand dialogAction = new DialogueTurnActionCommand(turn, UUID.fromString(action.playerId), action.action, playerStats);

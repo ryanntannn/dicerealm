@@ -6,8 +6,10 @@ import com.dicerealm.core.entity.Entity;
  * Base class for all useable items
  */
 public abstract class UseableItem extends Item {
+
 	public UseableItem(String name, String description) {
 		super(name, description);
+		this.type = "USEABLE_ITEM";
 	}
 	
 	/**

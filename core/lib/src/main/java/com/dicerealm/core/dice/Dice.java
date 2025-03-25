@@ -4,7 +4,7 @@ import com.dicerealm.core.strategy.RandomStrategy;
 
 public class Dice {
 	private int sides;
-	private RandomStrategy randomStrategy = new DefaultRandomStrategy();
+	transient RandomStrategy randomStrategy = new DefaultRandomStrategy();
 
 	public Dice(int sides) {
 		this.sides = sides;

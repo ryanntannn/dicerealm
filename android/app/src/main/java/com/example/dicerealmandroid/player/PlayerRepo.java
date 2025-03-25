@@ -3,19 +3,20 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dicerealmandroid.command.Command;
-import com.example.dicerealmandroid.command.PlayerEquipItemRequest;
-import com.example.dicerealmandroid.command.PlayerEquipItemResponse;
-import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
-import com.example.dicerealmandroid.command.UpdatePlayerDetailsRequestCommand;
-import com.example.dicerealmandroid.core.entity.Entity;
-import com.example.dicerealmandroid.core.item.InventoryOf;
-import com.example.dicerealmandroid.core.item.Item;
-import com.example.dicerealmandroid.core.player.Player;
-import com.example.dicerealmandroid.core.skill.Skill;
+import com.dicerealm.core.command.Command;
+import com.dicerealm.core.command.PlayerEquipItemRequest;
+import com.dicerealm.core.command.PlayerEquipItemResponse;
+import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.command.UpdatePlayerDetailsRequestCommand;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.inventory.InventoryOf;
+import com.dicerealm.core.item.Item;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.room.RoomDataSource;
 import com.example.dicerealmandroid.room.RoomRepo;
 import com.google.gson.Gson;
+import com.dicerealm.core.entity.BodyPart;
 
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class PlayerRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
-    public void equipItemRequest(UUID itemId, Entity.BodyPart bodypart){
+    public void equipItemRequest(UUID itemId, BodyPart bodypart){
         PlayerEquipItemRequest command = new PlayerEquipItemRequest(itemId.toString(), bodypart);
         String message = gson.toJson(command);
         roomDataSource.sendMessageToServer(message);

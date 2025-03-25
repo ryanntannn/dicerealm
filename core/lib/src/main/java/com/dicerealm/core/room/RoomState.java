@@ -79,4 +79,12 @@ public class RoomState {
 			dialogueTurns.add(dialogueTurn);
 			return dialogueTurn;
 		}
+
+		public void addPlayer(Player player) {
+			playerMap.put(player.getId(), player);
+		}
+
+		public void removePlayer(UUID playerId) {
+			playerMap.remove(playerId);
+		}
 }

@@ -8,4 +8,8 @@ public class ShowPlayerActionsCommand extends Command {
 		super.type = "SHOW_PLAYER_ACTIONS";
 		this.actions = actions;
 	}
+
+	public DungeonMasterResponse.PlayerAction[] getActions() {
+		return actions;
+	}
 }

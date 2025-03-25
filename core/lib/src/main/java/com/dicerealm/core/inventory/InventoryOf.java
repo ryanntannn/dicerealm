@@ -5,15 +5,21 @@ import java.util.List;
 import java.util.UUID;
 
 public class InventoryOf<T extends Identifiable> {
+	/**
+	 * This is used for deserialization
+	 */
+	private String type;
 	private int inventorySize;
 	private List<T> items = new ArrayList<T>();
 
-	public InventoryOf() {
+	public InventoryOf(String type) {
 		this.inventorySize = 5;
+		this.type = type;
 	}
 
-	public InventoryOf(int inventorySize) {
+	public InventoryOf( String type, int inventorySize) {
 		this.inventorySize = inventorySize;
+		this.type = type;
 	}
 
 	public int getInventorySize(int inventorySize){
@@ -55,5 +61,13 @@ public class InventoryOf<T extends Identifiable> {
 			}
 		}
 		return null;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public List<T> getItems() {
+		return items;
 	}
 }

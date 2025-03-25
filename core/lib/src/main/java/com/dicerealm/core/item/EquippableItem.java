@@ -8,7 +8,6 @@ import com.dicerealm.core.entity.StatsMap;
  * Base class for all wearable items
  */
 public class EquippableItem extends Item {
-
 	private BodyPart[] suitableBodyParts;
 	private StatsMap stats;
 
@@ -16,6 +15,7 @@ public class EquippableItem extends Item {
 		super(name, description);
 		this.suitableBodyParts = suitableBodyParts;
 		this.stats = stats;
+		this.type = "EQUIPPABLE_ITEM";
 	}
 
 	public boolean isSuitableFor(BodyPart bodyPart) {
@@ -29,5 +29,9 @@ public class EquippableItem extends Item {
 	
 	public int getStat(Stat stat) {
 		return stats.getOrDefault(stat, 0);
+	}
+
+	public BodyPart[] getSuitableBodyParts() {
+		return suitableBodyParts;
 	}
 }
