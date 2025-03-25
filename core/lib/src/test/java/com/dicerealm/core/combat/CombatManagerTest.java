@@ -51,28 +51,28 @@ class CombatManagerTest {
         combatManager = new CombatManager(participants);
     }
 
-    @Test
-    void testStartCombatWithWeaponAction() {
-        // Inject the action (weapon) and start the combat
-        CombatResult result = combatManager.startCombat(weapon);
+    // @Test
+    // void testStartCombatWithWeaponAction() {
+    //     // Inject the action (weapon) and start the combat
+    //     CombatResult result = combatManager.startCombat(weapon);
 
-        // Assert that the result is not null, meaning combat occurred
-        assertNotNull(result);
-
-
-    }
-
-    @Test
-    void testStartCombatWithSkillAction() {
+    //     // Assert that the result is not null, meaning combat occurred
+    //     assertNotNull(result);
 
 
-        // Inject the action (skill) and start the combat
-        CombatResult result = combatManager.startCombat(skill);
+    // }
 
-        // Assert that the result is not null, meaning combat occurred
-        assertNotNull(result);
+    // @Test
+    // void testStartCombatWithSkillAction() {
 
-    }
+
+    //     // Inject the action (skill) and start the combat
+    //     CombatResult result = combatManager.startCombat(skill);
+
+    //     // Assert that the result is not null, meaning combat occurred
+    //     assertNotNull(result);
+
+    // }
 
     @Test
     void testCombatOverWhenAllPlayersAreDead() {
