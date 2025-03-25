@@ -7,7 +7,6 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
-
 /**
  * Represents a player in the game
  * @see Entity
