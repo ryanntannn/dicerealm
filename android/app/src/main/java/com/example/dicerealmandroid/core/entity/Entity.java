@@ -1,5 +1,7 @@
 package com.example.dicerealmandroid.core.entity;
 
+import android.util.Log;
+
 import com.example.dicerealmandroid.core.item.EquippableItem;
 import com.example.dicerealmandroid.core.item.InventoryOf;
 import com.example.dicerealmandroid.core.item.Item;
@@ -152,7 +154,7 @@ public class Entity {
     private StatsMap baseStats;
     private StatsMap stats;
 
-    private InventoryOf<Item> inventory = new InventoryOf<>();
+    private InventoryOf<EquippableItem> inventory = new InventoryOf<>();
     private InventoryOf<Skill> skillsInventory = new InventoryOf<>(4);
 
 
@@ -194,11 +196,11 @@ public class Entity {
         return health > 0;
     }
 
-    public InventoryOf<Item> getInventory() {
+    public InventoryOf<EquippableItem> getInventory() {
         return inventory;
     }
 
-    public void updateInventory(InventoryOf<Item> inventory){
+    public void updateInventory(InventoryOf<EquippableItem> inventory){
         this.inventory = inventory;
     }
 
@@ -210,29 +212,31 @@ public class Entity {
         this.skillsInventory = skillsInventory;
     }
 
-//    public boolean equipItem(BodyPart bodyPart, EquippableItem item) {
-//        // Check if item is in inventory
-//        if (!inventory.containsItem(item)) {
-//            return false;
-//        }
-//
-//        if (!item.isSuitableFor(bodyPart)) {
-//            return false;
-//        }
-//
+    public void equipItem(BodyPart bodyPart, EquippableItem item) {
+        // I edit this code because the .contain() method inside .removeItem() compares the obj reference instead of the obj value
+        // Which when the same item comes back from the server, it will not be removed from the inventory as the obj reference is different
 //        inventory.removeItem(item);
-//
-//        // check if the body part is already equipped
-//        if (equippedItems.containsKey(bodyPart)) {
-//            // un-equip the item
-//            inventory.addItem(equippedItems.get(bodyPart));
-//        }
-//
-//        equippedItems.put(bodyPart, item);
-//        updateStats();
-//
-//        return true;
-//    }
+
+        // Remove item from inventory by checking the ID of the existing items vs equipping item
+        for (EquippableItem i : inventory.getItems()) {
+            if (i.getId().equals(item.getId())) {
+                inventory.removeItem(i);
+                break;
+            }
+        }
+
+        // check if the body part is already equipped
+        if (equippedItems.containsKey(bodyPart)) {
+            // un-equip the item
+            inventory.addItem(equippedItems.get(bodyPart));
+        }
+
+        equippedItems.put(bodyPart, item);
+    }
+
+    public Map<BodyPart, EquippableItem> getEquippedItems() {
+        return equippedItems;
+    }
 
     public void updateMaxHealth() {
         this.health = stats.get(Stat.MAX_HEALTH);

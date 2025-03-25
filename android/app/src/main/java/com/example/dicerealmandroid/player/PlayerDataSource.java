@@ -3,7 +3,9 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.dicerealmandroid.command.PlayerEquipItemResponse;
 import com.example.dicerealmandroid.core.entity.Entity;
+import com.example.dicerealmandroid.core.item.EquippableItem;
 import com.example.dicerealmandroid.core.item.InventoryOf;
 import com.example.dicerealmandroid.core.item.Item;
 import com.example.dicerealmandroid.core.player.Player;
@@ -43,6 +45,14 @@ public class PlayerDataSource {
 
     public UUID getPlayerId(){
         return player.getValue().getId();
+    }
+
+    public void equipItem(PlayerEquipItemResponse response){
+        Player equipPlayer = player.getValue();
+
+        equipPlayer.equipItem(response.getBodyPart(), response.getItem());
+        equipPlayer.updateEntityStats(response.getUpdatedPlayerStats());
+        player.postValue(equipPlayer);
     }
 
 }

@@ -16,8 +16,8 @@ public class DialogDataSource {
     private static DialogDataSource instance;
 
     // Turns
-    private List<DialogueClass> turnHistory = new LinkedList<>();
-    private final MutableLiveData<DialogueClass> currentTurn = new MutableLiveData<>();
+    private List<Dialog> turnHistory = new LinkedList<>();
+    private final MutableLiveData<Dialog> currentTurn = new MutableLiveData<>();
 
 
     // Player actions
@@ -33,16 +33,16 @@ public class DialogDataSource {
         return instance;
     }
 
-    public LiveData<DialogueClass> subscribeLatestTurn(){
+    public LiveData<Dialog> subscribeLatestTurn(){
         return currentTurn;
     }
 
-    public void updateTurnHistory(DialogueClass currentTurn){
+    public void updateTurnHistory(Dialog currentTurn){
         turnHistory.add(currentTurn);
         this.currentTurn.postValue(currentTurn);
     }
 
-    public List<DialogueClass> getTurnHistory(){
+    public List<Dialog> getTurnHistory(){
         return turnHistory;
     }
 

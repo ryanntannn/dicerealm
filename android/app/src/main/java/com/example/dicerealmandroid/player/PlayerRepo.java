@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.command.Command;
 import com.example.dicerealmandroid.command.PlayerEquipItemRequest;
+import com.example.dicerealmandroid.command.PlayerEquipItemResponse;
 import com.example.dicerealmandroid.command.UpdatePlayerDetailsCommand;
 import com.example.dicerealmandroid.command.UpdatePlayerDetailsRequestCommand;
 import com.example.dicerealmandroid.core.entity.Entity;
@@ -54,9 +55,20 @@ public class PlayerRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
-    public void equipItem(UUID itemId, Entity.BodyPart bodypart){
+    public void equipItemRequest(UUID itemId, Entity.BodyPart bodypart){
         PlayerEquipItemRequest command = new PlayerEquipItemRequest(itemId.toString(), bodypart);
         String message = gson.toJson(command);
         roomDataSource.sendMessageToServer(message);
     }
+
+    public void equipItem(PlayerEquipItemResponse response){
+        // Check if the response is for the current player
+        if(getPlayerId().equals(UUID.fromString(response.getPlayerId()))){
+            playerDataSource.equipItem(response);
+        }else{
+            throw new IllegalArgumentException("Item not found in inventory");
+        }
+    }
+
+
 }
