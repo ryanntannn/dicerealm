@@ -33,7 +33,7 @@ public class DicerealmClient extends WebSocketClient {
 
     private String roomCode;
 
-    private final static String baseUrl = "ws://192.168.18.69:8080/room/";
+    private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
 
     @Override
     public void onOpen() {
