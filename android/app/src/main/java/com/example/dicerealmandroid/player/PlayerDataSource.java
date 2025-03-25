@@ -3,13 +3,17 @@ package com.example.dicerealmandroid.player;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dicerealmandroid.command.PlayerEquipItemResponse;
-import com.example.dicerealmandroid.core.entity.Entity;
-import com.example.dicerealmandroid.core.item.EquippableItem;
-import com.example.dicerealmandroid.core.item.InventoryOf;
-import com.example.dicerealmandroid.core.item.Item;
-import com.example.dicerealmandroid.core.player.Player;
-import com.example.dicerealmandroid.core.skill.Skill;
+import com.dicerealm.core.command.PlayerEquipItemResponse;
+import com.dicerealm.core.entity.ClassStats;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.item.EquippableItem;
+import com.dicerealm.core.inventory.InventoryOf;
+import com.dicerealm.core.item.Item;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.skills.Skill;
 
 import java.util.UUID;
 
@@ -20,9 +24,9 @@ import java.util.UUID;
 public class PlayerDataSource {
     private static PlayerDataSource instance;
     private final MutableLiveData<Player> player = new MutableLiveData<Player>(new Player("Default",
-            Entity.Race.HUMAN,
-            Entity.EntityClass.WARRIOR,
-            Entity.ClassStats.getStatsForClass(Entity.EntityClass.WARRIOR)));
+            Race.HUMAN,
+            EntityClass.WARRIOR,
+            ClassStats.getStatsForClass(EntityClass.WARRIOR)));
 
     private PlayerDataSource(){}
 
@@ -49,9 +53,7 @@ public class PlayerDataSource {
 
     public void equipItem(PlayerEquipItemResponse response){
         Player equipPlayer = player.getValue();
-
-        equipPlayer.equipItem(response.getBodyPart(), response.getItem());
-        equipPlayer.updateEntityStats(response.getUpdatedPlayerStats());
+        equipPlayer.equipItem(response.getBodyPart(), (EquippableItem) response.getItem());
         player.postValue(equipPlayer);
     }
 

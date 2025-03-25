@@ -25,14 +25,15 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.dicerealmandroid.core.entity.Entity;
-import com.example.dicerealmandroid.core.item.EquippableItem;
-import com.example.dicerealmandroid.core.item.Item;
-import com.example.dicerealmandroid.core.player.Player;
+import com.dicerealm.core.entity.BodyPart;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.item.EquippableItem;
+import com.dicerealm.core.item.Item;
+import com.dicerealm.core.player.Player;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
-import com.example.dicerealmandroid.command.ShowPlayerActionsCommand;
-import com.example.dicerealmandroid.core.DungeonMasterResponse;
+import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.util.ScreenDimensions;
@@ -366,7 +367,7 @@ public class DialogScreen extends AppCompatActivity {
         btnLayoutParams.setLayoutDirection(LinearLayout.HORIZONTAL);
 
         // Display player equipped items
-        for(Entity.BodyPart bodypart : player.getEquippedItems().keySet()){
+        for(BodyPart bodypart : player.getEquippedItems().keySet()){
             EquippableItem item = player.getEquippedItems().get(bodypart);
 
             TextView itemView = new TextView(DialogScreen.this);
@@ -382,7 +383,7 @@ public class DialogScreen extends AppCompatActivity {
         }
 
         // Display player unequipped items
-        for(EquippableItem item : player.getInventory().getItems()){
+        for(Item item : player.getInventory().getItems()){
             TextView itemTitle = new TextView(DialogScreen.this);
             TextView itemDescription = new TextView(DialogScreen.this);
 
@@ -401,20 +402,26 @@ public class DialogScreen extends AppCompatActivity {
             // desc properties
             itemDescription.setText(item.getDescription());
 
-            // btn properties
-            for(Entity.BodyPart bodyPart : item.getSuitableBodyParts()){
-                Button equipButton = new Button(DialogScreen.this);
-                equipButton.setText("Equip to " +  bodyPart);
-                equipButton.setGravity(Gravity.RIGHT);
-                equipButton.setLayoutParams(btnLayoutParams);
+            // check if equippable
 
-                // Hardcode the body part for now, make it more dynamic later
-                equipButton.setOnClickListener(v -> {
-                    Log.d("info", "Equip button clicked");
-                    playerSh.equipItemRequest(item.getId(), bodyPart);
-                });
+            if (item instanceof EquippableItem) {
+                EquippableItem equippableItem = (EquippableItem) item;
 
-                itemCardLayout.addView(equipButton);
+                // btn properties
+                for (BodyPart bodyPart : equippableItem.getSuitableBodyParts()) {
+                    Button equipButton = new Button(DialogScreen.this);
+                    equipButton.setText("Equip to " + bodyPart);
+                    equipButton.setGravity(Gravity.RIGHT);
+                    equipButton.setLayoutParams(btnLayoutParams);
+
+                    // Hardcode the body part for now, make it more dynamic later
+                    equipButton.setOnClickListener(v -> {
+                        Log.d("info", "Equip button clicked");
+                        playerSh.equipItemRequest(equippableItem.getId(), bodyPart);
+                    });
+
+                    itemCardLayout.addView(equipButton);
+                }
             }
 
             itemCardLayout.addView(itemTitle);

@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.DicerealmClient;
-import com.example.dicerealmandroid.core.RoomState;
+import com.dicerealm.core.room.RoomState;
 
 import java.net.URISyntaxException;
 import java.util.Objects;

@@ -18,6 +18,8 @@ export OPENAI_API_KEY=<your-api-key>
 
 ## Running the server
 
+Before running the server, ensure that `core` is built. You may refer to [core/README.md](../core/README.md) for instructions on how to build the library.
+
 To run the server, you need to have Java 23 installed on your machine. You can run the server using the following command:
 
 PC:
