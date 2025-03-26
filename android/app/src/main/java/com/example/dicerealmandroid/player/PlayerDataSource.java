@@ -53,7 +53,8 @@ public class PlayerDataSource {
 
     public void equipItem(PlayerEquipItemResponse response){
         Player equipPlayer = player.getValue();
-        equipPlayer.equipItem(response.getBodyPart(), (EquippableItem) response.getItem());
+        equipPlayer.equipItem(response.getBodyPart(), (EquippableItem) equipPlayer.getInventory().getItem(response.getItem().getId()));
+
         player.postValue(equipPlayer);
     }
 
