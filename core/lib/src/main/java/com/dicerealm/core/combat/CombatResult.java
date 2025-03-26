@@ -1,5 +1,7 @@
 package com.dicerealm.core.combat;
 
+import java.util.UUID;
+
 import com.dicerealm.core.combat.systems.AttackResult;
 import com.dicerealm.core.combat.systems.DamageResult;
 import com.dicerealm.core.combat.systems.HitResult;
@@ -8,8 +10,6 @@ import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
-
-import java.util.UUID;
 
 public class CombatResult {
     private Entity attacker;
@@ -57,8 +57,13 @@ public class CombatResult {
 
     public void setAttackRoll(int attackRoll){ this.attackRoll = attackRoll; }
     public void setAttackBonus(int attackBonus){ this.attackBonus = attackBonus; }
+    public Entity getAttacker(){ return attacker; }
+    public Entity getTarget(){ return target; }
+    public UUID getAttackerID(){ return attackerID; }
+    public UUID getTargetID(){ return targetID; }
     public Dice getDamageDice(){ return damageDice; }
     public String getHitLog(){ return hitLog; }
     public String getDamageLog(){ return damageLog; }
+
 
 }
