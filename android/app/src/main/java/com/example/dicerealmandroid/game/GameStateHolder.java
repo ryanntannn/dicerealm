@@ -75,4 +75,8 @@ public class GameStateHolder extends ViewModel {
     }
 
 
+    // Turn related methods
+    public LiveData<Boolean> isServerBusy(){
+        return gameRepo.isServerBusy();
+    }
 }

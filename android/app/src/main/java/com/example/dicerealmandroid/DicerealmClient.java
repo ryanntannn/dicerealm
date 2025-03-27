@@ -9,6 +9,7 @@ import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
+import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
@@ -83,18 +84,24 @@ public class DicerealmClient extends WebSocketClient {
                     break;
 
                 case "START_GAME":
-                    Message.showMessage("Game started.");
-                    gameRepo.gameStarted();
+                    Message.showMessage("Initializing your game, please wait");
+                    gameRepo.serverNotFree();
                     break;
 
                 case "DIALOGUE_START_TURN":
-                    Message.showMessage("Turn started.");
+                    // Re-Enable the buttons for the player
                     StartTurnCommand startTurnCommand = gson.fromJson(message, StartTurnCommand.class);
+
                     int turnNumber = startTurnCommand.getDialogueTurn().getTurnNumber();
                     String dialog_msg = startTurnCommand.getDialogueTurn().getDungeonMasterText();
 
                     Dialog dialogueTurn = new Dialog(dialog_msg, null, turnNumber);
                     dialogRepo.updateTurnHistory(dialogueTurn);
+
+                    gameRepo.gameStarted();
+                    gameRepo.serverFree();
+
+                    Message.showMessage("Turn " + startTurnCommand.getDialogueTurn().getTurnNumber());
                     break;
 
                 case "SHOW_PLAYER_ACTIONS":
@@ -111,7 +118,9 @@ public class DicerealmClient extends WebSocketClient {
                     break;
 
                 case "DIALOGUE_END_TURN":
-                    // Send whatever the player selected to the server
+                    EndTurnCommand endTurnCommand = gson.fromJson(message, EndTurnCommand.class);
+                    // Disable the buttons for the player
+                    gameRepo.serverNotFree();
                     Message.showMessage("Turn ended.");
                     break;
 
