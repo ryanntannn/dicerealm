@@ -10,6 +10,7 @@ import com.dicerealm.core.strategy.LLMStrategy;
  */
 public class MockLLMStrategy implements LLMStrategy {
 
+		private Object promptSchemaResponse;
 		private String response = "{\"displayText\": \"mock response\", \"actionChoices\":[]}";
 		private JsonSerializationStrategy jsonSerializationStrategy;
 		private String latestPrompt = null;
@@ -40,7 +41,14 @@ public class MockLLMStrategy implements LLMStrategy {
 
 		@Override
 		public <T> T promptSchema(String systemPrompt, String userPrompt, Class<T> schema) {
+			if (promptSchemaResponse != null) {
+				return (T) promptSchemaResponse;
+			}
 			latestPrompt = systemPrompt;
 			return jsonSerializationStrategy.deserialize(response, schema);
+		}
+
+		public void setPromptSchemaResponse(Object promptSchemaResponse) {
+			this.promptSchemaResponse = promptSchemaResponse;
 		}
 }

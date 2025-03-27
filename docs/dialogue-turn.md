@@ -11,18 +11,17 @@ The following sequence diagram illustrates the flow of interactions between the 
 ```mermaid
 
 sequenceDiagram
-		participant Player
+		participant Players
 		participant Room
 
-		Room->>Player: Send START_TURN command
-		Player->>Room: Player 1 sends PLAYER_ACTION command
-		Player->>Room: Player 2 sends PLAYER_ACTION command
-		Player->>Room: Player 3 sends PLAYER_ACTION command
-		Room->>Room: Detect either all players have sent actions or the turn time has expired
-		Room->>Player: Send END_TURN command
+		Room->>Players: Send START_TURN command
+		Players->>Room: Players 1 sends PLAYER_ACTION command
+		Players->>Room: Players 2 sends PLAYER_ACTION command
+		Players->>Room: Players 3 sends PLAYER_ACTION command
+		Room->>Room: Detect either all players have sent actions
+		Room->>Players: Send END_TURN command
 		Room->>DungeonMaster: Process turn actions
 		DungeonMaster->>Room: Send responses
-		Room->>Player: Send responses
-		Room->>Player: Send START_TURN command
+		Room->>Players: Send START_TURN command
 
 ```
