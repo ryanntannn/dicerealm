@@ -75,10 +75,74 @@ public class DialogScreen extends AppCompatActivity {
         gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
 
-        this.getTurnHistory(messageLayout);
+//        this.getTurnHistory(messageLayout);
         this.trackTurns(messageLayout, actionLayout, timerView);
         this.displayPlayerDetails(itemInventoryView);
         this.openItemInventory(itemInventoryModal, itemInventoryView);
+        this.trackGameServer(messageLayout, actionLayout, itemInventoryView);
+    }
+
+    private void trackGameServer(LinearLayout messageLayout, LinearLayout actionLayout, View itemInventoryView){
+        CardView dmCard = new CardView(DialogScreen.this);
+        TextView dmMessage = new TextView(DialogScreen.this);
+
+        // Set LayoutParams for CardView
+        LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 300
+        );
+        cardLayoutParams.setMargins(40, 40, 40, 40);
+
+        // dm prop
+        dmCard.setCardBackgroundColor(Color.parseColor("#FFC0CB"));
+        dmCard.setRadius(10);
+        dmCard.setPadding(40, 40, 40, 40);
+        dmCard.setLayoutParams(cardLayoutParams);
+
+        dmMessage.setText("Dungeon Master is thinking...");
+        dmMessage.setTextSize(24);
+        dmMessage.setPadding(20, 20, 20, 20);
+        dmMessage.setGravity(Gravity.CENTER);
+        dmCard.addView(dmMessage);
+
+        // Tracks turn status and set accordingly the message and button's status
+        gameSh.isServerBusy().observe(this, new Observer<Boolean> () {
+            @Override
+            public void onChanged(Boolean isGameServerBusy) {
+                if (isGameServerBusy) {
+                    // Show dungeon master is thinking and disable action buttons
+                    messageLayout.addView(dmCard);
+                    disableButtons(actionLayout);
+                }else if (!isGameServerBusy){
+                    // Remove dungeon master is thinking and enable action buttons
+                    messageLayout.removeView(dmCard);
+                    enableButtons(actionLayout);
+                }
+            }
+        });
+    }
+
+    private void disableButtons(LinearLayout actionLayout){
+        FloatingActionButton itemInventory= findViewById(R.id.itemInventory);
+        // Disable action buttons
+        for(int i = 0; i < actionLayout.getChildCount(); i++){
+            CardView actionContainer = (CardView) actionLayout.getChildAt(i);
+            actionContainer.setCardBackgroundColor(Color.parseColor("#1A1D2A"));
+            actionContainer.setClickable(false);
+        }
+        // Disable item inventory
+        itemInventory.setEnabled(false);
+    }
+
+    private void enableButtons(LinearLayout actionLayout){
+        FloatingActionButton itemInventory= findViewById(R.id.itemInventory);
+        // Enable action btns
+        for(int i = 0; i < actionLayout.getChildCount(); i++){
+            CardView actionContainer = (CardView) actionLayout.getChildAt(i);
+            actionContainer.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
+            actionContainer.setClickable(true);
+        }
+        // Enable item inventory
+        itemInventory.setEnabled(true);
     }
 
     private void getTurnHistory(LinearLayout messageLayout){
@@ -194,7 +258,7 @@ public class DialogScreen extends AppCompatActivity {
             for(int i = 0; i < message.length(); i++){
                 char currChar = message.charAt(i);
                 try{
-                    Thread.sleep(10);
+                    Thread.sleep(5);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                     return;
@@ -307,27 +371,22 @@ public class DialogScreen extends AppCompatActivity {
     }
 
     private void timer(LinearLayout messageLayout, TextView timerView){
-
         // Timer for player's turn
         timerView.setPadding(20, 20, 20, 20);
+        countDownTimer = new CountDownTimer(gameSh.getTimeLeftInMillis(), gameSh.getIntervalInMillis()) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                gameSh.setTimeLeftInMillis(millisUntilFinished);
+                runOnUiThread(() -> {
+                    timerView.setText("Time Left: " + millisUntilFinished / 1000);
+                });
+            }
 
-        Thread backgroundThread = new Thread(() -> {
-            runOnUiThread(() -> {
-                countDownTimer = new CountDownTimer(gameSh.getTimeLeftInMillis(), gameSh.getIntervalInMillis()){
-                    @Override
-                    public void onTick(long millisUntilFinished){
-                        gameSh.setTimeLeftInMillis(millisUntilFinished);
-                        timerView.setText("Time Left: " + millisUntilFinished / 1000);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        gameSh.setTimeLeftInMillis(0);
-                    }
-                }.start();
-            });
-        });
-        backgroundThread.start();
+            @Override
+            public void onFinish() {
+                gameSh.setTimeLeftInMillis(0);
+            }
+        }.start();
     }
 
     private void openItemInventory(BottomSheetDialog itemInventoryModal, View bottomSheetView){
@@ -403,7 +462,6 @@ public class DialogScreen extends AppCompatActivity {
             itemDescription.setText(item.getDescription());
 
             // check if equippable
-
             if (item instanceof EquippableItem) {
                 EquippableItem equippableItem = (EquippableItem) item;
 

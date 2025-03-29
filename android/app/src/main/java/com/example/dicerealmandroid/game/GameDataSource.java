@@ -13,6 +13,7 @@ import com.example.dicerealmandroid.game.dialog.DialogDataSource;
 public class GameDataSource {
     private static GameDataSource instance;
     private MutableLiveData<Boolean> isGameRunning = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isGameServerBusy = new MutableLiveData<>(false);
     private GameDataSource(){}
 
 
@@ -29,5 +30,18 @@ public class GameDataSource {
 
     public void gameStarted(){
         isGameRunning.postValue(true);
+    }
+
+    // Turn related methods
+    public LiveData<Boolean> isGameServerBusy(){
+        return isGameServerBusy;
+    }
+
+    public void gameServerNotFree(){
+        isGameServerBusy.postValue(true);
+    }
+
+    public void gameServerFree(){
+        isGameServerBusy.postValue(false);
     }
 }
