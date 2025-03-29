@@ -21,6 +21,7 @@ import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
 import com.example.dicerealmandroid.util.Message;
+import com.example.dicerealmandroid.util.Serialization;
 import com.google.gson.Gson;
 
 import java.net.URI;
@@ -39,6 +40,7 @@ public class DicerealmClient extends WebSocketClient {
     @Override
     public void onOpen() {
         System.out.println("onOpen");
+        Message.showMessage("You joined the room.");
     }
 
     @Override
@@ -62,7 +64,6 @@ public class DicerealmClient extends WebSocketClient {
 
                     roomRepo.setRoomState(roomState);
                     playerRepo.setPlayer(myPlayer);
-                    Message.showMessage("You joined the room.");
                     break;
 
                 case "PLAYER_JOIN":

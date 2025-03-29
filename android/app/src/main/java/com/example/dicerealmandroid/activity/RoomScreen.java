@@ -22,6 +22,7 @@ import com.dicerealm.core.player.Player;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 
 public class RoomScreen extends AppCompatActivity {
+    private
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
