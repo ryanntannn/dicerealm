@@ -2,6 +2,7 @@ package com.example.dicerealmandroid.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -30,6 +31,7 @@ import com.dicerealm.core.player.Player;
 import com.dicerealm.core.player.PresetPlayerFactory;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.Loading;
 
 
 public class CharacterScreen extends AppCompatActivity {
@@ -37,6 +39,7 @@ public class CharacterScreen extends AppCompatActivity {
     private PlayerStateHolder playerSh;
     private RoomStateHolder roomSh;
     LinearLayout previousSelected = null;
+    private Loading loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,28 +113,24 @@ public class CharacterScreen extends AppCompatActivity {
         });
 
 
-        // Observe if game has started and user is still in the character screen
+        // Observe if game has started and user is still in the character screen, if so use the randomized character provided by the server when first joining the room
+        loading = new Loading(this, "Initializing Game...");
         RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         roomSh.trackState().observe(this, new Observer<RoomState.State>() {
             @Override
             public void onChanged(RoomState.State state) {
                 if (state == RoomState.State.DIALOGUE_PROCESSING) {
-                    // Randomly select a character
-                    selectedPlayer = new Player(chara_name1.getText().toString(),
-                            Race.DWARF ,
-                            EntityClass.WARRIOR,
-                            ClassStats.getStatsForClass(EntityClass.WARRIOR));
-                    playerSh.updatePlayerRequest(selectedPlayer);
-
+                    loading.show();
                 }else if (state == RoomState.State.DIALOGUE_TURN){
+                    loading.hide();
                     Intent intent = new Intent(CharacterScreen.this, DialogScreen.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
             }
         });
-
     }
+    
     private void setRoomCode(){
         TextView roomCode = findViewById(R.id.roomCode);
         String roomCodeText = "Room Code: " + roomSh.getRoomCode();

@@ -57,6 +57,7 @@ public class PlayerRepo {
 
     public void updatePlayerRequest(Player player){
         UpdatePlayerDetailsRequestCommand command = new UpdatePlayerDetailsRequestCommand(player.getDisplayName(), player.getRace(), player.getEntityClass(), player.getStats());
+        command.race = player.getRace();
         String message = gson.toJson(command);
         roomDataSource.sendMessageToServer(message);
     }
