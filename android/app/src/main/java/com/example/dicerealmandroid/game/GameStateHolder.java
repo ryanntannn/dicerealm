@@ -73,10 +73,4 @@ public class GameStateHolder extends ViewModel {
     public long getIntervalInMillis(){
         return interval;
     }
-
-
-    // Turn related methods
-    public LiveData<Boolean> isServerBusy(){
-        return gameRepo.isServerBusy();
-    }
 }

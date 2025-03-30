@@ -36,10 +36,15 @@ public class DicerealmClient extends WebSocketClient {
     private String roomCode;
 
     private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
+    private final PlayerRepo playerRepo = new PlayerRepo();
+    private final RoomRepo roomRepo = new RoomRepo();
+    private final DialogRepo dialogRepo = new DialogRepo();
+    private final GameRepo gameRepo = new GameRepo();
 
     @Override
     public void onOpen() {
         System.out.println("onOpen");
+        roomRepo.serverFree();
         Message.showMessage("You joined the room.");
     }
 
@@ -48,11 +53,6 @@ public class DicerealmClient extends WebSocketClient {
         Log.d("info", "message received + " + message);
         Command command = gson.fromJson(message, Command.class);
         System.out.println("Command is of type: " + command.getType());
-
-        PlayerRepo playerRepo = new PlayerRepo();
-        RoomRepo roomRepo = new RoomRepo();
-        DialogRepo dialogRepo = new DialogRepo();
-        GameRepo gameRepo = new GameRepo();
 
         try {
             switch (command.getType()) {
@@ -79,14 +79,14 @@ public class DicerealmClient extends WebSocketClient {
                     break;
 
                 case "UPDATE_PLAYER_DETAILS":
-                    // Update player details while keeping the item inventory and skills inventory intact
+                    // Update player details
                     UpdatePlayerDetailsCommand updatePlayerDetailsCommand = gson.fromJson(message, UpdatePlayerDetailsCommand.class);
                     playerRepo.setPlayer(updatePlayerDetailsCommand.player);
                     break;
 
                 case "START_GAME":
                     Message.showMessage("Initializing your game, please wait");
-                    gameRepo.serverNotFree();
+                    roomRepo.serverNotFree();
                     break;
 
                 case "DIALOGUE_START_TURN":
@@ -100,7 +100,7 @@ public class DicerealmClient extends WebSocketClient {
                     dialogRepo.updateTurnHistory(dialogueTurn);
 
                     gameRepo.gameStarted();
-                    gameRepo.serverFree();
+                    roomRepo.serverFree();
 
                     Message.showMessage("Turn " + startTurnCommand.getDialogueTurn().getTurnNumber());
                     break;
@@ -121,18 +121,16 @@ public class DicerealmClient extends WebSocketClient {
                 case "DIALOGUE_END_TURN":
                     EndTurnCommand endTurnCommand = gson.fromJson(message, EndTurnCommand.class);
                     // Disable the buttons for the player
-                    gameRepo.serverNotFree();
+                    roomRepo.serverNotFree();
                     Message.showMessage("Turn ended.");
                     break;
 
                 case "PLAYER_EQUIP_ITEM_RESPONSE":
-                    try {
-                        PlayerEquipItemResponse playerEquipItemResponse = gson.fromJson(message, PlayerEquipItemResponse.class);
-                        playerRepo.equipItem(playerEquipItemResponse);
+                    PlayerEquipItemResponse playerEquipItemResponse = gson.fromJson(message, PlayerEquipItemResponse.class);
+
+                    // Show msg if the item was equipped successfully to the specific player
+                    if(playerRepo.equipItem(playerEquipItemResponse)){
                         Message.showMessage("Equipped " + playerEquipItemResponse.getItem().getDisplayName() + " to " + playerEquipItemResponse.getBodyPart());
-                    }catch(IllegalArgumentException e){
-                        Message.showMessage(e.getMessage());
-                        break;
                     }
                     break;
 
@@ -181,6 +179,7 @@ public class DicerealmClient extends WebSocketClient {
 
     public DicerealmClient (String roomCode) throws URISyntaxException {
         super(new URI(DicerealmClient.baseUrl + roomCode));
+        this.roomRepo.serverNotFree();
         this.roomCode = roomCode;
         this.setConnectTimeout(6000000); // 10 minutes
         this.setReadTimeout(60000);
@@ -193,7 +192,4 @@ public class DicerealmClient extends WebSocketClient {
     public String getRoomCode() {
         return roomCode;
     }
-
-
 }
-

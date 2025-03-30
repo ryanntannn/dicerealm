@@ -98,4 +98,17 @@ public class RoomRepo {
         result.add(errorMessage);
         return result;
     }
+
+
+    // Server status
+    public LiveData<Boolean> isServerActive(){
+        return roomDataSource.getServerState();
+    }
+
+    public void serverFree(){
+        roomDataSource.serverFree();
+    }
+    public void serverNotFree(){
+        roomDataSource.serverNotFree();
+    }
 }

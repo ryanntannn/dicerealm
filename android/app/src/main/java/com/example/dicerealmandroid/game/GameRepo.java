@@ -31,17 +31,4 @@ public class GameRepo {
         gameDataSource.gameStarted();
     }
 
-
-    // Turn related methods
-    public LiveData<Boolean> isServerBusy(){
-        return gameDataSource.isGameServerBusy();
-    }
-
-    public void serverNotFree(){
-        gameDataSource.gameServerNotFree();
-    }
-
-    public void serverFree(){
-        gameDataSource.gameServerFree();
-    }
 }

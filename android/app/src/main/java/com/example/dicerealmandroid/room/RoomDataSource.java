@@ -23,6 +23,9 @@ public class RoomDataSource {
 
     private DicerealmClient dicerealmClient;
 
+    // null: Not connected, true: Busy, false: Not busy
+    private MutableLiveData<Boolean> serverState = new MutableLiveData<>(null);
+
     private RoomDataSource(){}
 
     public static RoomDataSource getInstance(){
@@ -61,4 +64,17 @@ public class RoomDataSource {
         dicerealmClient.send(message);
     }
 
+
+
+    public LiveData<Boolean> getServerState(){
+        return serverState;
+    }
+
+    public void serverNotFree(){
+        serverState.postValue(true);
+    }
+
+    public void serverFree(){
+        serverState.postValue(false);
+    }
 }

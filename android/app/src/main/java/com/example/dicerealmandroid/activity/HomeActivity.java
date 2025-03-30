@@ -12,16 +12,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.dicerealmandroid.R;
+import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.Loading;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
+    private String roomId;
+    private Loading loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +84,30 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
+        loading = new Loading(HomeActivity.this, "Joining room...");
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                String roomId = textInputLayout.getEditText().getText().toString().trim();
+                loading.show();
+                roomId = textInputLayout.getEditText().getText().toString().trim();
                 // Remove all spaces and newlines
                 roomId = roomId.replaceAll("\\s+", "");
                 roomSh.createRoom(roomId);
-                Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
-                startActivity(intent);
-                Log.d("Info", "Room created with code: " + roomId);
             }
+        });
+
+
+        // Navigate when server is free
+        roomSh.isServerActive().observe(this,  new Observer<Boolean>() {
+           @Override
+           public void onChanged(Boolean isServerBusy){
+               if(isServerBusy != null && !isServerBusy){
+                   loading.hide();
+                   Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
+                   startActivity(intent);
+                   Log.d("Info", "Room created with code: " + roomId);
+               }
+           }
         });
     }
 

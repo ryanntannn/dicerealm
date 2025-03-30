@@ -10,6 +10,7 @@ import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsRequestCommand;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.inventory.InventoryOf;
+import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
@@ -39,7 +40,11 @@ public class PlayerRepo {
         if (player == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
-        playerDataSource.setPlayer(player);
+
+        // Only set if the player ID matches the current player ID
+        if (this.getPlayerId() == null || player.getId().equals(this.getPlayerId())){
+            playerDataSource.setPlayer(player);
+        }
     }
 
 
@@ -62,14 +67,15 @@ public class PlayerRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
-    public void equipItem(PlayerEquipItemResponse response){
+    public Boolean equipItem(PlayerEquipItemResponse response){
+        BodyPart bodyPart = response.getBodyPart();
+        EquippableItem item = (EquippableItem) playerDataSource.getPlayer().getValue().getInventory().getItem(response.getItem().getId());
+
         // Check if the response is for the current player
         if(getPlayerId().equals(UUID.fromString(response.getPlayerId()))){
-            playerDataSource.equipItem(response);
-        }else{
-            throw new IllegalArgumentException("Item not found in inventory");
+            playerDataSource.equipItem(bodyPart, item);
+            return true;
         }
+        return false;
     }
-
-
 }

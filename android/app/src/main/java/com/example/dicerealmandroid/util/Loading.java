@@ -41,6 +41,11 @@ public class Loading {
         progress = new CircularProgressIndicator(activity);
         LinearLayout container = new LinearLayout(activity);
 
+        // container prop
+        container.setBackgroundColor(Color.TRANSPARENT);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setGravity(Gravity.CENTER);
+
         // message prop
         LinearLayout.LayoutParams textLayout = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -64,9 +69,13 @@ public class Loading {
         container.addView(message);
         container.addView(progress);
 
-        loadingLayout.addView(container);
-        loadingLayout.setBackgroundColor(Color.parseColor("66000000")); // 40% opacity black
+
+        loadingLayout.setBackgroundColor(Color.parseColor("#66000000")); // 40% black
+        loadingLayout.setClickable(true);
+        loadingLayout.setFocusable(true);
         loadingLayout.setVisibility(View.INVISIBLE);
+
+        loadingLayout.addView(container);
     }
 
     public void show(){

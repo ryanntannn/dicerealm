@@ -20,9 +20,10 @@ import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.player.Player;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.Loading;
 
 public class RoomScreen extends AppCompatActivity {
-    private
+    private Loading loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class RoomScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        loading = new Loading(this, "Initializing Game...");
 
         // Observe if game has started
         GameStateHolder gameStateHolder = new ViewModelProvider(this).get(GameStateHolder.class);
@@ -41,6 +43,7 @@ public class RoomScreen extends AppCompatActivity {
             @Override
             public void onChanged(Boolean isGameRunning) {
                 if (isGameRunning) {
+                    loading.hide();
                     Intent intent = new Intent(RoomScreen.this, DialogScreen.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -82,6 +85,7 @@ public class RoomScreen extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 gameSh.startGame();
+                loading.show();
             }
         });
     }

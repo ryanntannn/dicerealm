@@ -36,6 +36,7 @@ import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
+import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.example.dicerealmandroid.util.ScreenDimensions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -53,6 +54,7 @@ public class DialogScreen extends AppCompatActivity {
     private GameStateHolder gameSh;
     private PlayerStateHolder playerSh;
     private CountDownTimer countDownTimer;
+    private RoomStateHolder roomSh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class DialogScreen extends AppCompatActivity {
 
         gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
+        roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
 //        this.getTurnHistory(messageLayout);
         this.trackTurns(messageLayout, actionLayout, timerView);
@@ -105,7 +108,7 @@ public class DialogScreen extends AppCompatActivity {
         dmCard.addView(dmMessage);
 
         // Tracks turn status and set accordingly the message and button's status
-        gameSh.isServerBusy().observe(this, new Observer<Boolean> () {
+        roomSh.isServerActive().observe(this, new Observer<Boolean> () {
             @Override
             public void onChanged(Boolean isGameServerBusy) {
                 if (isGameServerBusy) {

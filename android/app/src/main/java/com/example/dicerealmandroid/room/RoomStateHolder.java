@@ -51,4 +51,8 @@ public class RoomStateHolder extends ViewModel {
         return roomRepo.validateRoomCode(roomcode);
     }
 
+    public LiveData<Boolean> isServerActive(){
+        return roomRepo.isServerActive();
+    }
+
 }
