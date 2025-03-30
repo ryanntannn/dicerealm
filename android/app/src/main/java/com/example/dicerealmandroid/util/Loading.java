@@ -54,6 +54,8 @@ public class Loading {
         message.setLayoutParams(textLayout);
         message.setForegroundGravity(Gravity.CENTER);
         message.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small);
+        message.setTextColor(Color.WHITE);
+        message.setTextSize(16);
 
         // indicator prop
         progress.setIndeterminate(true);
