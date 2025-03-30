@@ -38,6 +38,10 @@ public class RoomStateHolder extends ViewModel {
         return Transformations.map(roomRepo.subscribeToRoomState(), RoomState::getPlayers);
     }
 
+    public LiveData<RoomState.State> trackState(){
+        return Transformations.map(roomRepo.subscribeToRoomState(), RoomState::getState);
+    }
+
     public RoomStateHolder createRoom(String roomCode){
         roomRepo.createRoom(roomCode);
         return this;
@@ -51,8 +55,6 @@ public class RoomStateHolder extends ViewModel {
         return roomRepo.validateRoomCode(roomcode);
     }
 
-    public LiveData<Boolean> isServerActive(){
-        return roomRepo.isServerActive();
-    }
+
 
 }

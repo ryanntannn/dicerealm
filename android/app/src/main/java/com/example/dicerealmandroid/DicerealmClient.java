@@ -44,7 +44,6 @@ public class DicerealmClient extends WebSocketClient {
     @Override
     public void onOpen() {
         System.out.println("onOpen");
-        roomRepo.serverFree();
         Message.showMessage("You joined the room.");
     }
 
@@ -86,7 +85,8 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "START_GAME":
                     Message.showMessage("Initializing your game, please wait");
-                    roomRepo.serverNotFree();
+                    roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
+
                     break;
 
                 case "DIALOGUE_START_TURN":
@@ -98,9 +98,9 @@ public class DicerealmClient extends WebSocketClient {
 
                     Dialog dialogueTurn = new Dialog(dialog_msg, null, turnNumber);
                     dialogRepo.updateTurnHistory(dialogueTurn);
+                    roomRepo.changeState(RoomState.State.DIALOGUE_TURN);
+//                    gameRepo.gameStarted();
 
-                    gameRepo.gameStarted();
-                    roomRepo.serverFree();
 
                     Message.showMessage("Turn " + startTurnCommand.getDialogueTurn().getTurnNumber());
                     break;
@@ -121,7 +121,7 @@ public class DicerealmClient extends WebSocketClient {
                 case "DIALOGUE_END_TURN":
                     EndTurnCommand endTurnCommand = gson.fromJson(message, EndTurnCommand.class);
                     // Disable the buttons for the player
-                    roomRepo.serverNotFree();
+                    roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                     Message.showMessage("Turn ended.");
                     break;
 
@@ -179,7 +179,6 @@ public class DicerealmClient extends WebSocketClient {
 
     public DicerealmClient (String roomCode) throws URISyntaxException {
         super(new URI(DicerealmClient.baseUrl + roomCode));
-        this.roomRepo.serverNotFree();
         this.roomCode = roomCode;
         this.setConnectTimeout(6000000); // 10 minutes
         this.setReadTimeout(60000);

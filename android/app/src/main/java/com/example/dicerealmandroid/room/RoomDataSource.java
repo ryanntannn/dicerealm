@@ -20,11 +20,7 @@ public class RoomDataSource {
 
     private static RoomDataSource instance;
     private final MutableLiveData<RoomState> roomState = new MutableLiveData<>();
-
     private DicerealmClient dicerealmClient;
-
-    // null: Not connected, true: Busy, false: Not busy
-    private MutableLiveData<Boolean> serverState = new MutableLiveData<>(null);
 
     private RoomDataSource(){}
 
@@ -47,6 +43,15 @@ public class RoomDataSource {
         this.roomState.postValue(roomState); // Trigger observers
     }
 
+    public void changeState(RoomState.State state){
+        RoomState currentRoomState = this.roomState.getValue();
+        if (currentRoomState != null) {
+            currentRoomState.setState(state);
+            this.roomState.postValue(currentRoomState);
+        }
+    }
+
+
     public void createRoom(String roomCode) throws URISyntaxException {
         dicerealmClient = new DicerealmClient(roomCode);
     }
@@ -62,19 +67,5 @@ public class RoomDataSource {
 
     public void sendMessageToServer(String message){
         dicerealmClient.send(message);
-    }
-
-
-
-    public LiveData<Boolean> getServerState(){
-        return serverState;
-    }
-
-    public void serverNotFree(){
-        serverState.postValue(true);
-    }
-
-    public void serverFree(){
-        serverState.postValue(false);
     }
 }

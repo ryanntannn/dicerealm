@@ -30,6 +30,7 @@ import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomState;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
@@ -108,14 +109,14 @@ public class DialogScreen extends AppCompatActivity {
         dmCard.addView(dmMessage);
 
         // Tracks turn status and set accordingly the message and button's status
-        roomSh.isServerActive().observe(this, new Observer<Boolean> () {
+        roomSh.trackState().observe(this, new Observer<RoomState.State> () {
             @Override
-            public void onChanged(Boolean isGameServerBusy) {
-                if (isGameServerBusy) {
+            public void onChanged(RoomState.State state) {
+                if (state == RoomState.State.DIALOGUE_PROCESSING) {
                     // Show dungeon master is thinking and disable action buttons
                     messageLayout.addView(dmCard);
                     disableButtons(actionLayout);
-                }else if (!isGameServerBusy){
+                }else if (state == RoomState.State.DIALOGUE_TURN){
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
                     enableButtons(actionLayout);

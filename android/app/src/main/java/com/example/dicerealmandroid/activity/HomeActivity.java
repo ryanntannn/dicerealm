@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.dicerealm.core.room.RoomState;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
@@ -97,11 +98,11 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-        // Navigate when server is free
-        roomSh.isServerActive().observe(this,  new Observer<Boolean>() {
+        // Navigate when state changes to LOBBY
+        roomSh.trackState().observe(this,  new Observer<RoomState.State>() {
            @Override
-           public void onChanged(Boolean isServerBusy){
-               if(isServerBusy != null && !isServerBusy){
+           public void onChanged(RoomState.State state){
+               if(state == RoomState.State.LOBBY){
                    loading.hide();
                    Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
                    startActivity(intent);

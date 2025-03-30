@@ -23,12 +23,12 @@ public class GameRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
-    public LiveData<Boolean> isGameRunning(){
-        return gameDataSource.isGameRunning();
-    }
-
-    public void gameStarted(){
-        gameDataSource.gameStarted();
-    }
+//    public LiveData<Boolean> isGameReady(){
+//        return gameDataSource.isGameReady();
+//    }
+//
+//    public void gameStarted(){
+//        gameDataSource.gameStarted();
+//    }
 
 }

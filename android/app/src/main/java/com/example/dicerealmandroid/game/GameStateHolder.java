@@ -27,9 +27,9 @@ public class GameStateHolder extends ViewModel {
         gameRepo.startGame();
     }
 
-    public LiveData<Boolean> isGameRunning(){
-        return gameRepo.isGameRunning();
-    }
+//    public LiveData<Boolean> isGameReady(){
+//        return gameRepo.isGameReady();
+//    }
 
 
 

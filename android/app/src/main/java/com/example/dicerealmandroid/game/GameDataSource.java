@@ -12,7 +12,7 @@ import com.example.dicerealmandroid.game.dialog.DialogDataSource;
 
 public class GameDataSource {
     private static GameDataSource instance;
-    private MutableLiveData<Boolean> isGameRunning = new MutableLiveData<>(false);
+//    private MutableLiveData<Boolean> isGameReady = new MutableLiveData<>(null);
     private GameDataSource(){}
 
 
@@ -23,12 +23,12 @@ public class GameDataSource {
         return instance;
     }
 
-    public LiveData<Boolean> isGameRunning(){
-        return isGameRunning;
-    }
-
-    public void gameStarted(){
-        isGameRunning.postValue(true);
-    }
+//    public LiveData<Boolean> isGameReady(){
+//        return isGameReady;
+//    }
+//
+//    public void gameStarted(){
+//        isGameReady.postValue(true);
+//    }
 
 }

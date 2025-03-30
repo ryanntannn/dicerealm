@@ -55,6 +55,10 @@ public class RoomRepo {
         roomDataSource.setRoomState(roomState);
     }
 
+    public void changeState(RoomState.State state){
+        roomDataSource.changeState(state);
+    }
+
     // This is to keep track on the number of players currently in the room (client-side)
     public void addRoomStatePlayer(Player player){
         RoomState updatedRoomState = this.getRoomState();
@@ -97,18 +101,5 @@ public class RoomRepo {
         result.add(String.valueOf(isValid));
         result.add(errorMessage);
         return result;
-    }
-
-
-    // Server status
-    public LiveData<Boolean> isServerActive(){
-        return roomDataSource.getServerState();
-    }
-
-    public void serverFree(){
-        roomDataSource.serverFree();
-    }
-    public void serverNotFree(){
-        roomDataSource.serverNotFree();
     }
 }

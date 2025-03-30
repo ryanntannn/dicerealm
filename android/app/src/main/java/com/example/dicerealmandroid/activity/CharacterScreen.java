@@ -20,6 +20,7 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.handler.BackButtonHandler;
@@ -48,18 +49,7 @@ public class CharacterScreen extends AppCompatActivity {
             return insets;
         });
 
-        // Observe if game has started
-        GameStateHolder gameStateHolder = new ViewModelProvider(this).get(GameStateHolder.class);
-        gameStateHolder.isGameRunning().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isGameRunning) {
-                if (isGameRunning) {
-                    Intent intent = new Intent(CharacterScreen.this, DialogScreen.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            }
-        });
+
 
         // Access PlayerStateHolder
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
@@ -116,6 +106,28 @@ public class CharacterScreen extends AppCompatActivity {
                 // Navigate to lobby waiting screen when Next button is clicked
                 Intent intent = new Intent(CharacterScreen.this, RoomScreen.class);
                 startActivity(intent);
+            }
+        });
+
+
+        // Observe if game has started and user is still in the character screen
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
+            @Override
+            public void onChanged(RoomState.State state) {
+                if (state == RoomState.State.DIALOGUE_PROCESSING) {
+                    // Randomly select a character
+                    selectedPlayer = new Player(chara_name1.getText().toString(),
+                            Race.DWARF ,
+                            EntityClass.WARRIOR,
+                            ClassStats.getStatsForClass(EntityClass.WARRIOR));
+                    playerSh.updatePlayerRequest(selectedPlayer);
+
+                }else if (state == RoomState.State.DIALOGUE_TURN){
+                    Intent intent = new Intent(CharacterScreen.this, DialogScreen.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             }
         });
 
