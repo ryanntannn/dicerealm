@@ -53,6 +53,10 @@ public class RoomScreen extends AppCompatActivity {
 
         BackButtonHandler.setupBackImageButtonHandler(this, R.id.backBtn);
 
+        Button nextButton = findViewById(R.id.startGameBtn);
+        nextButton.setEnabled(true);
+
+
         this.startGame(R.id.startGameBtn, gameSh);
         this.setRoomCode(roomSh);
         this.trackPlayers(roomSh);
@@ -81,6 +85,7 @@ public class RoomScreen extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 gameSh.startGame();
+                startGame.setEnabled(false);
             }
         });
     }
