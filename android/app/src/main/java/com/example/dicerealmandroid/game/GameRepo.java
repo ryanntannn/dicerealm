@@ -23,25 +23,5 @@ public class GameRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
-    public LiveData<Boolean> isGameRunning(){
-        return gameDataSource.isGameRunning();
-    }
 
-    public void gameStarted(){
-        gameDataSource.gameStarted();
-    }
-
-
-    // Turn related methods
-    public LiveData<Boolean> isServerBusy(){
-        return gameDataSource.isGameServerBusy();
-    }
-
-    public void serverNotFree(){
-        gameDataSource.gameServerNotFree();
-    }
-
-    public void serverFree(){
-        gameDataSource.gameServerFree();
-    }
 }

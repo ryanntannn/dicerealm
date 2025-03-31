@@ -21,6 +21,7 @@ import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
 import com.example.dicerealmandroid.util.Message;
+import com.example.dicerealmandroid.util.Serialization;
 import com.google.gson.Gson;
 
 import java.net.URI;
@@ -35,10 +36,15 @@ public class DicerealmClient extends WebSocketClient {
     private String roomCode;
 
     private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
+    private final PlayerRepo playerRepo = new PlayerRepo();
+    private final RoomRepo roomRepo = new RoomRepo();
+    private final DialogRepo dialogRepo = new DialogRepo();
+    private final GameRepo gameRepo = new GameRepo();
 
     @Override
     public void onOpen() {
         System.out.println("onOpen");
+        Message.showMessage("You joined the room.");
     }
 
     @Override
@@ -46,11 +52,6 @@ public class DicerealmClient extends WebSocketClient {
         Log.d("info", "message received + " + message);
         Command command = gson.fromJson(message, Command.class);
         System.out.println("Command is of type: " + command.getType());
-
-        PlayerRepo playerRepo = new PlayerRepo();
-        RoomRepo roomRepo = new RoomRepo();
-        DialogRepo dialogRepo = new DialogRepo();
-        GameRepo gameRepo = new GameRepo();
 
         try {
             switch (command.getType()) {
@@ -62,7 +63,6 @@ public class DicerealmClient extends WebSocketClient {
 
                     roomRepo.setRoomState(roomState);
                     playerRepo.setPlayer(myPlayer);
-                    Message.showMessage("You joined the room.");
                     break;
 
                 case "PLAYER_JOIN":
@@ -78,14 +78,15 @@ public class DicerealmClient extends WebSocketClient {
                     break;
 
                 case "UPDATE_PLAYER_DETAILS":
-                    // Update player details while keeping the item inventory and skills inventory intact
+                    // Update player details
                     UpdatePlayerDetailsCommand updatePlayerDetailsCommand = gson.fromJson(message, UpdatePlayerDetailsCommand.class);
                     playerRepo.setPlayer(updatePlayerDetailsCommand.player);
                     break;
 
                 case "START_GAME":
                     Message.showMessage("Initializing your game, please wait");
-                    gameRepo.serverNotFree();
+                    roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
+
                     break;
 
                 case "DIALOGUE_START_TURN":
@@ -97,9 +98,9 @@ public class DicerealmClient extends WebSocketClient {
 
                     Dialog dialogueTurn = new Dialog(dialog_msg, null, turnNumber);
                     dialogRepo.updateTurnHistory(dialogueTurn);
+                    roomRepo.changeState(RoomState.State.DIALOGUE_TURN);
+//                    gameRepo.gameStarted();
 
-                    gameRepo.gameStarted();
-                    gameRepo.serverFree();
 
                     Message.showMessage("Turn " + startTurnCommand.getDialogueTurn().getTurnNumber());
                     break;
@@ -120,18 +121,16 @@ public class DicerealmClient extends WebSocketClient {
                 case "DIALOGUE_END_TURN":
                     EndTurnCommand endTurnCommand = gson.fromJson(message, EndTurnCommand.class);
                     // Disable the buttons for the player
-                    gameRepo.serverNotFree();
+                    roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                     Message.showMessage("Turn ended.");
                     break;
 
                 case "PLAYER_EQUIP_ITEM_RESPONSE":
-                    try {
-                        PlayerEquipItemResponse playerEquipItemResponse = gson.fromJson(message, PlayerEquipItemResponse.class);
-                        playerRepo.equipItem(playerEquipItemResponse);
+                    PlayerEquipItemResponse playerEquipItemResponse = gson.fromJson(message, PlayerEquipItemResponse.class);
+
+                    // Show msg if the item was equipped successfully to the specific player
+                    if(playerRepo.equipItem(playerEquipItemResponse)){
                         Message.showMessage("Equipped " + playerEquipItemResponse.getItem().getDisplayName() + " to " + playerEquipItemResponse.getBodyPart());
-                    }catch(IllegalArgumentException e){
-                        Message.showMessage(e.getMessage());
-                        break;
                     }
                     break;
 
@@ -192,7 +191,4 @@ public class DicerealmClient extends WebSocketClient {
     public String getRoomCode() {
         return roomCode;
     }
-
-
 }
-

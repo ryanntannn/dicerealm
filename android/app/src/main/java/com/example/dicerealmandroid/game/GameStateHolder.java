@@ -27,9 +27,9 @@ public class GameStateHolder extends ViewModel {
         gameRepo.startGame();
     }
 
-    public LiveData<Boolean> isGameRunning(){
-        return gameRepo.isGameRunning();
-    }
+//    public LiveData<Boolean> isGameReady(){
+//        return gameRepo.isGameReady();
+//    }
 
 
 
@@ -72,11 +72,5 @@ public class GameStateHolder extends ViewModel {
 
     public long getIntervalInMillis(){
         return interval;
-    }
-
-
-    // Turn related methods
-    public LiveData<Boolean> isServerBusy(){
-        return gameRepo.isServerBusy();
     }
 }

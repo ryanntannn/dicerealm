@@ -38,6 +38,10 @@ public class RoomStateHolder extends ViewModel {
         return Transformations.map(roomRepo.subscribeToRoomState(), RoomState::getPlayers);
     }
 
+    public LiveData<RoomState.State> trackState(){
+        return Transformations.map(roomRepo.subscribeToRoomState(), RoomState::getState);
+    }
+
     public RoomStateHolder createRoom(String roomCode){
         roomRepo.createRoom(roomCode);
         return this;
@@ -50,5 +54,7 @@ public class RoomStateHolder extends ViewModel {
     public ArrayList<String> validateRoomCode(String roomcode){
         return roomRepo.validateRoomCode(roomcode);
     }
+
+
 
 }

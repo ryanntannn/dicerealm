@@ -1,4 +1,4 @@
-package com.example.dicerealmandroid;
+package com.example.dicerealmandroid.util;
 
 import com.dicerealm.core.inventory.Identifiable;
 import com.dicerealm.core.inventory.InventoryOf;
