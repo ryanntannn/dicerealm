@@ -36,6 +36,30 @@ public class DungeonMaster {
 		""";
 	}
 
+	private String locationPrompt(){
+		return """
+				Act as a Dungeon Master for a multiplayer game of DND. Come up with a list of locations based on the setting and paths between them.
+				Provide a JSON-formatted response that includes the following keys:
+				
+					1. locations
+					- A list of objects, each representing a location. Each object must contain:
+						- displayName: A string representing the name of the location.
+						- description: A string describing the location in detail.
+					- Each location should be unique and have a distinct name and description.
+					- The locations should be interconnected in a way that makes sense for the game world.
+					- Provide at least 6 locations.
+
+					2. Paths
+					- A list of objects, each representing a path between two locations. Each object must contain:
+						- from: The displayName of the starting location based on the those generated in locations.
+						- to: The displayName of the ending location based on the those generated in locations..
+						- distance: An integer representing the distance between the two locations.
+					- The paths should connect the locations in a logical manner.
+					- Ensure al the locations are connected by at least one path.
+					- One location can have multiple paths leading to different locations.
+				""";
+	}
+
 	private LLMStrategy llmStrategy;
 	private JsonSerializationStrategy jsonSerializationStrategy;
 	private RoomState roomState;
@@ -46,6 +70,13 @@ public class DungeonMaster {
 		this.roomState = roomState;
 		this.jsonSerializationStrategy = jsonSerializationStrategy;
 		this.contextSummary = "No context summary yet, this is the first turn.";
+	}
+
+	public DungeonMasterLocationResponse handleLocationGeneration(String theme) {
+		String systemPrompt = locationPrompt();
+		String userPrompt = "Generate a list of creative locations for a story set in a " + theme;
+		DungeonMasterLocationResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterLocationResponse.class); 
+		return response;
 	}
 
 	public DungeonMasterResponse handleDialogueTurn(String dialogueTurnSummary) {
