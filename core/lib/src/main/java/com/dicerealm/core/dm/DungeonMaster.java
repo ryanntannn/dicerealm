@@ -45,6 +45,7 @@ public class DungeonMaster {
 					- A list of objects, each representing a location. Each object must contain:
 						- displayName: A string representing the name of the location.
 						- description: A string describing the location in detail.
+					- The first location will be the starting point of the adventure.
 					- Each location should be unique and have a distinct name and description.
 					- The locations should be interconnected in a way that makes sense for the game world.
 					- Provide at least 6 locations.
