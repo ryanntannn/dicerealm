@@ -249,7 +249,6 @@ public class DialogScreen extends AppCompatActivity {
                     // Add each turn to the message layout, action layout and start the timer
                     displayMessageStream(turn.getMessage(), currentTurnView);
                     displayActionButtons(actionLayout);
-                    timer(messageLayout, timerView);
                 }
             }
         });
@@ -372,25 +371,6 @@ public class DialogScreen extends AppCompatActivity {
                displayItemInventory(player, itemInventoryView);
             }
         });
-    }
-
-    private void timer(LinearLayout messageLayout, TextView timerView){
-        // Timer for player's turn
-        timerView.setPadding(20, 20, 20, 20);
-        countDownTimer = new CountDownTimer(gameSh.getTimeLeftInMillis(), gameSh.getIntervalInMillis()) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                gameSh.setTimeLeftInMillis(millisUntilFinished);
-                runOnUiThread(() -> {
-                    timerView.setText("Time Left: " + millisUntilFinished / 1000);
-                });
-            }
-
-            @Override
-            public void onFinish() {
-                gameSh.setTimeLeftInMillis(0);
-            }
-        }.start();
     }
 
     private void openItemInventory(BottomSheetDialog itemInventoryModal, View bottomSheetView){

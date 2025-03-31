@@ -3,6 +3,7 @@ package com.example.dicerealmandroid.game;
 import androidx.lifecycle.LiveData;
 
 import com.dicerealm.core.command.StartGameCommand;
+import com.dicerealm.core.locations.Location;
 import com.example.dicerealmandroid.room.RoomDataSource;
 import com.google.gson.Gson;
 
@@ -21,6 +22,17 @@ public class GameRepo {
         StartGameCommand command = new StartGameCommand();
         String message = gson.toJson(command);
         roomDataSource.sendMessageToServer(message);
+    }
+
+    public void changeLocation(Location location){
+        if(location.equals(gameDataSource.getCurrentLocation())){
+            return;
+        }
+        gameDataSource.setCurrentLocation(location);
+    }
+
+    public LiveData<Location> subscribeCurrentLocation(){
+        return gameDataSource.subscribeCurrentLocation();
     }
 
 
