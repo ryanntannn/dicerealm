@@ -352,7 +352,7 @@ public class DialogScreen extends AppCompatActivity {
         this.selectedCardView = selectedCardView;
         gameSh.sendPlayerDialogAction(action);
 
-        //TODO: Add note to player who already selected, "waiting for party to choose their actions",
+        //TODO: Add note to player who already selected, "waiting for party to choose their actions", terminate when roomstate is DIALOGUE_PROCESSING
 
     }
 
