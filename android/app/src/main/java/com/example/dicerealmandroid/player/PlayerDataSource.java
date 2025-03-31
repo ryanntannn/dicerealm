@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dicerealm.core.command.PlayerEquipItemResponse;
+import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.ClassStats;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.EntityClass;
@@ -23,10 +24,7 @@ import java.util.UUID;
  * */
 public class PlayerDataSource {
     private static PlayerDataSource instance;
-    private final MutableLiveData<Player> player = new MutableLiveData<Player>(new Player("Default",
-            Race.HUMAN,
-            EntityClass.WARRIOR,
-            ClassStats.getStatsForClass(EntityClass.WARRIOR)));
+    private final MutableLiveData<Player> player = new MutableLiveData<Player>(null);
 
     private PlayerDataSource(){}
 
@@ -51,10 +49,9 @@ public class PlayerDataSource {
         return player.getValue().getId();
     }
 
-    public void equipItem(PlayerEquipItemResponse response){
+    public void equipItem(BodyPart bodyPart, EquippableItem item){
         Player equipPlayer = player.getValue();
-        equipPlayer.equipItem(response.getBodyPart(), (EquippableItem) equipPlayer.getInventory().getItem(response.getItem().getId()));
-
+        equipPlayer.equipItem(bodyPart, item);
         player.postValue(equipPlayer);
     }
 

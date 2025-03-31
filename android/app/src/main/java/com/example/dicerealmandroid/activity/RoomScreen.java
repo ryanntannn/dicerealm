@@ -15,13 +15,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.dicerealm.core.room.RoomState;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.handler.BackButtonHandler;
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.player.Player;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.Loading;
 
 public class RoomScreen extends AppCompatActivity {
+    private Loading loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,23 +36,25 @@ public class RoomScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        GameStateHolder gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
+
+        loading = new Loading(this, "Initializing Game...");
 
         // Observe if game has started
-        GameStateHolder gameStateHolder = new ViewModelProvider(this).get(GameStateHolder.class);
-        gameStateHolder.isGameRunning().observe(this, new Observer<Boolean>() {
+        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
             @Override
-            public void onChanged(Boolean isGameRunning) {
-                if (isGameRunning) {
+            public void onChanged(RoomState.State state) {
+                if (state == RoomState.State.DIALOGUE_TURN) {
+                    loading.hide();
                     Intent intent = new Intent(RoomScreen.this, DialogScreen.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                }else if (state == RoomState.State.DIALOGUE_PROCESSING){
+                    loading.show();
                 }
             }
         });
-
-
-        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
-        GameStateHolder gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
 
         BackButtonHandler.setupBackImageButtonHandler(this, R.id.backBtn);
 

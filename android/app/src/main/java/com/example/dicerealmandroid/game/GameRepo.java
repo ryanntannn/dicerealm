@@ -1,7 +1,5 @@
 package com.example.dicerealmandroid.game;
 
-import androidx.lifecycle.LiveData;
-
 import com.dicerealm.core.command.StartGameCommand;
 import com.example.dicerealmandroid.room.RoomDataSource;
 import com.google.gson.Gson;
@@ -23,25 +21,11 @@ public class GameRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
-    public LiveData<Boolean> isGameRunning(){
-        return gameDataSource.isGameRunning();
+    public int[] getStatsIds(){
+        if (this.gameDataSource.statsIdArray == null){
+            throw new IllegalStateException("StatsIdArray is null");
+        }
+        return this.gameDataSource.statsIdArray;
     }
 
-    public void gameStarted(){
-        gameDataSource.gameStarted();
-    }
-
-
-    // Turn related methods
-    public LiveData<Boolean> isServerBusy(){
-        return gameDataSource.isGameServerBusy();
-    }
-
-    public void serverNotFree(){
-        gameDataSource.gameServerNotFree();
-    }
-
-    public void serverFree(){
-        gameDataSource.gameServerFree();
-    }
 }

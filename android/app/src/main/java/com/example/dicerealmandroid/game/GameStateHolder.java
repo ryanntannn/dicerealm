@@ -27,9 +27,9 @@ public class GameStateHolder extends ViewModel {
         gameRepo.startGame();
     }
 
-    public LiveData<Boolean> isGameRunning(){
-        return gameRepo.isGameRunning();
-    }
+//    public LiveData<Boolean> isGameReady(){
+//        return gameRepo.isGameReady();
+//    }
 
 
 
@@ -55,28 +55,9 @@ public class GameStateHolder extends ViewModel {
         return dialogRepo.getLatestTurn();
     }
 
-
-
-    // Timer related methods
-    public long getTimeLeftInMillis(){
-        // Reset the timer if it reaches 0
-        if(timeLeftMillis <= 0){
-            timeLeftMillis = 30000;
-        }
-        return timeLeftMillis;
-    }
-
-    public void setTimeLeftInMillis(long timeLeftMillis){
-        this.timeLeftMillis = timeLeftMillis;
-    }
-
-    public long getIntervalInMillis(){
-        return interval;
+    public int[] getStatsIds(){
+        return gameRepo.getStatsIds();
     }
 
 
-    // Turn related methods
-    public LiveData<Boolean> isServerBusy(){
-        return gameRepo.isServerBusy();
-    }
 }

@@ -97,7 +97,6 @@
         app:layout_constraintTop_toBottomOf="@+id/playerActions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -130,48 +129,25 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/stats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="STATS"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/itemInventory"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/health"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/race_entityclass">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stats"
-            >
             <!-- Left column Stats -->
             <TextView
-                android:id="@+id/stat_strength"
+                android:id="@+id/stat_armourclass"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="strength"
+                android:text="armourclass"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stat_constitution"
+                app:layout_constraintEnd_toStartOf="@+id/stat_intelligence"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_intelligence"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="intelligence"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stat_wisdom"
-                app:layout_constraintTop_toBottomOf="@+id/stat_strength"
                 app:layout_constraintHorizontal_weight="1"/>
 
             <TextView
@@ -182,7 +158,18 @@
                 android:text="charisma"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/stat_maxhealth"
-                app:layout_constraintTop_toBottomOf="@+id/stat_intelligence"
+                app:layout_constraintTop_toBottomOf="@+id/stat_armourclass"
+                app:layout_constraintHorizontal_weight="1"/>
+
+            <TextView
+                android:id="@+id/stat_constitution"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="constitution"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/stat_strength"
+                app:layout_constraintTop_toBottomOf="@+id/stat_charisma"
                 app:layout_constraintHorizontal_weight="1"/>
 
             <TextView
@@ -192,31 +179,20 @@
                 android:gravity="center"
                 android:text="dexterity"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stat_armourclass"
-                app:layout_constraintTop_toBottomOf="@+id/stat_charisma"
+                app:layout_constraintEnd_toStartOf="@+id/stat_wisdom"
+                app:layout_constraintTop_toBottomOf="@+id/stat_constitution"
                 app:layout_constraintHorizontal_weight="1"/>
 
             <!-- Right column Stats -->
             <TextView
-                android:id="@+id/stat_constitution"
+                android:id="@+id/stat_intelligence"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="constitution"
-                app:layout_constraintStart_toEndOf="@+id/stat_strength"
+                android:text="intelligence"
+                app:layout_constraintStart_toEndOf="@+id/stat_armourclass"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_wisdom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="wisdom"
-                app:layout_constraintStart_toEndOf="@+id/stat_intelligence"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stat_constitution"
                 app:layout_constraintHorizontal_weight="1"/>
 
             <TextView
@@ -227,32 +203,71 @@
                 android:text="maxhealth"
                 app:layout_constraintStart_toEndOf="@+id/stat_charisma"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stat_wisdom"
+                app:layout_constraintTop_toBottomOf="@+id/stat_intelligence"
                 app:layout_constraintHorizontal_weight="1"/>
 
             <TextView
-                android:id="@+id/stat_armourclass"
+                android:id="@+id/stat_strength"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="armourclass"
-                app:layout_constraintStart_toEndOf="@+id/stat_dexterity"
+                android:text="strength"
+                app:layout_constraintStart_toEndOf="@+id/stat_constitution"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/stat_maxhealth"
                 app:layout_constraintHorizontal_weight="1"/>
+
+            <TextView
+                android:id="@+id/stat_wisdom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="wisdom"
+                app:layout_constraintStart_toEndOf="@+id/stat_dexterity"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stat_strength"
+                app:layout_constraintHorizontal_weight="1"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/race_entityclass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/TextDescription"
+            android:textSize="15dp"
+            android:text="race, entityclass"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stats"
+            />
+        <!-- Add this weight=1 View to push the FAB container to the bottom -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/itemInventory"
+                android:layout_width="50dp"
+                android:layout_height="53dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="15dp"
+                android:clickable="true"
+                android:contentDescription="Inventory Button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:maxImageSize="60dp"
+                app:srcCompat="@drawable/sword2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/itemInventory"
-        android:layout_width="50dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:maxImageSize="60dp"
-        app:srcCompat="@drawable/sword2" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

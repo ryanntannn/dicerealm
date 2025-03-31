@@ -30,29 +30,36 @@ import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomState;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
+import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
+import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.example.dicerealmandroid.util.ScreenDimensions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 // TODO: Add player edit text input
 // TODO: Add player inventory interface
-// TODO: Add player stats interface popup
 
 public class DialogScreen extends AppCompatActivity {
     private CardView selectedCardView;
     private GameStateHolder gameSh;
     private PlayerStateHolder playerSh;
+    private RoomStateHolder roomSh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,7 @@ public class DialogScreen extends AppCompatActivity {
 
         gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
+        roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
 //        this.getTurnHistory(messageLayout);
         this.trackTurns(messageLayout, actionLayout);
@@ -104,14 +112,14 @@ public class DialogScreen extends AppCompatActivity {
         dmCard.addView(dmMessage);
 
         // Tracks turn status and set accordingly the message and button's status
-        gameSh.isServerBusy().observe(this, new Observer<Boolean> () {
+        roomSh.trackState().observe(this, new Observer<RoomState.State> () {
             @Override
-            public void onChanged(Boolean isGameServerBusy) {
-                if (isGameServerBusy) {
+            public void onChanged(RoomState.State state) {
+                if (state == RoomState.State.DIALOGUE_PROCESSING) {
                     // Show dungeon master is thinking and disable action buttons
                     messageLayout.addView(dmCard);
                     disableButtons(actionLayout);
-                }else if (!isGameServerBusy){
+                }else if (state == RoomState.State.DIALOGUE_TURN){
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
                     enableButtons(actionLayout);
@@ -343,31 +351,38 @@ public class DialogScreen extends AppCompatActivity {
         selectedCardView.setCardElevation(80f);
         this.selectedCardView = selectedCardView;
         gameSh.sendPlayerDialogAction(action);
-    }
 
+        //TODO: Add note to player who already selected, "waiting for party to choose their actions",
+
+    }
 
     private void displayPlayerDetails(View itemInventoryView){
         TextView username = findViewById(R.id.username);
         TextView health = findViewById(R.id.health);
-        int[] statsId = {R.id.stat_strength,R.id.stat_intelligence,R.id.stat_charisma,R.id.stat_dexterity,R.id.stat_constitution,R.id.stat_wisdom,R.id.stat_maxhealth,R.id.stat_armourclass,};
+        TextView race_entityclass = findViewById(R.id.race_entityclass);
+        int[] statsIds = gameSh.getStatsIds();
 
         // Initialize player details
-        username.setText(playerSh.getPlayer().getValue().getDisplayName());
+        Player currentPlayer = playerSh.getPlayer().getValue();
+        username.setText(currentPlayer.getDisplayName());
+        health.setText(playerSh.remainingHealth());
+        race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
+        // Initialize player stats
         try {
-            Iterator var1 = playerSh.getPlayer().getValue().getStats().keySet().iterator();
-            Log.d("DisplaySTATS", "displayPlayerDetails: "+playerSh.getPlayer().getValue().getStats());
+            List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
+            Collections.sort(sortedStats, Comparator.comparing(Enum::name));
+            Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
             int currentStatId = 0;
-            while (var1.hasNext()) {
-                Stat stat = (Stat) var1.next();
-                int id = statsId[currentStatId++];
+            for (Stat stat : sortedStats) {
+                int id = statsIds[currentStatId++];
                 TextView currentStat = findViewById(id);
-                currentStat.setText(stat.name()+ ": "+playerSh.getPlayer().getValue().getStat(stat));
+                currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
             }
         }
         catch (NullPointerException e){
             e.printStackTrace();
         }
-        displayItemInventory(playerSh.getPlayer().getValue(), itemInventoryView);
+        displayItemInventory(currentPlayer, itemInventoryView);
 
         playerSh.getPlayer().observe(this, new Observer<Player>() {
            @Override
@@ -375,16 +390,17 @@ public class DialogScreen extends AppCompatActivity {
                // When player details change, update the UI
                username.setText(player.getDisplayName());
                health.setText(playerSh.remainingHealth());
+               race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
                // Update player stats
                try {
-                   Iterator var1 = player.getStats().keySet().iterator();
-                   Log.d("STATS", "displayPlayerDetails: "+playerSh.getPlayer().getValue().getStats());
+                   List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
+                   Collections.sort(sortedStats, Comparator.comparing(Enum::name));
+                   Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
                    int currentStatId = 0;
-                   while (var1.hasNext()) {
-                       Stat stat = (Stat) var1.next();
-                       int id = statsId[currentStatId++];
+                   for (Stat stat : sortedStats) {
+                       int id = statsIds[currentStatId++];
                        TextView currentStat = findViewById(id);
-                       currentStat.setText(stat.name()+ ": "+playerSh.getPlayer().getValue().getStat(stat));
+                       currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
                    }
                }
                catch (NullPointerException e){
