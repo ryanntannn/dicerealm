@@ -11,11 +11,18 @@ public class InitiativeCalculator {
     // Default Constructor
     public InitiativeCalculator() {}
 
-    // Custom D20 For Testing
-    public InitiativeCalculator(D20 d20) { this.d20 = d20; }
-
     public InitiativeResult rollInitiative(Entity entity){
         int initiativeRoll = d20.roll();
+        int initiativeModifier = AbilityModifierCalculator.getDexterityModifier(entity.getStats());
+        int totalInitiative = initiativeRoll + initiativeModifier;
+        String initiativeLog = String.format("%s rolls a d20: %d + Dex Modifier (%d) = %d Total Initiative! ",
+                entity.getDisplayName(), initiativeRoll, initiativeModifier, totalInitiative);
+        return new InitiativeResult(entity, totalInitiative, initiativeRoll, initiativeModifier, initiativeLog);
+
+    }
+
+    public InitiativeResult rollRiggedInitiative(Entity entity, D20 riggedD20){
+        int initiativeRoll = riggedD20.roll();
         int initiativeModifier = AbilityModifierCalculator.getDexterityModifier(entity.getStats());
         int totalInitiative = initiativeRoll + initiativeModifier;
         String initiativeLog = String.format("%s rolls a d20: %d + Dex Modifier (%d) = %d Total Initiative! ",
