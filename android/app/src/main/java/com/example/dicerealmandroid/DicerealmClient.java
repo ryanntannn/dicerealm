@@ -2,6 +2,7 @@ package com.example.dicerealmandroid;
 
 import android.util.Log;
 
+import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.Command;
 import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.PlayerEquipItemResponse;
@@ -26,6 +27,7 @@ import com.google.gson.Gson;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.UUID;
 
 import dev.gustavoavila.websocketclient.WebSocketClient;
@@ -86,7 +88,6 @@ public class DicerealmClient extends WebSocketClient {
                 case "START_GAME":
                     Message.showMessage("Initializing your game, please wait");
                     roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
-
                     break;
 
                 case "DIALOGUE_START_TURN":
@@ -99,8 +100,6 @@ public class DicerealmClient extends WebSocketClient {
                     Dialog dialogueTurn = new Dialog(dialog_msg, null, turnNumber);
                     dialogRepo.updateTurnHistory(dialogueTurn);
                     roomRepo.changeState(RoomState.State.DIALOGUE_TURN);
-//                    gameRepo.gameStarted();
-
 
                     Message.showMessage("Turn " + startTurnCommand.getDialogueTurn().getTurnNumber());
                     break;
@@ -122,6 +121,7 @@ public class DicerealmClient extends WebSocketClient {
                     EndTurnCommand endTurnCommand = gson.fromJson(message, EndTurnCommand.class);
                     // Disable the buttons for the player
                     roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
+                    dialogRepo.setActionResult(endTurnCommand.getActionResultDetail());
                     Message.showMessage("Turn ended.");
                     break;
 
@@ -133,6 +133,11 @@ public class DicerealmClient extends WebSocketClient {
                         Message.showMessage("Equipped " + playerEquipItemResponse.getItem().getDisplayName() + " to " + playerEquipItemResponse.getBodyPart());
                     }
                     break;
+
+                case "CHANGE_LOCATION":
+                    ChangeLocationCommand changeLocationCommand = gson.fromJson(message, ChangeLocationCommand.class);
+                    gameRepo.changeLocation(changeLocationCommand.getLocation());
+                    Message.showMessage("Party has moved to " + changeLocationCommand.getLocation().getDisplayName());
 
                 default:
                     System.out.println("Command Not Handled: " + command.getType());

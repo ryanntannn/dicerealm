@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.dialogue.SkillCheck;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class DialogDataSource {
     // Player actions
     private MutableLiveData<ShowPlayerActionsCommand> playerActions = new MutableLiveData<>();
 
+    private final MutableLiveData<SkillCheck.ActionResultDetail> currentActionResult = new MutableLiveData<>();
 
     private DialogDataSource(){}
 
@@ -44,6 +46,14 @@ public class DialogDataSource {
 
     public List<Dialog> getTurnHistory(){
         return turnHistory;
+    }
+
+    public LiveData<SkillCheck.ActionResultDetail> subscribeLatestActionResult(){
+        return currentActionResult;
+    }
+
+    public void setLatestActionResult(SkillCheck.ActionResultDetail actionResult){
+        currentActionResult.postValue(actionResult);
     }
 
 

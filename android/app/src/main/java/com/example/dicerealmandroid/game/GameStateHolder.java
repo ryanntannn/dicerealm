@@ -3,10 +3,13 @@ package com.example.dicerealmandroid.game;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.dicerealm.core.dialogue.SkillCheck;
+import com.dicerealm.core.locations.Location;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
+import com.example.dicerealmandroid.room.RoomRepo;
 
 import java.util.List;
 
@@ -14,23 +17,17 @@ public class GameStateHolder extends ViewModel {
 
     private GameRepo gameRepo;
     private DialogRepo dialogRepo;
-
-    private long timeLeftMillis = 30000;
-    private long interval = 1000;
+    private RoomRepo roomRepo;
 
     public GameStateHolder(){
         gameRepo = new GameRepo();
         dialogRepo = new DialogRepo();
+        roomRepo = new RoomRepo();
     }
 
     public void startGame(){
         gameRepo.startGame();
     }
-
-//    public LiveData<Boolean> isGameReady(){
-//        return gameRepo.isGameReady();
-//    }
-
 
 
 
@@ -55,22 +52,18 @@ public class GameStateHolder extends ViewModel {
         return dialogRepo.getLatestTurn();
     }
 
-
-
-    // Timer related methods
-    public long getTimeLeftInMillis(){
-        // Reset the timer if it reaches 0
-        if(timeLeftMillis <= 0){
-            timeLeftMillis = 30000;
-        }
-        return timeLeftMillis;
+    public LiveData<SkillCheck.ActionResultDetail> subscribeDialogLatestActionResult(){
+        return dialogRepo.subscribeLatestActionResult();
     }
 
-    public void setTimeLeftInMillis(long timeLeftMillis){
-        this.timeLeftMillis = timeLeftMillis;
+    // Location
+    public LiveData<Location> subscribeCurrentLocation(){
+        return gameRepo.subscribeCurrentLocation();
     }
 
-    public long getIntervalInMillis(){
-        return interval;
+    // Send text input to server
+    public void sendTextInput(String text){
+        gameRepo.sendTextInput(text);
     }
+
 }
