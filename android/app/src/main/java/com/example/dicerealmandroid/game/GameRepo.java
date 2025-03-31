@@ -36,4 +36,12 @@ public class GameRepo {
     }
 
 
+    // Send user game input text to server
+    public void sendTextInput(String text){
+        if(text == null || text.isBlank()){
+            return;
+        }
+        roomDataSource.sendMessageToServer(text);
+    }
+
 }

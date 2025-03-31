@@ -9,6 +9,7 @@ import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
+import com.example.dicerealmandroid.room.RoomRepo;
 
 import java.util.List;
 
@@ -16,10 +17,12 @@ public class GameStateHolder extends ViewModel {
 
     private GameRepo gameRepo;
     private DialogRepo dialogRepo;
+    private RoomRepo roomRepo;
 
     public GameStateHolder(){
         gameRepo = new GameRepo();
         dialogRepo = new DialogRepo();
+        roomRepo = new RoomRepo();
     }
 
     public void startGame(){
@@ -56,6 +59,11 @@ public class GameStateHolder extends ViewModel {
     // Location
     public LiveData<Location> subscribeCurrentLocation(){
         return gameRepo.subscribeCurrentLocation();
+    }
+
+    // Send text input to server
+    public void sendTextInput(String text){
+        gameRepo.sendTextInput(text);
     }
 
 }
