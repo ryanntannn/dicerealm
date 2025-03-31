@@ -24,6 +24,12 @@ public class GameRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
+    public int[] getStatsIds(){
+        if (this.gameDataSource.statsIdArray == null){
+            throw new IllegalStateException("StatsIdArray is null");
+        }
+        return this.gameDataSource.statsIdArray;
+    }
     public void changeLocation(Location location){
         if(location.equals(gameDataSource.getCurrentLocation())){
             return;

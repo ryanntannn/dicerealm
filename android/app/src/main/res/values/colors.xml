@@ -9,6 +9,11 @@
     <color name="darkgray">#5B5B5B</color>
     <color name="gray">#666666</color>
     <color name="lightgrayText">#C8C8C8</color>
+    <color name="darkpurple">#150A2F</color>
+    <color name="purple">#352752</color>
+    <color name="palepurpleCard">#CAC3DB</color>
+    <color name="palepurpleCardPress">#b7afca</color>
+
 
     <!--  Messages background  -->
     <color name="messageBackground">#FAFAFA</color>

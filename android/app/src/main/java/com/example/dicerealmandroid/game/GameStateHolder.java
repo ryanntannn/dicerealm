@@ -19,51 +19,53 @@ public class GameStateHolder extends ViewModel {
     private DialogRepo dialogRepo;
     private RoomRepo roomRepo;
 
-    public GameStateHolder(){
+    public GameStateHolder() {
         gameRepo = new GameRepo();
         dialogRepo = new DialogRepo();
         roomRepo = new RoomRepo();
     }
 
-    public void startGame(){
+    public void startGame() {
         gameRepo.startGame();
     }
 
 
-
     // Dialog related methods
-    public List<Dialog> getDialogTurnHistory(){
+    public List<Dialog> getDialogTurnHistory() {
         return dialogRepo.getTurnHistory();
     }
 
-    public LiveData<Dialog> subscribeDialogLatestTurn(){
+    public LiveData<Dialog> subscribeDialogLatestTurn() {
         return dialogRepo.subscribeLatestTurn();
     }
 
-    public LiveData<ShowPlayerActionsCommand> subscribeDialogPlayerActions(){
+    public LiveData<ShowPlayerActionsCommand> subscribeDialogPlayerActions() {
         return dialogRepo.subscribePlayerActions();
     }
 
-    public void sendPlayerDialogAction(DungeonMasterResponse.PlayerAction action){
+    public void sendPlayerDialogAction(DungeonMasterResponse.PlayerAction action) {
         dialogRepo.sendPlayerAction(action);
     }
 
-    public int getDialogLatestTurn(){
+    public int getDialogLatestTurn() {
         return dialogRepo.getLatestTurn();
     }
 
-    public LiveData<SkillCheck.ActionResultDetail> subscribeDialogLatestActionResult(){
+    public int[] getStatsIds() {
+        return gameRepo.getStatsIds();
+    }
+
+    public LiveData<SkillCheck.ActionResultDetail> subscribeDialogLatestActionResult() {
         return dialogRepo.subscribeLatestActionResult();
     }
 
     // Location
-    public LiveData<Location> subscribeCurrentLocation(){
+    public LiveData<Location> subscribeCurrentLocation() {
         return gameRepo.subscribeCurrentLocation();
     }
 
     // Send text input to server
-    public void sendTextInput(String text){
+    public void sendTextInput(String text) {
         gameRepo.sendTextInput(text);
     }
-
 }

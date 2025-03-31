@@ -8,6 +8,7 @@ package com.example.dicerealmandroid.game;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.dicerealmandroid.R;
 import com.dicerealm.core.locations.Location;
 import com.example.dicerealmandroid.game.dialog.DialogDataSource;
 
@@ -24,6 +25,17 @@ public class GameDataSource {
         }
         return instance;
     }
+
+    public static final int[] statsIdArray = {
+            R.id.stat_armourclass,
+            R.id.stat_charisma,
+            R.id.stat_constitution,
+            R.id.stat_dexterity,
+            R.id.stat_intelligence,
+            R.id.stat_maxhealth,
+            R.id.stat_strength,
+            R.id.stat_wisdom
+    };
 
     public LiveData<Location> subscribeCurrentLocation(){
         return currentLocation;
