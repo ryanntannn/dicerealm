@@ -16,4 +16,27 @@ public class StatsMap extends HashMap<Stat, Integer> implements Stats {
 	public StatsMap(Map<Stat, Integer> stats) {
 		super.putAll(stats);
 	}
+
+	public static String getStatText(Stat stat) {
+		switch (stat) {
+			case MAX_HEALTH:
+				return "Max Health";
+			case ARMOUR_CLASS:
+				return "Armour Class";
+			case STRENGTH:
+				return "Strength";
+			case DEXTERITY:
+				return "Dexterity";
+			case CONSTITUTION:
+				return "Constitution";
+			case INTELLIGENCE:
+				return "Intelligence";
+			case WISDOM:
+				return "Wisdom";
+			case CHARISMA:
+				return "Charisma";
+			default:
+				return "Unknown";
+		}
+	}
 }

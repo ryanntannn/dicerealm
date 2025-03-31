@@ -3,7 +3,7 @@ package com.dicerealm.core.handler;
 import java.util.UUID;
 
 import com.dicerealm.core.command.StartGameCommand;
-import com.dicerealm.core.dialogue.DialogueTurnHandler;
+import com.dicerealm.core.dialogue.DialogueManager;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.room.RoomState;
@@ -21,8 +21,8 @@ public class StartGameHandler extends CommandHandler<StartGameCommand> {
 		context.getBroadcastStrategy().sendToAllPlayers(command);
 		context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn("Start the adventure.");
-		DialogueTurnHandler.handlePlayerActions(response.actionChoices, context);
-		DialogueTurnHandler.handleLocationChange(response, context);
-		DialogueTurnHandler.startNewDialogueTurn(response.displayText, context);
+		DialogueManager.broadcastPlayerActions(response.actionChoices, context);
+		DialogueManager.broadcastLocationChange(response, context);
+		DialogueManager.startNewDialogueTurn(response.displayText, context);
 	}
 }
