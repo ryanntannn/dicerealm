@@ -2,7 +2,6 @@ package com.example.dicerealmandroid.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -27,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
@@ -36,6 +36,7 @@ import com.example.dicerealmandroid.R;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
+import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.example.dicerealmandroid.util.ScreenDimensions;
@@ -43,18 +44,21 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 // TODO: Add player edit text input
 // TODO: Add player inventory interface
-// TODO: Add player stats interface popup
 
 public class DialogScreen extends AppCompatActivity {
     private CardView selectedCardView;
     private GameStateHolder gameSh;
     private PlayerStateHolder playerSh;
-    private CountDownTimer countDownTimer;
     private RoomStateHolder roomSh;
 
     @Override
@@ -70,7 +74,6 @@ public class DialogScreen extends AppCompatActivity {
 
         LinearLayout messageLayout = findViewById(R.id.messageContainer);
         LinearLayout actionLayout = findViewById(R.id.playerActionsContainer);
-        TextView timerView = findViewById(R.id.timer);
 
         BottomSheetDialog itemInventoryModal = new BottomSheetDialog(DialogScreen.this);
         View itemInventoryView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.modal_item_inventory, null);
@@ -80,7 +83,7 @@ public class DialogScreen extends AppCompatActivity {
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
 //        this.getTurnHistory(messageLayout);
-        this.trackTurns(messageLayout, actionLayout, timerView);
+        this.trackTurns(messageLayout, actionLayout);
         this.displayPlayerDetails(itemInventoryView);
         this.openItemInventory(itemInventoryModal, itemInventoryView);
         this.trackGameServer(messageLayout, actionLayout, itemInventoryView);
@@ -130,7 +133,7 @@ public class DialogScreen extends AppCompatActivity {
         // Disable action buttons
         for(int i = 0; i < actionLayout.getChildCount(); i++){
             CardView actionContainer = (CardView) actionLayout.getChildAt(i);
-            actionContainer.setCardBackgroundColor(Color.parseColor("#1A1D2A"));
+            actionContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCardPress, null));
             actionContainer.setClickable(false);
         }
         // Disable item inventory
@@ -142,7 +145,7 @@ public class DialogScreen extends AppCompatActivity {
         // Enable action btns
         for(int i = 0; i < actionLayout.getChildCount(); i++){
             CardView actionContainer = (CardView) actionLayout.getChildAt(i);
-            actionContainer.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
+            actionContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));
             actionContainer.setClickable(true);
         }
         // Enable item inventory
@@ -164,7 +167,7 @@ public class DialogScreen extends AppCompatActivity {
             TextView eachTurnView = new TextView(DialogScreen.this);
 
             turnContainer.setPadding(0, 10, 0, 10);
-            turnContainer.setCardBackgroundColor(Color.parseColor("#D9D9D9"));  // Set background color
+            turnContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));  // Set background color
             eachTurnView.setText(turn.getMessage());
             eachTurnView.setPadding(20,20,20,20);
 
@@ -177,7 +180,7 @@ public class DialogScreen extends AppCompatActivity {
 
 
     // Keeps track of the dialog latest turn only, type out the message character by character
-    private void trackTurns(LinearLayout messageLayout, LinearLayout actionLayout, TextView timerView){
+    private void trackTurns(LinearLayout messageLayout, LinearLayout actionLayout){
 
         gameSh.subscribeDialogLatestTurn().observe(this, new Observer<Dialog>() {
 
@@ -246,10 +249,9 @@ public class DialogScreen extends AppCompatActivity {
 
                     currentTurnView.setText(""); // clear before start of each turn
 
-                    // Add each turn to the message layout, action layout and start the timer
+                    // Add each turn to the message layout and action layout
                     displayMessageStream(turn.getMessage(), currentTurnView);
                     displayActionButtons(actionLayout);
-                    timer(messageLayout, timerView);
                 }
             }
         });
@@ -303,7 +305,7 @@ public class DialogScreen extends AppCompatActivity {
                     // Set CardView properties
                     actionContainer.setLayoutParams(cardLayoutParams);
                     actionContainer.setForeground(AppCompatResources.getDrawable(DialogScreen.this, outValue.resourceId));
-                    actionContainer.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
+                    actionContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));
                     actionContainer.setCardElevation(20f);
                     actionContainer.setClickable(true);
                     actionContainer.setRadius(20);
@@ -341,56 +343,72 @@ public class DialogScreen extends AppCompatActivity {
     private void setSelectedActon(CardView selectedCardView, DungeonMasterResponse.PlayerAction action){
         // Unselect prev card
         if(!selectedCardView.equals(this.selectedCardView) && this.selectedCardView != null){
-            this.selectedCardView.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
+            this.selectedCardView.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));
             this.selectedCardView.setCardElevation(20f);
         }
 
-        selectedCardView.setCardBackgroundColor(Color.parseColor("#9B9B9B"));
+        selectedCardView.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCardPress, null));
         selectedCardView.setCardElevation(80f);
         this.selectedCardView = selectedCardView;
         gameSh.sendPlayerDialogAction(action);
-    }
 
+        //TODO: Add note to player who already selected, "waiting for party to choose their actions", terminate when roomstate is DIALOGUE_PROCESSING
+
+    }
 
     private void displayPlayerDetails(View itemInventoryView){
         TextView username = findViewById(R.id.username);
-        TextView stats = findViewById(R.id.stats);
         TextView health = findViewById(R.id.health);
+        TextView race_entityclass = findViewById(R.id.race_entityclass);
+        int[] statsIds = gameSh.getStatsIds();
 
         // Initialize player details
-        username.setText(playerSh.getPlayer().getValue().getDisplayName());
-        stats.setText(playerSh.getPlayer().getValue().getStats().toString());
-        displayItemInventory(playerSh.getPlayer().getValue(), itemInventoryView);
+        Player currentPlayer = playerSh.getPlayer().getValue();
+        username.setText(currentPlayer.getDisplayName());
+        health.setText(playerSh.remainingHealth());
+        race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
+        // Initialize player stats
+        try {
+            List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
+            Collections.sort(sortedStats, Comparator.comparing(Enum::name));
+            Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
+            int currentStatId = 0;
+            for (Stat stat : sortedStats) {
+                int id = statsIds[currentStatId++];
+                TextView currentStat = findViewById(id);
+                currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
+            }
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        displayItemInventory(currentPlayer, itemInventoryView);
 
         playerSh.getPlayer().observe(this, new Observer<Player>() {
            @Override
            public void onChanged(Player player){
                // When player details change, update the UI
                username.setText(player.getDisplayName());
-               stats.setText(player.getStats().toString());
                health.setText(playerSh.remainingHealth());
+               race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
+               // Update player stats
+               try {
+                   List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
+                   Collections.sort(sortedStats, Comparator.comparing(Enum::name));
+                   Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
+                   int currentStatId = 0;
+                   for (Stat stat : sortedStats) {
+                       int id = statsIds[currentStatId++];
+                       TextView currentStat = findViewById(id);
+                       currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
+                   }
+               }
+               catch (NullPointerException e){
+                   e.printStackTrace();
+               }
                displayItemInventory(player, itemInventoryView);
             }
         });
-    }
-
-    private void timer(LinearLayout messageLayout, TextView timerView){
-        // Timer for player's turn
-        timerView.setPadding(20, 20, 20, 20);
-        countDownTimer = new CountDownTimer(gameSh.getTimeLeftInMillis(), gameSh.getIntervalInMillis()) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                gameSh.setTimeLeftInMillis(millisUntilFinished);
-                runOnUiThread(() -> {
-                    timerView.setText("Time Left: " + millisUntilFinished / 1000);
-                });
-            }
-
-            @Override
-            public void onFinish() {
-                gameSh.setTimeLeftInMillis(0);
-            }
-        }.start();
     }
 
     private void openItemInventory(BottomSheetDialog itemInventoryModal, View bottomSheetView){

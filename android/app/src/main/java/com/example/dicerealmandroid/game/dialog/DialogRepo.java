@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
+import com.dicerealm.core.dialogue.SkillCheck;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.StatsMap;
@@ -61,5 +62,14 @@ public class DialogRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
+
+    // Action result
+    public void setActionResult(SkillCheck.ActionResultDetail actionResult){
+        dialogDataSource.setLatestActionResult(actionResult);
+    }
+
+    public LiveData<SkillCheck.ActionResultDetail> subscribeLatestActionResult(){
+        return dialogDataSource.subscribeLatestActionResult();
+    }
 
 }
