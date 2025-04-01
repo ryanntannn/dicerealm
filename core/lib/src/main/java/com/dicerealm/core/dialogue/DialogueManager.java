@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
@@ -101,7 +102,7 @@ public class DialogueManager {
 		context.getCombatManager().startCombat();
 
 		// Get the turn order of combat participants
-		UUID[] turnOrderIds = context.getCombatManager().getTurnOrderIds();
+		List<InitiativeResult> turnOrderIds = context.getCombatManager().getInitiativeResults();
 
 		// Send the turn order to all players
 		context.getBroadcastStrategy().sendToAllPlayers(new CombatStartCommand(displayText, turnOrderIds));

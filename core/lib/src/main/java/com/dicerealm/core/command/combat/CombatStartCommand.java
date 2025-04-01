@@ -1,7 +1,8 @@
 package com.dicerealm.core.command.combat;
 
-import java.util.UUID;
+import java.util.List;
 
+import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.Command;
 
 /**
@@ -10,19 +11,19 @@ import com.dicerealm.core.command.Command;
  */
 public class CombatStartCommand extends Command {
 		private String displayText;
-		private UUID[] turnOrderIds;
+		private List<InitiativeResult> initiativeResults;
 
-		public CombatStartCommand(String displayText, UUID[] turnOrderIds) {
-			super.type = "COMBAT_START";
-			this.displayText = displayText;
-			this.turnOrderIds = turnOrderIds;
+		public CombatStartCommand(String displayText, List<InitiativeResult> initiativeResults) {
+				this.type = "COMBAT_START";
+				this.displayText = displayText;
+				this.initiativeResults = initiativeResults;
 		}
 
 		public String getDisplayText() {
-			return displayText;
+				return displayText;
 		}
 
-		public UUID[] getTurnOrderIds() {
-			return turnOrderIds;
+		public List<InitiativeResult> getInitiativeResults() {
+				return initiativeResults;
 		}
 }
