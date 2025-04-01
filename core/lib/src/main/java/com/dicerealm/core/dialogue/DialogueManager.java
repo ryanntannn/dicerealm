@@ -2,13 +2,16 @@ package com.dicerealm.core.dialogue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomContext;
@@ -24,6 +27,7 @@ public class DialogueManager {
 	 * @return the new DialogueTurn
 	 */
 	public static DialogueTurn startNewDialogueTurn(String dungeonMasterText, RoomContext context) {
+		context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
 		DialogueTurn turn = context.getRoomState().addDialogueTurn(dungeonMasterText);
 		context.getBroadcastStrategy().sendToAllPlayers(new StartTurnCommand(turn));
 		return turn;
@@ -75,13 +79,43 @@ public class DialogueManager {
 	}
 
 	/**
+	 * Transition RoomState from DIALOGUE_PROCESSING to BATTLE
+	 * @param displayText
+	 */
+	public static void handleSwitchToCombat(String displayText, RoomContext context) {
+		context.getRoomState().setState(RoomState.State.BATTLE);
+		List<Entity> combatParticipants = new ArrayList<>();
+		
+		// add all players and entities in the location to the combat manager
+		for (Player player : context.getRoomState().getPlayers()) {
+			combatParticipants.add(player);
+		}
+		for (Entity entity : context.getRoomState().getLocationGraph().getCurrentLocation().getEntities()) {
+			combatParticipants.add(entity);
+		}
+
+		// Update the combat manager with the new participants
+		context.getCombatManager().newCombat(combatParticipants);
+
+		// Initialize the turn order
+		context.getCombatManager().startCombat();
+
+		// Get the turn order of combat participants
+		UUID[] turnOrderIds = context.getCombatManager().getTurnOrderIds();
+
+		// Send the turn order to all players
+		context.getBroadcastStrategy().sendToAllPlayers(new CombatStartCommand(displayText, turnOrderIds));
+	}
+
+	/**
 	 * End the current dialogue turn
+	 * This transitions the RoomState from DIALOGUE_TURN to DIALOGUE_PROCESSING
 	 * @param context
 	 */
 	public static void endDialogueTurn(RoomContext context) {
 		DialogueTurn currentTurn = context.getRoomState().getCurrentDialogueTurn();
 
-		context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
+		context.getRoomState().setState(RoomState.State.DIALOGUE_PROCESSING);
 
 		SkillCheck skillCheck = new SkillCheck(context.getRandomStrategy());
 
@@ -104,8 +138,12 @@ public class DialogueManager {
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(dungeonMasterPrompt.toString());
 
 		broadcastLocationChange(response, context);
-		broadcastPlayerActions(response.actionChoices, context);
 
-		startNewDialogueTurn(response.displayText, context);
+		if (response.switchToCombatThisTurn) {
+			handleSwitchToCombat(response.displayText, context);
+		} else {
+			broadcastPlayerActions(response.actionChoices, context);
+			startNewDialogueTurn(response.displayText, context);
+		}
 	}
 }
