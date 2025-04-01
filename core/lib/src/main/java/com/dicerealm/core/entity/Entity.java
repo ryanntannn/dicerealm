@@ -16,7 +16,7 @@ import com.dicerealm.core.skills.Skill;
  * @see EquippableItem - represents an item that can be worn by an entity
  * @see InventoryOf - represents the inventory of an entity
  */
-public abstract class Entity {
+public class Entity {
 	private UUID id;
 	private String displayName;
 	private Race race;

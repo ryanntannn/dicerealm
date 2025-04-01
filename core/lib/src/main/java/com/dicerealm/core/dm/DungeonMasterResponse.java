@@ -1,5 +1,10 @@
 package com.dicerealm.core.dm;
 
+import java.util.Map;
+
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
+
 /**
  * Response from the Dungeon Master should be serialized to this class
  * This response should contain the displayText shown to the players in the room, and the action choices that each player can make
@@ -12,6 +17,7 @@ public class DungeonMasterResponse{
 		public PlayerAction[] actionChoices;
 		public String locationId;
 		public String contextSummary;
+		public boolean switchToCombatThisTurn;
 
 		public class PlayerAction{
 			public String action;
@@ -26,5 +32,16 @@ public class DungeonMasterResponse{
 			public int INTELLIGENCE;
 			public int WISDOM;
 			public int CHARISMA;
+
+			public StatsMap toStatsMap() {
+				return new StatsMap(Map.of(
+					Stat.STRENGTH, STRENGTH,
+					Stat.DEXTERITY, DEXTERITY,
+					Stat.CONSTITUTION, CONSTITUTION,
+					Stat.INTELLIGENCE, INTELLIGENCE,
+					Stat.WISDOM, WISDOM,
+					Stat.CHARISMA, CHARISMA
+				));
+			}
 		}
 }
