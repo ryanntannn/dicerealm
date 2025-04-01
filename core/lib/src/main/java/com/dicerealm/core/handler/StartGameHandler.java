@@ -23,9 +23,9 @@ public class StartGameHandler extends CommandHandler<StartGameCommand> {
 		if (context.getRoomState().getState() != RoomState.State.LOBBY) {
 			throw new IllegalStateException("Game has already started");
 		}
-		context.getDungeonMaster().handleLocationGeneration("Forgotten Kingdom of Shadows");
 		context.getBroadcastStrategy().sendToAllPlayers(command);
 		context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
+		context.getDungeonMaster().handleLocationGeneration("Forgotten Kingdom of Shadows");
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn("Start the adventure.");
 		DialogueManager.broadcastPlayerActions(response.actionChoices, context);
 		DialogueManager.broadcastLocationChange(response, context);
