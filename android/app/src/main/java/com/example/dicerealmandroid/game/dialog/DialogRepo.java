@@ -54,10 +54,8 @@ public class DialogRepo {
     }
 
     public void sendPlayerAction(DungeonMasterResponse.PlayerAction action){
-        StatsMap playerStats = playerDataSource.getPlayer().getValue().getStats();
         int turn = dialogDataSource.subscribeLatestTurn().getValue().getTurnNumber();
-
-        DialogueTurnActionCommand dialogAction = new DialogueTurnActionCommand(turn, UUID.fromString(action.playerId), action.action, playerStats);
+        DialogueTurnActionCommand dialogAction = new DialogueTurnActionCommand(turn, UUID.fromString(action.playerId), action.action, action.skillCheck.toStatsMap());
         String message = gson.toJson(dialogAction);
         roomDataSource.sendMessageToServer(message);
     }
