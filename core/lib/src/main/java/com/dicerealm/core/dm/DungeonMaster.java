@@ -1,5 +1,10 @@
 package com.dicerealm.core.dm;
 
+import java.util.ArrayList;
+
+import com.dicerealm.core.locations.Location;
+import com.dicerealm.core.locations.LocationGraph;
+import com.dicerealm.core.locations.Path;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
@@ -73,11 +78,11 @@ public class DungeonMaster {
 		this.contextSummary = "No context summary yet, this is the first turn.";
 	}
 
-	public DungeonMasterLocationResponse handleLocationGeneration(String theme) {
+	public void handleLocationGeneration(String theme) {
 		String systemPrompt = locationPrompt();
 		String userPrompt = "Generate a list of creative locations for a story set in a " + theme;
 		DungeonMasterLocationResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterLocationResponse.class); 
-		return response;
+		roomState.setLocationGraph(generateLocations(response));
 	}
 
 	public DungeonMasterResponse handleDialogueTurn(String dialogueTurnSummary) {
@@ -86,5 +91,35 @@ public class DungeonMaster {
 		DungeonMasterResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterResponse.class); 
 		contextSummary = response.contextSummary;
 		return response;
+	}
+
+	public LocationGraph generateLocations(DungeonMasterLocationResponse response){
+		ArrayList<Location> locations = new ArrayList<>();
+		ArrayList<Path> paths = new ArrayList<>();
+		for (DungeonMasterLocationResponse.LocationList location : response.locations) {
+			Location loc = new Location(location.displayName, location.description);
+			locations.add(loc);
+		}
+		for (DungeonMasterLocationResponse.PathList path : response.paths) {
+			Location from = locations.stream()
+					.filter(Location -> path.from.equals(Location.getDisplayName()))
+					.findFirst()
+					.orElseThrow(() -> new IllegalArgumentException("Location not found: " + path.from));
+			Location to = locations.stream()
+					.filter(Location -> path.to.equals(Location.getDisplayName()))
+					.findFirst()
+					.orElseThrow(() -> new IllegalArgumentException("Location not found: " + path.to));
+			Path p = new Path(from, to, path.distance);
+			paths.add(p);
+		}
+		LocationGraph graph = new LocationGraph(locations.get(0));
+		for (Location location : locations) {
+			graph.addN(location);
+		}
+		for (Path path : paths) {
+			graph.addE(path);
+		}
+
+		return graph;
 	}
 }

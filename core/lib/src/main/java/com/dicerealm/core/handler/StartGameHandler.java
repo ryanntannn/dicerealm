@@ -23,44 +23,12 @@ public class StartGameHandler extends CommandHandler<StartGameCommand> {
 		if (context.getRoomState().getState() != RoomState.State.LOBBY) {
 			throw new IllegalStateException("Game has already started");
 		}
+		context.getDungeonMaster().handleLocationGeneration("Forgotten Kingdom of Shadows");
 		context.getBroadcastStrategy().sendToAllPlayers(command);
 		context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
-		DungeonMasterLocationResponse locationResponse = context.getDungeonMaster().handleLocationGeneration("Forgotten Kingdom of Shadows");
-		context.getRoomState().setLocationGraph(generateLocations(locationResponse));
-		context.getRoomState().getLocationGraph();
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn("Start the adventure.");
 		DialogueManager.broadcastPlayerActions(response.actionChoices, context);
 		DialogueManager.broadcastLocationChange(response, context);
 		DialogueManager.startNewDialogueTurn(response.displayText, context);
-	}
-
-	public LocationGraph generateLocations(DungeonMasterLocationResponse response){
-		ArrayList<Location> locations = new ArrayList<>();
-		ArrayList<Path> paths = new ArrayList<>();
-		for (DungeonMasterLocationResponse.LocationList location : response.locations) {
-			Location loc = new Location(location.displayName, location.description);
-			locations.add(loc);
-		}
-		for (DungeonMasterLocationResponse.PathList path : response.paths) {
-			Location from = locations.stream()
-					.filter(Location -> path.from.equals(Location.getDisplayName()))
-					.findFirst()
-					.orElseThrow(() -> new IllegalArgumentException("Location not found: " + path.from));
-			Location to = locations.stream()
-					.filter(Location -> path.to.equals(Location.getDisplayName()))
-					.findFirst()
-					.orElseThrow(() -> new IllegalArgumentException("Location not found: " + path.to));
-			Path p = new Path(from, to, path.distance);
-			paths.add(p);
-		}
-		LocationGraph graph = new LocationGraph(locations.get(0));
-		for (Location location : locations) {
-			graph.addN(location);
-		}
-		for (Path path : paths) {
-			graph.addE(path);
-		}
-
-		return graph;
 	}
 }
