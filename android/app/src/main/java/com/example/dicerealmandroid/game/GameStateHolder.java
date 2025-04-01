@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.dicerealm.core.dialogue.SkillCheck;
 import com.dicerealm.core.locations.Location;
+import com.example.dicerealmandroid.game.combat.CombatRepo;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
@@ -15,18 +16,27 @@ import java.util.List;
 
 public class GameStateHolder extends ViewModel {
 
+    // TODO: Move combat and dialog related methods to their own state holders (if got time)
+
     private GameRepo gameRepo;
     private DialogRepo dialogRepo;
     private RoomRepo roomRepo;
+    private CombatRepo combatRepo;
 
     public GameStateHolder() {
         gameRepo = new GameRepo();
         dialogRepo = new DialogRepo();
         roomRepo = new RoomRepo();
+        combatRepo = new CombatRepo();
     }
 
     public void startGame() {
         gameRepo.startGame();
+    }
+
+    // Combat related methods
+    public LiveData<String> subscribeCombatLatestTurn() {
+        return combatRepo.subscribeLatestTurn();
     }
 
 

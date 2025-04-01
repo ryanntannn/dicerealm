@@ -1,5 +1,6 @@
 package com.example.dicerealmandroid.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -123,6 +124,10 @@ public class DialogScreen extends AppCompatActivity {
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
                     enableButtons(actionLayout);
+                } else if (state == RoomState.State.BATTLE) {
+                    // Navigate to combat screen
+                    Intent intent = new Intent(DialogScreen.this, CombatScreen.class);
+                    startActivity(intent);
                 }
             }
         });
