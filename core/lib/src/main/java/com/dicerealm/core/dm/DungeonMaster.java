@@ -33,6 +33,13 @@ public class DungeonMaster {
 			- A string summarizing the current context of the room and adding it to the previous context summary 
 			- Include as much infomation as possbile.
 			- This summary will be provided back to you in the next turn.
+
+			5. switchToCombatThisTurn
+			- A boolean indicating whether the room should switch to combat mode this turn. 
+			- If there are enemies present in the current location, you can set this to true to initiate combat this turn.
+			- If there are no enemies present, this must be set to false.
+			- If true, the room will switch to combat mode and a different system will handle combat
+			- If false, the room will remain in dialogue mode. 
 		""";
 	}
 

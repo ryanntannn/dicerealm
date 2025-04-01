@@ -4,6 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StatsMap extends HashMap<Stat, Integer> implements Stats {
+	public static class Builder {
+		private final Map<Stat, Integer> stats = new HashMap<>();
+
+		public Builder set(Stat stat, int value) {
+			stats.put(stat, value);
+			return this;
+		}
+
+		public StatsMap build() {
+			return new StatsMap(stats);
+		}
+	}
+
 	@Override
 	public int getStat(Stat stat) {
 		return super.get(stat);

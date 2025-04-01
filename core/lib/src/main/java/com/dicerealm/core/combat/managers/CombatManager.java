@@ -3,6 +3,7 @@ package com.dicerealm.core.combat.managers;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import com.dicerealm.core.combat.CombatLog;
 import com.dicerealm.core.combat.CombatResult;
@@ -26,14 +27,10 @@ public class CombatManager {
     private CombatLog combatLog;
     private int currentTurnIndex;
 
-    public CombatManager(){}
+    public CombatManager(){
+		}
     public CombatManager(List<Entity> participants) {
-        this.participants = participants;
-        this.initiativeResults = new ArrayList<>();
-        this.turnOrder = new ArrayList<>();
-        this.currentTurnIndex = 0;
-        this.combatLog = new CombatLog();
-        this.actionManager = new ActionManager(combatLog);
+				newCombat(participants);
     }
 
     private List<InitiativeResult> initializeTurnOrder(List<Entity> participants) {
@@ -171,4 +168,20 @@ public class CombatManager {
         return currentTurnIndex;
     }
 
+		public void newCombat(List<Entity> participants) {
+			this.participants = participants;
+			this.initiativeResults = new ArrayList<>();
+			this.turnOrder = new ArrayList<>();
+			this.currentTurnIndex = 0;
+			this.combatLog = new CombatLog();
+			this.actionManager = new ActionManager(combatLog);
+		}
+
+		public UUID[] getTurnOrderIds() {
+			UUID[] ids = new UUID[turnOrder.size()];
+			for (int i = 0; i < turnOrder.size(); i++) {
+				ids[i] = turnOrder.get(i).getId();
+			}
+			return ids;
+		}
 }

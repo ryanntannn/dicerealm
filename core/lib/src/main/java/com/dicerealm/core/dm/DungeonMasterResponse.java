@@ -12,6 +12,7 @@ public class DungeonMasterResponse{
 		public PlayerAction[] actionChoices;
 		public String locationId;
 		public String contextSummary;
+		public boolean switchToCombatThisTurn;
 
 		public class PlayerAction{
 			public String action;
