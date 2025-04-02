@@ -1,19 +1,19 @@
 package com.dicerealm.core.command.combat;
 
-import com.dicerealm.core.combat.managers.CombatManager;
 import com.dicerealm.core.command.Command;
 
+/**
+ * Sent by the server to notify players that the current turn has ended.
+ */
 public class ComandEndTurnCommand extends Command {
-    private CombatManager combatManager;
-    private int combatTurnNumber;
+    private final int turnNumber;
 
-    public ComandEndTurnCommand(CombatManager combatManager, int CombatTurnNumber) {
-        this.combatManager = combatManager;
-        this.combatTurnNumber = CombatTurnNumber;
+    public ComandEndTurnCommand(int turnNumber) {
         super.type = "COMBAT_END_TURN";
+        this.turnNumber = turnNumber;
     }
 
-    public void execute() {
-        combatManager.endTurn();
+    public int getTurnNumber() {
+        return turnNumber;
     }
 }

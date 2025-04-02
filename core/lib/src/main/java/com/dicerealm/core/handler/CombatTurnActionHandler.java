@@ -3,6 +3,8 @@ package com.dicerealm.core.handler;
 import java.util.UUID;
 
 import com.dicerealm.core.combat.managers.CombatManager;
+import com.dicerealm.core.command.combat.ComandEndTurnCommand;
+import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.room.RoomState;
@@ -35,10 +37,15 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 
         // End the turn
         combatManager.endTurn();
+        context.getBroadcastStrategy().sendToAllPlayers(new ComandEndTurnCommand(combatManager.getCurrentTurnIndex()));
 
         // Check if the combat is over
         if (combatManager.isCombatOver()) {
             context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
+        } else {
+            // Start the next turn
+            combatManager.startTurn();
+            context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnEntity()));
         }
     }
 }
