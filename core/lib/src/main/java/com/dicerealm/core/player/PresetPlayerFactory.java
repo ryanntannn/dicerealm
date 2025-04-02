@@ -5,11 +5,11 @@ import java.util.Map;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
-import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.Helmet;
-import com.dicerealm.core.item.IronAxe;
-import com.dicerealm.core.item.IronSword;
+import com.dicerealm.core.item.weapons.IronAxe;
+import com.dicerealm.core.item.weapons.IronSword;
 import com.dicerealm.core.skills.Fireball;
 
 /**
