@@ -152,9 +152,6 @@ public class DicerealmClient extends WebSocketClient {
                     roomRepo.changeState(RoomState.State.BATTLE);
                     break;
 
-                case "COMBAT_START_TURN":
-                    CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
-                    break;
 
                 default:
                     System.out.println("Command Not Handled: " + command.getType());
