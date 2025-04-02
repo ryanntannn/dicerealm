@@ -2,9 +2,14 @@ package com.dicerealm.core.dm;
 
 import java.util.ArrayList;
 
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.locations.LocationGraph;
 import com.dicerealm.core.locations.Path;
+import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.dicerealm.core.strategy.LLMStrategy;
@@ -40,9 +45,21 @@ public class DungeonMaster {
 			- This summary will be provided back to you in the next turn.
 
 			5. switchToCombatThisTurn
+			- If the player's chosen actions is "I want to fight someone", set this to true.
 			- A boolean indicating whether the room should switch to combat mode this turn. 
-			- If there are enemies present in the current location, you can set this to true to initiate combat this turn.
-			- If there are no enemies present, this must be set to false.
+			- If you want the party to fight a monster, set this to true. Provide the monster object that contains:
+				- name: A string representing the name of the enemy
+				- race: A string representing the race of the enemy out of these options: HUMAN, ELF, DEMON, DWARF, TIEFLING
+				- entityClass: A string representing the class of the enemy out of these options: WARRIOR, WIZARD, CLERIC, ROGUE, RANGER
+				- stats: A JSON object containing the following keys:
+					- maxHealth: An integer representing the maximum health of the enemy.
+					- armourClass: An integer representing the enemy's armor class.
+					- strength: An integer representing the enemy's strength.
+					- dexterity: An integer representing the enemy's dexterity.
+					- constitution: An integer representing the enemy's constitution.
+					- intelligence: An integer representing the enemy's intelligence.
+					- wisdom: An integer representing the enemy's wisdom.
+					- charisma: An integer representing the enemy's charisma.
 			- If true, the room will switch to combat mode and a different system will handle combat
 			- If false, the room will remain in dialogue mode. 
 		""";
@@ -128,5 +145,22 @@ public class DungeonMaster {
 		}
 
 		return graph;
+	}
+
+	public void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState){
+		Monster monster = new Monster(enemy.name, 
+		Race.valueOf(enemy.race.toUpperCase()), 
+		EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
+		new StatsMap.Builder().set(Stat.MAX_HEALTH,enemy.stats.maxHealth)
+		.set(Stat.ARMOUR_CLASS, enemy.stats.armourClass)
+		.set(Stat.STRENGTH, enemy.stats.strength)
+		.set(Stat.DEXTERITY, enemy.stats.dexterity)
+		.set(Stat.CONSTITUTION, enemy.stats.constitution)
+		.set(Stat.INTELLIGENCE, enemy.stats.intelligence)
+		.set(Stat.WISDOM, enemy.stats.wisdom)
+		.set(Stat.CHARISMA, enemy.stats.charisma)
+		.build());
+
+		roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
 	}
 }
