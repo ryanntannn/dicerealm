@@ -148,19 +148,27 @@ public class DungeonMaster {
 	}
 
 	public void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState){
-		Monster monster = new Monster(enemy.name, 
-		Race.valueOf(enemy.race.toUpperCase()), 
-		EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
-		new StatsMap.Builder().set(Stat.MAX_HEALTH,enemy.stats.maxHealth)
-		.set(Stat.ARMOUR_CLASS, enemy.stats.armourClass)
-		.set(Stat.STRENGTH, enemy.stats.strength)
-		.set(Stat.DEXTERITY, enemy.stats.dexterity)
-		.set(Stat.CONSTITUTION, enemy.stats.constitution)
-		.set(Stat.INTELLIGENCE, enemy.stats.intelligence)
-		.set(Stat.WISDOM, enemy.stats.wisdom)
-		.set(Stat.CHARISMA, enemy.stats.charisma)
-		.build());
-
-		roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
+		try {
+			Monster monster = new Monster(
+				enemy.name, 
+				Race.valueOf(enemy.race.toUpperCase()), 
+				EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
+				new StatsMap.Builder()
+					.set(Stat.MAX_HEALTH, enemy.stats.maxHealth)
+					.set(Stat.ARMOUR_CLASS, enemy.stats.armourClass)
+					.set(Stat.STRENGTH, enemy.stats.strength)
+					.set(Stat.DEXTERITY, enemy.stats.dexterity)
+					.set(Stat.CONSTITUTION, enemy.stats.constitution)
+					.set(Stat.INTELLIGENCE, enemy.stats.intelligence)
+					.set(Stat.WISDOM, enemy.stats.wisdom)
+					.set(Stat.CHARISMA, enemy.stats.charisma)
+					.build()
+			);
+			roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Error creating monster: Invalid enum value for race or entity class. " + e.getMessage());
+		} catch (NullPointerException e) {
+			throw new NullPointerException("Error creating monster: Missing required fields in enemy stats. " + e.getMessage());
+		}
 	}
 }
