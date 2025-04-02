@@ -1,18 +1,26 @@
 package com.example.dicerealmandroid.game;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.dialogue.SkillCheck;
 import com.dicerealm.core.locations.Location;
 import com.example.dicerealmandroid.game.combat.CombatRepo;
+import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
+import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.room.RoomRepo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class GameStateHolder extends ViewModel {
 
@@ -22,12 +30,14 @@ public class GameStateHolder extends ViewModel {
     private DialogRepo dialogRepo;
     private RoomRepo roomRepo;
     private CombatRepo combatRepo;
+    private PlayerRepo playerRepo;
 
     public GameStateHolder() {
         gameRepo = new GameRepo();
         dialogRepo = new DialogRepo();
         roomRepo = new RoomRepo();
         combatRepo = new CombatRepo();
+        playerRepo = new PlayerRepo();
     }
 
     public void startGame() {
@@ -37,6 +47,24 @@ public class GameStateHolder extends ViewModel {
     // Combat related methods
     public LiveData<String> subscribeCombatLatestTurn() {
         return combatRepo.subscribeLatestTurn();
+    }
+
+
+    public LiveData<List<CombatSequence>> getCombatSequence(){
+        // Only used for UI display only, so placed here instead of in the repo
+        // The CombatSequence class is a filtered version of InitiativeResult
+        return Transformations.map(combatRepo.getInitiativeResults(), initiativeResults -> {
+            List<CombatSequence> combatSequence = new ArrayList<>();
+            for(InitiativeResult initiativeResult : initiativeResults){
+                String name = initiativeResult.getEntity().getDisplayName();
+                int totalInitiative = initiativeResult.getTotalInitiative();
+                if(initiativeResult.getEntity().getId().equals(playerRepo.getPlayerId())){
+                    name = "You";
+                }
+                combatSequence.add(new CombatSequence(name, totalInitiative));
+            }
+            return combatSequence;
+        });
     }
 
 

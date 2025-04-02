@@ -9,6 +9,7 @@ import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
@@ -145,9 +146,10 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "COMBAT_START":
                     CombatStartCommand combatStartCommand = gson.fromJson(message, CombatStartCommand.class);
-                    roomRepo.changeState(RoomState.State.BATTLE);
                     combatRepo.setLatestTurn(combatStartCommand.getDisplayText());
+                    combatRepo.setInitiativeResults(combatStartCommand.getInitiativeResults());
                     Message.showMessage("Enemies found! Switching to combat mode.");
+                    roomRepo.changeState(RoomState.State.BATTLE);
                     break;
 
                 case "COMBAT_START_TURN":
