@@ -31,6 +31,7 @@ public class DungeonMaster {
 			- A list of objects, each representing an action available to the players. Each object must contain:
 				- action: A string describing the action.
 					- Provide action for the player to do in Current location.
+					- Always include an option for players to engage in combat with the monster.
 				- playerId: The ID of the player who can take this action.
 				- skillCheck: A JSON object specifying any required skill checks. This object can include keys such as STRENGTH, DEXTERITY, CONSTITUTION, INTELLIGENCE, WISDOM, and CHARISMA with integer values representing the threshold. For skills not needed, set their value to 0.
 					- Ensure that any skill checks required are logically tied to the action. For example, use DEXTERITY for lockpicking, CHARISMA for persuasion, etc. If no skill check is needed, set the skill check values to 0.
