@@ -8,6 +8,8 @@ import com.dicerealm.core.combat.systems.HitResult;
 import com.dicerealm.core.dice.Dice;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
 
@@ -26,6 +28,7 @@ public class CombatResult {
     private Dice damageDice;
     private Weapon weapon;
     private Skill skill;
+    private String potionLog;
 
     // Default Constructor
     public CombatResult(){}
@@ -43,6 +46,20 @@ public class CombatResult {
         this.damageDice = skill.getDamageDice();
     }
 
+    public CombatResult(Entity attacker, Entity target, Scroll scroll){
+        attackerID = attacker.getId();
+        targetID = target.getId();
+        targetAC = target.getStat(Stat.ARMOUR_CLASS);
+        this.damageDice = scroll.getDamageDice();
+    }
+
+    public CombatResult(Entity attacker, Entity target, Potion potion){
+        attackerID = attacker.getId();
+        targetID = target.getId();
+        targetAC = target.getStat(Stat.ARMOUR_CLASS);
+        this.damageDice = potion.getDamageDice();
+    }
+
     public void fromHitResult(HitResult hitResult) {
         this.attackResult = hitResult.getAttackResult();
         this.attackRoll = hitResult.getAttackRoll();
@@ -57,6 +74,7 @@ public class CombatResult {
 
     public void setAttackRoll(int attackRoll){ this.attackRoll = attackRoll; }
     public void setAttackBonus(int attackBonus){ this.attackBonus = attackBonus; }
+    public void setPotionLog(String potionLog){ this.potionLog = potionLog; }
     public Entity getAttacker(){ return attacker; }
     public Entity getTarget(){ return target; }
     public UUID getAttackerID(){ return attackerID; }
