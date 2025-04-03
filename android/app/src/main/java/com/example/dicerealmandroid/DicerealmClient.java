@@ -9,6 +9,8 @@ import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.command.combat.CombatStartCommand;
+import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
@@ -17,6 +19,7 @@ import com.dicerealm.core.command.PlayerLeaveCommand;
 
 import com.dicerealm.core.room.RoomState;
 import com.example.dicerealmandroid.game.GameRepo;
+import com.example.dicerealmandroid.game.combat.CombatRepo;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.player.PlayerRepo;
@@ -42,6 +45,7 @@ public class DicerealmClient extends WebSocketClient {
     private final RoomRepo roomRepo = new RoomRepo();
     private final DialogRepo dialogRepo = new DialogRepo();
     private final GameRepo gameRepo = new GameRepo();
+    private final CombatRepo combatRepo = new CombatRepo();
 
     @Override
     public void onOpen() {
@@ -138,6 +142,16 @@ public class DicerealmClient extends WebSocketClient {
                     ChangeLocationCommand changeLocationCommand = gson.fromJson(message, ChangeLocationCommand.class);
                     gameRepo.changeLocation(changeLocationCommand.getLocation());
                     Message.showMessage("Party has moved to " + changeLocationCommand.getLocation().getDisplayName());
+                    break;
+
+                case "COMBAT_START":
+                    CombatStartCommand combatStartCommand = gson.fromJson(message, CombatStartCommand.class);
+                    combatRepo.setLatestTurn(combatStartCommand.getDisplayText());
+                    combatRepo.setInitiativeResults(combatStartCommand.getInitiativeResults());
+                    Message.showMessage("Enemies found! Switching to combat mode.");
+                    roomRepo.changeState(RoomState.State.BATTLE);
+                    break;
+
 
                 default:
                     System.out.println("Command Not Handled: " + command.getType());

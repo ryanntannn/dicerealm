@@ -40,7 +40,7 @@ public class SkillCheck {
 			this.stat = stat;
 		}
 
-		public Result getResult() {
+		public Result getResult() { 
 			return result;
 		}
 

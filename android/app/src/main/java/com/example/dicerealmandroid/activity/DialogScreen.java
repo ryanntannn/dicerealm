@@ -1,5 +1,6 @@
 package com.example.dicerealmandroid.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,7 @@ import com.example.dicerealmandroid.R;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
+import com.example.dicerealmandroid.game.dialog.DialogStateHolder;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
@@ -60,6 +62,7 @@ public class DialogScreen extends AppCompatActivity {
     private GameStateHolder gameSh;
     private PlayerStateHolder playerSh;
     private RoomStateHolder roomSh;
+    private DialogStateHolder dialogSh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,7 @@ public class DialogScreen extends AppCompatActivity {
         gameSh = new ViewModelProvider(this).get(GameStateHolder.class);
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+        dialogSh = new ViewModelProvider(this).get(DialogStateHolder.class);
 
 //        this.getTurnHistory(messageLayout);
         this.trackTurns(messageLayout, actionLayout);
@@ -123,6 +127,10 @@ public class DialogScreen extends AppCompatActivity {
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
                     enableButtons(actionLayout);
+                } else if (state == RoomState.State.BATTLE) {
+                    // Navigate to combat screen
+                    Intent intent = new Intent(DialogScreen.this, CombatScreen.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -153,7 +161,7 @@ public class DialogScreen extends AppCompatActivity {
     }
 
     private void getTurnHistory(LinearLayout messageLayout){
-        for(Dialog turn : gameSh.getDialogTurnHistory()){
+        for(Dialog turn : dialogSh.getDialogTurnHistory()){
             // Each turn number
             TextView numberOfTurns = new TextView(DialogScreen.this);
             numberOfTurns.setText("Turn " + turn.getTurnNumber());
@@ -182,7 +190,7 @@ public class DialogScreen extends AppCompatActivity {
     // Keeps track of the dialog latest turn only, type out the message character by character
     private void trackTurns(LinearLayout messageLayout, LinearLayout actionLayout){
 
-        gameSh.subscribeDialogLatestTurn().observe(this, new Observer<Dialog>() {
+        dialogSh.subscribeDialogLatestTurn().observe(this, new Observer<Dialog>() {
 
             @Override
             public void onChanged(Dialog turn){
@@ -282,7 +290,7 @@ public class DialogScreen extends AppCompatActivity {
 
     private void displayActionButtons(LinearLayout actionLayout) {
 
-        gameSh.subscribeDialogPlayerActions().observe(this, new Observer<ShowPlayerActionsCommand>() {
+        dialogSh.subscribeDialogPlayerActions().observe(this, new Observer<ShowPlayerActionsCommand>() {
             @Override
             public void onChanged(ShowPlayerActionsCommand actions) {
                 actionLayout.removeAllViews();  // Clear previous views before adding new ones
@@ -350,7 +358,7 @@ public class DialogScreen extends AppCompatActivity {
         selectedCardView.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCardPress, null));
         selectedCardView.setCardElevation(80f);
         this.selectedCardView = selectedCardView;
-        gameSh.sendPlayerDialogAction(action);
+        dialogSh.sendPlayerDialogAction(action);
 
         //TODO: Add note to player who already selected, "waiting for party to choose their actions", terminate when roomstate is DIALOGUE_PROCESSING
 
