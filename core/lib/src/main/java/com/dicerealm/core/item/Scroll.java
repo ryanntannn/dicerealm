@@ -9,6 +9,7 @@ public class Scroll extends UseableItem {
     public Scroll(String name, String description, int numDice, int diceSides) {
         super(name, description);
         this.damageDice = new MultiDice(numDice, diceSides);
+				this.type = "SCROLL";
     }
 
     public MultiDice getDamageDice(){ return damageDice; }

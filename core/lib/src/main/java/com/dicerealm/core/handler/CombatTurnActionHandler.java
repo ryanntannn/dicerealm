@@ -46,7 +46,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				}
 
         // Execute the combat action
-        CombatResult result = combatManager.executeCombatTurn(command.getAttacker(), command.getTarget(), command.getActionType());
+        CombatResult result = combatManager.executeCombatTurn(command.getAttacker(), command.getTarget(), command.getAction());
 
 				int currentTurnIndex = combatManager.getCurrentTurnIndex();
 

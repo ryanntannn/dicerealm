@@ -9,6 +9,7 @@ public class Potion extends UseableItem {
     public Potion(String name, String description, int numDice, int diceSides) {
         super(name, description);
         this.effectDice = new MultiDice(numDice, diceSides);
+				this.type = "POTION";
     }
 
     public MultiDice getDamageDice(){ return effectDice; }

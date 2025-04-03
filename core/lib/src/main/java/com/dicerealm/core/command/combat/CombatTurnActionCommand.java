@@ -4,15 +4,25 @@ import com.dicerealm.core.command.Command;
 import com.dicerealm.core.entity.Entity;
 
 public class CombatTurnActionCommand extends Command {
+
+		public enum ActionType {
+				SKILL,
+				WEAPON,
+				SCROLL,
+				POTION,
+		}
+
     private final Entity attacker;
     private final Entity target;
-    private final Object actionType;
+    private final Object action;
+		private final ActionType actionType;
 
-    public CombatTurnActionCommand(Entity attacker, Entity target, Object actionType) {
+    public CombatTurnActionCommand(Entity attacker, Entity target, Object action, ActionType actionType) {
         super.type = "COMBAT_TURN_ACTION";
         this.attacker = attacker;
         this.target = target;
-        this.actionType = actionType;
+        this.action = action;
+				this.actionType = actionType;
     }
 
     public Entity getAttacker() {
@@ -21,7 +31,10 @@ public class CombatTurnActionCommand extends Command {
     public Entity getTarget() {
         return target;
     }
-    public Object getActionType() {
-        return actionType;
+    public Object getAction() {
+        return action;
     }
+		public ActionType getActionType() {
+			return actionType;
+		}
 }
