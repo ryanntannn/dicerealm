@@ -13,6 +13,13 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.item.Scroll;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.entity.Entity;
+
+
 
 import java.lang.reflect.Type;
 import java.util.List;
