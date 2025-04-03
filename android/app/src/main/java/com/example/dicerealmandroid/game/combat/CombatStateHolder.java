@@ -20,7 +20,6 @@ public class CombatStateHolder extends ViewModel {
         playerRepo = new PlayerRepo();
     }
 
-    // Combat related methods
     public LiveData<String> subscribeCombatLatestTurn() {
         return combatRepo.subscribeLatestTurn();
     }
@@ -46,4 +45,5 @@ public class CombatStateHolder extends ViewModel {
     public void performAction(Object action){
         combatRepo.performAction(action);
     }
+
 }

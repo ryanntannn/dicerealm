@@ -138,6 +138,11 @@ public class DialogueManager {
 
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(dungeonMasterPrompt.toString());
 
+		handleDungeonMasterResponse(response, context);
+	}
+
+	public static void handleDungeonMasterResponse(DungeonMasterResponse response, RoomContext context) {
+		
 		broadcastLocationChange(response, context);
 
 		if (response.switchToCombatThisTurn) {

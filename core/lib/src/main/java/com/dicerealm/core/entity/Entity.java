@@ -17,6 +17,11 @@ import com.dicerealm.core.skills.Skill;
  * @see InventoryOf - represents the inventory of an entity
  */
 public class Entity {
+
+	public static enum Allegiance {
+		PLAYER, FRIENDLY, ENEMY
+	}
+
 	private UUID id;
 	private String displayName;
 	private Race race;
@@ -25,6 +30,7 @@ public class Entity {
 	private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();
 	private StatsMap baseStats;
 	private StatsMap stats;
+	protected Allegiance allegiance = Allegiance.FRIENDLY;
 
 	private InventoryOf<Item> inventory = new InventoryOf<Item>("ITEM");
 
@@ -165,6 +171,10 @@ public class Entity {
 
 	public Map<BodyPart, EquippableItem> getEquippedItems() {
 		return equippedItems;
+	}
+
+	public Allegiance getAllegiance() {
+		return this.allegiance;
 	}
 
 }
