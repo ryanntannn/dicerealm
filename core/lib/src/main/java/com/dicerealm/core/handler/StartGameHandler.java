@@ -25,7 +25,7 @@ public class StartGameHandler extends CommandHandler<StartGameCommand> {
 		}
 		context.getBroadcastStrategy().sendToAllPlayers(command);
 		context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
-		context.getDungeonMaster().handleLocationGeneration("Forgotten Kingdom of Shadows");
+		context.getDungeonMaster().handleLocationGeneration("Forgotten Kingdom of Shadows"); // Comment out this line to use mockLocationGraph.
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn("Start the adventure.");
 		DialogueManager.broadcastPlayerActions(response.actionChoices, context);
 		DialogueManager.broadcastLocationChange(response, context);

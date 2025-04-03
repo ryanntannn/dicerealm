@@ -25,7 +25,10 @@ public class DungeonMaster {
 		Your JSON output must include the following keys:
 		
 			1. displayText
-			- A string describing the actions taken by the players, the new state of the room as a result of these actions, and any additional context you wish to convey.
+			- A string describing the actions taken by the players, the new state of the room as a result of these actions, and any additional context you wish to convey. 
+			- Do not provide any action choices in the displayText.
+			- Engage with the party as a whole and not just one player.
+			- Guide the players to combat as much as possible within the context of the story.
 		
 			2. actionChoices
 			- A list of objects, each representing an action available to the players. Each object must contain:
@@ -61,6 +64,7 @@ public class DungeonMaster {
 					- intelligence: An integer representing the enemy's intelligence.
 					- wisdom: An integer representing the enemy's wisdom.
 					- charisma: An integer representing the enemy's charisma.
+			- Ensure that the monster created is logically tied to the current location and the context of the story.
 			- If true, the room will switch to combat mode and a different system will handle combat
 			- If false, the room will remain in dialogue mode. 
 		""";
@@ -113,7 +117,7 @@ public class DungeonMaster {
 	public DungeonMasterResponse handleDialogueTurn(String dialogueTurnSummary) {
 		String systemPrompt = systemPrompt() + "\nCurrent Location\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getCurrentLocation()) + "\nAdjacent Locations\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getAdjacentLocations()) + "\nPlayers\n" + jsonSerializationStrategy.serialize(roomState.getPlayers());
 		String userPrompt = "This is what has happened so far:\n" + contextSummary  + "\nThese are players' chosen actions:\n" + dialogueTurnSummary + "\n Continue the story accordingly.";
-		DungeonMasterResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterResponse.class); 
+		DungeonMasterResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterResponse.class);
 		contextSummary = response.contextSummary;
 		return response;
 	}
@@ -146,30 +150,5 @@ public class DungeonMaster {
 		}
 
 		return graph;
-	}
-
-	public void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState){
-		try {
-			Monster monster = new Monster(
-				enemy.name, 
-				Race.valueOf(enemy.race.toUpperCase()), 
-				EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
-				new StatsMap.Builder()
-					.set(Stat.MAX_HEALTH, enemy.stats.maxHealth)
-					.set(Stat.ARMOUR_CLASS, enemy.stats.armourClass)
-					.set(Stat.STRENGTH, enemy.stats.strength)
-					.set(Stat.DEXTERITY, enemy.stats.dexterity)
-					.set(Stat.CONSTITUTION, enemy.stats.constitution)
-					.set(Stat.INTELLIGENCE, enemy.stats.intelligence)
-					.set(Stat.WISDOM, enemy.stats.wisdom)
-					.set(Stat.CHARISMA, enemy.stats.charisma)
-					.build()
-			);
-			roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Error creating monster: Invalid enum value for race or entity class. " + e.getMessage());
-		} catch (NullPointerException e) {
-			throw new NullPointerException("Error creating monster: Missing required fields in enemy stats. " + e.getMessage());
-		}
 	}
 }

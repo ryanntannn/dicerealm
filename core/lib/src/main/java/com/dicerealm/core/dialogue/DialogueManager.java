@@ -13,7 +13,12 @@ import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.locations.Location;
+import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.room.RoomState;
@@ -144,12 +149,38 @@ public class DialogueManager {
 	public static void handleDungeonMasterResponse(DungeonMasterResponse response, RoomContext context) {
 		
 		broadcastLocationChange(response, context);
-
 		if (response.switchToCombatThisTurn) {
+			addMonster(response.enemy, context.getRoomState());
+			List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
 			handleSwitchToCombat(response.displayText, context);
 		} else {
 			broadcastPlayerActions(response.actionChoices, context);
 			startNewDialogueTurn(response.displayText, context);
+		}
+	}
+
+	public static void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState){
+		try {
+			Monster monster = new Monster(
+				enemy.name, 
+				Race.valueOf(enemy.race.toUpperCase()), 
+				EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
+				new StatsMap.Builder()
+					.set(Stat.MAX_HEALTH, enemy.stats.maxHealth)
+					.set(Stat.ARMOUR_CLASS, enemy.stats.armourClass)
+					.set(Stat.STRENGTH, enemy.stats.strength)
+					.set(Stat.DEXTERITY, enemy.stats.dexterity)
+					.set(Stat.CONSTITUTION, enemy.stats.constitution)
+					.set(Stat.INTELLIGENCE, enemy.stats.intelligence)
+					.set(Stat.WISDOM, enemy.stats.wisdom)
+					.set(Stat.CHARISMA, enemy.stats.charisma)
+					.build()
+			);
+			roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Error creating monster: Invalid enum value for race or entity class. " + e.getMessage());
+		} catch (NullPointerException e) {
+			throw new NullPointerException("Error creating monster: Missing required fields in enemy stats. " + e.getMessage());
 		}
 	}
 }
