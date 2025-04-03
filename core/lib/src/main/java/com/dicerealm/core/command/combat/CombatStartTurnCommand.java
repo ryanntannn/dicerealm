@@ -1,20 +1,20 @@
 package com.dicerealm.core.command.combat;
 
 import com.dicerealm.core.command.Command;
-import com.dicerealm.core.entity.Entity;
 
 /**
  * Sent by the server to notify players that a new turn has started.
  */
 public class CombatStartTurnCommand extends Command {
-    private final Entity currentTurnEntity;
+		// index of the current turn
+		private final int turnNumber;
 
-    public CombatStartTurnCommand(Entity currentTurnEntity) {
+    public CombatStartTurnCommand(int turnNumber) {
         super.type = "COMBAT_START_TURN";
-        this.currentTurnEntity = currentTurnEntity;
+				this.turnNumber = turnNumber;
     }
 
-    public Entity getCurrentTurnEntity() {
-        return currentTurnEntity;
-    }
+		public int getTurnNumber() {
+			return turnNumber;
+		}
 }

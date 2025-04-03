@@ -196,4 +196,13 @@ public class CombatManager {
 			}
 			return ids;
 		}
+
+		public Entity getEntityById(UUID id) {
+			for (Entity entity : participants) {
+				if (entity.getId().equals(id)) {
+					return entity;
+				}
+			}
+			return null;
+		}
 }

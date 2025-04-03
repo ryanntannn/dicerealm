@@ -82,6 +82,4 @@ public class CombatResult {
     public Dice getDamageDice(){ return damageDice; }
     public String getHitLog(){ return hitLog; }
     public String getDamageLog(){ return damageLog; }
-
-
-}
+}	
