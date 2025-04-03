@@ -1,4 +1,6 @@
-# dicerealm Monorepo
+# Dicerealm Monorepo
+
+Dicerealm is an AI powered multiplayer RPG experience, leveraging on cutting edge GenAI models to deliver an immersive and organic experience
 
 This is the monorepo for the dicerealm project. It contains the following packages:
 
@@ -11,7 +13,7 @@ This is the monorepo for the dicerealm project. It contains the following packag
 
 ```mermaid
 graph TD
-		A[android] -->|imports| B[lib]
+		A[android] -->|imports| B[core]
 		D[server] -->|imports| B
 ```
 

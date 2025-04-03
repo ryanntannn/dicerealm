@@ -1,14 +1,21 @@
 package com.example.dicerealmandroid.player;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.Stats;
+import com.dicerealm.core.inventory.InventoryOf;
+import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.skills.Skill;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerStateHolder extends ViewModel{
@@ -40,5 +47,15 @@ public class PlayerStateHolder extends ViewModel{
 
     public String remainingHealth() {
         return "Remaining Health: " + playerRepo.getPlayer().getValue().getHealth() + "/" + playerRepo.getPlayer().getValue().getStat(Stat.MAX_HEALTH);
+    }
+
+
+    public LiveData<EquippableItem> getEquippedItem(BodyPart bodyPart){
+        return Transformations.map(playerRepo.getPlayer(), player -> player.getEquippedItems().get(bodyPart));
+    }
+
+
+    public LiveData<InventoryOf<Skill>> getSkills(){
+        return Transformations.map(playerRepo.getPlayer(), Entity::getSkillsInventory);
     }
 }
