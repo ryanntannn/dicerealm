@@ -205,4 +205,7 @@ public class CombatManager {
 			}
 			return null;
 		}
+        public List<Entity> getParticipants() {
+            return participants;
+        }
 }
