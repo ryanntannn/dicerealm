@@ -55,6 +55,10 @@ public class RoomState {
 			return locationGraph;
 		}
 
+		public void setLocationGraph(LocationGraph locationGraph) {
+			this.locationGraph = locationGraph;
+		}
+
 		public State getState() {
 			return state;
 		}
