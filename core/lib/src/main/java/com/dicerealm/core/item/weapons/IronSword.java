@@ -1,10 +1,12 @@
-package com.dicerealm.core.item;
+package com.dicerealm.core.item.weapons;
+
+import java.util.Map;
 
 import com.dicerealm.core.combat.ActionType;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
-
-import java.util.Map;
+import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.item.WeaponClass;
 
 public class IronSword extends Weapon{
     public IronSword(int strength) {

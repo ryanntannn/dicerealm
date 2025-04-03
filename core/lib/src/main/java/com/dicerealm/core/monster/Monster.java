@@ -24,9 +24,11 @@ public class Monster extends Entity {
 			Stat.WISDOM, 0,
 			Stat.CHARISMA, 0
 		)));
+		this.allegiance = Allegiance.ENEMY;
 	}
 
 	public Monster(String name, Race race, EntityClass entityClass, StatsMap baseStats) {
 		super(name, race, entityClass, baseStats);
+		this.allegiance = Allegiance.ENEMY;
 	}
 }

@@ -1,6 +1,7 @@
 package com.dicerealm.core.combat.systems;
 
 import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
 
@@ -40,6 +41,15 @@ public class DamageCalculator {
         return new DamageResult(damage, damageLog);
     }
 
+    public DamageResult applyScrollDamage(Entity attacker, Entity target, Scroll scroll, boolean isCritHit) {
+        int damage = isCritHit ? calculateCritDamage(scroll) : calculateNormalDamage(scroll);
+
+        target.takeDamage(damage);
+        damageLog = (attacker.getDisplayName() + " uses Scroll of " + scroll.getDisplayName() + " on " +
+                target.getDisplayName() + " for " + damage + " damage!");
+        return new DamageResult(damage, damageLog);
+    }
+
     //Helper Methods to roll for each Damage Type
     private static int calculateNormalDamage(Weapon weapon) {
         return weapon.rollDamage();
@@ -55,6 +65,14 @@ public class DamageCalculator {
 
     private static int calculateCritDamage(Skill skill) {
         return skill.rollDamage() + skill.rollDamage(); // DND 5E Crit 2 x Die Roll
+    }
+
+    private static int calculateNormalDamage(Scroll scroll) {
+        return scroll.rollDamage();
+    }
+
+    private static int calculateCritDamage(Scroll scroll) {
+        return scroll.rollDamage() + scroll.rollDamage(); // DND 5E Crit 2 x Die Roll
     }
 
     //Helper Method to print damageLog

@@ -12,6 +12,8 @@ import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.dice.D20;
 import com.dicerealm.core.dice.FixedD20;
 import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
@@ -105,6 +107,12 @@ public class CombatManager {
         } else if (action instanceof Weapon) {
             actionManager.rigDice(d20); // Set the rigged dice for the action manager
             return actionManager.performAttack(player, target, (Weapon) action);
+        } else if (action instanceof Scroll) {
+            actionManager.rigDice(d20); // Set the rigged dice for the action manager
+            return actionManager.useScroll(player, target, (Scroll) action);
+        }  else if (action instanceof Potion) {
+            actionManager.rigDice(d20); // Set the rigged dice for the action manager
+            return actionManager.usePotion(player, target, (Potion) action);
         }
         return null;
     }
@@ -114,6 +122,10 @@ public class CombatManager {
             return actionManager.performSkillAttack(player, target, (Skill) action);
         } else if (action instanceof Weapon) {
             return actionManager.performAttack(player, target, (Weapon) action);
+        } else if (action instanceof Scroll) {
+            return actionManager.useScroll(player, target, (Scroll) action);
+        } else if (action instanceof Potion) {
+            return actionManager.usePotion(player, target, (Potion) action);
         }
         return null;
     }
@@ -183,5 +195,14 @@ public class CombatManager {
 				ids[i] = turnOrder.get(i).getId();
 			}
 			return ids;
+		}
+
+		public Entity getEntityById(UUID id) {
+			for (Entity entity : participants) {
+				if (entity.getId().equals(id)) {
+					return entity;
+				}
+			}
+			return null;
 		}
 }

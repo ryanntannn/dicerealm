@@ -7,6 +7,7 @@ import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 import com.dicerealm.core.dm.DungeonMaster;
+import com.dicerealm.core.handler.CombatTurnActionHandler;
 import com.dicerealm.core.handler.CommandRouter;
 import com.dicerealm.core.handler.DialogueTurnActionHandler;
 import com.dicerealm.core.handler.PlayerEquipItemHandler;
@@ -67,6 +68,7 @@ public class Room {
 		commandRouter.registerHandler(new PlayerEquipItemHandler());
 		commandRouter.registerHandler(new UpdatePlayerDetailsHandler());
 		commandRouter.registerHandler(new DialogueTurnActionHandler());
+		commandRouter.registerHandler(new CombatTurnActionHandler());
 	}
 
 	/**
