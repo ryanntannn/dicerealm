@@ -8,6 +8,10 @@ public class MultiDice extends Dice {
         this.numDice = numDice;
     }
 
+    public int getNumDice() {
+        return numDice;
+    }
+    
     @Override
     public int roll() {
         int total = 0;
