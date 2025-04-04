@@ -9,8 +9,8 @@ import java.util.UUID;
 import com.dicerealm.core.util.queue.Queue;
 
 public class Graph<N extends Node, E extends Edge<N>> {
-	private Map<UUID, N> nodes = new HashMap<UUID, N>();
-	private Map<UUID, E> edges = new HashMap<UUID, E>();
+	protected Map<UUID, N> nodes = new HashMap<UUID, N>();
+	protected Map<UUID, E> edges = new HashMap<UUID, E>();
 
 	public void addN(N node) {
 		nodes.put(node.getId(), node);
