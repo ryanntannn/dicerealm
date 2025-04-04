@@ -33,6 +33,8 @@ public class CombatResult {
     // Default Constructor
     public CombatResult(){}
     public CombatResult(Entity attacker, Entity target, Weapon weapon){
+        this.attacker = attacker;
+        this.target = target;
         attackerID = attacker.getId();
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
@@ -40,6 +42,8 @@ public class CombatResult {
     }
 
     public CombatResult(Entity attacker, Entity target, Skill skill){
+        this.attacker = attacker;
+        this.target = target;
         attackerID = attacker.getId();
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
@@ -47,6 +51,8 @@ public class CombatResult {
     }
 
     public CombatResult(Entity attacker, Entity target, Scroll scroll){
+        this.attacker = attacker;
+        this.target = target;
         attackerID = attacker.getId();
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
@@ -54,6 +60,8 @@ public class CombatResult {
     }
 
     public CombatResult(Entity attacker, Entity target, Potion potion){
+        this.attacker = attacker;
+        this.target = target;
         attackerID = attacker.getId();
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
