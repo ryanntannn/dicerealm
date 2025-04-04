@@ -22,17 +22,28 @@ public class Skill implements Identifiable {
     private int cooldown;
     private int remainingCooldown;
 
-    public Skill(String name, String description, EntityClass entityClass, ActionType actiontype, int spellSlotCost, int numDice, int diceSides, int cooldown) {
+    public Skill(String name, String description, EntityClass entityClass, ActionType actiontype, int spellSlotCost, int diceSides, int cooldown) {
         this.id = UUID.randomUUID();
         this.displayName = name;
         this.description = description;
         this.entityClass = entityClass;
         this.actiontype = actiontype;
         this.spellSlotCost = spellSlotCost;
-        this.damageDice = new MultiDice(numDice, diceSides);
+        this.damageDice = new MultiDice(1, diceSides);
         this.cooldown = cooldown;
         this.remainingCooldown = 0;
     }
+    public Skill(String name, String description, EntityClass entityClass, ActionType actiontype, int spellSlotCost, int numDice, int diceSides, int cooldown) {
+      this.id = UUID.randomUUID();
+      this.displayName = name;
+      this.description = description;
+      this.entityClass = entityClass;
+      this.actiontype = actiontype;
+      this.spellSlotCost = spellSlotCost;
+      this.damageDice = new MultiDice(numDice, diceSides);
+      this.cooldown = cooldown;
+      this.remainingCooldown = 0;
+  }
     public String getDisplayName() { return displayName; }
 
     public String getDescription() { return description; }
@@ -46,6 +57,8 @@ public class Skill implements Identifiable {
     public MultiDice getDamageDice(){ return damageDice; }
 
     public int rollDamage(){ return damageDice.roll(); }
+
+    public int getMaxDamage() { return damageDice.getNumDice() * damageDice.getSides(); }
 
     public UUID getId() { return id; }
 
