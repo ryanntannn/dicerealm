@@ -48,9 +48,12 @@ public class MonsterAI {
                 s2.getDamageDice().getNumDice() * s2.getDamageDice().getSides())); // Compare skills by max damage
 
         Object action = null;
-        if (skill.isPresent() && (!weapon.isPresent() || 
-            skill.get().getDamageDice().getNumDice() * skill.get().getDamageDice().getSides() >= 
-            weapon.get().getDamageDice().getSides())) {
+        boolean hasSkill = skill.isPresent();
+        boolean hasWeapon = weapon.isPresent();
+        boolean skillStrongerThanWeapon = hasSkill && (!hasWeapon || 
+            skill.get().getMaxDamage() >= weapon.get().getMaxDamage());
+
+        if (skillStrongerThanWeapon) {
             action = skill.get();
         } else if (weapon.isPresent()) {
             action = weapon.get();
