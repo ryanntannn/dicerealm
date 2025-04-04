@@ -1,9 +1,8 @@
 package com.dicerealm.core.handler;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import com.dicerealm.core.command.UpdatePlayerDetailsRequestCommand;
@@ -37,7 +36,7 @@ public class UpdatePlayerDetailsHandlerTest {
 		updatePlayerDetailsRequestCommand.entityClass = EntityClass.CLERIC;
 		updatePlayerDetailsRequestCommand.baseStats = player.getStats();
 
-		updatePlayerDetailsHandler.handle(playerId, updatePlayerDetailsRequestCommand, new RoomContext(roomState, null, broadcastStrategy, null, null));
+		updatePlayerDetailsHandler.handle(playerId, updatePlayerDetailsRequestCommand, new RoomContext(roomState, null, broadcastStrategy, null, null, null));
 
 		Player updatedPlayer = roomState.getPlayerMap().get(playerId);
 
@@ -46,13 +45,13 @@ public class UpdatePlayerDetailsHandlerTest {
 		roomState.setState(RoomState.State.DIALOGUE_TURN);
 
 		assertThrows(RuntimeException.class, () -> {
-			updatePlayerDetailsHandler.handle(playerId, updatePlayerDetailsRequestCommand, new RoomContext(roomState, null, broadcastStrategy, null, null));
+			updatePlayerDetailsHandler.handle(playerId, updatePlayerDetailsRequestCommand, new RoomContext(roomState, null, broadcastStrategy, null, null, null));
 		});
 
 		UUID newPlayerId = UUID.randomUUID();
 
 		assertThrows(RuntimeException.class, () -> {
-			updatePlayerDetailsHandler.handle(newPlayerId, updatePlayerDetailsRequestCommand, new RoomContext(roomState, null, broadcastStrategy, null, null));
+			updatePlayerDetailsHandler.handle(newPlayerId, updatePlayerDetailsRequestCommand, new RoomContext(roomState, null, broadcastStrategy, null, null, null));
 		});
 	}
 }

@@ -11,10 +11,9 @@ import com.dicerealm.core.skills.Skill;
 
 public class MonsterAI {
 
-    private final CombatManager combatManager;
+    private CombatManager combatManager;
 
-    public MonsterAI(CombatManager combatManager) {
-        this.combatManager = combatManager;
+    public MonsterAI() {
     }
 
     /**
@@ -39,21 +38,32 @@ public class MonsterAI {
         Optional<Weapon> weapon = monster.getEquippedItems().values().stream()
             .filter(item -> item instanceof Weapon)
             .map(item -> (Weapon) item)
-            .findFirst();
+            .max((w1, w2) -> Integer.compare(w1.getDamageDice().getSides(),
+                                             w2.getDamageDice().getSides()));
 
         Optional<Skill> skill = monster.getSkillsInventory().getItems().stream()
+            .filter(Skill::isUsable)
             .max((s1, s2) -> Integer.compare(
                 s1.getDamageDice().getNumDice() * s1.getDamageDice().getSides(),
                 s2.getDamageDice().getNumDice() * s2.getDamageDice().getSides())); // Compare skills by max damage
 
         Object action = null;
-        if (skill.isPresent()) {
-            action = skill;
+        if (skill.isPresent() && (!weapon.isPresent() || 
+            skill.get().getDamageDice().getNumDice() * skill.get().getDamageDice().getSides() >= 
+            weapon.get().getDamageDice().getSides())) {
+            action = skill.get();
         } else if (weapon.isPresent()) {
-            action = weapon;
+            action = weapon.get();
+        } else {
+            throw new IllegalStateException("Monster has no usable skills or weapons.");
         }
 
         // Execute the combat turn
-        return combatManager.executeCombatTurn(monster, target, action);
+        CombatResult result = combatManager.executeCombatTurn(monster, target, action);
+        return result;
+    }
+
+    public void setCombatManager(CombatManager combatManager) {
+        this.combatManager = combatManager;
     }
 }
