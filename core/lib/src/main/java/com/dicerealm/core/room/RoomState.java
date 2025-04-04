@@ -31,6 +31,8 @@ public class RoomState {
 		private List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
 		private LocationGraph locationGraph = MockLocationGraph.makeLocationGraph();
 		private List<DialogueTurn> dialogueTurns = new ArrayList<DialogueTurn>();
+		private int roomLevel = 1;
+
 
 		public RoomState() {
 			// set some placeholder messages
@@ -90,5 +92,12 @@ public class RoomState {
 
 		public void removePlayer(UUID playerId) {
 			playerMap.remove(playerId);
+		}
+
+		public void setRoomLevel(int roomLevel) {
+			this.roomLevel = roomLevel;
+		}
+		public int getRoomLevel() {
+			return roomLevel;
 		}
 }
