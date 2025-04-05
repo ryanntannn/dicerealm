@@ -1,10 +1,15 @@
 package com.example.dicerealmandroid.util;
 
+import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.inventory.Identifiable;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.UseableItem;
+import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

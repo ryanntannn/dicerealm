@@ -1,9 +1,11 @@
 package com.example.dicerealmandroid.game.combat;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.player.PlayerDataSource;
 import com.example.dicerealmandroid.room.RoomDataSource;
@@ -59,5 +61,14 @@ public class CombatRepo {
             initiativeResults.add(first);
         }
         combatDataSource.setInitiativeResults(initiativeResults);
+    }
+
+
+    public void setMonster(@NonNull Monster monster){
+        combatDataSource.setMonster(monster);
+    }
+
+    public LiveData<Monster> getMonster(){
+        return combatDataSource.getMonster();
     }
 }

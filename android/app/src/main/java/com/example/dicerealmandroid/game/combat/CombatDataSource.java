@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
+import com.dicerealm.core.monster.Monster;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class CombatDataSource {
     private static CombatDataSource instance;
     private final MutableLiveData<String> currentTurn = new MutableLiveData<>();
     private final MutableLiveData<List<InitiativeResult>> initiativeResults = new MutableLiveData<>();
+    private final MutableLiveData<Monster> monster = new MutableLiveData<>();
 
     private CombatDataSource(){}
 
@@ -40,5 +42,13 @@ public class CombatDataSource {
 
     public void setInitiativeResults(List<InitiativeResult> initiativeResult){
         this.initiativeResults.postValue(initiativeResult);
+    }
+
+    public void setMonster(Monster monster){
+        this.monster.postValue(monster);
+    }
+
+    public LiveData<Monster> getMonster(){
+        return monster;
     }
 }

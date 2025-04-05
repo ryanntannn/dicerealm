@@ -17,8 +17,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 
 import com.dicerealm.core.entity.BodyPart;
+import com.dicerealm.core.entity.ClassStats;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.Stats;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
+import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.R;
@@ -35,6 +39,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+// TODO: Save monster details
+// TODO:
 public class CombatScreen extends AppCompatActivity {
     private RoomStateHolder roomSh = new RoomStateHolder();
     private PlayerStateHolder playerSh = new PlayerStateHolder();
@@ -57,13 +63,32 @@ public class CombatScreen extends AppCompatActivity {
         this.attackRight();
         this.openSpells();
         this.displayPlayerInfo();
+
+        this.displayEnemyInfo();
+    }
+
+    private void displayEnemyInfo(){
+        TextView enemyName = findViewById(R.id.enemyName);
+        TextView enemyHealth = findViewById(R.id.enemyHealth);
+        combatSh.getMonster().observe(this, new Observer<Monster>(){
+            @Override
+            public void onChanged(Monster monster){
+                enemyName.setText(monster.getDisplayName());
+                enemyHealth.setText(monster.getHealth() + "/" + monster.getStat(Stat.MAX_HEALTH));
+            }
+        });
     }
 
     private void displayPlayerInfo(){
         TextView playerInfo = findViewById(R.id.PlayerInfo);
+        TextView playerName = findViewById(R.id.playerName);
+        TextView yourHealth = findViewById(R.id.yourHealth);
         playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
             public void onChanged(Player player) {
+                playerName.setText("You");
+                yourHealth.setText(player.getHealth() + "/" + player.getStat(Stat.MAX_HEALTH));
+
                 playerInfo.setText("");
                 playerInfo.setText(player.getStats().toString());
             }
