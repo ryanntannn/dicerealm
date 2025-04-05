@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.player.PlayerDataSource;
@@ -45,6 +46,14 @@ public class CombatRepo {
             throw new IllegalArgumentException("InitiativeResults cannot be null");
         }
         else if (!Objects.equals(initiativeResults, combatDataSource.getInitiativeResults())){
+            // get monster details
+            for(InitiativeResult initiativeResult : initiativeResults){
+                if(initiativeResult.getEntity().getAllegiance() == Entity.Allegiance.ENEMY){
+                    combatDataSource.setMonster(initiativeResult.getEntity());
+                }
+            }
+
+            // Set the initiative results
             combatDataSource.setInitiativeResults(initiativeResults);
         }
     }
@@ -68,7 +77,7 @@ public class CombatRepo {
         combatDataSource.setMonster(monster);
     }
 
-    public LiveData<Monster> getMonster(){
+    public LiveData<Entity> getMonster(){
         return combatDataSource.getMonster();
     }
 }

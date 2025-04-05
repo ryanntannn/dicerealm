@@ -15,10 +15,10 @@
         android:text="Combat Sequence"
         app:layout_constraintBottom_toTopOf="@+id/playerName"
         app:layout_constraintEnd_toStartOf="@+id/enemyHealth"
-        app:layout_constraintHorizontal_bias="0.076"
+        app:layout_constraintHorizontal_bias="0.071"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.181" />
+        app:layout_constraintVertical_bias="0.39" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Actions"
@@ -95,20 +95,20 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="73dp"
-        android:layout_height="110dp"
+        android:layout_width="86dp"
+        android:layout_height="123dp"
         app:layout_constraintBottom_toTopOf="@+id/playerName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.982"
+        app:layout_constraintHorizontal_bias="0.984"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enemyName"
-        app:layout_constraintVertical_bias="0.112"
+        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintVertical_bias="0.262"
         app:srcCompat="@drawable/kid2" />
 
     <ImageView
         android:id="@+id/me"
-        android:layout_width="70dp"
-        android:layout_height="130dp"
+        android:layout_width="75dp"
+        android:layout_height="139dp"
         app:layout_constraintBottom_toTopOf="@+id/Actions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.032"
@@ -134,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Player info here"
-        app:layout_constraintBottom_toTopOf="@+id/Actions"
+        app:layout_constraintBottom_toBottomOf="@+id/me"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.048"
         app:layout_constraintStart_toEndOf="@+id/me"
@@ -146,12 +146,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="health"
-        app:layout_constraintBottom_toTopOf="@+id/Actions"
+        app:layout_constraintBottom_toBottomOf="@+id/me"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintHorizontal_bias="0.056"
         app:layout_constraintStart_toEndOf="@+id/me"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.719" />
+        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintVertical_bias="0.157" />
 
     <TextView
         android:id="@+id/enemyName"
@@ -159,6 +159,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Enemy name"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.981"
         app:layout_constraintStart_toStartOf="parent"
@@ -171,10 +172,10 @@
         android:text="Health"
         app:layout_constraintBottom_toTopOf="@+id/yourHealth"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.958"
+        app:layout_constraintHorizontal_bias="0.925"
         app:layout_constraintStart_toEndOf="@+id/yourHealth"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.165" />
+        app:layout_constraintVertical_bias="0.151" />
 
 
     <!-- Action -->

@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer;
 
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.ClassStats;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.Stats;
 import com.dicerealm.core.inventory.InventoryOf;
@@ -70,9 +71,9 @@ public class CombatScreen extends AppCompatActivity {
     private void displayEnemyInfo(){
         TextView enemyName = findViewById(R.id.enemyName);
         TextView enemyHealth = findViewById(R.id.enemyHealth);
-        combatSh.getMonster().observe(this, new Observer<Monster>(){
+        combatSh.getMonster().observe(this, new Observer<Entity>(){
             @Override
-            public void onChanged(Monster monster){
+            public void onChanged(Entity monster){
                 enemyName.setText(monster.getDisplayName());
                 enemyHealth.setText(monster.getHealth() + "/" + monster.getStat(Stat.MAX_HEALTH));
             }

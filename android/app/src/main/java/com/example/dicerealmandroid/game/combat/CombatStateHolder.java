@@ -5,6 +5,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.monster.Monster;
 import com.example.dicerealmandroid.player.PlayerRepo;
 
@@ -47,7 +48,7 @@ public class CombatStateHolder extends ViewModel {
         combatRepo.performAction(action);
     }
 
-    public LiveData<Monster> getMonster(){
+    public LiveData<Entity> getMonster(){
         return combatRepo.getMonster();
     }
 

@@ -199,8 +199,8 @@ public class DicerealmClient extends WebSocketClient {
     public DicerealmClient (String roomCode) throws URISyntaxException {
         super(new URI(DicerealmClient.baseUrl + roomCode));
         this.roomCode = roomCode;
-        this.setConnectTimeout(6000000); // 10 minutes
-        this.setReadTimeout(60000);
+//        this.setConnectTimeout(6000000); // 100 minutes
+        this.setReadTimeout(600000); // 10 minute of idle time
         this.addHeader("Origin", "http://developer.example.com");
         this.enableAutomaticReconnection(5000);
         this.connect();
