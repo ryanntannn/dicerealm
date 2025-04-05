@@ -32,6 +32,7 @@ public class RoomState {
 		private LocationGraph locationGraph = MockLocationGraph.makeLocationGraph();
 		private List<DialogueTurn> dialogueTurns = new ArrayList<DialogueTurn>();
 		private int roomLevel = 1;
+		private int roomExperience = 0;
 
 
 		public RoomState() {
@@ -99,5 +100,11 @@ public class RoomState {
 		}
 		public int getRoomLevel() {
 			return roomLevel;
+		}
+		public void addRoomExperience(int xp) {
+			roomExperience += xp;
+		}
+		public int getRoomExperience() {
+			return roomExperience;
 		}
 }
