@@ -1,4 +1,4 @@
-package com.dicerealm.core.command.leveling;
+package com.dicerealm.core.command.levelling;
 
 import java.util.UUID;
 

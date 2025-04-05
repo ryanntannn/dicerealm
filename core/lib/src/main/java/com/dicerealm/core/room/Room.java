@@ -13,8 +13,8 @@ import com.dicerealm.core.dm.DungeonMaster;
 import com.dicerealm.core.handler.CombatTurnActionHandler;
 import com.dicerealm.core.handler.CommandRouter;
 import com.dicerealm.core.handler.DialogueTurnActionHandler;
+import com.dicerealm.core.handler.LevelUpHandler;
 import com.dicerealm.core.handler.PlayerEquipItemHandler;
-import com.dicerealm.core.handler.SkillSelectionResponseHandler;
 import com.dicerealm.core.handler.StartGameHandler;
 import com.dicerealm.core.handler.UpdatePlayerDetailsHandler;
 import com.dicerealm.core.player.Player;
@@ -77,7 +77,7 @@ public class Room {
 		commandRouter.registerHandler(new UpdatePlayerDetailsHandler());
 		commandRouter.registerHandler(new DialogueTurnActionHandler());
 		commandRouter.registerHandler(new CombatTurnActionHandler());
-		commandRouter.registerHandler(new SkillSelectionResponseHandler());
+		commandRouter.registerHandler(new LevelUpHandler());
 	}
 
 	/**

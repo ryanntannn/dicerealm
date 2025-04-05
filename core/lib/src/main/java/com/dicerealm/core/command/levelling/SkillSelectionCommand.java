@@ -1,10 +1,10 @@
-package com.dicerealm.core.command.leveling;
-
-import com.dicerealm.core.command.Command;
-import com.dicerealm.core.skills.Skill;
+package com.dicerealm.core.command.levelling;
 
 import java.util.List;
 import java.util.UUID;
+
+import com.dicerealm.core.command.Command;
+import com.dicerealm.core.skills.Skill;
 
 /**
  * Command sent to clients when a player needs to select a skill.

@@ -4,11 +4,12 @@ import java.util.UUID;
 
 import com.dicerealm.core.combat.CombatResult;
 import com.dicerealm.core.combat.managers.CombatManager;
-import com.dicerealm.core.combat.managers.MonsterAI;
 import com.dicerealm.core.combat.managers.LevelManager;
+import com.dicerealm.core.combat.managers.MonsterAI;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.command.combat.CommandEndTurnCommand;
+import com.dicerealm.core.command.levelling.LevelUpCommand;
 import com.dicerealm.core.dialogue.DialogueManager;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
@@ -80,7 +81,12 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
               .sum();
             LevelManager levelManager = new LevelManager();
             levelManager.addExperience(totalXP, context.getRoomState());
-						// TODO: Handle prompt for the DM to end the combat
+
+            if (levelManager.checkLevelUp(context.getRoomState())) {
+                // Notify players about level up
+                context.getBroadcastStrategy().sendToAllPlayers(new LevelUpCommand(context.getRoomState().getRoomLevel()));
+            }
+            // TODO: Handle prompt for the DM to end the combat
 						String prompt = "The combat has ended and the players are victorious!";
 						DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(prompt);
 						DialogueManager.handleDungeonMasterResponse(response, context);
