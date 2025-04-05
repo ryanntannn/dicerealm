@@ -82,9 +82,10 @@ public class CombatManager {
         }
         if (attacker instanceof Player) {
             return performPlayerAction((Player) attacker, target, action);
-        } else {
-            return actionManager.performAttack(attacker, target, (Weapon) action);
+        } else if (attacker instanceof Monster) {
+            return performMonsterAction((Monster) attacker, target, action);
         }
+        return null; // Return null or handle invalid action appropriately
     }
 
     public CombatResult executeRiggedCombatTurn(Entity attacker, Entity target, Object action, D20 d20) {
@@ -94,38 +95,112 @@ public class CombatManager {
         }
         if (attacker instanceof Player) {
             return performRiggedPlayerAction((Player) attacker, target, action, d20);
-        } else {
+        } else if (attacker instanceof Monster){
             actionManager.rigDice(d20);
-            return actionManager.performAttack(attacker, target, (Weapon) action);
+            return performRiggedMonsterAction((Monster) attacker, target, action, d20);
         }
+
+        return null; // Return null or handle invalid action appropriately
     }
 
     private CombatResult performRiggedPlayerAction(Player player, Entity target, Object action, D20 d20) {
-        if (action instanceof Skill) {
-            actionManager.rigDice(d20); // Set the rigged dice for the action manager
-            return actionManager.performSkillAttack(player, target, (Skill) action);
-        } else if (action instanceof Weapon) {
-            actionManager.rigDice(d20); // Set the rigged dice for the action manager
-            return actionManager.performAttack(player, target, (Weapon) action);
-        } else if (action instanceof Scroll) {
-            actionManager.rigDice(d20); // Set the rigged dice for the action manager
-            return actionManager.useScroll(player, target, (Scroll) action);
-        }  else if (action instanceof Potion) {
-            actionManager.rigDice(d20); // Set the rigged dice for the action manager
-            return actionManager.usePotion(player, target, (Potion) action);
+        switch (action) {
+            case Skill skill -> {
+                if (skill.isUsable()) {
+                    skill.activateCooldown(); // Start the cooldown for the skill
+                    actionManager.rigDice(d20);
+                    return actionManager.performSkillAttack(player, target, (Skill) action);
+                } else {
+                    combatLog.log(player.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
+                }
+            }
+            case Weapon weapon -> {
+                actionManager.rigDice(d20);
+                return actionManager.performAttack(player, target, weapon);
+            }
+            case Scroll scroll -> {
+                actionManager.rigDice(d20);
+                return actionManager.useScroll(player, target, scroll);
+            }
+            case Potion potion -> {
+                actionManager.rigDice(d20);
+                return actionManager.usePotion(player, target, potion);
+            }
+            default -> {
+                combatLog.log(player.getDisplayName() + " attempted an unknown action!");
+                return null;
+            }
         }
         return null;
     }
 
     private CombatResult performPlayerAction(Player player, Entity target, Object action) {
-        if (action instanceof Skill) {
-            return actionManager.performSkillAttack(player, target, (Skill) action);
-        } else if (action instanceof Weapon) {
-            return actionManager.performAttack(player, target, (Weapon) action);
-        } else if (action instanceof Scroll) {
-            return actionManager.useScroll(player, target, (Scroll) action);
-        } else if (action instanceof Potion) {
-            return actionManager.usePotion(player, target, (Potion) action);
+        switch (action) {
+            case Skill skill -> {
+                if (skill.isUsable()) {
+                    skill.activateCooldown(); // Start the cooldown for the skill
+                    return actionManager.performSkillAttack(player, target, (Skill) action);
+                } else {
+                    combatLog.log(player.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
+                }
+            }
+            case Weapon weapon -> {
+                return actionManager.performAttack(player, target, weapon);
+            }
+            case Scroll scroll -> {
+                return actionManager.useScroll(player, target, scroll);
+            }
+            case Potion potion -> {
+                return actionManager.usePotion(player, target, potion);
+            }
+            default -> {
+                combatLog.log(player.getDisplayName() + " attempted an unknown action!");
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private CombatResult performMonsterAction(Monster monster, Entity target, Object action) {
+        switch (action) {
+            case Skill skill -> {
+                if (skill.isUsable()) {
+                    skill.activateCooldown(); // Start the cooldown for the skill
+                    return actionManager.performSkillAttack(monster, target, (Skill) action);
+                } else {
+                    combatLog.log(monster.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
+                }
+            }
+            case Weapon weapon -> {
+                return actionManager.performAttack(monster, target, weapon);
+            }
+            default -> {
+                combatLog.log(monster.getDisplayName() + " attempted an unknown action!");
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private CombatResult performRiggedMonsterAction(Monster monster, Entity target, Object action, D20 d20) {
+        switch (action) {
+            case Skill skill -> {
+                if (skill.isUsable()) {
+                    skill.activateCooldown(); // Start the cooldown for the skill
+                    actionManager.rigDice(d20); // Example of rigging the dice
+                    return actionManager.performSkillAttack(monster, target, (Skill) action);
+                } else {
+                    combatLog.log(monster.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
+                }
+            }
+            case Weapon weapon -> {
+                actionManager.rigDice(d20); // Example of rigging the dice
+                return actionManager.performAttack(monster, target, weapon);
+            }
+            default -> {
+                combatLog.log(monster.getDisplayName() + " attempted an unknown action!");
+                return null;
+            }
         }
         return null;
     }
@@ -169,7 +244,15 @@ public class CombatManager {
         // If all participants have acted, the round ends
         if (currentTurnIndex >= participants.size()) {
             combatLog.log("The round has ended.");
+            reduceAllSkillCooldowns();
             startRound(); // Start a new round
+        }
+    }
+
+    public void reduceAllSkillCooldowns() {
+        combatLog.log("A full round has ended. Reducing skill cooldowns for all participants.");
+        for (Entity entity : participants) {
+            entity.getSkillsInventory().getItems().forEach(Skill::reduceCooldown);
         }
     }
 
@@ -180,29 +263,33 @@ public class CombatManager {
         return currentTurnIndex;
     }
 
-		public void newCombat(List<Entity> participants) {
-			this.participants = participants;
-			this.initiativeResults = new ArrayList<>();
-			this.turnOrder = new ArrayList<>();
-			this.currentTurnIndex = 0;
-			this.combatLog = new CombatLog();
-			this.actionManager = new ActionManager(combatLog);
-		}
+    public void newCombat(List<Entity> participants) {
+        this.participants = participants;
+        this.initiativeResults = new ArrayList<>();
+        this.turnOrder = new ArrayList<>();
+        this.currentTurnIndex = 0;
+        this.combatLog = new CombatLog();
+        this.actionManager = new ActionManager(combatLog);
+    }
 
-		public UUID[] getTurnOrderIds() {
-			UUID[] ids = new UUID[turnOrder.size()];
-			for (int i = 0; i < turnOrder.size(); i++) {
-				ids[i] = turnOrder.get(i).getId();
-			}
-			return ids;
-		}
+    public List<Entity> getParticipants() {
+        return participants;
+    }
 
-		public Entity getEntityById(UUID id) {
-			for (Entity entity : participants) {
-				if (entity.getId().equals(id)) {
-					return entity;
-				}
-			}
-			return null;
-		}
+    public UUID[] getTurnOrderIds() {
+        UUID[] ids = new UUID[turnOrder.size()];
+        for (int i = 0; i < turnOrder.size(); i++) {
+            ids[i] = turnOrder.get(i).getId();
+        }
+        return ids;
+    }
+
+    public Entity getEntityById(UUID id) {
+        for (Entity entity : participants) {
+            if (entity.getId().equals(id)) {
+                return entity;
+            }
+        }
+        return null;
+    }
 }
