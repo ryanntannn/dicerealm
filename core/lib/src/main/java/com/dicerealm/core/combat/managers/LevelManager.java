@@ -94,15 +94,20 @@ public class LevelManager {
             if (replacedSkillId == null) {
                 return false;
             }
-            
+    
             Skill replacedSkill = skillInventory.getItem(replacedSkillId);
             if (replacedSkill == null) {
                 return false;
             }
-            
-            // Remove the old skill and add the new one
-            skillInventory.removeItem(replacedSkill);
-            skillInventory.addItem(selectedSkill);
+    
+            // Replace the old skill with the new one in the same position
+            List<Skill> skills = skillInventory.getItems();
+            int index = skills.indexOf(replacedSkill);
+            if (index != -1) {
+                skills.set(index, selectedSkill);
+            } else {
+                return false;
+            }
         } else {
             // Just add the new skill
             skillInventory.addItem(selectedSkill);
