@@ -15,27 +15,23 @@ import com.dicerealm.core.skills.SkillsRepository;
  * Manages room XP, leveling, and player skill selection.
  */
 public class LevelManager {
-    private static final int XP_PER_LEVEL = 100;
-    private int roomExperience = 0;
+    //TODO: Adjust Level XP Scaling
+    private int XP_PER_LEVEL = 100;
     private Map<UUID, List<Skill>> pendingSkillSelections = new HashMap<>();
     private int MAX_SKILLS = 4;
 
-
-    public int getRoomExperience() {
-        return roomExperience;
-    }
     
     public void addExperience(int xp, RoomState roomState) {
-        roomExperience += xp;
+        roomState.addRoomExperience(xp);
     }
     
     public boolean checkLevelUp(RoomState roomState) {
         int currentLevel = roomState.getRoomLevel();
         int requiredXP = XP_PER_LEVEL * currentLevel;
         
-        if (roomExperience >= requiredXP) {
+        if (roomState.getRoomExperience() >= requiredXP) {
             // Level up the room
-            roomExperience -= requiredXP;
+            roomState.addRoomExperience(-requiredXP);
             roomState.setRoomLevel(currentLevel + 1);
             return true;
         }
