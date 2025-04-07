@@ -122,6 +122,18 @@ public class DungeonMaster {
 		return response;
 	}
 
+	public DungeonMasterResponse handleEndCombat(Boolean levelUp){
+		String systemPrompt = systemPrompt() + "\nCurrent Location\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getCurrentLocation()) + "\nAdjacent Locations\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getAdjacentLocations()) + "\nPlayers\n" + jsonSerializationStrategy.serialize(roomState.getPlayers());
+		String userPrompt = "This is what has happened so far:\n" + contextSummary + "\nThe combat has ended.";
+		if (levelUp) {
+			userPrompt += " The players have leveled up!";
+		}
+		userPrompt += " Continue the story accordingly.";
+		DungeonMasterResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterResponse.class);
+		contextSummary = response.contextSummary;
+		return response;
+	}
+
 	public LocationGraph generateLocations(DungeonMasterLocationResponse response){
 		ArrayList<Location> locations = new ArrayList<>();
 		ArrayList<Path> paths = new ArrayList<>();

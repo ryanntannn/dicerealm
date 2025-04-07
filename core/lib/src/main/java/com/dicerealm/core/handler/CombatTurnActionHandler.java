@@ -109,8 +109,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				LevelManager levelManager = new LevelManager();
 				levelManager.addExperience(totalXP, context.getRoomState());
 				// TODO: Handle prompt for the DM to end the combat
-				String prompt = "The combat has ended and the players are victorious!";
-				DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(prompt);
+				DungeonMasterResponse response = context.getDungeonMaster().handleEndCombat(true);
 				DialogueManager.handleDungeonMasterResponse(response, context);
 			} else {
 				context.getBroadcastStrategy().sendToAllPlayers(new CombatEndCommand(CombatEndStatus.LOSE));
