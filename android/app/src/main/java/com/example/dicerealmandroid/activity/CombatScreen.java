@@ -28,6 +28,7 @@ import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
@@ -74,6 +75,16 @@ public class CombatScreen extends AppCompatActivity {
         this.displayPlayerInfo();
 
         this.displayEnemyInfo();
+
+        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
+           @Override
+           public void onChanged(RoomState.State roomState) {
+               if(roomState == RoomState.State.DIALOGUE_TURN){
+                   Log.d("CombatScreen", "Navigating back to dialog screen");
+                   CombatScreen.this.finish();
+               }
+           }
+        });
     }
 
     private void displayEnemyInfo(){

@@ -85,8 +85,29 @@ public class CombatRepo {
         combatDataSource.setInitiativeResults(initiativeResults);
     }
 
+
     public LiveData<Entity> getMonster(){
         return combatDataSource.getMonster();
+    }
+
+
+    public void takeDamage(UUID targetId, int damage){
+        UUID playerId = playerDataSource.getPlayerId();
+        UUID enemyId = getMonster().getValue().getId();
+
+        Entity targetEntity = null;
+
+        // If target is the player (you) or enemy
+        if (playerId.equals(targetId)){
+            targetEntity = playerDataSource.getPlayer().getValue();
+            targetEntity.takeDamage(damage);
+            playerDataSource.setPlayer((Player) targetEntity);
+        }
+        else if (enemyId.equals(targetId)){
+            targetEntity = getMonster().getValue();
+            targetEntity.takeDamage(damage);
+            combatDataSource.setMonster(targetEntity);
+        }
     }
 
 }

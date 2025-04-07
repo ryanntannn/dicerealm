@@ -121,8 +121,11 @@ public class DialogScreen extends AppCompatActivity {
             public void onChanged(RoomState.State state) {
                 if (state == RoomState.State.DIALOGUE_PROCESSING) {
                     // Show dungeon master is thinking and disable action buttons
-                    messageLayout.addView(dmCard);
-                    disableButtons(actionLayout);
+                    // Check if dmCard is alrdy present in the message layout
+                    if(dmCard.getParent() == null){
+                        messageLayout.addView(dmCard);
+                        disableButtons(actionLayout);
+                    }
                 }else if (state == RoomState.State.DIALOGUE_TURN){
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
