@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import com.dicerealm.core.combat.CombatResult;
 import com.dicerealm.core.combat.managers.CombatManager;
-import com.dicerealm.core.combat.managers.MonsterAI;
 import com.dicerealm.core.combat.managers.LevelManager;
+import com.dicerealm.core.combat.managers.MonsterAI;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.command.combat.CommandEndTurnCommand;
@@ -70,9 +70,9 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				combatManager.startTurn();
 
 				CombatResult monsterResult = monsterAI.handleMonsterTurn(combatManager.getParticipants(), combatManager.getCurrentTurnEntity());
-
+        int currentTurn = combatManager.getCurrentTurnIndex();
 				combatManager.endTurn();
-				context.getBroadcastStrategy().sendToAllPlayers(new CommandEndTurnCommand(combatManager.getCurrentTurnIndex(), monsterResult));
+				context.getBroadcastStrategy().sendToAllPlayers(new CommandEndTurnCommand(currentTurn, monsterResult));
 			}
 
 			// Check if the combat is over

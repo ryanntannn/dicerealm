@@ -205,9 +205,14 @@ public class CombatManager {
         return null;
     }
 
+    
+    private void removeDeadEntities() {
+        turnOrder.removeIf(entity -> !entity.isAlive());
+    }
+
     public boolean isCombatOver() {
         int alivePlayers = 0, aliveMonsters = 0;
-        for (Entity entity : turnOrder) {
+        for (Entity entity : participants) {
             if (entity.isAlive()) {
                 if (entity instanceof Player) alivePlayers++;
                 else if (entity instanceof Monster) aliveMonsters++;
@@ -240,6 +245,7 @@ public class CombatManager {
         Entity currentEntity = getCurrentTurnEntity();
         combatLog.log(currentEntity.getDisplayName() + "'s turn has ended.");
         currentTurnIndex++;
+        removeDeadEntities(); // Remove dead entities from the turn order
 
         // If all participants have acted, the round ends
         if (currentTurnIndex >= participants.size()) {
