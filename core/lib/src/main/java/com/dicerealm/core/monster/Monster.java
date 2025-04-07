@@ -7,6 +7,7 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
+import com.dicerealm.core.skills.Fireball;
 
 /**
  * Represents a Monster in the game
@@ -14,6 +15,11 @@ import com.dicerealm.core.entity.StatsMap;
  */
 public class Monster extends Entity {
 	private int monsterLevel;
+
+	// TODO: Remove this
+	public void addDefaultSkills(){
+		addSkill(new Fireball());
+	}
 
 	public Monster() {
 		super("Monster", Race.DEMON, EntityClass.WIZARD, new StatsMap(Map.of(
@@ -28,18 +34,21 @@ public class Monster extends Entity {
 		)));
 		this.allegiance = Allegiance.ENEMY;
 		this.monsterLevel = 1;
+		addDefaultSkills();
 	}
 
 	public Monster(String name, Race race, EntityClass entityClass, StatsMap baseStats, int monsterLevel) {
 		super(name, race, entityClass, baseStats);
 		this.monsterLevel = monsterLevel;
 		this.allegiance = Allegiance.ENEMY;
+		addDefaultSkills();
 	}
 
 	public Monster(String name, Race race, EntityClass entityClass, StatsMap baseStats) {
 		super(name, race, entityClass, baseStats);
 		this.monsterLevel = 1;
 		this.allegiance = Allegiance.ENEMY;
+		addDefaultSkills();
 	}
 
 	public int getXpValue() {
