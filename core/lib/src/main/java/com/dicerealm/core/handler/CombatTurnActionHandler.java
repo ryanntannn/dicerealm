@@ -86,14 +86,15 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
             levelManager.addExperience(totalXP, context.getRoomState());
 
             if (levelManager.checkLevelUp(context.getRoomState())) {
-                // Notify players about level up
-                Player player = context.getRoomState().getPlayerMap().get(playerId);
+              // Notify players about level up
+              int roomLevel = context.getRoomState().getRoomLevel();
+              for (Player player : context.getRoomState().getPlayers()) {
                 if (player == null) {
                   throw new IllegalArgumentException("Player not found in room.");
+                }
+                List<Skill> availableSkills = levelManager.preparePlayerSkillSelection(player, roomLevel);
+                context.getBroadcastStrategy().sendToPlayer(new SkillSelectionCommand(playerId, availableSkills, player.getSkillsInventory().getItems(), roomLevel), player);
               }
-              int roomLevel = context.getRoomState().getRoomLevel();
-              List<Skill> availableSkills = levelManager.preparePlayerSkillSelection(player, roomLevel);
-              context.getBroadcastStrategy().sendToPlayer(new SkillSelectionCommand(playerId, availableSkills, player.getSkillsInventory().getItems(), roomLevel), player);
             }
             // TODO: Handle prompt for the DM to end the combat
 						String prompt = "The combat has ended and the players are victorious!";
