@@ -1,5 +1,6 @@
 package com.dicerealm.core.handler;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.dicerealm.core.combat.CombatResult;
@@ -9,13 +10,16 @@ import com.dicerealm.core.combat.managers.MonsterAI;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.command.combat.CommandEndTurnCommand;
+import com.dicerealm.core.command.levelling.SkillSelectionCommand;
 import com.dicerealm.core.dialogue.DialogueManager;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Entity.Allegiance;
 import com.dicerealm.core.monster.Monster;
+import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.room.RoomState;
+import com.dicerealm.core.skills.Skill;
 
 public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionCommand> {
 
@@ -83,7 +87,13 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 
             if (levelManager.checkLevelUp(context.getRoomState())) {
                 // Notify players about level up
-                context.getBroadcastStrategy().sendToAllPlayers(new LevelUpCommand(context.getRoomState().getRoomLevel()));
+                Player player = context.getRoomState().getPlayerMap().get(playerId);
+                if (player == null) {
+                  throw new IllegalArgumentException("Player not found in room.");
+              }
+              int roomLevel = context.getRoomState().getRoomLevel();
+              List<Skill> availableSkills = levelManager.preparePlayerSkillSelection(player, roomLevel);
+              context.getBroadcastStrategy().sendToPlayer(new SkillSelectionCommand(playerId, availableSkills, player.getSkillsInventory().getItems(), roomLevel), player);
             }
             // TODO: Handle prompt for the DM to end the combat
 						String prompt = "The combat has ended and the players are victorious!";
