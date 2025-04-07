@@ -112,22 +112,27 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Example of scrollable items -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Line 1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Line 2" />
+                <!-- Example of scrollable buttons -->
+                <!--button-->
 
                 <!-- Add more items as needed -->
                 <!-- You can even use custom views, images, buttons, etc. -->
 
+
+
             </LinearLayout>
         </ScrollView>
+        <com.google.android.material.button.MaterialButton
+        android:id="@+id/BackButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="14dp"
+        android:text="Go back"
+        android:textSize="20dp"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -76,6 +77,7 @@ public class CombatScreen extends AppCompatActivity {
         this.openSpells();
         this.displayPlayerInfo();
         this.displayEnemyInfo();
+        this.closespell();
     }
 
     private void displayEnemyInfo(){
@@ -132,11 +134,34 @@ public class CombatScreen extends AppCompatActivity {
                             spellaction.setVisibility(View.VISIBLE);
                             //Scrollable view
                             LinearLayout spellayout = (LinearLayout) findViewById(R.id.spellayout);
-                            for (Skill skill: skillList){
-                                MaterialButton spellbutton = new MaterialButton(CombatScreen.this);
-                                spellbutton.setText(skill.getDisplayName());
-                                spellbutton.setTextSize(18);
-                                spellayout.addView(spellbutton);
+                            int total_skillsize = skillList.size();
+                            int skill_number = 0;
+                            for (Skill skill : skillList) {
+                                // Create a horizontal LinearLayout for each row
+                                LinearLayout rowLayout = new LinearLayout(CombatScreen.this);
+                                rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                                rowLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                        ViewGroup.LayoutParams.MATCH_PARENT,
+                                        ViewGroup.LayoutParams.WRAP_CONTENT
+                                ));
+                                // First TextView
+                                MaterialButton textView = new MaterialButton(CombatScreen.this);
+                                textView.setText(skill.getDisplayName());
+                                textView.setId(skill_number);
+                                rowLayout.addView(textView);
+                                skill_number += 1;
+
+                                // Check if there's a second item to add
+                                if (skill_number  < total_skillsize) {
+                                    MaterialButton textView1 = new MaterialButton(CombatScreen.this);
+                                    textView1.setText(skill.getDisplayName());
+                                    textView.setId(skill_number);
+                                    rowLayout.addView(textView1);
+                                    skill_number += 1;
+                                }
+
+                                // Add the row to the main container
+                                spellayout.addView(rowLayout);
                             }
 
                         }
@@ -145,7 +170,40 @@ public class CombatScreen extends AppCompatActivity {
             }
         });
     }
+    //Back button for spell action
+    public void closespell(){
+        playerSh.getSkills().observe(this, new Observer<InventoryOf<Skill>>() {
+            @Override
+            public void onChanged(InventoryOf<Skill> skills) {
+                if (skills != null) {
+                    List<Skill> skillList = new ArrayList<>(skills.getItems());
 
+                    for (Skill skill : skillList) {
+                        Log.d("skill", "Skill: " + skill.getDisplayName());
+                    }
+
+                    // Hardcode the button to use the first skill
+                    MaterialButton skillButtons = findViewById(R.id.BackButton);
+                    skillButtons.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            //Make the actions layout invisible
+                            ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
+                            actions.setVisibility(View.VISIBLE);
+                            //Show the spells layout
+                            ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
+                            spellaction.setVisibility(View.GONE);
+                            //Scrollable view
+                            LinearLayout spellayout = (LinearLayout) findViewById(R.id.spellayout);
+                            spellayout.removeAllViews();
+
+
+                        }
+                    });
+                }
+            }
+        });
+    }
     private void attackRight(){
         MaterialButton attackBtnRight = findViewById(R.id.attackButtonRight);
 
