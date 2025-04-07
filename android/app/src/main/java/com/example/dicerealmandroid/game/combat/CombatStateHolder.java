@@ -5,17 +5,20 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
+import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.monster.Monster;
 import com.example.dicerealmandroid.player.PlayerRepo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CombatStateHolder extends ViewModel {
     private CombatRepo combatRepo;
     private PlayerRepo playerRepo;
 
     public CombatStateHolder() {
-        // Constructor logic if needed
         combatRepo = new CombatRepo();
         playerRepo = new PlayerRepo();
     }
@@ -42,8 +45,24 @@ public class CombatStateHolder extends ViewModel {
         });
     }
 
-    public void performAction(Object action){
-        combatRepo.performAction(action);
+    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType){
+        combatRepo.performAction(action, actionType);
     }
 
+    public LiveData<Entity> getMonster(){
+        return combatRepo.getMonster();
+    }
+
+
+
+    public Boolean isMyTurn(){
+        List<InitiativeResult> initiativeResults = combatRepo.getInitiativeResults().getValue();
+        if(initiativeResults != null || !initiativeResults.isEmpty()){
+            UUID currPlayer = initiativeResults.get(0).getEntity().getId();
+            if(currPlayer.equals(playerRepo.getPlayerId())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

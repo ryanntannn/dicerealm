@@ -24,8 +24,6 @@ import java.util.UUID;
 
 public class GameStateHolder extends ViewModel {
 
-    // TODO: Move combat and dialog related methods to their own state holders (if got time)
-
     private GameRepo gameRepo;
     public GameStateHolder() {
         gameRepo = new GameRepo();

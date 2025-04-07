@@ -1,9 +1,13 @@
 package com.example.dicerealmandroid.game.combat;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.monster.Monster;
+import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.player.PlayerDataSource;
 import com.example.dicerealmandroid.room.RoomDataSource;
@@ -12,6 +16,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class CombatRepo {
     private final CombatDataSource combatDataSource;
@@ -43,13 +48,32 @@ public class CombatRepo {
             throw new IllegalArgumentException("InitiativeResults cannot be null");
         }
         else if (!Objects.equals(initiativeResults, combatDataSource.getInitiativeResults())){
+            // get monster details
+            for(InitiativeResult initiativeResult : initiativeResults){
+                if(initiativeResult.getEntity().getAllegiance() == Entity.Allegiance.ENEMY){
+                    combatDataSource.setMonster(initiativeResult.getEntity());
+                }
+            }
+
+            // Set the initiative results
             combatDataSource.setInitiativeResults(initiativeResults);
         }
     }
 
-    public void performAction(Object action){
+    // action represents the sub-classes of Item, Skill or Weapon
+    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType){
+        Player attacker = playerDataSource.getPlayer().getValue();
+        Entity target = combatDataSource.getMonster().getValue();
+        if (attacker == null || target == null) {
+            throw new IllegalArgumentException("Player or Monster cannot be null");
+        }
 
+        CombatTurnActionCommand command = new CombatTurnActionCommand(attacker, target, action, actionType);
+        String message = gson.toJson(command);
+        roomDataSource.sendMessageToServer(message);
     }
+
+
 
     // Rotate the combat sequence, showing the next player in line
     public void rotateCombatSequence(){
@@ -60,4 +84,9 @@ public class CombatRepo {
         }
         combatDataSource.setInitiativeResults(initiativeResults);
     }
+
+    public LiveData<Entity> getMonster(){
+        return combatDataSource.getMonster();
+    }
+
 }

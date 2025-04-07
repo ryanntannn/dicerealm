@@ -16,9 +16,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 
+import com.dicerealm.core.combat.ActionType;
+import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.entity.BodyPart;
+import com.dicerealm.core.entity.ClassStats;
+import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.Stats;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
+import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.R;
@@ -34,6 +42,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+
+// TODO: Implement Weapon attack functionality (Cant seem to send the weapon to the command)
+// TODO: Implement spell functionality
+// TODO: Implement item functionality (Show potions and scrolls)
+
+// TODO: Refactor code again to implement dependencies injection (Dagger or Hilt) if got time
 
 public class CombatScreen extends AppCompatActivity {
     private RoomStateHolder roomSh = new RoomStateHolder();
@@ -57,13 +72,32 @@ public class CombatScreen extends AppCompatActivity {
         this.attackRight();
         this.openSpells();
         this.displayPlayerInfo();
+
+        this.displayEnemyInfo();
+    }
+
+    private void displayEnemyInfo(){
+        TextView enemyName = findViewById(R.id.enemyName);
+        TextView enemyHealth = findViewById(R.id.enemyHealth);
+        combatSh.getMonster().observe(this, new Observer<Entity>(){
+            @Override
+            public void onChanged(Entity monster){
+                enemyName.setText(monster.getDisplayName());
+                enemyHealth.setText(monster.getHealth() + "/" + monster.getStat(Stat.MAX_HEALTH));
+            }
+        });
     }
 
     private void displayPlayerInfo(){
         TextView playerInfo = findViewById(R.id.PlayerInfo);
+        TextView playerName = findViewById(R.id.playerName);
+        TextView yourHealth = findViewById(R.id.yourHealth);
         playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
             public void onChanged(Player player) {
+                playerName.setText("You");
+                yourHealth.setText(player.getHealth() + "/" + player.getStat(Stat.MAX_HEALTH));
+
                 playerInfo.setText("");
                 playerInfo.setText(player.getStats().toString());
             }
@@ -76,9 +110,22 @@ public class CombatScreen extends AppCompatActivity {
             public void onChanged(InventoryOf<Skill> skills) {
                 if (skills != null) {
                     List<Skill> skillList = new ArrayList<>(skills.getItems());
+
                     for (Skill skill : skillList) {
                         Log.d("skill", "Skill: " + skill.getDisplayName());
                     }
+
+                    // Hardcode the button to use the first skill
+                    MaterialButton skillButtons = findViewById(R.id.spellButton);
+                    skillButtons.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Log.d("action", "Execute first skill");
+                            Skill hardcodeSkill = skillList.get(0);
+                            // I hardcode to use the first skill for now
+                            combatSh.performAction(hardcodeSkill, CombatTurnActionCommand.ActionType.SKILL);
+                        }
+                    });
                 }
             }
         });
@@ -91,20 +138,22 @@ public class CombatScreen extends AppCompatActivity {
             @Override
             public void onChanged(EquippableItem equippableItem) {
                 if (equippableItem != null) {
-                    attackBtnRight.setText("Right Hand Attack with " + equippableItem.getDisplayName());
+                    attackBtnRight.setText("Right-H Attack: " + equippableItem.getDisplayName());
                 } else {
-                    attackBtnRight.setText("Attack with right hand");
+                    attackBtnRight.setText("Right-H Attack: Fist");
                 }
+
+                attackBtnRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("action right", "Attack with right hand");
+                        combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
+                    }
+                });
             }
         });
 
-        attackBtnRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // gameSh.performAction();
-                Log.d("action right", "Attack with right hand");
-            }
-        });
+
     }
 
     private void attackLeft(){
@@ -114,9 +163,9 @@ public class CombatScreen extends AppCompatActivity {
             @Override
             public void onChanged(EquippableItem equippableItem) {
                 if (equippableItem != null) {
-                    attackBtnLeft.setText("Left Hand Attack with " + equippableItem.getDisplayName());
+                    attackBtnLeft.setText("Left-H Attack: " + equippableItem.getDisplayName());
                 } else {
-                    attackBtnLeft.setText("Attack with left hand");
+                    attackBtnLeft.setText("Left-H Attack: Fist");
                 }
             }
         });
@@ -133,10 +182,11 @@ public class CombatScreen extends AppCompatActivity {
 
     private void combatSequence(){
         TextView turnText = findViewById(R.id.CombatSequence);
-        turnText.setText("");
+
         combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
             @Override
             public void onChanged(List<CombatSequence> combatSequences){
+                turnText.setText("");
                 for(int i = 0; i < combatSequences.size(); i++){
                     CombatSequence sequence = combatSequences.get(i);
                     if(i == 0){
