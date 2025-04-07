@@ -248,7 +248,7 @@ public class CombatManager {
         removeDeadEntities(); // Remove dead entities from the turn order
 
         // If all participants have acted, the round ends
-        if (currentTurnIndex >= participants.size()) {
+        if (currentTurnIndex >= turnOrder.size()) {
             combatLog.log("The round has ended.");
             reduceAllSkillCooldowns();
             startRound(); // Start a new round

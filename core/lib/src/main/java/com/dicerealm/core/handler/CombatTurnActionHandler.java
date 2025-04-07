@@ -14,6 +14,7 @@ import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Entity.Allegiance;
 import com.dicerealm.core.monster.Monster;
+import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.room.RoomState;
 
@@ -50,7 +51,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				}
 
         // Execute the combat action
-        CombatResult result = combatManager.executeCombatTurn(command.getAttacker(), command.getTarget(), command.getAction());
+        CombatResult result = combatManager.executeCombatTurn((Player)attacker, (Monster)target, command.getAction());
 
 				int currentTurnIndex = combatManager.getCurrentTurnIndex();
 
@@ -60,37 +61,52 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				// Broadcast the end of turn command containing the result
         context.getBroadcastStrategy().sendToAllPlayers(new CommandEndTurnCommand(currentTurnIndex, result));
 
-				
+				if (combatManager.isCombatOver()) {
+					handleCombatOver(context);
+				} else {
+					handleNextTurn(context);
+				}
     }
 
 		public static void handleNextTurn(RoomContext context) {
 			CombatManager combatManager = context.getCombatManager();
 			MonsterAI monsterAI = context.getMonsterAI();
+
+			System.err.println("CombatTurnActionHandler.handleNextTurn: " + combatManager.getCurrentTurnEntity().getDisplayName() + " is taking their turn.");
+			
 			while (combatManager.getCurrentTurnEntity().getAllegiance() == Allegiance.ENEMY) {
 				combatManager.startTurn();
-
+				context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(),  combatManager.getCurrentTurnEntity().getId()));
 				CombatResult monsterResult = monsterAI.handleMonsterTurn(combatManager.getParticipants(), combatManager.getCurrentTurnEntity());
         int currentTurn = combatManager.getCurrentTurnIndex();
 				combatManager.endTurn();
 				context.getBroadcastStrategy().sendToAllPlayers(new CommandEndTurnCommand(currentTurn, monsterResult));
+				if (combatManager.isCombatOver()) {
+					handleCombatOver(context);
+					return;
+				}
 			}
 
 			// Check if the combat is over
 			if (combatManager.isCombatOver()) {
-					int totalXP = combatManager.getParticipants().stream()
-						.filter(entity -> entity instanceof Monster && !entity.isAlive())
-						.mapToInt(entity -> ((Monster) entity).getXpValue())
-						.sum();
-					LevelManager levelManager = new LevelManager();
-					levelManager.addExperience(totalXP, context.getRoomState());
-					// TODO: Handle prompt for the DM to end the combat
-					String prompt = "The combat has ended and the players are victorious!";
-					DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(prompt);
-					DialogueManager.handleDungeonMasterResponse(response, context);
+					handleCombatOver(context);
 			} else {
 					// Start the next turn
 					combatManager.startTurn();
-					context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex()));
+					context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(),  combatManager.getCurrentTurnEntity().getId()));
 			}
+		}
+
+		public static void handleCombatOver(RoomContext context) {
+			int totalXP = context.getCombatManager().getParticipants().stream()
+				.filter(entity -> entity instanceof Monster && !entity.isAlive())
+				.mapToInt(entity -> ((Monster) entity).getXpValue())
+				.sum();
+			LevelManager levelManager = new LevelManager();
+			levelManager.addExperience(totalXP, context.getRoomState());
+			// TODO: Handle prompt for the DM to end the combat
+			String prompt = "The combat has ended and the players are victorious!";
+			DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(prompt);
+			DialogueManager.handleDungeonMasterResponse(response, context);
 		}
 }
