@@ -35,15 +35,14 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
         CombatManager combatManager = context.getCombatManager();
         MonsterAI monsterAI = context.getMonsterAI();
 
-        // Ensure the action is valid for the current turn
-        if (!combatManager.isValidAction(command.getAttacker())) {
-            throw new IllegalArgumentException("Invalid action: It is not the attacker's turn.");
-        }
-
 				Entity attacker = combatManager.getEntityById(command.getAttacker().getId());
 
 				if (attacker == null) {
 					throw new IllegalArgumentException("Invalid attacker: Entity not found.");
+				}
+        // Ensure the action is valid for the current turn
+        if (!combatManager.isValidAction(attacker)) {
+					throw new IllegalArgumentException("Invalid action: It is not the attacker's turn.");
 				}
 
 				Entity target = combatManager.getEntityById(command.getTarget().getId());
