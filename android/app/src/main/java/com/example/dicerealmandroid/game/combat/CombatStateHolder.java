@@ -5,6 +5,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
+import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.monster.Monster;
 import com.example.dicerealmandroid.player.PlayerRepo;
@@ -17,7 +18,6 @@ public class CombatStateHolder extends ViewModel {
     private PlayerRepo playerRepo;
 
     public CombatStateHolder() {
-        // Constructor logic if needed
         combatRepo = new CombatRepo();
         playerRepo = new PlayerRepo();
     }
@@ -44,8 +44,8 @@ public class CombatStateHolder extends ViewModel {
         });
     }
 
-    public void performAction(Object action){
-        combatRepo.performAction(action);
+    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType){
+        combatRepo.performAction(action, actionType);
     }
 
     public LiveData<Entity> getMonster(){

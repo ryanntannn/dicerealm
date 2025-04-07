@@ -10,7 +10,7 @@ import com.dicerealm.core.monster.Monster;
 import java.util.List;
 
 /*
- * Singleton pattern to ensure only 1 instance of DialogDataSource exists so that it persists throughout the lifecycle of the app.
+ * Singleton pattern to ensure only 1 instance of CombatDataSource exists so that it persists throughout the lifecycle of the app.
  * Separating dialog and combat data
  * */
 public class CombatDataSource {

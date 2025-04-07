@@ -28,18 +28,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/spellButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="Spell"
+            android:textSize="18sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/itemButton"
+            app:layout_constraintEnd_toStartOf="@+id/attackButtonRight"
+            app:layout_constraintStart_toEndOf="@+id/attackButtonLeft"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/attackButtonLeft"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="3dp"
+            android:layout_marginEnd="8dp"
             android:text="Attack Left"
-            android:textSize="18dp"
+            android:textSize="16sp"
             app:cornerRadius="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/skillButton"
-            app:layout_constraintEnd_toStartOf="@+id/attackButtonRight"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintBottom_toTopOf="@+id/itemButton"
+            app:layout_constraintEnd_toStartOf="@+id/spellButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,20 +59,23 @@
             android:id="@+id/attackButtonRight"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Attack right"
-            android:textSize="18dp"
+            android:text="Attack Right"
+            android:textSize="16sp"
             app:cornerRadius="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/skillButton"
+            app:layout_constraintBottom_toTopOf="@+id/itemButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/attackButtonLeft"
+            app:layout_constraintStart_toEndOf="@+id/spellButton"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+
+
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/skillButton"
+            android:id="@+id/itemButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="14dp"
-            android:text="Spells"
+            android:text="Inventory"
             android:textSize="20dp"
             app:cornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"

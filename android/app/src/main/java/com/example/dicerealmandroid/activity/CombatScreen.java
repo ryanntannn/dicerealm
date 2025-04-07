@@ -16,6 +16,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 
+import com.dicerealm.core.combat.ActionType;
+import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.ClassStats;
 import com.dicerealm.core.entity.Entity;
@@ -23,6 +25,7 @@ import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.Stats;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
+import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
@@ -40,8 +43,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO: Save monster details
-// TODO:
+
+// TODO: Implement Weapon attack functionality (Cant seem to send the weapon to the command)
+// TODO: Implement spell functionality
+// TODO: Implement item functionality (Show potions and scrolls)
+
+// TODO: Refactor code again to implement dependencies injection (Dagger or Hilt) if got time
+
 public class CombatScreen extends AppCompatActivity {
     private RoomStateHolder roomSh = new RoomStateHolder();
     private PlayerStateHolder playerSh = new PlayerStateHolder();
@@ -117,20 +125,23 @@ public class CombatScreen extends AppCompatActivity {
             @Override
             public void onChanged(EquippableItem equippableItem) {
                 if (equippableItem != null) {
-                    attackBtnRight.setText("Right Hand Attack with " + equippableItem.getDisplayName());
+                    attackBtnRight.setText("Right-H Attack: " + equippableItem.getDisplayName());
                 } else {
-                    attackBtnRight.setText("Attack with right hand");
+                    attackBtnRight.setText("Right-H Attack: Fist");
                 }
+
+                attackBtnRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // gameSh.performAction();
+                        Log.d("action right", "Attack with right hand");
+                        combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
+                    }
+                });
             }
         });
 
-        attackBtnRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // gameSh.performAction();
-                Log.d("action right", "Attack with right hand");
-            }
-        });
+
     }
 
     private void attackLeft(){
@@ -140,9 +151,9 @@ public class CombatScreen extends AppCompatActivity {
             @Override
             public void onChanged(EquippableItem equippableItem) {
                 if (equippableItem != null) {
-                    attackBtnLeft.setText("Left Hand Attack with " + equippableItem.getDisplayName());
+                    attackBtnLeft.setText("Left-H Attack: " + equippableItem.getDisplayName());
                 } else {
-                    attackBtnLeft.setText("Attack with left hand");
+                    attackBtnLeft.setText("Left-H Attack: Fist");
                 }
             }
         });

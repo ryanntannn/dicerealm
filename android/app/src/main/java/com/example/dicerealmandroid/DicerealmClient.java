@@ -69,6 +69,7 @@ public class DicerealmClient extends WebSocketClient {
 
                     roomRepo.setRoomState(roomState);
                     playerRepo.setPlayer(myPlayer);
+                    gameRepo.changeLocation(roomState.getLocationGraph().getCurrentLocation());
                     break;
 
                 case "PLAYER_JOIN":
