@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -11,9 +12,11 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.dicerealm.core.combat.ActionType;
@@ -72,7 +75,6 @@ public class CombatScreen extends AppCompatActivity {
         this.attackRight();
         this.openSpells();
         this.displayPlayerInfo();
-
         this.displayEnemyInfo();
     }
 
@@ -104,6 +106,7 @@ public class CombatScreen extends AppCompatActivity {
         });
     }
 
+
     public void openSpells(){
         playerSh.getSkills().observe(this, new Observer<InventoryOf<Skill>>() {
             @Override
@@ -121,9 +124,21 @@ public class CombatScreen extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Log.d("action", "Execute first skill");
-                            Skill hardcodeSkill = skillList.get(0);
-                            // I hardcode to use the first skill for now
-                            combatSh.performAction(hardcodeSkill, CombatTurnActionCommand.ActionType.SKILL);
+                            //Make the actions layout invisible
+                            ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
+                            actions.setVisibility(View.GONE);
+                            //Show the spells layout
+                            ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
+                            spellaction.setVisibility(View.VISIBLE);
+                            //Scrollable view
+                            LinearLayout spellayout = (LinearLayout) findViewById(R.id.spellayout);
+                            for (Skill skill: skillList){
+                                MaterialButton spellbutton = new MaterialButton(CombatScreen.this);
+                                spellbutton.setText(skill.getDisplayName());
+                                spellbutton.setTextSize(18);
+                                spellayout.addView(spellbutton);
+                            }
+
                         }
                     });
                 }
