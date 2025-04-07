@@ -1,8 +1,7 @@
 package com.dicerealm.core.skills;
 
 import java.util.List;
-
-import com.dicerealm.core.player.Player;
+import java.util.UUID;
 
 public class SkillSelectionResult {
 
@@ -15,15 +14,15 @@ public class SkillSelectionResult {
         FAILED_INVENTORY_FULL
     }
 
-    private final Player player;
+    private final UUID playerID;
     private final ResultType resultType;
     private final Skill selectedSkill;
     private final Skill replacedSkill;
     private final List<Skill> availableSkills;
     private final String resultMessage;
 
-    private SkillSelectionResult(Player player, ResultType resultType, Skill selectedSkill, Skill replacedSkill, List<Skill> availableSkills, String resultMessage) {
-        this.player = player;
+    private SkillSelectionResult(UUID playerID, ResultType resultType, Skill selectedSkill, Skill replacedSkill, List<Skill> availableSkills, String resultMessage) {
+        this.playerID = playerID;
         this.resultType = resultType;
         this.selectedSkill = selectedSkill;
         this.replacedSkill = replacedSkill;
@@ -31,8 +30,8 @@ public class SkillSelectionResult {
         this.resultMessage = resultMessage;
     }
 
-    public Player getPlayer() {
-        return player;
+    public UUID getPlayerID() {
+        return playerID;
     }
 
     public ResultType getResultType() {
@@ -59,9 +58,9 @@ public class SkillSelectionResult {
         return resultType == ResultType.SUCCESS_ADDED || resultType == ResultType.SUCCESS_REPLACED;
     }
 
-    public static SkillSelectionResult success(Player player, Skill selectedSkill, List<Skill> availableSkills) {
+    public static SkillSelectionResult success(UUID playerID, Skill selectedSkill, List<Skill> availableSkills) {
         return new SkillSelectionResult(
-                player,
+                playerID,
                 ResultType.SUCCESS_ADDED,
                 selectedSkill,
                 null,
@@ -70,10 +69,10 @@ public class SkillSelectionResult {
         );
     }
 
-    public static SkillSelectionResult successReplaced(Player player, Skill selectedSkill,
+    public static SkillSelectionResult successReplaced(UUID playerID, Skill selectedSkill,
                                                        Skill replacedSkill, List<Skill> availableSkills) {
         return new SkillSelectionResult(
-                player,
+                playerID,
                 ResultType.SUCCESS_REPLACED,
                 selectedSkill,
                 replacedSkill,
@@ -83,7 +82,7 @@ public class SkillSelectionResult {
         );
     }
 
-    public static SkillSelectionResult failure(Player player, ResultType failureType, List<Skill> availableSkills) {
+    public static SkillSelectionResult failure(UUID playerID, ResultType failureType, List<Skill> availableSkills) {
         String message = switch (failureType) {
             case FAILED_NO_SELECTION -> "No pending skill selection found.";
             case FAILED_INVALID_SKILL -> "Invalid skill selected.";
@@ -93,7 +92,7 @@ public class SkillSelectionResult {
         };
 
         return new SkillSelectionResult(
-                player,
+                playerID,
                 failureType,
                 null,
                 null,
