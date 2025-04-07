@@ -42,6 +42,10 @@ public class Monster extends Entity {
 		this.allegiance = Allegiance.ENEMY;
 	}
 
+	public int getMonsterLevel() {
+		return monsterLevel;
+	}
+	
 	public int getXpValue() {
         return monsterLevel * 10;
     }
