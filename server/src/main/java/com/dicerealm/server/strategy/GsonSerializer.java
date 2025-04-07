@@ -12,8 +12,8 @@ import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.item.Potion;
-import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.item.Scroll;
+import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
 import com.google.gson.Gson;
@@ -36,10 +36,12 @@ public class GsonSerializer implements JsonSerializationStrategy {
                     return context.deserialize(json, Item.class);
                 case "EQUIPPABLE_ITEM":
                     return context.deserialize(json, EquippableItem.class);
+				case "WEAPON":
+					return context.deserialize(json, Weapon.class);
                 case "SCROLL":
                     return context.deserialize(json, Scroll.class);
-								case "POTION":
-										return context.deserialize(json, Potion.class);
+				case "POTION":
+					return context.deserialize(json, Potion.class);
                 default:
                     throw new JsonParseException(itemType + " not handled");
             }

@@ -27,7 +27,7 @@ public class DialogueManagerTest {
 			}
 		};
 
-		RoomContext context = new RoomContext(state, null, broadcast, random, null);
+		RoomContext context = new RoomContext(state, null, broadcast, random, null, null);
 		DialogueManager.startNewDialogueTurn("Test", context);
 		assert(context.getRoomState().getCurrentDialogueTurn().getDungeonMasterText().equals("Test"));
 		DialogueManager.startNewDialogueTurn("Test2", context);
@@ -61,7 +61,7 @@ public class DialogueManagerTest {
 			}
 		};
 
-		RoomContext context = new RoomContext(state, new DungeonMaster(llm, json, state), broadcast, random, null);
+		RoomContext context = new RoomContext(state, new DungeonMaster(llm, json, state), broadcast, random, null, null);
 
 		Player player1 = new Player();
 		Player player2 = new Player();

@@ -13,6 +13,8 @@ import com.dicerealm.core.entity.StatsMap;
  * @see Entity
  */
 public class Monster extends Entity {
+	private int monsterLevel;
+
 	public Monster() {
 		super("Monster", Race.DEMON, EntityClass.WIZARD, new StatsMap(Map.of(
 			Stat.MAX_HEALTH, 20,
@@ -25,10 +27,22 @@ public class Monster extends Entity {
 			Stat.CHARISMA, 0
 		)));
 		this.allegiance = Allegiance.ENEMY;
+		this.monsterLevel = 1;
+	}
+
+	public Monster(String name, Race race, EntityClass entityClass, StatsMap baseStats, int monsterLevel) {
+		super(name, race, entityClass, baseStats);
+		this.monsterLevel = monsterLevel;
+		this.allegiance = Allegiance.ENEMY;
 	}
 
 	public Monster(String name, Race race, EntityClass entityClass, StatsMap baseStats) {
 		super(name, race, entityClass, baseStats);
+		this.monsterLevel = 1;
 		this.allegiance = Allegiance.ENEMY;
 	}
+
+	public int getXpValue() {
+        return monsterLevel * 10;
+    }
 }

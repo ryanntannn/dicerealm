@@ -86,8 +86,7 @@ public class ActionManager {
     }*/
 
     public CombatResult usePotion(Entity user, Entity target, Potion potion) {
-        boolean useable = false;
-        useable = potion.useOn(target);
+        boolean useable = potion.useOn(target);
         if (useable) {
             int damage = potion.rollDamage();
             target.takeDamage(damage);

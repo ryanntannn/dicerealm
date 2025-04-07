@@ -1,19 +1,24 @@
 package com.dicerealm.core.combat;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.dicerealm.core.combat.managers.ActionManager;
 import com.dicerealm.core.dice.FixedD20;
-import com.dicerealm.core.entity.*;
+import com.dicerealm.core.entity.BodyPart;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.item.WeaponClass;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
-
-import java.util.Map;
 
 public class ActionManagerTest {
     private Player player;
@@ -45,7 +50,7 @@ public class ActionManagerTest {
 
         // Create a test weapon
         weapon = new Weapon("Sword", "Iron Sword forged from the Great Dwarfen Forges", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 1)), 1);
-        skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, 3,2,1);
+        skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3,2,1,2);
         player.equipItem(BodyPart.RIGHT_HAND, weapon);
 
     }

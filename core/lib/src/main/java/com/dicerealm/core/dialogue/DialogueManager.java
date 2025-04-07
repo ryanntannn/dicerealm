@@ -102,6 +102,7 @@ public class DialogueManager {
 
 		// Update the combat manager with the new participants
 		context.getCombatManager().newCombat(combatParticipants);
+		context.getMonsterAI().setCombatManager(context.getCombatManager());
 
 		// Initialize the turn order
 		context.getCombatManager().startCombat();

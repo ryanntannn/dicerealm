@@ -1,7 +1,9 @@
 package com.dicerealm.core.room;
 
 import java.util.UUID;
+
 import com.dicerealm.core.combat.managers.CombatManager;
+import com.dicerealm.core.combat.managers.MonsterAI;
 import com.dicerealm.core.command.Command;
 import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.PlayerJoinCommand;
@@ -11,8 +13,8 @@ import com.dicerealm.core.handler.CombatTurnActionHandler;
 import com.dicerealm.core.handler.CommandRouter;
 import com.dicerealm.core.handler.DialogueTurnActionHandler;
 import com.dicerealm.core.handler.PlayerEquipItemHandler;
-import com.dicerealm.core.handler.UpdatePlayerDetailsHandler;
 import com.dicerealm.core.handler.StartGameHandler;
+import com.dicerealm.core.handler.UpdatePlayerDetailsHandler;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
@@ -39,6 +41,7 @@ public class Room {
 	private CommandRouter commandRouter;
 	private RandomStrategy randomStrategy;
 	private CombatManager combatManager;
+	private MonsterAI monsterAI;
 
 	/**
 	 * Create a new RoomBuilder for creating a Room
@@ -63,6 +66,7 @@ public class Room {
 		this.commandRouter = commandRouter;
 		this.randomStrategy = randomStrategy;
 		this.combatManager = new CombatManager();
+		this.monsterAI = new MonsterAI();
 
 		commandRouter.registerHandler(new StartGameHandler());
 		commandRouter.registerHandler(new PlayerEquipItemHandler());
@@ -115,6 +119,6 @@ public class Room {
 	 * @param json
 	 */
 	public void handlePlayerCommand(UUID playerId, String json) {
-		commandRouter.handlePlayerCommand(playerId, json, new RoomContext(roomState, dungeonMaster, broadcastStrategy, randomStrategy, combatManager));
+		commandRouter.handlePlayerCommand(playerId, json, new RoomContext(roomState, dungeonMaster, broadcastStrategy, randomStrategy, combatManager, monsterAI));
 	}
 }
