@@ -90,4 +90,12 @@ public class CombatResult {
     public Dice getDamageDice(){ return damageDice; }
     public String getHitLog(){ return hitLog; }
     public String getDamageLog(){ return damageLog; }
+		public int getDamageRoll(){ return damageRoll; }
+		public int getAttackRoll(){ return attackRoll; }
+		public int getAttackBonus(){ return attackBonus; }
+		public int getTargetAC(){ return targetAC; }
+		public AttackResult getAttackResult(){ return attackResult; }
+		public String getPotionLog(){ return potionLog; }
+		public Weapon getWeapon(){ return weapon; }
+		public Skill getSkill(){ return skill; }
 }	
