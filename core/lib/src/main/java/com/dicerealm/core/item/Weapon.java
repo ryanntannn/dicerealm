@@ -17,6 +17,7 @@ public class Weapon extends EquippableItem{
         this.actionType = actionType;
         this.weaponClass = weaponClass;
         this.damageDice = new MultiDice(1, diceSides);
+				this.type = "WEAPON";
     }
 
     public Weapon(String name, String description, ActionType actionType, WeaponClass weaponClass, StatsMap stats, int numDice, int diceSides) {
@@ -24,6 +25,7 @@ public class Weapon extends EquippableItem{
         this.actionType = actionType;
         this.weaponClass = weaponClass;
         this.damageDice = new MultiDice(numDice, diceSides);
+				this.type = "WEAPON";
     }
 
     public ActionType getActionType() { return actionType; }
