@@ -109,11 +109,13 @@ class CombatManagerTest {
     }
 
     @Test
-    void testCombatOverWhenAllMonstersAreDead() {
-        monster.takeDamage(25); 
+    void testCombatOverWhenAllMonstersAreDead() { 
         combatManager.startCombat();
+        monster.takeDamage(25); 
+        combatManager.endTurn();
         boolean combatOver = combatManager.isCombatOver();
         assertTrue(combatOver, "Combat should be over when all players are dead");
+        assertEquals(combatManager.getTurnOrderIds().length, 2);
     }
 
     @Test

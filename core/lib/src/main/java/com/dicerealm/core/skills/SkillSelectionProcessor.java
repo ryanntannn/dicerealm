@@ -8,24 +8,25 @@ import com.dicerealm.core.player.Player;
 
 public class SkillSelectionProcessor {
 
-    public SkillSelectionResult processSkillSelection(
-        UUID playerId,
+    public static SkillSelectionResult processSkillSelection(
+        UUID playerID,
         UUID selectedSkillId,
         UUID replacedSkillId,
-        Player player,
-        LevelManager levelManager
+        LevelManager levelManager,
+        Player player
     ) {
-        // Check if player has pending skill selection
-        if (!levelManager.hasPendingSkillSelection(playerId)) {
+
+        // Check if playerID has pending skill selection
+        if (!levelManager.hasPendingSkillSelection(playerID)) {
             return SkillSelectionResult.failure(
-                player,
+                playerID,
                 SkillSelectionResult.ResultType.FAILED_NO_SELECTION,
                 null
             );
         }
 
         // Find the selected skill
-        List<Skill> availableSkills = levelManager.getPendingSkillSelections(playerId);
+        List<Skill> availableSkills = levelManager.getPendingSkillSelections(playerID);
         Skill selectedSkill = null;
         if (availableSkills != null) {
             selectedSkill = availableSkills.stream()
@@ -37,7 +38,7 @@ public class SkillSelectionProcessor {
         // If selected skill not found, return failure
         if (selectedSkill == null) {
             return SkillSelectionResult.failure(
-                player,
+                playerID,
                 SkillSelectionResult.ResultType.FAILED_INVALID_SKILL,
                 availableSkills
             );
@@ -47,7 +48,7 @@ public class SkillSelectionProcessor {
         if (player.getSkillsInventory().getItems().size() >= 4) {
             if (replacedSkillId == null) {
                 return SkillSelectionResult.failure(
-                    player,
+                    playerID,
                     SkillSelectionResult.ResultType.FAILED_INVENTORY_FULL,
                     availableSkills
                 );
@@ -56,7 +57,7 @@ public class SkillSelectionProcessor {
             Skill replacedSkill = player.getSkillsInventory().getItem(replacedSkillId);
             if (replacedSkill == null) {
                 return SkillSelectionResult.failure(
-                    player,
+                    playerID,
                     SkillSelectionResult.ResultType.FAILED_INVALID_REPLACE,
                     availableSkills
                 );
@@ -65,7 +66,7 @@ public class SkillSelectionProcessor {
 
         // Process the skill selection
         boolean success = levelManager.processSkillSelection(
-            playerId,
+            playerID,
             selectedSkillId,
             replacedSkillId,
             player
@@ -76,14 +77,14 @@ public class SkillSelectionProcessor {
             if (replacedSkillId != null) {
                 Skill replacedSkill = player.getSkillsInventory().getItem(replacedSkillId);
                 return SkillSelectionResult.successReplaced(
-                    player,
+                    playerID,
                     selectedSkill,
                     replacedSkill,
                     availableSkills
                 );
             } else {
                 return SkillSelectionResult.success(
-                    player,
+                    playerID,
                     selectedSkill,
                     availableSkills
                 );
@@ -91,7 +92,7 @@ public class SkillSelectionProcessor {
         } else {
             // Generic failure
             return SkillSelectionResult.failure(
-                player,
+                playerID,
                 SkillSelectionResult.ResultType.FAILED_INVALID_SKILL,
                 availableSkills
             );

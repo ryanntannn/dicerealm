@@ -17,6 +17,9 @@ import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
+import com.dicerealm.core.handler.CombatTurnActionHandler;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
@@ -112,6 +115,9 @@ public class DialogueManager {
 
 		// Send the turn order to all players
 		context.getBroadcastStrategy().sendToAllPlayers(new CombatStartCommand(displayText, turnOrderIds));
+
+		// Start the first turn
+		CombatTurnActionHandler.handleNextTurn(context);
 	}
 
 	/**
@@ -159,6 +165,7 @@ public class DialogueManager {
 				isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
 			}
 			List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
+
 			handleSwitchToCombat(response.displayText, context);
 		} else {
 			broadcastPlayerActions(response.actionChoices, context);

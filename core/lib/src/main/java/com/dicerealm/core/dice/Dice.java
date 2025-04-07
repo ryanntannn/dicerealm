@@ -11,6 +11,10 @@ public class Dice {
 	}
 
 	public int roll() {
+		// don't ask
+		if (randomStrategy == null) {
+			randomStrategy = new DefaultRandomStrategy();
+		}
 		return (int) (randomStrategy.random() * sides) + 1;
 	}
 
