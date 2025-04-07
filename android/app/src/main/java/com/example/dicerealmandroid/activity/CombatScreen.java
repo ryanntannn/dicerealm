@@ -110,9 +110,22 @@ public class CombatScreen extends AppCompatActivity {
             public void onChanged(InventoryOf<Skill> skills) {
                 if (skills != null) {
                     List<Skill> skillList = new ArrayList<>(skills.getItems());
+
                     for (Skill skill : skillList) {
                         Log.d("skill", "Skill: " + skill.getDisplayName());
                     }
+
+                    // Hardcode the button to use the first skill
+                    MaterialButton skillButtons = findViewById(R.id.spellButton);
+                    skillButtons.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Log.d("action", "Execute first skill");
+                            Skill hardcodeSkill = skillList.get(0);
+                            // I hardcode to use the first skill for now
+                            combatSh.performAction(hardcodeSkill, CombatTurnActionCommand.ActionType.SKILL);
+                        }
+                    });
                 }
             }
         });
@@ -133,7 +146,6 @@ public class CombatScreen extends AppCompatActivity {
                 attackBtnRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // gameSh.performAction();
                         Log.d("action right", "Attack with right hand");
                         combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
                     }
@@ -170,10 +182,11 @@ public class CombatScreen extends AppCompatActivity {
 
     private void combatSequence(){
         TextView turnText = findViewById(R.id.CombatSequence);
-        turnText.setText("");
+
         combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
             @Override
             public void onChanged(List<CombatSequence> combatSequences){
+                turnText.setText("");
                 for(int i = 0; i < combatSequences.size(); i++){
                     CombatSequence sequence = combatSequences.get(i);
                     if(i == 0){

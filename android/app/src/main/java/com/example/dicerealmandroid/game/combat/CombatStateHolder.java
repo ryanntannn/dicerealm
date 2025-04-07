@@ -12,6 +12,7 @@ import com.example.dicerealmandroid.player.PlayerRepo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CombatStateHolder extends ViewModel {
     private CombatRepo combatRepo;
@@ -52,4 +53,16 @@ public class CombatStateHolder extends ViewModel {
         return combatRepo.getMonster();
     }
 
+
+
+    public Boolean isMyTurn(){
+        List<InitiativeResult> initiativeResults = combatRepo.getInitiativeResults().getValue();
+        if(initiativeResults != null || !initiativeResults.isEmpty()){
+            UUID currPlayer = initiativeResults.get(0).getEntity().getId();
+            if(currPlayer.equals(playerRepo.getPlayerId())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

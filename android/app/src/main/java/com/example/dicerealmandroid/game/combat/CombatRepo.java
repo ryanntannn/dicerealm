@@ -73,16 +73,7 @@ public class CombatRepo {
         roomDataSource.sendMessageToServer(message);
     }
 
-    public Boolean isMyTurn(){
-        List<InitiativeResult> initiativeResults = combatDataSource.getInitiativeResults().getValue();
-        if(initiativeResults != null || !initiativeResults.isEmpty()){
-            UUID currPlayer = initiativeResults.get(0).getEntity().getId();
-            if(currPlayer.equals(playerDataSource.getPlayerId())){
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     // Rotate the combat sequence, showing the next player in line
     public void rotateCombatSequence(){

@@ -11,6 +11,7 @@ import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
+import com.dicerealm.core.command.combat.CommandEndTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
@@ -40,7 +41,7 @@ public class DicerealmClient extends WebSocketClient {
 
     private String roomCode;
 
-    private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
+    private final static String baseUrl = "wss://50e2-2406-3003-2007-1f2b-adee-b5d3-1440-32e1.ngrok-free.app/room/";
     private final PlayerRepo playerRepo = new PlayerRepo();
     private final RoomRepo roomRepo = new RoomRepo();
     private final DialogRepo dialogRepo = new DialogRepo();
@@ -153,6 +154,19 @@ public class DicerealmClient extends WebSocketClient {
                     roomRepo.changeState(RoomState.State.BATTLE);
                     break;
 
+                case "COMBAT_START_TURN":
+                    CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
+                    Message.showMessage("Your turn!");
+                    break;
+
+                case "COMBAT_END_TURN":
+                    CommandEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CommandEndTurnCommand.class);
+                    if(combatEndTurnCommand.getCombatResult() != null){
+                        combatRepo.rotateCombatSequence();
+                    }
+
+                    Message.showMessage("Turn ended.");
+                    break;
 
                 default:
                     System.out.println("Command Not Handled: " + command.getType());
