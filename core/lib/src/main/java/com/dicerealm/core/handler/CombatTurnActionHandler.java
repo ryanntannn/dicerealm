@@ -7,11 +7,12 @@ import com.dicerealm.core.combat.CombatResult;
 import com.dicerealm.core.combat.managers.CombatManager;
 import com.dicerealm.core.combat.managers.LevelManager;
 import com.dicerealm.core.combat.managers.MonsterAI;
+import com.dicerealm.core.command.combat.CombatEndCommand;
+import com.dicerealm.core.command.combat.CombatEndCommand.CombatEndStatus;
+import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
-import com.dicerealm.core.command.combat.CommandEndTurnCommand;
 import com.dicerealm.core.command.levelling.SkillSelectionCommand;
-import com.dicerealm.core.command.combat.CombatEndCommand.CombatEndStatus;
 import com.dicerealm.core.dialogue.DialogueManager;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
@@ -118,7 +119,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
                   throw new IllegalArgumentException("Player not found in room.");
                 }
                 List<Skill> availableSkills = levelManager.preparePlayerSkillSelection(player, roomLevel);
-                context.getBroadcastStrategy().sendToPlayer(new SkillSelectionCommand(playerId, availableSkills, player.getSkillsInventory().getItems(), roomLevel), player);
+                context.getBroadcastStrategy().sendToPlayer(new SkillSelectionCommand(player.getId(), availableSkills, player.getSkillsInventory().getItems(), roomLevel), player);
              }
         }
 				// TODO: Handle prompt for the DM to end the combat
