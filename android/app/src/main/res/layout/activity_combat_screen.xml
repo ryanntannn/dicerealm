@@ -11,10 +11,14 @@
         android:id="@+id/CombatSequence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Combat Sequence"
 
-        app:layout_constraintBottom_toTopOf="@+id/Actions"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Combat Sequence"
+        app:layout_constraintBottom_toTopOf="@+id/playerName"
+        app:layout_constraintEnd_toStartOf="@+id/enemyHealth"
+        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintVertical_bias="0.39" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Actions"
@@ -24,53 +28,67 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/spellButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="Spell"
+            android:textSize="18sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/itemButton"
+            app:layout_constraintEnd_toStartOf="@+id/attackButtonRight"
+            app:layout_constraintStart_toEndOf="@+id/attackButtonLeft"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/attackButtonLeft"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
             android:text="Attack Left"
-            android:textSize="18dp"
+            android:textSize="16sp"
             app:cornerRadius="8dp"
-            android:layout_marginEnd="3dp"
+            app:layout_constraintBottom_toTopOf="@+id/itemButton"
+            app:layout_constraintEnd_toStartOf="@+id/spellButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/attackButtonRight"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/skillButton"
-            app:layout_constraintHorizontal_chainStyle="spread" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/attackButtonRight"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Attack right"
-            android:textSize="18dp"
+            android:text="Attack Right"
+            android:textSize="16sp"
             app:cornerRadius="8dp"
-            app:layout_constraintStart_toEndOf="@id/attackButtonLeft"
+            app:layout_constraintBottom_toTopOf="@+id/itemButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/skillButton" />
+            app:layout_constraintStart_toEndOf="@+id/spellButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/skillButton"
+            android:id="@+id/itemButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="14dp"
-            android:text="Spells"
+            android:text="Inventory"
             android:textSize="20dp"
             app:cornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <ScrollView
         android:id="@+id/messages"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_width="410dp"
+        android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/combatTitle">
 
@@ -82,16 +100,6 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/PlayerInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player info here"
-        app:layout_constraintBottom_toTopOf="@+id/CombatSequence"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages" />
-
-    <TextView
         android:id="@+id/combatTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,6 +107,90 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="86dp"
+        android:layout_height="123dp"
+        app:layout_constraintBottom_toTopOf="@+id/playerName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.984"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintVertical_bias="0.262"
+        app:srcCompat="@drawable/kid2" />
+
+    <ImageView
+        android:id="@+id/me"
+        android:layout_width="75dp"
+        android:layout_height="139dp"
+        app:layout_constraintBottom_toTopOf="@+id/Actions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintVertical_bias="0.936"
+        app:srcCompat="@drawable/kid1" />
+
+    <TextView
+        android:id="@+id/playerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="4dp"
+        android:text="Your name"
+        app:layout_constraintBottom_toTopOf="@+id/me"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/me" />
+
+    <TextView
+        android:id="@+id/PlayerInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player info here"
+        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintStart_toEndOf="@+id/me"
+        app:layout_constraintTop_toBottomOf="@+id/yourHealth"
+        app:layout_constraintVertical_bias="0.368" />
+
+    <TextView
+        android:id="@+id/yourHealth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="health"
+        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintStart_toEndOf="@+id/me"
+        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintVertical_bias="0.157" />
+
+    <TextView
+        android:id="@+id/enemyName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Enemy name"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.981"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messages" />
+
+    <TextView
+        android:id="@+id/enemyHealth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Health"
+        app:layout_constraintBottom_toTopOf="@+id/yourHealth"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        app:layout_constraintHorizontal_bias="0.925"
+        app:layout_constraintStart_toEndOf="@+id/yourHealth"
+        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintVertical_bias="0.151" />
 
 
     <!-- Action -->
