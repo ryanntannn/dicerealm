@@ -222,6 +222,17 @@ public class CombatManager {
         return combatOver;
     }
 
+		public boolean isPlayersWin() {
+			int alivePlayers = 0, aliveMonsters = 0;
+			for (Entity entity : participants) {
+				if (entity.isAlive()) {
+					if (entity instanceof Player) alivePlayers++;
+					else if (entity instanceof Monster) aliveMonsters++;
+				}
+			}
+			return alivePlayers > 0 && aliveMonsters == 0;
+		}
+
     public boolean isValidAction(Entity attacker) {
         return !turnOrder.isEmpty() && turnOrder.get(currentTurnIndex).equals(attacker);
     }
@@ -248,7 +259,7 @@ public class CombatManager {
         removeDeadEntities(); // Remove dead entities from the turn order
 
         // If all participants have acted, the round ends
-        if (currentTurnIndex >= participants.size()) {
+        if (currentTurnIndex >= turnOrder.size()) {
             combatLog.log("The round has ended.");
             reduceAllSkillCooldowns();
             startRound(); // Start a new round

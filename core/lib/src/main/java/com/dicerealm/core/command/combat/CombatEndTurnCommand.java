@@ -6,13 +6,13 @@ import com.dicerealm.core.command.Command;
 /**
  * Sent by the server to notify players that the current turn has ended.
  */
-public class CommandEndTurnCommand extends Command {
+public class CombatEndTurnCommand extends Command {
 		// The turn number that has ended
     private final int turnNumber;
 		// The result of the combat for this turn
 		private CombatResult combatResult;
 
-    public CommandEndTurnCommand(int turnNumber, CombatResult combatResult) {
+    public CombatEndTurnCommand(int turnNumber, CombatResult combatResult) {
         super.type = "COMBAT_END_TURN";
         this.turnNumber = turnNumber;
 				this.combatResult = combatResult;
