@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dicerealm.core.combat.systems.WeaponGenerator;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.ClassStats;
 import com.dicerealm.core.entity.EntityClass;
@@ -31,7 +32,6 @@ public class MonsterGenerator {
 
     private static final Map<EntityClass, Float> CLASS_HEALTH_MULTIPLIERS = new HashMap<>();
     private static final Map<EntityClass, Float> CLASS_DAMAGE_MULTIPLIERS = new HashMap<>();
-    private static final Map<EntityClass, WeaponFactory> CLASS_WEAPON_MAP = new HashMap<>();
     
     // Base stat scaling factor per level
     private static final float LEVEL_SCALING_FACTOR = 0.2f; // 20% increase per level
@@ -50,12 +50,6 @@ public class MonsterGenerator {
         CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.CLERIC, 1.0f);
         CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.ROGUE, 1.4f);
         CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.RANGER, 1.2f);
-
-        CLASS_WEAPON_MAP.put(EntityClass.WARRIOR, new AxeFactory());
-        CLASS_WEAPON_MAP.put(EntityClass.WIZARD, new StaffFactory());
-        CLASS_WEAPON_MAP.put(EntityClass.CLERIC, new StaffFactory());
-        CLASS_WEAPON_MAP.put(EntityClass.ROGUE, new SwordFactory());
-        CLASS_WEAPON_MAP.put(EntityClass.RANGER, new BowFactory());
     }
     
     public static Monster generateMonster(String displayName, EntityClass entityClass, Race race, int roomLevel) {
@@ -132,9 +126,9 @@ public class MonsterGenerator {
     // }
     private static void equipWeapon(Monster monster, EntityClass entityClass, int roomLevel) {
         // Use WeaponFactory to create a weapon for the monster's class
-       Weapon weapon = CLASS_WEAPON_MAP.getOrDefault(entityClass, new SpearFactory()).createWeapon(roomLevel); // Default to SpearFactory if class not found
+       Weapon weapon = WeaponGenerator.generateWeapon(entityClass, roomLevel);
        // Check if the weapon is not null and is of the correct class
-       if (weapon != null){
+       if (weapon != null ){
             // Add the weapon to the monster's inventory
             monster.getInventory().addItem(weapon);
             // Equip the weapon in the monster's right hand
