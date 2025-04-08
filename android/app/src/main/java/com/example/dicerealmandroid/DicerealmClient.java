@@ -11,6 +11,7 @@ import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
+import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
@@ -69,6 +70,7 @@ public class DicerealmClient extends WebSocketClient {
 
                     roomRepo.setRoomState(roomState);
                     playerRepo.setPlayer(myPlayer);
+                    gameRepo.changeLocation(roomState.getLocationGraph().getCurrentLocation());
                     break;
 
                 case "PLAYER_JOIN":
@@ -152,6 +154,19 @@ public class DicerealmClient extends WebSocketClient {
                     roomRepo.changeState(RoomState.State.BATTLE);
                     break;
 
+                case "COMBAT_START_TURN":
+                    CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
+                    Message.showMessage("Your turn!");
+                    break;
+
+                case "COMBAT_END_TURN":
+                    CombatEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CombatEndTurnCommand.class);
+                    if(combatEndTurnCommand.getCombatResult() != null){
+                        combatRepo.rotateCombatSequence();
+                    }
+
+                    Message.showMessage("Turn ended.");
+                    break;
 
                 default:
                     System.out.println("Command Not Handled: " + command.getType());
@@ -199,8 +214,8 @@ public class DicerealmClient extends WebSocketClient {
     public DicerealmClient (String roomCode) throws URISyntaxException {
         super(new URI(DicerealmClient.baseUrl + roomCode));
         this.roomCode = roomCode;
-        this.setConnectTimeout(6000000); // 10 minutes
-        this.setReadTimeout(60000);
+//        this.setConnectTimeout(6000000); // 100 minutes
+        this.setReadTimeout(600000); // 10 minute of idle time
         this.addHeader("Origin", "http://developer.example.com");
         this.enableAutomaticReconnection(5000);
         this.connect();

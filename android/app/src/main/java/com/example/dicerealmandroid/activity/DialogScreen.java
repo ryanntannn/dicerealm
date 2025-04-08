@@ -128,17 +128,6 @@ public class DialogScreen extends AppCompatActivity {
                         waitingForPartyCard = null;
                     }
 
-//                    // Remove "Waiting for Party" card if it exists
-//                    for (int i = 0; i < messageLayout.getChildCount(); i++) {
-//                        View child = messageLayout.getChildAt(i);
-//                        if (child instanceof CardView) {
-//                            TextView textView = (TextView) ((CardView) child).getChildAt(0);
-//                            if ("Waiting for Party to do their action...".equals(textView.getText().toString())) {
-//                                messageLayout.removeView(child);
-//                                break;
-//                            }
-//                        }
-//                    }
                     // Show dungeon master is thinking and disable action buttons
                     messageLayout.addView(dmCard);
                     disableButtons(actionLayout);
@@ -203,7 +192,6 @@ public class DialogScreen extends AppCompatActivity {
             messageLayout.addView(turnContainer);
         }
     }
-
 
 
     // Keeps track of the dialog latest turn only, type out the message character by character
