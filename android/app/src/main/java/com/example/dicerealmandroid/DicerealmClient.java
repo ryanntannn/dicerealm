@@ -11,7 +11,7 @@ import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
-import com.dicerealm.core.command.combat.CommandEndTurnCommand;
+import com.dicerealm.core.command.combat. CombatEndTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
@@ -160,7 +160,7 @@ public class DicerealmClient extends WebSocketClient {
                     break;
 
                 case "COMBAT_END_TURN":
-                    CommandEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CommandEndTurnCommand.class);
+                    CombatEndTurnCommand combatEndTurnCommand = gson.fromJson(message,  CombatEndTurnCommand.class);
                     if(combatEndTurnCommand.getCombatResult() != null){
                         combatRepo.rotateCombatSequence();
                     }

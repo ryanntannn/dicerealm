@@ -118,9 +118,20 @@
                 <!-- Add more items as needed -->
                 <!-- You can even use custom views, images, buttons, etc. -->
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/cardRecycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    android:fadeScrollbars="false"
+                    android:scrollbarSize="20dp"
+                    android:layout_weight="0.70">
 
+                </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
+
+
         </ScrollView>
         <com.google.android.material.button.MaterialButton
         android:id="@+id/BackButton"

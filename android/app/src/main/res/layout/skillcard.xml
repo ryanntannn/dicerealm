@@ -1,0 +1,26 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/ard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardtext"
+            android:text="Do i need this ?"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="skillbutton"
+            android:id="@+id/skillbutton">
+        </com.google.android.material.button.MaterialButton>
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
