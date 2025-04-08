@@ -157,15 +157,15 @@ public class DialogueManager {
 		
 		broadcastLocationChange(response, context);
 		RoomState roomState = context.getRoomState();
-		if (response.switchToCombatThisTurn) {	
-			boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+		if (response.switchToCombatThisTurn) {
+			context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
+				boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
 			while (!isRoomBalanced) {
 				// Add a monster to the room if it is not balanced
 				addMonster(response.enemy, context.getRoomState());
 				isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
 			}
 			List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
-
 			handleSwitchToCombat(response.displayText, context);
 		} else {
 			broadcastPlayerActions(response.actionChoices, context);
