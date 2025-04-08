@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Factory for creating axes with scaling damage and unique names.
  */
-public class AxeFactory {
+public class AxeFactory extends WeaponFactory {
 
     /**
      * Creates an axe scaled to the given level.
@@ -19,7 +19,7 @@ public class AxeFactory {
      * @param level The level to scale the axe's damage.
      * @return An axe with scaled damage and unique attributes.
      */
-    public static Weapon createAxe(int level) {
+    public Weapon createWeapon(int level) {
         String name = "Axe of the Berserker";
         String description = "A heavy axe that strikes fear into enemies.";
         int damageDice = calculateDamageDice(level);
@@ -35,17 +35,5 @@ public class AxeFactory {
             damageDice,
             diceSides
         );
-    }
-
-    private static int calculateDamageDice(int level) {
-        return 1 + (level / 5); // Add 1 die every 5 levels
-    }
-
-    private static int calculateDiceSides(int level) {
-        return 6 + (level / 3); // Add 1 side every 3 levels
-    }
-
-    private static int calculateStatBonus(int level) {
-        return 2 + (level / 4); // Add 1 stat bonus every 4 levels
     }
 }

@@ -11,7 +11,7 @@ import com.dicerealm.core.item.WeaponClass;
 /**
  * Factory for creating swords with scaling damage and unique names.
  */
-public class SwordFactory {
+public class SwordFactory extends WeaponFactory {
 
     /**
      * Creates a sword scaled to the given level.
@@ -19,7 +19,7 @@ public class SwordFactory {
      * @param level The level to scale the sword's damage.
      * @return A sword with scaled damage and unique attributes.
      */
-    public static Weapon createSword(int level) {
+    public Weapon createWeapon(int level) {
         String name = "Blade of Valor";
         String description = "A legendary sword forged for heroes.";
         int damageDice = calculateDamageDice(level);
@@ -35,17 +35,5 @@ public class SwordFactory {
             damageDice,
             diceSides
         );
-    }
-
-    private static int calculateDamageDice(int level) {
-        return 1 + (level / 2); // Add 1 die every 5 levels
-    }
-
-    private static int calculateDiceSides(int level) {
-        return 5 + (level); // Add 1 side every 3 levels
-    }
-
-    private static int calculateStatBonus(int level) {
-        return 1 + (level / 4); // Add 1 stat bonus every 4 levels
     }
 }
