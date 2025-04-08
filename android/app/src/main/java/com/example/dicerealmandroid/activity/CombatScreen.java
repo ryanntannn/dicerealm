@@ -45,11 +45,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-// TODO: Implement Weapon attack functionality (Cant seem to send the weapon to the command)
+// TODO: Implement Weapon attack functionality (DONE)
 // TODO: Implement spell functionality
 // TODO: Implement item functionality (Show potions and scrolls)
 
 // TODO: Refactor code again to implement dependencies injection (Dagger or Hilt) if got time
+// TODO: Refactor the classes to move the attributes in datasource to repo (datasouces shouldnt be holding data only talking to the server, make repo the singleton)
+//          - Make sure sub-repos is not a cycle
+//          - Maybe can make the DicerealmClient a singleton and can remove the roomDataSource
 
 public class CombatScreen extends AppCompatActivity {
     private RoomStateHolder roomSh = new RoomStateHolder();
@@ -79,7 +82,7 @@ public class CombatScreen extends AppCompatActivity {
         roomSh.trackState().observe(this, new Observer<RoomState.State>() {
            @Override
            public void onChanged(RoomState.State roomState) {
-               if(roomState == RoomState.State.DIALOGUE_TURN){
+               if(roomState == RoomState.State.DIALOGUE_PROCESSING){
                    Log.d("CombatScreen", "Navigating back to dialog screen");
                    CombatScreen.this.finish();
                }
@@ -178,14 +181,14 @@ public class CombatScreen extends AppCompatActivity {
                 } else {
                     attackBtnLeft.setText("Left-H Attack: Fist");
                 }
-            }
-        });
 
-        attackBtnLeft.setOnClickListener(new View.OnClickListener()  {
-            @Override
-            public void onClick(View v) {
-//                gameSh.performAction();
-                Log.d("action left", "Attack with left hand");
+                attackBtnLeft.setOnClickListener(new View.OnClickListener()  {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("action left", "Attack with left hand");
+                        combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
+                    }
+                });
             }
         });
 
@@ -213,24 +216,25 @@ public class CombatScreen extends AppCompatActivity {
 
     private void trackCurrentTurn() {
         LinearLayout messageView = findViewById(R.id.CombatMessageLayout);
-        CardView currentTurnCard = new CardView(CombatScreen.this);
-        TextView currentTurnText = new TextView(CombatScreen.this);
 
-        currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
-        currentTurnCard.setCardElevation(10);
-        currentTurnCard.setRadius(20);
-
-        currentTurnText.setPadding(10, 10, 10, 10);
-
-        messageView.setPadding(10, 10, 10, 10);
-        messageView.setVerticalScrollBarEnabled(true);
-
-        currentTurnCard.addView(currentTurnText);
-        messageView.addView(currentTurnCard);
 
         combatSh.subscribeCombatLatestTurn().observe(this, new Observer<String>() {
            @Override
            public void onChanged(String currTurn){
+               CardView currentTurnCard = new CardView(CombatScreen.this);
+               TextView currentTurnText = new TextView(CombatScreen.this);
+
+               currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
+               currentTurnCard.setCardElevation(10);
+               currentTurnCard.setRadius(20);
+
+               currentTurnText.setPadding(10, 10, 10, 10);
+
+               messageView.setPadding(10, 10, 10, 10);
+               messageView.setVerticalScrollBarEnabled(true);
+
+               currentTurnCard.addView(currentTurnText);
+               messageView.addView(currentTurnCard);
 
                currentTurnText.setText(""); // Reset the text view before displaying the new message
                displayMessageStream(currTurn, currentTurnText);

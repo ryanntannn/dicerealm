@@ -168,11 +168,15 @@ public class DicerealmClient extends WebSocketClient {
                     if(combatEndTurnCommand.getCombatResult() != null){
                         UUID targetId = combatEndTurnCommand.getCombatResult().getTargetID();
                         combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
+                        combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog());
                         combatRepo.rotateCombatSequence();
                     }
                     break;
 
                 case "COMBAT_END":
+                    // TODO: Add combat end navigate back to the main menu and leave the room/server
+                    // TODO: Add left hand attack
+                    // TODO: Show the initial combat msg as a seperate overlay
                     CombatEndCommand combatEndCommand = gson.fromJson(message, CombatEndCommand.class);
                     if(combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.WIN){
                         Message.showMessage("You won the battle!");
@@ -180,7 +184,7 @@ public class DicerealmClient extends WebSocketClient {
                     else if (combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.LOSE){
                         Message.showMessage("You lost the battle!");
                     }
-                    roomRepo.changeState(RoomState.State.DIALOGUE_TURN);
+                    roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                     break;
 
                 default:

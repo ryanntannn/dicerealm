@@ -95,7 +95,7 @@ public class CombatRepo {
         UUID playerId = playerDataSource.getPlayerId();
         UUID enemyId = getMonster().getValue().getId();
 
-        Entity targetEntity = null;
+        Entity targetEntity;
 
         // If target is the player (you) or enemy
         if (playerId.equals(targetId)){

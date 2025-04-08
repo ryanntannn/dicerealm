@@ -155,6 +155,7 @@ public class DialogueManager {
 		
 		broadcastLocationChange(response, context);
 		if (response.switchToCombatThisTurn) {
+			context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
 			addMonster(response.enemy, context.getRoomState());
 			handleSwitchToCombat(response.displayText, context);
 		} else {
