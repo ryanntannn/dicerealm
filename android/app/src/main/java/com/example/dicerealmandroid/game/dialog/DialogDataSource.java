@@ -69,4 +69,15 @@ public class DialogDataSource {
     }
 
 
+
+    // Reset all cache data while leaving the singleton instance
+    // Maintain observers connections :>
+    public static void destroy(){
+        if(instance != null){
+            instance.turnHistory = null;
+            instance.currentTurn.postValue(null);
+            instance.setPlayerActions(null);
+            instance.setLatestActionResult(null);
+        }
+    }
 }

@@ -58,7 +58,7 @@ public class CharacterScreen extends AppCompatActivity {
         // Access PlayerStateHolder
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
-        BackButtonHandler.setupBackImageButtonHandler(this, R.id.backToLobby);
+        this.backToHome();
         this.setRoomCode();
 
         TextView chara_name1 = findViewById(R.id.chara_name1);
@@ -131,6 +131,10 @@ public class CharacterScreen extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void backToHome(){
+        BackButtonHandler.setupBackImageButtonHandler(this, R.id.backToLobby);
     }
 
     private void setRoomCode(){

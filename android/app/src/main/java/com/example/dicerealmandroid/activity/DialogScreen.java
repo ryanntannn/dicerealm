@@ -89,7 +89,6 @@ public class DialogScreen extends AppCompatActivity {
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         dialogSh = new ViewModelProvider(this).get(DialogStateHolder.class);
 
-//        this.getTurnHistory(messageLayout);
         this.trackTurns(messageLayout, actionLayout);
         this.displayPlayerDetails(itemInventoryView);
         this.openItemInventory(itemInventoryModal, itemInventoryView);
@@ -107,6 +106,7 @@ public class DialogScreen extends AppCompatActivity {
         cardLayoutParams.setMargins(30, 15, 30, 15);
 
         // dm prop
+        dmCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
         dmCard.setRadius(10);
         dmCard.setPadding(40, 40, 40, 40);
         dmCard.setLayoutParams(cardLayoutParams);
@@ -130,8 +130,10 @@ public class DialogScreen extends AppCompatActivity {
                     }
 
                     // Show dungeon master is thinking and disable action buttons
-                    messageLayout.addView(dmCard);
-                    disableButtons(actionLayout);
+                    if (dmCard.getParent() == null){
+                        messageLayout.addView(dmCard);
+                        disableButtons(actionLayout);
+                    }
                 }else if (state == RoomState.State.DIALOGUE_TURN){
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
@@ -421,42 +423,16 @@ public class DialogScreen extends AppCompatActivity {
         TextView race_entityclass = findViewById(R.id.race_entityclass);
         int[] statsIds = gameSh.getStatsIds();
 
-        // Initialize player details
-        Player currentPlayer = playerSh.getPlayer().getValue();
-        username.setText(currentPlayer.getDisplayName());
-        health.setText(playerSh.remainingHealth());
-        race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
-        // Initialize player stats
-        try {
-            List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
-            Collections.sort(sortedStats, Comparator.comparing(Enum::name));
-            Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
-            int currentStatId = 0;
-            for (Stat stat : sortedStats) {
-                // we render max health separately
-                if (stat == Stat.MAX_HEALTH) {
-                    continue;
-                }
-                int id = statsIds[currentStatId++];
-                TextView currentStat = findViewById(id);
-                currentStat.setText(StatsMap.getStatText(stat) + ": " + currentPlayer.getStat(stat));
-            }
-        }
-        catch (NullPointerException e){
-            e.printStackTrace();
-        }
-        displayItemInventory(currentPlayer, itemInventoryView);
-
         playerSh.getPlayer().observe(this, new Observer<Player>() {
            @Override
            public void onChanged(Player player){
                // When player details change, update the UI
                username.setText(player.getDisplayName());
                health.setText(playerSh.remainingHealth());
-               race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
+               race_entityclass.setText(player.getRace().name() + " " + player.getEntityClass().name());
                // Update player stats
                try {
-                   List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
+                   List<Stat> sortedStats = new ArrayList<>(player.getStats().keySet());
                    Collections.sort(sortedStats, Comparator.comparing(Enum::name));
                    Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
                    int currentStatId = 0;
@@ -467,7 +443,7 @@ public class DialogScreen extends AppCompatActivity {
                        }
                        int id = statsIds[currentStatId++];
                        TextView currentStat = findViewById(id);
-                       currentStat.setText(StatsMap.getStatText(stat) + ": " + currentPlayer.getStat(stat));
+                       currentStat.setText(StatsMap.getStatText(stat) + ": " + player.getStat(stat));
                    }
                }
                catch (NullPointerException e){

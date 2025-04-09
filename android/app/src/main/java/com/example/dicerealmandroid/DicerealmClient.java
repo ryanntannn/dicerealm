@@ -9,12 +9,15 @@ import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.command.combat.CombatEndCommand;
+import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 
@@ -156,16 +159,34 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "COMBAT_START_TURN":
                     CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
-                    Message.showMessage("Your turn!");
+                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
+                        Message.showMessage("Your turn!");
+                    }
                     break;
 
                 case "COMBAT_END_TURN":
                     CombatEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CombatEndTurnCommand.class);
                     if(combatEndTurnCommand.getCombatResult() != null){
+                        UUID targetId = combatEndTurnCommand.getCombatResult().getTargetID();
+                        combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
+                        combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog());
                         combatRepo.rotateCombatSequence();
                     }
+                    break;
 
-                    Message.showMessage("Turn ended.");
+                case "COMBAT_END":
+                    // TODO: Add combat end navigate back to the main menu and leave the room/server
+                    // TODO: Add left hand attack
+                    // TODO: Show the initial combat msg as a seperate overlay
+                    CombatEndCommand combatEndCommand = gson.fromJson(message, CombatEndCommand.class);
+                    if(combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.WIN){
+                        roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
+                        Message.showMessage("You won the battle!");
+                    }
+                    else if (combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.LOSE){
+                        roomRepo.leaveRoom();
+                        Message.showMessage("You have died! Returning back to main menu.");
+                    }
                     break;
 
                 default:

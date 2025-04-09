@@ -24,7 +24,7 @@ import java.util.UUID;
  * */
 public class PlayerDataSource {
     private static PlayerDataSource instance;
-    private final MutableLiveData<Player> player = new MutableLiveData<Player>(null);
+    private final MutableLiveData<Player> player = new MutableLiveData<>(null);
 
     private PlayerDataSource(){}
 
@@ -55,4 +55,12 @@ public class PlayerDataSource {
         player.postValue(equipPlayer);
     }
 
+
+    // Reset all cache data while leaving the singleton instance
+    // Maintain observers connections :>
+    public static void destroy(){
+        if(instance != null){
+            instance.setPlayer(null);
+        }
+    }
 }

@@ -52,4 +52,16 @@ public class CombatDataSource {
     public LiveData<Entity> getMonster(){
         return monster;
     }
+
+
+
+    // Reset all cache data while leaving the singleton instance
+    // Maintain observers connections :>
+    public static void destroy(){
+        if(instance != null){
+            instance.setMonster(null);
+            instance.setInitiativeResults(null);
+            instance.updateTurnHistory(null);
+        }
+    }
 }
