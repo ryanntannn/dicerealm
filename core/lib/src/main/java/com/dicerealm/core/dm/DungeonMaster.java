@@ -118,7 +118,7 @@ public class DungeonMaster {
 
 	public DungeonMasterResponse handleDialogueTurn(String dialogueTurnSummary) {
 
-		String systemPrompt = systemPrompt() + "\nCurrent Location\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getCurrentLocation()) + "\nAdjacent Locations\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getAdjacentLocations()) + "\nPlayers\n" + jsonSerializationStrategy.serialize(roomState.getPlayers());
+		String systemPrompt = systemPrompt() + "\nCurrent Location\n" + roomState.getLocationGraph().getCurrentLocation().getSummary() + "\nAdjacent Locations\n" + roomState.getLocationGraph().getAdjacentLocationSummaries() + "\nPlayers\n" + roomState.getPlayerSummaries();
 		String userPrompt = "This is what has happened so far:\n" + contextSummary  + "\nThese are players' chosen actions:\n" + dialogueTurnSummary + "\n Continue the story accordingly.";
 		DungeonMasterResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterResponse.class);
 		contextSummary = response.contextSummary;

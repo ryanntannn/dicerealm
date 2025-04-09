@@ -42,4 +42,12 @@ public class LocationGraph extends DistanceGraph<Location, Path>  {
 	public Location getCurrentLocation() {
 		return this.currentLocation;
 	}
+
+	public String getAdjacentLocationSummaries() {
+		StringBuilder summaries = new StringBuilder();
+		for (Location location : getAdjacentLocations()) {
+			summaries.append(location.getSummary()).append("\n");
+		}
+		return summaries.toString();
+	}
 }
