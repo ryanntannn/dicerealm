@@ -367,41 +367,45 @@ public class DialogScreen extends AppCompatActivity {
         this.selectedCardView = selectedCardView;
         dialogSh.sendPlayerDialogAction(action);
 
-        //Add note to player who already selected, to wait for party to choose their actions, terminate when roomstate is DIALOGUE_PROCESSING
-        new Handler().postDelayed(() -> {
-            waitingForPartyCard = new CardView(DialogScreen.this);
-            TextView waitMessage = new TextView(DialogScreen.this);
-            LinearLayout messageLayout = findViewById(R.id.messageContainer);
+        // Check if player has selected an action this turn, if so add the "Waiting for Party" card
+        dialogSh.subscribeDialogLatestTurn().observe(this, new Observer<Dialog>() {
+            @Override
+            public void onChanged(Dialog turn) {
+                if (turn.getSender().isPresent() && turn.getSender().get().equals(playerSh.getPlayerId())) {
+                    // Player has selected an action, add the "Waiting for Party" card
+                    waitingForPartyCard = new CardView(DialogScreen.this);
+                    TextView waitMessage = new TextView(DialogScreen.this);
+                    LinearLayout messageLayout = findViewById(R.id.messageContainer);
 
-            // Set LayoutParams for CardView
-            LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 300
-            );
-            cardLayoutParams.setMargins(40, 40, 40, 40);
+                    // Set LayoutParams for CardView
+                    LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, 300
+                    );
+                    cardLayoutParams.setMargins(40, 40, 40, 40);
 
-            // Waiting card
-            waitingForPartyCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
-            waitingForPartyCard.setRadius(10);
-            waitingForPartyCard.setPadding(40, 40, 40, 40);
-            waitingForPartyCard.setLayoutParams(cardLayoutParams);
+                    // Waiting card
+                    waitingForPartyCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
+                    waitingForPartyCard.setRadius(10);
+                    waitingForPartyCard.setPadding(40, 40, 40, 40);
+                    waitingForPartyCard.setLayoutParams(cardLayoutParams);
 
-            waitMessage.setText("Waiting for Party to do their action...");
-            waitMessage.setTextSize(18);
-            waitMessage.setPadding(20, 20, 20, 20);
-            waitMessage.setGravity(Gravity.CENTER);
+                    waitMessage.setText("Waiting for Party to do their action...");
+                    waitMessage.setTextSize(18);
+                    waitMessage.setPadding(20, 20, 20, 20);
+                    waitMessage.setGravity(Gravity.CENTER);
 
-            try {
-                if (roomSh.getRoomState() != RoomState.State.DIALOGUE_PROCESSING) {
-                    waitingForPartyCard.addView(waitMessage);
-                    Log.d("WaitingForParty", "Waiting for party card is not null");
-                    messageLayout.addView(waitingForPartyCard);
+                    try {
+                        if (roomSh.getRoomState() != RoomState.State.DIALOGUE_PROCESSING) {
+                            waitingForPartyCard.addView(waitMessage);
+                            Log.d("WaitingForParty", "Waiting for party card is not null");
+                            messageLayout.addView(waitingForPartyCard);
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("Error", "Waiting for party card is null");
+                    }
                 }
             }
-            catch (NullPointerException e){
-                Log.d("Error", "Waiting for party card is null");
-            }
-            // Delay so that the action message is displayed before Wait Card
-        }, 400);
+        });
     }
 
     private void displayPlayerDetails(View itemInventoryView){
