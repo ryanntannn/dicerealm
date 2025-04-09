@@ -64,6 +64,6 @@ public class PlayerStateHolder extends ViewModel{
     }
 
     public LiveData<InventoryOf<Item>> getScrolls_Potions(){
-        return  Transformations.map(playerRepo.getPlayer(), Entity::getInventory);
+       return Transformations.map(playerRepo.getPlayer(), Entity::getInventory);
     }
 }

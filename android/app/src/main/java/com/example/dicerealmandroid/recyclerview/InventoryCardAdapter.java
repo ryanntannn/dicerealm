@@ -13,8 +13,8 @@ import com.example.dicerealmandroid.R;
 
 import java.util.List;
 
-public class InventoryCardAdapter extends CardAdapter<Item>{
-    public InventoryCardAdapter(Context context, List<Item> item, SelectListener listener, String type) {
+public class InventoryCardAdapter extends CardAdapter<Potion>{
+    public InventoryCardAdapter(Context context, List<Potion> item, SelectListener listener, String type) {
         super(context, item, listener, type);
     }
 

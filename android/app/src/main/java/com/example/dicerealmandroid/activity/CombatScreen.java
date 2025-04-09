@@ -44,6 +44,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 // TODO: Implement Weapon attack functionality (Cant seem to send the weapon to the command)
@@ -149,9 +150,9 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
             @Override
             public void onChanged(InventoryOf<Item> Potions_Scroll) {
                 if (Potions_Scroll != null) {
-                    List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
+                    List<Potion> Potions_Scrolllist = Potions_Scroll.getItems().stream().filter(item -> item instanceof Potion).map(item -> (Potion) item).collect(Collectors.toList());;
 
-                    for (Item potion_scroll : Potions_Scrolllist) {
+                    for (Potion potion_scroll : Potions_Scrolllist) {
                         Log.d("skill", "Skill: " + potion_scroll.getDisplayName());
                     }
 
