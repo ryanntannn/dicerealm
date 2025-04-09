@@ -3,6 +3,7 @@ package com.example.dicerealmandroid.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -54,11 +55,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO: Add player edit text input
+// TODO: Add player edit text input(Optional)
 // TODO: Add player inventory interface
 
 public class DialogScreen extends AppCompatActivity {
     private CardView selectedCardView;
+    private CardView waitingForPartyCard;
     private GameStateHolder gameSh;
     private PlayerStateHolder playerSh;
     private RoomStateHolder roomSh;
@@ -99,18 +101,18 @@ public class DialogScreen extends AppCompatActivity {
 
         // Set LayoutParams for CardView
         LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 300
+                ViewGroup.LayoutParams.MATCH_PARENT, 200
         );
         cardLayoutParams.setMargins(40, 40, 40, 40);
 
         // dm prop
-        dmCard.setCardBackgroundColor(Color.parseColor("#FFC0CB"));
+        dmCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
         dmCard.setRadius(10);
         dmCard.setPadding(40, 40, 40, 40);
         dmCard.setLayoutParams(cardLayoutParams);
 
         dmMessage.setText("Dungeon Master is thinking...");
-        dmMessage.setTextSize(24);
+        dmMessage.setTextSize(18);
         dmMessage.setPadding(20, 20, 20, 20);
         dmMessage.setGravity(Gravity.CENTER);
         dmCard.addView(dmMessage);
@@ -120,6 +122,12 @@ public class DialogScreen extends AppCompatActivity {
             @Override
             public void onChanged(RoomState.State state) {
                 if (state == RoomState.State.DIALOGUE_PROCESSING) {
+                    // Remove "Waiting for Party" card if it exists
+                    if (waitingForPartyCard != null) {
+                        messageLayout.removeView(waitingForPartyCard);
+                        waitingForPartyCard = null;
+                    }
+
                     // Show dungeon master is thinking and disable action buttons
                     // Check if dmCard is alrdy present in the message layout
                     if(dmCard.getParent() == null){
@@ -187,7 +195,6 @@ public class DialogScreen extends AppCompatActivity {
             messageLayout.addView(turnContainer);
         }
     }
-
 
 
     // Keeps track of the dialog latest turn only, type out the message character by character
@@ -363,8 +370,41 @@ public class DialogScreen extends AppCompatActivity {
         this.selectedCardView = selectedCardView;
         dialogSh.sendPlayerDialogAction(action);
 
-        //TODO: Add note to player who already selected, "waiting for party to choose their actions", terminate when roomstate is DIALOGUE_PROCESSING
+        //Add note to player who already selected, to wait for party to choose their actions, terminate when roomstate is DIALOGUE_PROCESSING
+        new Handler().postDelayed(() -> {
+            waitingForPartyCard = new CardView(DialogScreen.this);
+            TextView waitMessage = new TextView(DialogScreen.this);
+            LinearLayout messageLayout = findViewById(R.id.messageContainer);
 
+            // Set LayoutParams for CardView
+            LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, 300
+            );
+            cardLayoutParams.setMargins(40, 40, 40, 40);
+
+            // Waiting card
+            waitingForPartyCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
+            waitingForPartyCard.setRadius(10);
+            waitingForPartyCard.setPadding(40, 40, 40, 40);
+            waitingForPartyCard.setLayoutParams(cardLayoutParams);
+
+            waitMessage.setText("Waiting for Party to do their action...");
+            waitMessage.setTextSize(18);
+            waitMessage.setPadding(20, 20, 20, 20);
+            waitMessage.setGravity(Gravity.CENTER);
+
+            try {
+                if (roomSh.getRoomState() != RoomState.State.DIALOGUE_PROCESSING) {
+                    waitingForPartyCard.addView(waitMessage);
+                    Log.d("WaitingForParty", "Waiting for party card is not null");
+                    messageLayout.addView(waitingForPartyCard);
+                }
+            }
+            catch (NullPointerException e){
+                Log.d("Error", "Waiting for party card is null");
+            }
+            // Delay so that the action message is displayed before Wait Card
+        }, 400);
     }
 
     private void displayPlayerDetails(View itemInventoryView){
