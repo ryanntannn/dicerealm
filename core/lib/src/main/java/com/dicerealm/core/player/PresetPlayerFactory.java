@@ -8,6 +8,8 @@ import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.Helmet;
+import com.dicerealm.core.item.potions.MinorHealthPotion;
+import com.dicerealm.core.item.scrolls.MagicMissileScroll;
 import com.dicerealm.core.item.weapons.IronAxe;
 import com.dicerealm.core.item.weapons.IronSword;
 import com.dicerealm.core.skills.Fireball;
@@ -76,6 +78,8 @@ public class PresetPlayerFactory {
 		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
 		player.getInventory().addItem(ironsword);
 		player.getInventory().addItem(ironaxe);
+		player.getInventory().addItem(new MagicMissileScroll());
+		player.getInventory().addItem(new MinorHealthPotion());
 		player.equipItem(BodyPart.HEAD, helmet);
 		player.equipItem(BodyPart.LEFT_HAND, ironsword);
 		player.equipItem(BodyPart.RIGHT_HAND, ironaxe);
