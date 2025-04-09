@@ -65,7 +65,7 @@ public class RoomStrengthCalculator {
             return monsterStrength == 0; // No monsters for no players
         }
         
-        return roomDifficulty >= monsterStrength;
+        return roomDifficulty <= monsterStrength;
     }
     
     /**
