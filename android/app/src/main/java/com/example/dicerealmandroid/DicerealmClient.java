@@ -169,7 +169,11 @@ public class DicerealmClient extends WebSocketClient {
                     if(combatEndTurnCommand.getCombatResult() != null){
                         UUID targetId = combatEndTurnCommand.getCombatResult().getTargetID();
                         combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
-                        combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog());
+                        String damageLog = "";
+                        if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
+                            damageLog = combatEndTurnCommand.getCombatResult().getDamageLog();
+                        }
+                        combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog() + "\n" + damageLog);
                         combatRepo.rotateCombatSequence();
                     }
                     break;
