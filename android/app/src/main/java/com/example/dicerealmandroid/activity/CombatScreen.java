@@ -1,5 +1,6 @@
 package com.example.dicerealmandroid.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,10 +50,11 @@ import java.util.UUID;
 // TODO: Implement spell functionality
 // TODO: Implement item functionality (Show potions and scrolls)
 
-// TODO: Refactor code again to implement dependencies injection (Dagger or Hilt) if got time
+
 // TODO: Refactor the classes to move the attributes in datasource to repo (datasouces shouldnt be holding data only talking to the server, make repo the singleton)
 //          - Make sure sub-repos is not a cycle
 //          - Maybe can make the DicerealmClient a singleton and can remove the roomDataSource
+// TODO: Refactor code again to implement dependencies injection if got time
 
 public class CombatScreen extends AppCompatActivity {
     private RoomStateHolder roomSh = new RoomStateHolder();
@@ -85,6 +87,11 @@ public class CombatScreen extends AppCompatActivity {
                if(roomState == RoomState.State.DIALOGUE_PROCESSING){
                    Log.d("CombatScreen", "Navigating back to dialog screen");
                    CombatScreen.this.finish();
+               }else if (roomState == null){
+                     Log.d("CombatScreen", "Navigating back to home screen");
+                     Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
+                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                     startActivity(intent);
                }
            }
         });

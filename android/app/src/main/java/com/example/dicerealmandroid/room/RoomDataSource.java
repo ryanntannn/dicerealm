@@ -59,6 +59,8 @@ public class RoomDataSource {
     public void leaveRoom(){
         dicerealmClient.close(1000, 1000, "Leaving room");
         dicerealmClient = null;
+        roomState.postValue(null);
+        instance = null;
     }
 
     public DicerealmClient getDiceRealmClient(){

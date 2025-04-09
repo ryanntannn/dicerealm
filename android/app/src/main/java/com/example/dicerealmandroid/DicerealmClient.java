@@ -182,7 +182,8 @@ public class DicerealmClient extends WebSocketClient {
                         Message.showMessage("You won the battle!");
                     }
                     else if (combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.LOSE){
-                        Message.showMessage("You lost the battle!");
+                        roomRepo.leaveRoom();
+                        Message.showMessage("You have died! Returning back to main menu.");
                     }
                     roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                     break;
