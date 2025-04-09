@@ -4,9 +4,8 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.item.weapons.AxeFactory;
 import com.dicerealm.core.item.weapons.BowFactory;
-import com.dicerealm.core.item.weapons.SpearFactory;
+import com.dicerealm.core.item.weapons.DaggerFactory;
 import com.dicerealm.core.item.weapons.StaffFactory;
-import com.dicerealm.core.item.weapons.SwordFactory;
 
 /**
  * Generates weapons based on the entity class and room level.
@@ -25,9 +24,8 @@ public class WeaponGenerator {
             case WARRIOR -> AxeFactory.createAxe(roomLevel);
             case WIZARD -> StaffFactory.createStaff(roomLevel);
             case CLERIC -> StaffFactory.createStaff(roomLevel);
-            case ROGUE -> SwordFactory.createSword(roomLevel);
+            case ROGUE -> DaggerFactory.createDagger(roomLevel);
             case RANGER -> BowFactory.createBow(roomLevel);
-            default -> SpearFactory.createSpear(roomLevel);
         };
     }
 }
