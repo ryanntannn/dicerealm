@@ -1,6 +1,7 @@
 package com.dicerealm.core.player;
 
 import java.util.Map;
+import java.util.Random;
 
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.EntityClass;
@@ -20,16 +21,28 @@ import com.dicerealm.core.skills.Fireball;
  * @see Player
  */
 public class PresetPlayerFactory {
+	private static final Random random = new Random();
+
 	public static final String[] CHARACTER_NAMES = {
-		"Kael'thas Sunstrider",
-		"Jaina Proudmoore",
-		"Thrall",
-		"Garrosh Hellscream",
-		"Uther Lightbringer",
+			"Kael'thas Sunstrider",
+			"Jaina Proudmoore",
+			"Thrall",
+			"Garrosh Hellscream",
+			"Uther Lightbringer",
+			"Sylvanas Windrunner",
+			"Illidan Stormrage",
+			"Baine Bronze",
+			"Renard Moon",
+			"Arnien Grey",
+			"Reagan Arc",
+			"Donotello",
+			"Wellington",
+			"Ragnarok",
+			"Starknight",
 	};
 
 	public static String getRandomCharacterName() {
-		return CHARACTER_NAMES[(int) (Math.random() * CHARACTER_NAMES.length)];
+		return CHARACTER_NAMES[random.nextInt(CHARACTER_NAMES.length)];
 	}
 
 	public static final Race[] CHARACTER_RACE = Race.values();
@@ -46,27 +59,29 @@ public class PresetPlayerFactory {
 
 	/**
 	 * Choose a random character preset and create a player with that preset
+	 * 
 	 * @return Player
 	 * @see Player
 	 */
 	public static Player createPresetPlayer() {
 		StatsMap baseStats = new StatsMap(Map.of(
-			Stat.MAX_HEALTH, 20,
-			Stat.ARMOUR_CLASS, 0,
-			Stat.STRENGTH, 0,
-			Stat.DEXTERITY, 0,
-			Stat.CONSTITUTION, 0,
-			Stat.INTELLIGENCE, 0,
-			Stat.WISDOM, 0,
-			Stat.CHARISMA, 0
-		));
-		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(), baseStats);
+				Stat.MAX_HEALTH, 20,
+				Stat.ARMOUR_CLASS, 0,
+				Stat.STRENGTH, 0,
+				Stat.DEXTERITY, 0,
+				Stat.CONSTITUTION, 0,
+				Stat.INTELLIGENCE, 0,
+				Stat.WISDOM, 0,
+				Stat.CHARISMA, 0));
+		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(),
+				baseStats);
 		addDefaultItems(player);
 		return player;
 	}
 
 	/**
 	 * Add default items to the player
+	 * 
 	 * @param player
 	 */
 	public static void addDefaultItems(Player player) {
