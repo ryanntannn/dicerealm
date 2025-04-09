@@ -18,7 +18,6 @@ import com.dicerealm.core.item.weapons.BowFactory;
 import com.dicerealm.core.item.weapons.SpearFactory;
 import com.dicerealm.core.item.weapons.StaffFactory;
 import com.dicerealm.core.item.weapons.SwordFactory;
-import com.dicerealm.core.item.weapons.WeaponFactory;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.skills.Skill;
 import com.dicerealm.core.skills.SkillsRepository;
@@ -111,19 +110,6 @@ public class MonsterGenerator {
         }
     }
 
-    // Todo: Uncomment and implement the weapon equipping logic
-    // private static void equipWeapon(Monster monster, EntityClass entityClass) {
-    //     // Use WeaponFactory to create a weapon for the monster's class
-    //     Weapon weapon = WeaponFactory.createWeaponForClass(entityClass);
-
-    //     if (weapon != null) {
-    //         // Add the weapon to the monster's inventory
-    //         monster.getInventory().addItem(weapon);
-
-    //         // Equip the weapon in the monster's right hand
-    //         monster.equipItem(BodyPart.RIGHT_HAND, weapon);
-    //     }
-    // }
     private static void equipWeapon(Monster monster, EntityClass entityClass, int roomLevel) {
         // Use WeaponFactory to create a weapon for the monster's class
        Weapon weapon = WeaponGenerator.generateWeapon(entityClass, roomLevel);

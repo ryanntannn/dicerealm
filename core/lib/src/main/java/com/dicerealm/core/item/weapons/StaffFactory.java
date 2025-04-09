@@ -11,7 +11,7 @@ import com.dicerealm.core.item.WeaponClass;
 /**
  * Factory for creating staffs with scaling damage and unique names.
  */
-public class StaffFactory extends WeaponFactory {
+public class StaffFactory {
 
     /**
      * Creates a staff scaled to the given level.
@@ -19,7 +19,7 @@ public class StaffFactory extends WeaponFactory {
      * @param level The level to scale the staff's damage.
      * @return A staff with scaled damage and unique attributes.
      */
-    public Weapon createWeapon(int level) {
+    public static Weapon createStaff(int level) {
         String name = "Staff of Arcane Power";
         String description = "A staff imbued with magical energy.";
         int damageDice = calculateDamageDice(level);
@@ -35,5 +35,17 @@ public class StaffFactory extends WeaponFactory {
             damageDice,
             diceSides
         );
+    }
+
+    private static int calculateDamageDice(int level) {
+        return 1 + (level / 5); // Add 1 die every 5 levels
+    }
+
+    private static int calculateDiceSides(int level) {
+        return 6 + (level / 3); // Add 1 side every 3 levels
+    }
+
+    private static int calculateStatBonus(int level) {
+        return 2 + (level / 4); // Add 1 stat bonus every 4 levels
     }
 }
