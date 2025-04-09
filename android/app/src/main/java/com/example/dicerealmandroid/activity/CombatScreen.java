@@ -12,10 +12,13 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicerealm.core.combat.ActionType;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
@@ -26,6 +29,7 @@ import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.Stats;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
+import com.dicerealm.core.item.Item;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
@@ -37,11 +41,16 @@ import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
+import com.example.dicerealmandroid.recyclerview.CardAdapter;
+import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
+import com.example.dicerealmandroid.recyclerview.SelectListener;
+import com.example.dicerealmandroid.recyclerview.SpellCardAdapter;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,7 +65,7 @@ import java.util.UUID;
 //          - Maybe can make the DicerealmClient a singleton and can remove the roomDataSource
 // TODO: Refactor code again to implement dependencies injection if got time
 
-public class CombatScreen extends AppCompatActivity {
+public class CombatScreen extends AppCompatActivity implements SelectListener {
     private RoomStateHolder roomSh = new RoomStateHolder();
     private PlayerStateHolder playerSh = new PlayerStateHolder();
     private CombatStateHolder combatSh = new CombatStateHolder();
@@ -78,8 +87,9 @@ public class CombatScreen extends AppCompatActivity {
         this.attackRight();
         this.openSpells();
         this.displayPlayerInfo();
-
         this.displayEnemyInfo();
+        this.closespell();
+        this.useitems();
 
         roomSh.trackState().observe(this, new Observer<RoomState.State>() {
            @Override
@@ -141,10 +151,81 @@ public class CombatScreen extends AppCompatActivity {
                     skillButtons.setOnClickListener(new View.OnClickListener(){
                         @Override
                         public void onClick(View v) {
-                            Log.d("action", "Execute first skill");
-                            Skill hardcodeSkill = skillList.get(0);
-                            // I hardcode to use the first skill for now
-                            combatSh.performAction(hardcodeSkill, CombatTurnActionCommand.ActionType.SKILL);
+
+                            //Make the actions layout invisible
+                            ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
+                            actions.setVisibility(View.GONE);
+                            //Show the spells layout
+                            ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
+                            spellaction.setVisibility(View.VISIBLE);
+                            for (Skill skills : skillList){
+                                Log.d("skill", "Skill: " + skills.getDisplayName());
+                            }
+                            //Call recycleview
+                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell");
+                            RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
+                            recyclerView.setAdapter(cardAdapter);
+                            recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void closespell(){
+
+        // Hardcode the button to use the first skill
+        MaterialButton skillButtons = findViewById(R.id.BackButton);
+        skillButtons.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Make the actions layout invisible
+                ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
+                actions.setVisibility(View.VISIBLE);
+                //Show the spells layout
+                ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
+                spellaction.setVisibility(View.GONE);
+                //Scrollable view
+                RecyclerView cardRecycleView = (RecyclerView) findViewById(R.id.cardRecycleView);
+                cardRecycleView.removeAllViews();
+
+
+            }
+        });
+    }
+
+    public void useitems(){
+        playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
+            @Override
+            public void onChanged(InventoryOf<Item> Potions_Scroll) {
+                if (Potions_Scroll != null) {
+                    List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
+
+                    for (Item potion_scroll : Potions_Scrolllist) {
+                        Log.d("skill", "Skill: " + potion_scroll.getDisplayName());
+                    }
+
+                    // Hardcode the button to use the first skill
+                    MaterialButton Itembutton = findViewById(R.id.itemButton);
+                    Itembutton.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Log.d("Open Inventory", "Inventory Opened");
+                            //Make the actions layout invisible
+                            ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
+                            actions.setVisibility(View.GONE);
+                            //Show the spells layout
+                            ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
+                            spellaction.setVisibility(View.VISIBLE);
+
+                            //Call recycleview
+                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item");
+                            RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
+                            recyclerView.setAdapter(cardAdapter);
+                            recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
+
                         }
                     });
                 }
@@ -269,5 +350,36 @@ public class CombatScreen extends AppCompatActivity {
             }
         });
         backgroundThread.start();
+    }
+
+    @Override
+    public void onItemClick(int position ,String type ) {
+        if (Objects.equals(type, "Spell")) {
+            playerSh.getSkills().observe(this, new Observer<InventoryOf<Skill>>() {
+                @Override
+                public void onChanged(InventoryOf<Skill> skills) {
+                    if (skills != null) {
+                        List<Skill> skillList = new ArrayList<>(skills.getItems());
+
+                        Log.d("Spell", "Spell: " + skillList.get(position).getDisplayName() + " used");
+                        closespell();
+                    }
+                }
+            });
+        }
+        else if (Objects.equals(type, "Item")){
+            playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
+                @Override
+                public void onChanged(InventoryOf<Item> Potions_Scrolls) {
+                    if (Potions_Scrolls != null) {
+                        List<Item> potions_scroll_list = new ArrayList<>(Potions_Scrolls.getItems());
+
+                        Log.d("Item", "Item: " + potions_scroll_list.get(position).getDisplayName() + " used");
+                        closespell();
+                    }
+                }
+            });
+        }
+
     }
 }
