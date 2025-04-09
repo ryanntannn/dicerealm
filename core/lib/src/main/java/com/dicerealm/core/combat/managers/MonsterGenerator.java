@@ -4,11 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dicerealm.core.combat.systems.WeaponGenerator;
+import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.ClassStats;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
+import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.item.WeaponClass;
+import com.dicerealm.core.item.weapons.AxeFactory;
+import com.dicerealm.core.item.weapons.BowFactory;
+import com.dicerealm.core.item.weapons.SpearFactory;
+import com.dicerealm.core.item.weapons.StaffFactory;
+import com.dicerealm.core.item.weapons.SwordFactory;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.skills.Skill;
 import com.dicerealm.core.skills.SkillsRepository;
@@ -54,6 +63,7 @@ public class MonsterGenerator {
         
         // Equip appropriate weapons and skills
         equipSkills(monster, entityClass, roomLevel);
+        equipWeapon(monster, entityClass, roomLevel);
         
         return monster;
     }
@@ -100,18 +110,16 @@ public class MonsterGenerator {
         }
     }
 
-    // Todo: Uncomment and implement the weapon equipping logic
-    // private static void equipWeapon(Monster monster, EntityClass entityClass) {
-    //     // Use WeaponFactory to create a weapon for the monster's class
-    //     Weapon weapon = WeaponFactory.createWeaponForClass(entityClass);
-
-    //     if (weapon != null) {
-    //         // Add the weapon to the monster's inventory
-    //         monster.getInventory().addItem(weapon);
-
-    //         // Equip the weapon in the monster's right hand
-    //         monster.equipItem(BodyPart.RIGHT_HAND, weapon);
-    //     }
-    // }
+    private static void equipWeapon(Monster monster, EntityClass entityClass, int roomLevel) {
+        // Use WeaponFactory to create a weapon for the monster's class
+       Weapon weapon = WeaponGenerator.generateWeapon(entityClass, roomLevel);
+       // Check if the weapon is not null and is of the correct class
+       if (weapon != null ){
+            // Add the weapon to the monster's inventory
+            monster.getInventory().addItem(weapon);
+            // Equip the weapon in the monster's right hand
+            monster.equipItem(BodyPart.RIGHT_HAND, weapon);
+       }
+    }
     
 }
