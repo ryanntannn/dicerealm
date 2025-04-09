@@ -1,6 +1,7 @@
 package com.dicerealm.core.player;
 
 import java.util.Map;
+import java.util.Random;
 
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.EntityClass;
@@ -8,6 +9,8 @@ import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.Helmet;
+import com.dicerealm.core.item.potions.MinorHealthPotion;
+import com.dicerealm.core.item.scrolls.MagicMissileScroll;
 import com.dicerealm.core.item.weapons.IronAxe;
 import com.dicerealm.core.item.weapons.IronSword;
 import com.dicerealm.core.skills.Fireball;
@@ -18,6 +21,8 @@ import com.dicerealm.core.skills.Fireball;
  * @see Player
  */
 public class PresetPlayerFactory {
+	private static final Random random = new Random();
+
 	public static final String[] CHARACTER_NAMES = {
 			"Kael'thas Sunstrider",
 			"Jaina Proudmoore",
@@ -37,7 +42,7 @@ public class PresetPlayerFactory {
 	};
 
 	public static String getRandomCharacterName() {
-		return CHARACTER_NAMES[(int) (Math.random() * CHARACTER_NAMES.length)];
+		return CHARACTER_NAMES[random.nextInt(CHARACTER_NAMES.length)];
 	}
 
 	public static final Race[] CHARACTER_RACE = Race.values();
@@ -91,5 +96,7 @@ public class PresetPlayerFactory {
 		player.equipItem(BodyPart.HEAD, helmet);
 		player.equipItem(BodyPart.LEFT_HAND, ironsword);
 		player.equipItem(BodyPart.RIGHT_HAND, ironaxe);
+		player.getInventory().addItem(new MagicMissileScroll());
+		player.getInventory().addItem(new MinorHealthPotion());
 	}
 }
