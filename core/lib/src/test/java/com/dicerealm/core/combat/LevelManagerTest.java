@@ -67,15 +67,15 @@ public class LevelManagerTest {
         
         // Add more XP to trigger level up
         levelManager.addExperience(50, roomState);
-        boolean leveledUp = levelManager.checkLevelUp(roomState);
-        assertTrue(leveledUp, "Room should level up when enough XP is added");
+        boolean levelledUp = levelManager.checkLevelUp(roomState);
+        assertTrue(levelledUp, "Room should level up when enough XP is added");
         assertEquals(2, roomState.getRoomLevel());
         assertEquals(0, roomState.getRoomExperience());
         
         // Add XP for another level up plus some overflow
         levelManager.addExperience(250, roomState);
-        leveledUp = levelManager.checkLevelUp(roomState);
-        assertTrue(leveledUp,"Room should level up when reaching enough XP");
+        levelledUp = levelManager.checkLevelUp(roomState);
+        assertTrue(levelledUp,"Room should level up when reaching enough XP");
         assertEquals(3, roomState.getRoomLevel());
         assertEquals(50, roomState.getRoomExperience()); // 250 - 200 = 50 overflow
     }

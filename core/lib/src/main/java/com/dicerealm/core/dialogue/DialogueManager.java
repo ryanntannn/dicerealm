@@ -17,8 +17,6 @@ import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
-import com.dicerealm.core.entity.Stat;
-import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.handler.CombatTurnActionHandler;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.monster.Monster;
@@ -157,9 +155,9 @@ public class DialogueManager {
 		
 		broadcastLocationChange(response, context);
 		RoomState roomState = context.getRoomState();
-		if (response.switchToCombatThisTurn) {
+		if (response.switchToCombatThisTurn) {	
 			context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
-				boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+			boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
 			while (!isRoomBalanced) {
 				// Add a monster to the room if it is not balanced
 				addMonster(response.enemy, context.getRoomState());
