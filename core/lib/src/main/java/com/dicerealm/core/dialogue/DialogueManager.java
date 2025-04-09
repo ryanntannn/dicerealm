@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import com.dicerealm.core.combat.managers.MonsterGenerator;
 import com.dicerealm.core.combat.systems.InitiativeResult;
-import com.dicerealm.core.combat.systems.RoomStrengthCalculator;
 import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
@@ -157,12 +156,13 @@ public class DialogueManager {
 		RoomState roomState = context.getRoomState();
 		if (response.switchToCombatThisTurn) {	
 			context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
-			boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
-			while (!isRoomBalanced) {
-				// Add a monster to the room if it is not balanced
-				addMonster(response.enemy, context.getRoomState());
-				isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
-			}
+			addMonster(response.enemy, roomState);
+			// boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+			// while (!isRoomBalanced) {
+			// 	// Add a monster to the room if it is not balanced
+			// 	addMonster(response.enemy, context.getRoomState());
+			// 	isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+			// }
 			List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
 			handleSwitchToCombat(response.displayText, context);
 		} else {
