@@ -80,7 +80,19 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 			System.err.println("CombatTurnActionHandler.handleNextTurn: " + combatManager.getCurrentTurnEntity().getDisplayName() + " is taking their turn.");
 			
 			while (combatManager.getCurrentTurnEntity().getAllegiance() == Allegiance.ENEMY) {
+				// wait for two seconds
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				combatManager.startTurn();
+				// wait for two seconds
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(),  combatManager.getCurrentTurnEntity().getId()));
 				CombatResult monsterResult = monsterAI.handleMonsterTurn(combatManager.getParticipants(), combatManager.getCurrentTurnEntity());
         int currentTurn = combatManager.getCurrentTurnIndex();

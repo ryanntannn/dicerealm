@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import com.dicerealm.core.combat.managers.MonsterGenerator;
 import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
@@ -14,11 +13,8 @@ import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
-import com.dicerealm.core.entity.EntityClass;
-import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.handler.CombatTurnActionHandler;
 import com.dicerealm.core.locations.Location;
-import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomContext;
 import com.dicerealm.core.room.RoomState;
@@ -96,6 +92,7 @@ public class DialogueManager {
 		for (Player player : context.getRoomState().getPlayers()) {
 			combatParticipants.add(player);
 		}
+		// add all entities in the current location to the combat manager
 		for (Entity entity : context.getRoomState().getLocationGraph().getCurrentLocation().getEntities()) {
 			combatParticipants.add(entity);
 		}
@@ -153,17 +150,17 @@ public class DialogueManager {
 	public static void handleDungeonMasterResponse(DungeonMasterResponse response, RoomContext context) {
 		
 		broadcastLocationChange(response, context);
-		RoomState roomState = context.getRoomState();
-		if (response.switchToCombatThisTurn) {	
-			context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
-			addMonster(response.enemy, roomState);
-			// boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
-			// while (!isRoomBalanced) {
-			// 	// Add a monster to the room if it is not balanced
-			// 	addMonster(response.enemy, context.getRoomState());
-			// 	isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
-			// }
-			List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
+		// RoomState roomState = context.getRoomState();
+		if (response.switchToCombatThisTurn && context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().size() > 0) {	
+			// context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
+			// addMonster(response.enemy, roomState);
+			// // boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+			// // while (!isRoomBalanced) {
+			// // 	// Add a monster to the room if it is not balanced
+			// // 	addMonster(response.enemy, context.getRoomState());
+			// // 	isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+			// // }
+			// List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
 			handleSwitchToCombat(response.displayText, context);
 		} else {
 			broadcastPlayerActions(response.actionChoices, context);
@@ -171,18 +168,18 @@ public class DialogueManager {
 		}
 	}
 
-	public static void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState) {
-		try {
-			Monster monster = MonsterGenerator.generateMonster(enemy.name, 
-			EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
-			Race.valueOf(enemy.race.toUpperCase()), 
-			roomState.getRoomLevel()
-			);
-			roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Error creating monster: Invalid enum value for race or entity class. " + e.getMessage());
-		} catch (NullPointerException e) {
-			throw new NullPointerException("Error creating monster: Missing required fields in enemy stats. " + e.getMessage());
-		}
-	}
+	// public static void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState) {
+	// 	try {
+	// 		Monster monster = MonsterGenerator.generateMonster(enemy.name, 
+	// 		EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
+	// 		Race.valueOf(enemy.race.toUpperCase()), 
+	// 		roomState.getRoomLevel()
+	// 		);
+	// 		roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
+	// 	} catch (IllegalArgumentException e) {
+	// 		throw new IllegalArgumentException("Error creating monster: Invalid enum value for race or entity class. " + e.getMessage());
+	// 	} catch (NullPointerException e) {
+	// 		throw new NullPointerException("Error creating monster: Missing required fields in enemy stats. " + e.getMessage());
+	// 	}
+	// }
 }

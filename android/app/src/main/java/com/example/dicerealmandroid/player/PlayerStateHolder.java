@@ -53,7 +53,6 @@ public class PlayerStateHolder extends ViewModel{
 
 
     public LiveData<EquippableItem> getEquippedItem(BodyPart bodyPart){
-        Log.d("PlayerStateHolder", "getEquippedItem: " + playerRepo.getPlayer().getValue().getEquippedItems().get(bodyPart).getClass());
         return Transformations.map(playerRepo.getPlayer(), player -> player.getEquippedItems().get(bodyPart));
     }
 

@@ -19,7 +19,6 @@ public class DungeonMasterResponse{
 		public String locationId;
 		public String contextSummary;
 		public boolean switchToCombatThisTurn;
-		public Enemy enemy;
 		public class PlayerAction{
 			public String action;
 			public String playerId;
@@ -45,13 +44,7 @@ public class DungeonMasterResponse{
 				));
 			}
 		}
-
-		public class Enemy {
-			public String name;
-			public String race;
-			public String entityClass;
-			public Stats stats;
-		}
+		
 		public class Stats {
 			public int maxHealth;
 			public int armourClass;
