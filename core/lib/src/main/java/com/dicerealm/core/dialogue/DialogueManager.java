@@ -164,7 +164,6 @@ public class DialogueManager {
 				isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
 			}
 			List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
-
 			handleSwitchToCombat(response.displayText, context);
 		} else {
 			broadcastPlayerActions(response.actionChoices, context);
