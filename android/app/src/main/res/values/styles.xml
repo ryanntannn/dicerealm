@@ -24,6 +24,10 @@
         <item name="android:textColor">@color/lightgrayText</item>
         <item name="android:enabled">false</item>
     </style>
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">50%</item>
+        <item name="android:windowMinWidthMinor">50%</item>
+    </style>
 
 </resources>
 
