@@ -89,7 +89,7 @@ public class ActionManager {
         boolean useable = potion.useOn(target);
         if (useable) {
             int damage = potion.rollDamage();
-            target.takeDamage(damage);
+            target.takeDamage(-damage);
             combatResult = new CombatResult(user, target, potion);
             //Temp as all potions will be healing 
             combatResult.setPotionLog((user.getDisplayName() + " uses " + potion.getDisplayName() + " on " +
