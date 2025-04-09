@@ -36,12 +36,14 @@ public class DungeonMaster {
 					- Ensure that any skill checks required are logically tied to the action. For example, use DEXTERITY for lockpicking, CHARISMA for persuasion, etc. If no skill check is needed, set the skill check values to 0.
 				- Each player should have at least 3 action choices available.
 				- Different players can have the same action choices, but the playerId must be unique for each action choice.
-				- If there is an entity in the room, include an action choice for the player to engage in combat with it, and this action should be available to all players, and should not require a skill check.
+				- If there is an entity in the room that is still alive, include an action choice for the player to engage in combat with it, and this action should be available to all players, and should not require a skill check.
+				- Players can only engage in combat with entities in the current location, not the adjacent locations.
+				- If there are adjacent locations, include an action choice for the player to move to all adjacent locations.
 				
 		
 			3. location
 			- A UUID representing the current location of the party.
-			- When at least half of the party wants to move to a new location, update the locationId
+			- When at least half of the party wants to move to a new location, you must set this to the new location's id.
 		
 			4. contextSummary
 			- A string summarizing the current context of the room and adding it to the previous context summary 
@@ -84,7 +86,7 @@ public class DungeonMaster {
 					- The first location will be the starting point of the adventure.
 					- Each location should be unique and have a distinct name and description.
 					- The locations should be interconnected in a way that makes sense for the game world.
-					- Provide at least 6 locations.
+					- Provide at exactly 6 locations.
 
 					2. Paths
 					- A list of objects, each representing a path between two locations. Each object must contain:

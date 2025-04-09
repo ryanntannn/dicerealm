@@ -178,8 +178,8 @@ public class Entity {
 	}
 
 	public String getSummary() {
-		return String.format("display_name: %s, id: %s, stats: %s", 
-			getDisplayName(), getId(), getStats().toString());
+		return String.format("display_name: %s, id: %s, health: %d, stats: %s, ", 
+			getDisplayName(), getId(), getHealth(), getStats().toString());
 	}
 }
 
