@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.dicerealm.core.combat.managers.MonsterGenerator;
+import com.dicerealm.core.combat.systems.WeaponGenerator;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.item.WeaponClass;
 import com.dicerealm.core.monster.Monster;
 
 public class MonsterGeneratorTest {
@@ -18,7 +20,7 @@ public class MonsterGeneratorTest {
     @Test
     public void testGenerateMonster() {
         // Arrange
-        String monsterName = "Goblin Warrior";
+        String monsterName = "Demon Warrior";
         EntityClass entityClass = EntityClass.WARRIOR;
         Race race = Race.DEMON;
         int roomLevel = 5;
@@ -41,11 +43,18 @@ public class MonsterGeneratorTest {
         assertTrue(!monster.getSkillsInventory().getItems().isEmpty(), "Monster should have skills assigned");
 
         // Verify weapon assignment
-        Weapon equippedWeapon = (Weapon) monster.getEquippedItems().getOrDefault("RIGHT_HAND", null);
+        Weapon equippedWeapon = (Weapon) monster.getWeapon();
         assertNotNull(equippedWeapon, "Monster should have a weapon equipped");
-        assertEquals("Sword", equippedWeapon.getWeaponClass().toString(), "Weapon class should match monster class");
+        assertEquals(WeaponClass.AXE, equippedWeapon.getWeaponClass(), "Weapon class should match monster class");
 
-        // Verify skills assignment
-        assertTrue(!monster.getSkillsInventory().getItems().isEmpty(), "Monster should have skills assigned");
+    }
+
+    @Test
+    public void testWeaponGeneratorIntegration(){
+
+    Weapon weapon = WeaponGenerator.generateWeapon(EntityClass.WARRIOR, 5);
+        assertNotNull(weapon, "Generated weapon should not be null");
+        assertEquals(WeaponClass.AXE, weapon.getWeaponClass(), "Generated weapon class should match expected class");
+
     }
 }
