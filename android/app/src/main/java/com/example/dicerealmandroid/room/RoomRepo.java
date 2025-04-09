@@ -8,6 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.dicerealmandroid.DicerealmClient;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
+import com.example.dicerealmandroid.game.GameDataSource;
+import com.example.dicerealmandroid.game.combat.CombatDataSource;
+import com.example.dicerealmandroid.game.dialog.DialogDataSource;
+import com.example.dicerealmandroid.player.PlayerDataSource;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -23,7 +27,6 @@ public class RoomRepo {
     public RoomRepo(){
         roomDataSource = RoomDataSource.getInstance();
     };
-
 
     public RoomRepo createRoom(String roomCode){
         try {
@@ -79,6 +82,13 @@ public class RoomRepo {
             return;
         }
         roomDataSource.leaveRoom();
+
+        // Destroy all cached data but keep the singleton instance
+        PlayerDataSource.destroy();
+        DialogDataSource.destroy();
+        GameDataSource.destroy();
+        CombatDataSource.destroy();
+        RoomDataSource.destroy();
     }
 
     // Room Code input validation: Returns list with boolean and error message

@@ -180,13 +180,13 @@ public class DicerealmClient extends WebSocketClient {
                     // TODO: Show the initial combat msg as a seperate overlay
                     CombatEndCommand combatEndCommand = gson.fromJson(message, CombatEndCommand.class);
                     if(combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.WIN){
+                        roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                         Message.showMessage("You won the battle!");
                     }
                     else if (combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.LOSE){
                         roomRepo.leaveRoom();
                         Message.showMessage("You have died! Returning back to main menu.");
                     }
-                    roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                     break;
 
                 default:

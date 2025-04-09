@@ -48,4 +48,12 @@ public class GameDataSource {
     public void setCurrentLocation(Location location){
         currentLocation.postValue(location);
     }
+
+
+    // Destroy the singleton instance
+    public static void destroy(){
+        if(instance != null){
+            instance.setCurrentLocation(null);
+        }
+    }
 }

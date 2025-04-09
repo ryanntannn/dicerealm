@@ -84,14 +84,14 @@ public class CombatScreen extends AppCompatActivity {
         roomSh.trackState().observe(this, new Observer<RoomState.State>() {
            @Override
            public void onChanged(RoomState.State roomState) {
-               if(roomState == RoomState.State.DIALOGUE_PROCESSING){
-                   Log.d("CombatScreen", "Navigating back to dialog screen");
-                   CombatScreen.this.finish();
-               }else if (roomState == null){
+               if (roomState == null){
                      Log.d("CombatScreen", "Navigating back to home screen");
                      Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
                      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                      startActivity(intent);
+               }else if(roomState == RoomState.State.DIALOGUE_PROCESSING){
+                   Log.d("CombatScreen", "Navigating back to dialog screen");
+                   CombatScreen.this.finish();
                }
            }
         });
