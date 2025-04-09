@@ -101,18 +101,18 @@ public class DialogScreen extends AppCompatActivity {
 
         // Set LayoutParams for CardView
         LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 200
+                ViewGroup.LayoutParams.MATCH_PARENT, 150
         );
-        cardLayoutParams.setMargins(40, 40, 40, 40);
+        cardLayoutParams.setMargins(30, 15, 30, 15);
 
         // dm prop
-        dmCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
         dmCard.setRadius(10);
         dmCard.setPadding(40, 40, 40, 40);
         dmCard.setLayoutParams(cardLayoutParams);
 
         dmMessage.setText("Dungeon Master is thinking...");
         dmMessage.setTextSize(18);
+        dmMessage.setTextColor(getColor(R.color.darkred));
         dmMessage.setPadding(20, 20, 20, 20);
         dmMessage.setGravity(Gravity.CENTER);
         dmCard.addView(dmMessage);
@@ -372,24 +372,30 @@ public class DialogScreen extends AppCompatActivity {
             @Override
             public void onChanged(Dialog turn) {
                 if (turn.getSender().isPresent() && turn.getSender().get().equals(playerSh.getPlayerId())) {
+                    LinearLayout messageLayout = findViewById(R.id.messageContainer);
+
+                    // Remove previous "Waiting for Party" card if it exists
+                    if (waitingForPartyCard != null) {
+                        messageLayout.removeView(waitingForPartyCard);
+                        waitingForPartyCard = null;
+                    }
                     // Player has selected an action, add the "Waiting for Party" card
                     waitingForPartyCard = new CardView(DialogScreen.this);
                     TextView waitMessage = new TextView(DialogScreen.this);
-                    LinearLayout messageLayout = findViewById(R.id.messageContainer);
 
                     // Set LayoutParams for CardView
                     LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, 300
+                            ViewGroup.LayoutParams.MATCH_PARENT, 150
                     );
                     cardLayoutParams.setMargins(40, 40, 40, 40);
 
                     // Waiting card
-                    waitingForPartyCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
                     waitingForPartyCard.setRadius(10);
-                    waitingForPartyCard.setPadding(40, 40, 40, 40);
+                    waitingForPartyCard.setPadding(30, 15, 30, 15);
                     waitingForPartyCard.setLayoutParams(cardLayoutParams);
 
                     waitMessage.setText("Waiting for Party to do their action...");
+                    waitMessage.setTextColor(getColor(R.color.darkred));
                     waitMessage.setTextSize(18);
                     waitMessage.setPadding(20, 20, 20, 20);
                     waitMessage.setGravity(Gravity.CENTER);

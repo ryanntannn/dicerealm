@@ -1,6 +1,7 @@
 package com.dicerealm.core.player;
 
 import java.util.Map;
+import java.util.Random;
 
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.EntityClass;
@@ -18,6 +19,8 @@ import com.dicerealm.core.skills.Fireball;
  * @see Player
  */
 public class PresetPlayerFactory {
+	private static final Random random = new Random();
+
 	public static final String[] CHARACTER_NAMES = {
 			"Kael'thas Sunstrider",
 			"Jaina Proudmoore",
@@ -37,7 +40,7 @@ public class PresetPlayerFactory {
 	};
 
 	public static String getRandomCharacterName() {
-		return CHARACTER_NAMES[(int) (Math.random() * CHARACTER_NAMES.length)];
+		return CHARACTER_NAMES[random.nextInt(CHARACTER_NAMES.length)];
 	}
 
 	public static final Race[] CHARACTER_RACE = Race.values();
