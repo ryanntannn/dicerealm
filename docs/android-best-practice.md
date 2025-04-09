@@ -70,7 +70,7 @@ erDiagram
 - Where the main underlying business logic resides
 - 1 class per type of data (e.g. MovieRepo, ComicRepo)
 - Could have multiple layers (Specific Sub-repo)
-- Immutable, should not change values directly but rather delegate them to the Data Source
+- Immutable, should not change values directly but rather delegate them to the Data Source (for persistence), it still is able to update its own internal cache but only through its methods
 
 ###### Data Sources
 - Only accessible by repo

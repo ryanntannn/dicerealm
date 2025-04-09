@@ -22,10 +22,11 @@ public class RoomStateHolder extends ViewModel {
     }
 
     public RoomState.State getRoomState(){
-        if (roomRepo.getRoomState() == null){
+        RoomState roomState = roomRepo.getRoomState();
+        if (roomState == null){
             return null;
         }
-        return roomRepo.getRoomState().getState();
+        return roomState.getState();
     }
 
     public Player[] getAllPlayers(){
@@ -39,7 +40,12 @@ public class RoomStateHolder extends ViewModel {
     }
 
     public LiveData<RoomState.State> trackState(){
-        return Transformations.map(roomRepo.subscribeToRoomState(), RoomState::getState);
+        return Transformations.map(roomRepo.subscribeToRoomState(), roomState -> {
+            if(roomState == null){
+                return null;
+            }
+            return roomState.getState();
+        });
     }
 
     public RoomStateHolder createRoom(String roomCode){
