@@ -16,9 +16,6 @@ import com.example.dicerealmandroid.activity.HomeActivity;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 
 public class MainActivity extends AppCompatActivity {
-    private DicerealmClient dicerealmClient;
-
-    // TODO: 1. Add Lobby Interface (User connects to lobby)
 
     /*
     * Used as the app entry point

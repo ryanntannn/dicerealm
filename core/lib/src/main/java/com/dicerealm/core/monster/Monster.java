@@ -61,7 +61,11 @@ public class Monster extends Entity {
 		addDefaults();
 	}
 
+	public int getMonsterLevel() {
+		return monsterLevel;
+	}
+	// Temp No Xp Gain
 	public int getXpValue() {
-        return monsterLevel * 10;
+        return monsterLevel * 0;
     }
 }

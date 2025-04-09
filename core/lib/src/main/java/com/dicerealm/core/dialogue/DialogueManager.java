@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import com.dicerealm.core.combat.managers.MonsterGenerator;
 import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.ChangeLocationCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
@@ -15,8 +16,6 @@ import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
-import com.dicerealm.core.entity.Stat;
-import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.handler.CombatTurnActionHandler;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.monster.Monster;
@@ -154,9 +153,17 @@ public class DialogueManager {
 	public static void handleDungeonMasterResponse(DungeonMasterResponse response, RoomContext context) {
 		
 		broadcastLocationChange(response, context);
-		if (response.switchToCombatThisTurn) {
+		RoomState roomState = context.getRoomState();
+		if (response.switchToCombatThisTurn) {	
 			context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
-			addMonster(response.enemy, context.getRoomState());
+			addMonster(response.enemy, roomState);
+			// boolean isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+			// while (!isRoomBalanced) {
+			// 	// Add a monster to the room if it is not balanced
+			// 	addMonster(response.enemy, context.getRoomState());
+			// 	isRoomBalanced = RoomStrengthCalculator.isRoomBalanced(roomState);
+			// }
+			List<Entity> monster = context.getRoomState().getLocationGraph().getCurrentLocation().getEntities();
 			handleSwitchToCombat(response.displayText, context);
 		} else {
 			broadcastPlayerActions(response.actionChoices, context);
@@ -164,22 +171,12 @@ public class DialogueManager {
 		}
 	}
 
-	public static void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState){
+	public static void addMonster(DungeonMasterResponse.Enemy enemy, RoomState roomState) {
 		try {
-			Monster monster = new Monster(
-				enemy.name, 
-				Race.valueOf(enemy.race.toUpperCase()), 
-				EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
-				new StatsMap.Builder()
-					.set(Stat.MAX_HEALTH, enemy.stats.maxHealth)
-					.set(Stat.ARMOUR_CLASS, enemy.stats.armourClass)
-					.set(Stat.STRENGTH, enemy.stats.strength)
-					.set(Stat.DEXTERITY, enemy.stats.dexterity)
-					.set(Stat.CONSTITUTION, enemy.stats.constitution)
-					.set(Stat.INTELLIGENCE, enemy.stats.intelligence)
-					.set(Stat.WISDOM, enemy.stats.wisdom)
-					.set(Stat.CHARISMA, enemy.stats.charisma)
-					.build()
+			Monster monster = MonsterGenerator.generateMonster(enemy.name, 
+			EntityClass.valueOf(enemy.entityClass.toUpperCase()), 
+			Race.valueOf(enemy.race.toUpperCase()), 
+			roomState.getRoomLevel()
 			);
 			roomState.getLocationGraph().getCurrentLocation().getEntities().add(monster);
 		} catch (IllegalArgumentException e) {
