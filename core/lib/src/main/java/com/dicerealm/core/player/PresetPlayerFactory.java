@@ -93,10 +93,10 @@ public class PresetPlayerFactory {
 		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
 		player.getInventory().addItem(ironsword);
 		player.getInventory().addItem(ironaxe);
-		player.getInventory().addItem(new MagicMissileScroll());
-		player.getInventory().addItem(new MinorHealthPotion());
 		player.equipItem(BodyPart.HEAD, helmet);
 		player.equipItem(BodyPart.LEFT_HAND, ironsword);
 		player.equipItem(BodyPart.RIGHT_HAND, ironaxe);
+		player.getInventory().addItem(new MagicMissileScroll());
+		player.getInventory().addItem(new MinorHealthPotion());
 	}
 }
