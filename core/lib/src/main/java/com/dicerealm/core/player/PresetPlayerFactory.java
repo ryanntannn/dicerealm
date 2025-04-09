@@ -8,12 +8,18 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
+import com.dicerealm.core.item.Chestpiece;
 import com.dicerealm.core.item.Helmet;
+import com.dicerealm.core.item.Necklace;
+import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.item.potions.MinorHealthPotion;
-import com.dicerealm.core.item.scrolls.MagicMissileScroll;
-import com.dicerealm.core.item.weapons.IronAxe;
-import com.dicerealm.core.item.weapons.IronSword;
-import com.dicerealm.core.skills.Fireball;
+import com.dicerealm.core.item.scrolls.FireballScroll;
+import com.dicerealm.core.item.weapons.AxeFactory;
+import com.dicerealm.core.item.weapons.BowFactory;
+import com.dicerealm.core.item.weapons.DaggerFactory;
+import com.dicerealm.core.item.weapons.StaffFactory;
+import com.dicerealm.core.item.weapons.SwordFactory;
+import com.dicerealm.core.skills.MagicMissile;
 
 /**
  * Factory for creating preset players
@@ -85,18 +91,70 @@ public class PresetPlayerFactory {
 	 * @param player
 	 */
 	public static void addDefaultItems(Player player) {
-		Helmet helmet = new Helmet("Iron Helmet", 1);
-		IronSword ironsword = new IronSword(1);
-		IronAxe ironaxe = new IronAxe(1);
-		player.getSkillsInventory().addItem(new Fireball());
-		player.getInventory().addItem(helmet);
-		player.getInventory().addItem(new Helmet("Diamond Helmet", 4));
-		player.getInventory().addItem(ironsword);
-		player.getInventory().addItem(ironaxe);
-		player.equipItem(BodyPart.HEAD, helmet);
-		player.equipItem(BodyPart.LEFT_HAND, ironsword);
-		player.equipItem(BodyPart.RIGHT_HAND, ironaxe);
-		player.getInventory().addItem(new MagicMissileScroll());
-		player.getInventory().addItem(new MinorHealthPotion());
+		EntityClass entityClass = player.getEntityClass();
+
+        switch (entityClass) {
+            case WARRIOR -> {
+                Weapon sword = SwordFactory.createSword(1); 
+                Weapon axe = AxeFactory.createAxe(1);
+                Helmet helmet = new Helmet("Iron Helmet", 2);
+				Chestpiece chestpiece = new Chestpiece("Iron Chestplate", 2);
+                player.getInventory().addItem(sword);
+                player.getInventory().addItem(axe);
+                player.getInventory().addItem(helmet);
+				player.getInventory().addItem(chestpiece);
+                player.equipItem(BodyPart.RIGHT_HAND, sword);
+                player.equipItem(BodyPart.LEFT_HAND, axe);
+                player.equipItem(BodyPart.HEAD, helmet);
+				player.equipItem(BodyPart.TORSO, chestpiece);
+            }
+            case WIZARD -> {
+                Weapon staff = StaffFactory.createStaff(1);
+				Necklace necklace = new Necklace("Necklace of Wizardy", Stat.INTELLIGENCE, 1);
+				Chestpiece chestpiece = new Chestpiece("Cloak of Wizardy", 1);
+                player.getSkillsInventory().addItem(new MagicMissile());
+                player.getInventory().addItem(staff);
+                player.getInventory().addItem(new FireballScroll());
+				player.getInventory().addItem(necklace);
+                player.equipItem(BodyPart.RIGHT_HAND, staff);
+				player.equipItem(BodyPart.NECK, necklace);
+				player.equipItem(BodyPart.TORSO, chestpiece);
+            }
+            case ROGUE -> {
+                Weapon dagger = DaggerFactory.createDagger(1);
+				Necklace necklace = new Necklace("Rogue's Stealth", Stat.DEXTERITY, 2);
+                player.getInventory().addItem(dagger);
+				player.getInventory().addItem(necklace);
+                player.equipItem(BodyPart.RIGHT_HAND, dagger);
+				player.equipItem(BodyPart.NECK, necklace);
+            }
+            case RANGER -> {
+                Weapon bow = BowFactory.createBow(1);
+				Necklace necklace = new Necklace("Ranger's Shot", Stat.DEXTERITY, 1);
+				Chestpiece chestpiece = new Chestpiece("Ranger's Chestplate", 2);
+                player.getInventory().addItem(bow);
+				player.equipItem(BodyPart.NECK, necklace);
+                player.equipItem(BodyPart.RIGHT_HAND, bow);
+				player.equipItem(BodyPart.TORSO, chestpiece);
+				player.equipItem(BodyPart.NECK, necklace);
+            }
+            case CLERIC -> {
+				Weapon staff = StaffFactory.createStaff(1); 
+                Helmet helmet = new Helmet("Cleric's Helmet", 2);
+				Necklace necklace = new Necklace("Necklace of Wisdom", Stat.WISDOM, 1);
+				Chestpiece chestpiece = new Chestpiece("Cloak of Wisdom", 1);
+                player.getInventory().addItem(staff);
+                player.getInventory().addItem(helmet);
+				player.getInventory().addItem(chestpiece);
+				player.getInventory().addItem(necklace);
+                player.equipItem(BodyPart.RIGHT_HAND, staff);
+                player.equipItem(BodyPart.HEAD, helmet);
+				player.equipItem(BodyPart.NECK, necklace);
+				player.equipItem(BodyPart.TORSO, chestpiece);
+				
+				player.getInventory().addItem(new MinorHealthPotion());
+            }
+
+        }
 	}
 }

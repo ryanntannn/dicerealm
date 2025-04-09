@@ -42,7 +42,7 @@ public class DaggerFactory {
     }
 
     private static int calculateDiceSides(int level) {
-        return 6 + (level / 3); // Add 1 side every 3 levels
+        return 4 + (level / 3); // Add 1 side every 3 levels
     }
 
     private static int calculateStatBonus(int level) {
