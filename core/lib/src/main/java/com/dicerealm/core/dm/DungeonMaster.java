@@ -67,20 +67,20 @@ public class DungeonMaster {
 					- A list of objects, each representing a location. Each object must contain:
 						- displayName: A string representing the name of the location.
 						- description: A string describing the location in detail.
-						- enemies: A list of objects, each representing an enemy. This should either be empty or have only one enemy.
+						- enemies: A list of objects, each representing an enemy. This should exactly have one enemy.
 							Each object must contain:
 							- name: A string representing the name of the enemy
 							- race: A string representing the race of the enemy out of these options: HUMAN, ELF, DEMON, DWARF, TIEFLING
 							- entityClass: A string representing the class of the enemy out of these options: WARRIOR, WIZARD, CLERIC, ROGUE, RANGER
 							- stats: A JSON object containing the following keys:
-							- maxHealth: An integer representing the maximum health of the enemy.
-							- armourClass: An integer representing the enemy's armor class.
-							- strength: An integer representing the enemy's strength.
-							- dexterity: An integer representing the enemy's dexterity.
-							- constitution: An integer representing the enemy's constitution.
-							- intelligence: An integer representing the enemy's intelligence.
-							- wisdom: An integer representing the enemy's wisdom.
-							- charisma: An integer representing the enemy's charisma.
+								- maxHealth: An integer representing the maximum health of the enemy.
+								- armourClass: An integer representing the enemy's armor class.
+								- strength: An integer representing the enemy's strength.
+								- dexterity: An integer representing the enemy's dexterity.
+								- constitution: An integer representing the enemy's constitution.
+								- intelligence: An integer representing the enemy's intelligence.
+								- wisdom: An integer representing the enemy's wisdom.
+								- charisma: An integer representing the enemy's charisma.
 					- The first location will be the starting point of the adventure.
 					- Each location should be unique and have a distinct name and description.
 					- The locations should be interconnected in a way that makes sense for the game world.
