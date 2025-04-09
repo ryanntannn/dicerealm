@@ -38,6 +38,8 @@ public class DungeonMaster {
 				- playerId: The ID of the player who can take this action.
 				- skillCheck: A JSON object specifying any required skill checks. This object can include keys such as STRENGTH, DEXTERITY, CONSTITUTION, INTELLIGENCE, WISDOM, and CHARISMA with integer values representing the threshold. For skills not needed, set their value to 0.
 					- Ensure that any skill checks required are logically tied to the action. For example, use DEXTERITY for lockpicking, CHARISMA for persuasion, etc. If no skill check is needed, set the skill check values to 0.
+				- Each player should have at least 3 action choices available.
+				- Different players can have the same action choices, but the playerId must be unique for each action choice.
 		
 			3. location
 			- A UUID representing the current location of the party.
