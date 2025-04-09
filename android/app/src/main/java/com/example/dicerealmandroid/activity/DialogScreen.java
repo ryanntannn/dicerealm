@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
@@ -432,9 +433,13 @@ public class DialogScreen extends AppCompatActivity {
             Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
             int currentStatId = 0;
             for (Stat stat : sortedStats) {
+                // we render max health separately
+                if (stat == Stat.MAX_HEALTH) {
+                    continue;
+                }
                 int id = statsIds[currentStatId++];
                 TextView currentStat = findViewById(id);
-                currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
+                currentStat.setText(StatsMap.getStatText(stat) + ": " + currentPlayer.getStat(stat));
             }
         }
         catch (NullPointerException e){
@@ -456,9 +461,13 @@ public class DialogScreen extends AppCompatActivity {
                    Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
                    int currentStatId = 0;
                    for (Stat stat : sortedStats) {
+                       // we render max health separately
+                       if (stat == Stat.MAX_HEALTH) {
+                           continue;
+                       }
                        int id = statsIds[currentStatId++];
                        TextView currentStat = findViewById(id);
-                       currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
+                       currentStat.setText(StatsMap.getStatText(stat) + ": " + currentPlayer.getStat(stat));
                    }
                }
                catch (NullPointerException e){

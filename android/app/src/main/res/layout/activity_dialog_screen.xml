@@ -129,119 +129,225 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/stats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/itemInventory"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/race_entityclass">
-
-            <!-- Left column Stats -->
-            <TextView
-                android:id="@+id/stat_armourclass"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="armourclass"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stat_intelligence"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_charisma"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="charisma"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stat_maxhealth"
-                app:layout_constraintTop_toBottomOf="@+id/stat_armourclass"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_constitution"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="constitution"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stat_strength"
-                app:layout_constraintTop_toBottomOf="@+id/stat_charisma"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_dexterity"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="dexterity"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/stat_wisdom"
-                app:layout_constraintTop_toBottomOf="@+id/stat_constitution"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <!-- Right column Stats -->
-            <TextView
-                android:id="@+id/stat_intelligence"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="intelligence"
-                app:layout_constraintStart_toEndOf="@+id/stat_armourclass"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_maxhealth"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="maxhealth"
-                app:layout_constraintStart_toEndOf="@+id/stat_charisma"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stat_intelligence"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_strength"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="strength"
-                app:layout_constraintStart_toEndOf="@+id/stat_constitution"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stat_maxhealth"
-                app:layout_constraintHorizontal_weight="1"/>
-
-            <TextView
-                android:id="@+id/stat_wisdom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="wisdom"
-                app:layout_constraintStart_toEndOf="@+id/stat_dexterity"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stat_strength"
-                app:layout_constraintHorizontal_weight="1"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
         <TextView
+            android:textStyle="bold"
             android:id="@+id/race_entityclass"
+            style="@style/TextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            style="@style/TextDescription"
-            android:textSize="15dp"
             android:text="race, entityclass"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stats"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/stats" />
+
+        <LinearLayout
+            android:id="@+id/ll0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center">
+
+            <ImageView
+
+                android:id="@+id/img_armourclass"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:src="@drawable/ac" />
+
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/stat_armourclass"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:gravity="center"
+                android:text="armour class"
+                app:layout_constraintStart_toEndOf="@+id/img_armourclass" />
+
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            >
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/ll1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_constitution"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/constitution" />
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/stat_constitution"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="12dp"
+                        android:gravity="center"
+                        android:text="constitution"
+                        app:layout_constraintStart_toEndOf="@+id/img_constitution" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_charisma"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/charisma" />
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/stat_charisma"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="12dp"
+                        android:gravity="center"
+                        android:text="charisma"
+                        app:layout_constraintStart_toEndOf="@+id/img_charisma" />
+
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/ll3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_intelligence"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/intelligence" />
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/stat_intelligence"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="12dp"
+                        android:gravity="center"
+                        android:text="intelligence"
+                        app:layout_constraintStart_toEndOf="@+id/img_intelligence" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_strength"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/strength" />
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/stat_strength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="12dp"
+                        android:gravity="center"
+                        android:text="strength"
+                        app:layout_constraintStart_toEndOf="@+id/img_strength" />
+
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:id="@+id/ll5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_wisdom"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0"
+                        android:background="#00000000"
+                        android:src="@drawable/wisdom" />
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/stat_wisdom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="12dp"
+                        android:gravity="center"
+                        android:text="wisdom"
+                        app:layout_constraintStart_toEndOf="@+id/img_wisdom" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_dexterity"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/dexterity" />
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/stat_dexterity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="12dp"
+                        android:gravity="center"
+                        android:text="dexterity"
+                        app:layout_constraintStart_toEndOf="@+id/img_dexterity" />
+
+                </LinearLayout>
+            </TableRow>
+
+        </TableLayout>
+
         <!-- Add this weight=1 View to push the FAB container to the bottom -->
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -250,18 +356,20 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/itemInventory"
-                android:layout_width="50dp"
-                android:layout_height="53dp"
+                android:layout_width="57dp"
+                android:layout_height="55dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginBottom="15dp"
                 android:clickable="true"
                 android:contentDescription="Inventory Button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:maxImageSize="60dp"
-                app:srcCompat="@drawable/sword2" />
+                app:maxImageSize="40dp"
+                app:srcCompat="@drawable/pack"
+                app:useCompatPadding="false" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
