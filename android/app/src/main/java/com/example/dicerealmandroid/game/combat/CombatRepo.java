@@ -108,6 +108,8 @@ public class CombatRepo {
                 throw new IllegalArgumentException("Player cannot be null");
             }
             targetEntity.takeDamage(damage);
+            if (!targetEntity.isAlive()) removeCombatant(targetEntity.getId().toString());
+
             playerDataSource.setPlayer((Player) targetEntity);
         }
         else if (enemyId.equals(targetId)){

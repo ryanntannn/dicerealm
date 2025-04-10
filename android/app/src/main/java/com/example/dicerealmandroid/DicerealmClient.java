@@ -177,6 +177,7 @@ public class DicerealmClient extends WebSocketClient {
                         if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
                             damageLog = combatEndTurnCommand.getCombatResult().getDamageLog();
                         }
+
                         combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog() + "\n" + damageLog);
                         combatRepo.rotateCombatSequence();
                     }

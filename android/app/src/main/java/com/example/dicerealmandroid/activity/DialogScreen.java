@@ -33,6 +33,8 @@ import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
@@ -91,6 +93,24 @@ public class DialogScreen extends AppCompatActivity {
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         dialogSh = new ViewModelProvider(this).get(DialogStateHolder.class);
+
+        playerSh.getSpecificInventoryType(Scroll.class).observe(this, scrolls -> {
+            if (scrolls != null) {
+                // Use scrolls list here
+                for(Scroll scroll : scrolls){
+                    Log.d("Scrolls", "You have the following scroll: " + scroll.getDisplayName());
+                }
+            }
+        });
+
+        playerSh.getSpecificInventoryType(Potion.class).observe(this, potions -> {
+            if (potions != null) {
+                // Use potions list here
+                for(Potion potion : potions) {
+                    Log.d("Potions", "You have the following potion: " + potion.getDisplayName());
+                }
+            }
+        });
 
         this.trackTurns(messageLayout, actionLayout);
         this.displayPlayerDetails(itemInventoryView);
