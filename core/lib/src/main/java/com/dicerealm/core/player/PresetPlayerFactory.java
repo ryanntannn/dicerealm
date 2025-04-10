@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.dicerealm.core.combat.ActionType;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
@@ -84,7 +85,7 @@ public class PresetPlayerFactory {
 		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(),
 				baseStats);
 		addDefaultItems(player);
-		addDefaultSkills(player);
+		// addDefaultSkills(player);
 		return player;
 	}
 
@@ -110,6 +111,7 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.LEFT_HAND, axe);
                 player.equipItem(BodyPart.HEAD, helmet);
 				player.equipItem(BodyPart.TORSO, chestpiece);
+				player.getSkillsInventory().addItem( new Skill("Slash", "A powerful slash attack", EntityClass.WARRIOR, ActionType.SKILL, 0, 1, 6, 1));
 
 				player.getInventory().addItem(new MinorHealthPotion());
             }
@@ -123,7 +125,8 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.RIGHT_HAND, staff);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
-
+				player.getSkillsInventory().addItem(new Skill("Magic Missile", "A reliable magical projectile", EntityClass.WIZARD, ActionType.MAGIC, 1, 1, 4, 1));
+				player.getSkillsInventory().addItem(new Skill("Frost Ray", "A ray of frost that slows enemies", EntityClass.WIZARD, ActionType.MAGIC, 1, 1, 3, 1));
 				player.getInventory().addItem(new MinorHealthPotion());
             }
             case ROGUE -> {
@@ -133,7 +136,7 @@ public class PresetPlayerFactory {
 				player.getInventory().addItem(necklace);
                 player.equipItem(BodyPart.RIGHT_HAND, dagger);
 				player.equipItem(BodyPart.NECK, necklace);
-
+				player.getSkillsInventory().addItem(new Skill("Backstab", "A deadly attack from behind", EntityClass.ROGUE, ActionType.SKILL, 0, 10, 3));
 				player.getInventory().addItem(new MinorHealthPotion());
             }
             case RANGER -> {
@@ -145,7 +148,8 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.RIGHT_HAND, bow);
 				player.equipItem(BodyPart.TORSO, chestpiece);
 				player.equipItem(BodyPart.NECK, necklace);
-
+				player.getSkillsInventory().addItem(new Skill("Arrow Shot", "A precise arrow attack", EntityClass.RANGER, ActionType.SKILL, 0, 2,4, 6));
+				player.getSkillsInventory().addItem(new Skill("Rapid Strike", "Strike Rapidly", EntityClass.RANGER, ActionType.SKILL, 0, 4, 3, 4));
 				player.getInventory().addItem(new MinorHealthPotion());
             }
             case CLERIC -> {
@@ -161,7 +165,8 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.HEAD, helmet);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
-				
+				player.getSkillsInventory().addItem(new Skill("Smite", "A divine attack against enemies", EntityClass.CLERIC, ActionType.MAGIC, 2, 1, 8, 6));
+				player.getSkillsInventory().addItem(new Skill("Holy Light", "A beam of Light", EntityClass.CLERIC, ActionType.MAGIC, 2, 1, 5, 8));
 				player.getInventory().addItem(new MinorHealthPotion());
             }
 
@@ -172,7 +177,7 @@ public class PresetPlayerFactory {
 		EntityClass entityClass = player.getEntityClass();
 
 		// Retrieve level 1 skills for the player's class
-		List<Skill> level1Skills = SkillsRepository.getAvailableSkills(entityClass, 1);
+		List<Skill> level1Skills = SkillsRepository.getNewSkillsForLevel(entityClass, 1);
 
 		// Add all level 1 skills to the player's skill inventory
 		for (Skill skill : level1Skills) {
