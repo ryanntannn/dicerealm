@@ -15,61 +15,61 @@ public class ClassStats {
         // Warrior starting stats
         classStatsMap.put(EntityClass.WARRIOR, new StatsMap(Map.of(
                 Stat.MAX_HEALTH, 24,
-                Stat.ARMOUR_CLASS, 15,
+                Stat.ARMOUR_CLASS, 13,
                 Stat.STRENGTH, 16,
                 Stat.DEXTERITY, 12,
-                Stat.CONSTITUTION, 16,
+                Stat.CONSTITUTION, 15,
                 Stat.INTELLIGENCE, 8,
-                Stat.WISDOM, 10,
+                Stat.WISDOM, 11,
                 Stat.CHARISMA, 10
         )));
 
         // Wizard starting stats
         classStatsMap.put(EntityClass.WIZARD, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 18,
-                Stat.ARMOUR_CLASS, 12,
+                Stat.MAX_HEALTH, 17,
+                Stat.ARMOUR_CLASS, 11,
                 Stat.STRENGTH, 8,
-                Stat.DEXTERITY, 12,
+                Stat.DEXTERITY, 11,
                 Stat.CONSTITUTION, 10,
-                Stat.INTELLIGENCE, 18,
-                Stat.WISDOM, 12,
-                Stat.CHARISMA, 10
+                Stat.INTELLIGENCE, 16,
+                Stat.WISDOM, 15,
+                Stat.CHARISMA, 12
         )));
 
         // CLERIC starting stats
         classStatsMap.put(EntityClass.CLERIC, new StatsMap(Map.of(
                 Stat.MAX_HEALTH, 18,
-                Stat.ARMOUR_CLASS, 12,
+                Stat.ARMOUR_CLASS, 11,
                 Stat.STRENGTH, 8,
-                Stat.DEXTERITY, 12,
+                Stat.DEXTERITY, 10,
                 Stat.CONSTITUTION, 12,
-                Stat.INTELLIGENCE, 13,
+                Stat.INTELLIGENCE, 15,
                 Stat.WISDOM, 16,
-                Stat.CHARISMA, 14
+                Stat.CHARISMA, 11
         )));
 
         // Rogue starting stats
         classStatsMap.put(EntityClass.ROGUE, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 18,
-                Stat.ARMOUR_CLASS, 14,
+                Stat.MAX_HEALTH, 16,
+                Stat.ARMOUR_CLASS, 12,
                 Stat.STRENGTH, 12,
-                Stat.DEXTERITY, 15,
-                Stat.CONSTITUTION, 14,
-                Stat.INTELLIGENCE, 10,
+                Stat.DEXTERITY, 16,
+                Stat.CONSTITUTION, 8,
+                Stat.INTELLIGENCE, 11,
                 Stat.WISDOM, 10,
-                Stat.CHARISMA, 16
+                Stat.CHARISMA, 15
         )));
 
         // Ranger starting stats
         classStatsMap.put(EntityClass.RANGER, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 20,
-                Stat.ARMOUR_CLASS, 14,
-                Stat.STRENGTH, 12,
-                Stat.DEXTERITY, 18,
-                Stat.CONSTITUTION, 14,
-                Stat.INTELLIGENCE, 10,
-                Stat.WISDOM, 10,
-                Stat.CHARISMA, 12
+                Stat.MAX_HEALTH, 18,
+                Stat.ARMOUR_CLASS, 12,
+                Stat.STRENGTH, 15,
+                Stat.DEXTERITY, 16,
+                Stat.CONSTITUTION, 12,
+                Stat.INTELLIGENCE, 8,
+                Stat.WISDOM, 12,
+                Stat.CHARISMA, 10
         )));
 
 
