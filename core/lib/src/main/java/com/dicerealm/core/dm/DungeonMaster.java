@@ -36,12 +36,14 @@ public class DungeonMaster {
 					- Ensure that any skill checks required are logically tied to the action. For example, use DEXTERITY for lockpicking, CHARISMA for persuasion, etc. If no skill check is needed, set the skill check values to 0.
 				- Each player should have at least 3 action choices available.
 				- Different players can have the same action choices, but the playerId must be unique for each action choice.
-				- If there is an entity in the room, include an action choice for the player to engage in combat with it, and this action should be available to all players, and should not require a skill check.
+				- If there is an entity in the room that is still alive, include an action choice for the player to engage in combat with it, and this action should be available to all players, and should not require a skill check.
+				- Players can only engage in combat with entities in the current location, not the adjacent locations.
+				- If there are adjacent locations, include an action choice for the player to move to all adjacent locations.
 				
 		
 			3. location
 			- A UUID representing the current location of the party.
-			- When at least half of the party wants to move to a new location, update the locationId
+			- When at least half of the party wants to move to a new location, you must set this to the new location's id.
 		
 			4. contextSummary
 			- A string summarizing the current context of the room and adding it to the previous context summary 
@@ -67,24 +69,24 @@ public class DungeonMaster {
 					- A list of objects, each representing a location. Each object must contain:
 						- displayName: A string representing the name of the location.
 						- description: A string describing the location in detail.
-						- enemies: A list of objects, each representing an enemy. This should either be empty or have only one enemy.
+						- enemies: A list of objects, each representing an enemy. This should exactly have one enemy.
 							Each object must contain:
 							- name: A string representing the name of the enemy
 							- race: A string representing the race of the enemy out of these options: HUMAN, ELF, DEMON, DWARF, TIEFLING
 							- entityClass: A string representing the class of the enemy out of these options: WARRIOR, WIZARD, CLERIC, ROGUE, RANGER
 							- stats: A JSON object containing the following keys:
-							- maxHealth: An integer representing the maximum health of the enemy.
-							- armourClass: An integer representing the enemy's armor class.
-							- strength: An integer representing the enemy's strength.
-							- dexterity: An integer representing the enemy's dexterity.
-							- constitution: An integer representing the enemy's constitution.
-							- intelligence: An integer representing the enemy's intelligence.
-							- wisdom: An integer representing the enemy's wisdom.
-							- charisma: An integer representing the enemy's charisma.
+								- maxHealth: An integer representing the maximum health of the enemy.
+								- armourClass: An integer representing the enemy's armor class.
+								- strength: An integer representing the enemy's strength.
+								- dexterity: An integer representing the enemy's dexterity.
+								- constitution: An integer representing the enemy's constitution.
+								- intelligence: An integer representing the enemy's intelligence.
+								- wisdom: An integer representing the enemy's wisdom.
+								- charisma: An integer representing the enemy's charisma.
 					- The first location will be the starting point of the adventure.
 					- Each location should be unique and have a distinct name and description.
 					- The locations should be interconnected in a way that makes sense for the game world.
-					- Provide at least 6 locations.
+					- Provide at exactly 6 locations.
 
 					2. Paths
 					- A list of objects, each representing a path between two locations. Each object must contain:
@@ -118,7 +120,7 @@ public class DungeonMaster {
 
 	public DungeonMasterResponse handleDialogueTurn(String dialogueTurnSummary) {
 
-		String systemPrompt = systemPrompt() + "\nCurrent Location\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getCurrentLocation()) + "\nAdjacent Locations\n" + jsonSerializationStrategy.serialize(roomState.getLocationGraph().getAdjacentLocations()) + "\nPlayers\n" + jsonSerializationStrategy.serialize(roomState.getPlayers());
+		String systemPrompt = systemPrompt() + "\nCurrent Location\n" + roomState.getLocationGraph().getCurrentLocation().getSummary() + "\nAdjacent Locations\n" + roomState.getLocationGraph().getAdjacentLocationSummaries() + "\nPlayers\n" + roomState.getPlayerSummaries();
 		String userPrompt = "This is what has happened so far:\n" + contextSummary  + "\nThese are players' chosen actions:\n" + dialogueTurnSummary + "\n Continue the story accordingly.";
 		DungeonMasterResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterResponse.class);
 		contextSummary = response.contextSummary;

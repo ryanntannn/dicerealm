@@ -46,6 +46,17 @@ public class RoomState {
 			return playerMap.values().toArray(new Player[playerMap.size()]);
 		}
 
+		public String getPlayerSummaries() {
+			StringBuilder sb = new StringBuilder();
+			for (Player player : playerMap.values()) {
+				sb.append(player.getSummary()).append(", ");
+			}
+			if (sb.length() > 0) {
+				sb.setLength(sb.length() - 2); // remove last comma and space
+			}
+			return sb.toString();
+		}
+
 		public Map<UUID, Player> getPlayerMap() {
 			return playerMap;
 		}

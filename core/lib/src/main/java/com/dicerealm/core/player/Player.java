@@ -29,6 +29,5 @@ public class Player extends Entity {
 	public Player(String name, Race race, EntityClass entityClass, StatsMap baseStats) {
 		super(name, race, entityClass, baseStats);
 		this.allegiance = Allegiance.PLAYER;
-
 	}
 }

@@ -42,6 +42,11 @@ public class RoomRouter {
 	}
 
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
-		getRoomManager(session).handleMessage(session, message);
+		try{
+			getRoomManager(session).handleMessage(session, message);
+		} catch (Exception e) {
+			logger.error("Error handling message: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 }
