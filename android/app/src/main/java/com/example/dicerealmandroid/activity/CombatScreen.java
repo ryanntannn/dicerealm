@@ -163,7 +163,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                                 Log.d("skill", "Skill: " + skills.getDisplayName());
                             }
                             //Call recycleview
-                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell",combatSh);
+                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell",combatSh , CombatScreen.this);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
@@ -224,7 +224,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                             spellaction.setVisibility(View.VISIBLE);
 
                             //Call recycleview
-                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item",combatSh);
+                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item",combatSh, CombatScreen.this);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));

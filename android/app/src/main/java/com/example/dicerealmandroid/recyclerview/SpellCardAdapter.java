@@ -1,6 +1,7 @@
 package com.example.dicerealmandroid.recyclerview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,14 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.R;
+import com.example.dicerealmandroid.activity.CombatScreen;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
 public class SpellCardAdapter extends CardAdapter<Skill> {
-    public SpellCardAdapter(Context context, List<Skill> item, SelectListener listener, String type, CombatStateHolder combatSh) {
+    CombatScreen Combat;
+    public SpellCardAdapter(Context context, List<Skill> item, SelectListener listener, String type, CombatStateHolder combatSh , CombatScreen combat) {
         super(context, item, listener,type,combatSh);
+        this.Combat = combat;
     }
 
     @NonNull
@@ -34,14 +38,18 @@ public class SpellCardAdapter extends CardAdapter<Skill> {
         holder.skillbutton.setText(skill.getDisplayName());
         if (skill.isUsable()){
             holder.textViewName.setText("Usable, Cooldown:" + (skill.getCooldown()) + " turns");
+        }else {
+            holder.textViewName.setText("Remaining Cooldown:" + skill.getRemainingCooldown());
+            holder.skillbutton.setBackgroundColor(Color.GRAY);
         }
-        holder.textViewName.setText("Remaining Cooldown:" + skill.getRemainingCooldown());
         holder.skillbutton.setOnClickListener(new View.OnClickListener() {
         int pos = holder.getAdapterPosition();
             @Override
             public void onClick(View v) {
                 if (skill.isUsable()) {
                     combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL);
+                    skill.activateCooldown();
+                    Combat.close();
                 }
             }
         });

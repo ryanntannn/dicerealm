@@ -11,13 +11,16 @@ import com.dicerealm.core.item.Item;
 import com.dicerealm.core.item.Potion;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.R;
+import com.example.dicerealmandroid.activity.CombatScreen;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
 
 import java.util.List;
 
 public class InventoryCardAdapter extends CardAdapter<Item>{
-    public InventoryCardAdapter(Context context, List<Item> item, SelectListener listener, String type , CombatStateHolder combatSh) {
+    CombatScreen Combat;
+    public InventoryCardAdapter(Context context, List<Item> item, SelectListener listener, String type , CombatStateHolder combatSh , CombatScreen Combat) {
         super(context, item, listener, type , combatSh);
+        this.Combat = Combat;
     }
 
     @NonNull
@@ -37,6 +40,7 @@ public class InventoryCardAdapter extends CardAdapter<Item>{
             @Override
             public void onClick(View v) {
                 combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL);
+                Combat.close();
             }
         });
     }
