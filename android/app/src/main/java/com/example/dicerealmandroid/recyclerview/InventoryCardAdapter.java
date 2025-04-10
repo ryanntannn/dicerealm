@@ -29,5 +29,6 @@ public class InventoryCardAdapter extends CardAdapter<Item>{
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Item potionsandscrolls = item.get(position);
         holder.skillbutton.setText(potionsandscrolls.getDisplayName());
+        holder.textViewName.setText("One time usage");
     }
 }

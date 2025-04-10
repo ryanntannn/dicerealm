@@ -30,6 +30,10 @@ public class SpellCardAdapter extends CardAdapter<Skill> {
     public void onBindViewHolder(@NonNull CardAdapter.CardViewHolder holder, int position) {
         Skill skill = item.get(position);
         holder.skillbutton.setText(skill.getDisplayName());
+        if (skill.isUsable()){
+            holder.textViewName.setText("Usable, Cooldown:" + (skill.getCooldown()) + " turns");
+        }
+        holder.textViewName.setText("Remaining Cooldown:" + skill.getRemainingCooldown());
     }
 }
 

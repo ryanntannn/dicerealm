@@ -182,18 +182,20 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
             @Override
             public void onClick(View v) {
                 //Make the actions layout invisible
-                ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
-                actions.setVisibility(View.VISIBLE);
-                //Show the spells layout
-                ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
-                spellaction.setVisibility(View.GONE);
-                //Scrollable view
-                RecyclerView cardRecycleView = (RecyclerView) findViewById(R.id.cardRecycleView);
-                cardRecycleView.removeAllViews();
-
+                close();
 
             }
         });
+    }
+    public void close(){
+        ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
+        actions.setVisibility(View.VISIBLE);
+        //Show the spells layout
+        ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
+        spellaction.setVisibility(View.GONE);
+        //Scrollable view
+        RecyclerView cardRecycleView = (RecyclerView) findViewById(R.id.cardRecycleView);
+        cardRecycleView.removeAllViews();
     }
 
     public void useitems(){
@@ -360,9 +362,9 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                 public void onChanged(InventoryOf<Skill> skills) {
                     if (skills != null) {
                         List<Skill> skillList = new ArrayList<>(skills.getItems());
-
+                        combatSh.performAction(skillList.get(position), CombatTurnActionCommand.ActionType.SKILL);
                         Log.d("Spell", "Spell: " + skillList.get(position).getDisplayName() + " used");
-                        closespell();
+                        close();
                     }
                 }
             });
@@ -375,7 +377,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                         List<Item> potions_scroll_list = new ArrayList<>(Potions_Scrolls.getItems());
 
                         Log.d("Item", "Item: " + potions_scroll_list.get(position).getDisplayName() + " used");
-                        closespell();
+                        close();
                     }
                 }
             });
