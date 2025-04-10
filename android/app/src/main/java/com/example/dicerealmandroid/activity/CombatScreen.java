@@ -126,7 +126,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
             public void onChanged(Player player) {
-                playerName.setText("You");
+                playerName.setText(player.getDisplayName() + "(you)");
                 yourHealth.setText(player.getHealth() + "/" + player.getStat(Stat.MAX_HEALTH));
 
                 playerInfo.setText("");

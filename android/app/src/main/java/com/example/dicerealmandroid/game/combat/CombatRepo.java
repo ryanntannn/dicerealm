@@ -91,15 +91,22 @@ public class CombatRepo {
     }
 
 
-    public void takeDamage(UUID targetId, int damage){
+    public void takeDamage(UUID targetId, int damage) throws IllegalArgumentException{
         UUID playerId = playerDataSource.getPlayerId();
-        UUID enemyId = getMonster().getValue().getId();
+        Entity enemy = getMonster().getValue();
+        if(enemy == null){
+            throw new IllegalArgumentException("There doesn't exist a monster");
+        }
+        UUID enemyId = enemy.getId();
 
         Entity targetEntity;
 
         // If target is the player (you) or enemy
         if (playerId.equals(targetId)){
             targetEntity = playerDataSource.getPlayer().getValue();
+            if(targetEntity == null){
+                throw new IllegalArgumentException("Player cannot be null");
+            }
             targetEntity.takeDamage(damage);
             playerDataSource.setPlayer((Player) targetEntity);
         }
@@ -108,6 +115,24 @@ public class CombatRepo {
             targetEntity.takeDamage(damage);
             combatDataSource.setMonster(targetEntity);
         }
+    }
+
+
+    // Remove combatant from the initiative list, maintaining the order
+    public void removeCombatant(String targetId){
+        UUID combatant = UUID.fromString(targetId);
+        List<InitiativeResult> initiativeResults =this.getInitiativeResults().getValue();
+        if(initiativeResults == null || initiativeResults.isEmpty()){
+            return;
+        }
+
+        for(int i =0; i < initiativeResults.size(); i++){
+            if(initiativeResults.get(i).getEntity().getId().equals(combatant)){
+                initiativeResults.remove(i);
+                break;
+            }
+        }
+        combatDataSource.setInitiativeResults(initiativeResults);
     }
 
 }
