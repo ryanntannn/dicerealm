@@ -1,5 +1,6 @@
 package com.dicerealm.core.player;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -19,7 +20,8 @@ import com.dicerealm.core.item.weapons.BowFactory;
 import com.dicerealm.core.item.weapons.DaggerFactory;
 import com.dicerealm.core.item.weapons.StaffFactory;
 import com.dicerealm.core.item.weapons.SwordFactory;
-import com.dicerealm.core.skills.MagicMissile;
+import com.dicerealm.core.skills.Skill;
+import com.dicerealm.core.skills.SkillsRepository;
 
 /**
  * Factory for creating preset players
@@ -82,6 +84,7 @@ public class PresetPlayerFactory {
 		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(),
 				baseStats);
 		addDefaultItems(player);
+		addDefaultSkills(player);
 		return player;
 	}
 
@@ -107,18 +110,21 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.LEFT_HAND, axe);
                 player.equipItem(BodyPart.HEAD, helmet);
 				player.equipItem(BodyPart.TORSO, chestpiece);
+
+				player.getInventory().addItem(new MinorHealthPotion());
             }
             case WIZARD -> {
                 Weapon staff = StaffFactory.createStaff(1);
 				Necklace necklace = new Necklace("Necklace of Wizardy", Stat.INTELLIGENCE, 1);
 				Chestpiece chestpiece = new Chestpiece("Cloak of Wizardy", 1);
-                player.getSkillsInventory().addItem(new MagicMissile());
                 player.getInventory().addItem(staff);
                 player.getInventory().addItem(new FireballScroll());
 				player.getInventory().addItem(necklace);
                 player.equipItem(BodyPart.RIGHT_HAND, staff);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
+
+				player.getInventory().addItem(new MinorHealthPotion());
             }
             case ROGUE -> {
                 Weapon dagger = DaggerFactory.createDagger(1);
@@ -127,6 +133,8 @@ public class PresetPlayerFactory {
 				player.getInventory().addItem(necklace);
                 player.equipItem(BodyPart.RIGHT_HAND, dagger);
 				player.equipItem(BodyPart.NECK, necklace);
+
+				player.getInventory().addItem(new MinorHealthPotion());
             }
             case RANGER -> {
                 Weapon bow = BowFactory.createBow(1);
@@ -137,6 +145,8 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.RIGHT_HAND, bow);
 				player.equipItem(BodyPart.TORSO, chestpiece);
 				player.equipItem(BodyPart.NECK, necklace);
+
+				player.getInventory().addItem(new MinorHealthPotion());
             }
             case CLERIC -> {
 				Weapon staff = StaffFactory.createStaff(1); 
@@ -157,4 +167,17 @@ public class PresetPlayerFactory {
 
         }
 	}
+
+	private static void addDefaultSkills(Player player) {
+		EntityClass entityClass = player.getEntityClass();
+
+		// Retrieve level 1 skills for the player's class
+		List<Skill> level1Skills = SkillsRepository.getAvailableSkills(entityClass, 1);
+
+		// Add all level 1 skills to the player's skill inventory
+		for (Skill skill : level1Skills) {
+			player.getSkillsInventory().addItem(skill);
+		}
+	}	
+	
 }
