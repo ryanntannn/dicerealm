@@ -33,4 +33,21 @@ public class Location extends Node {
 	public List<Entity> getEntities() {
 		return entities;
 	}
+
+	public String getSummary() {
+		StringBuilder summary = new StringBuilder();
+		summary.append("id: ").append(getId().toString()).append("\n");
+		summary.append("Location: ").append(displayName).append("\n");
+		summary.append("Description: ").append(description).append("\n");
+		summary.append("Entities: ");
+		if (entities.isEmpty()) {
+			summary.append("None");
+		} else {
+			for (Entity entity : entities) {
+				summary.append(entity.getSummary()).append(", ");
+			}
+			summary.setLength(summary.length() - 2); // Remove the last comma and space
+		}
+		return summary.toString();
+	}
 }

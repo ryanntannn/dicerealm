@@ -16,13 +16,17 @@
     <!--  Text Description Style  -->
     <style name="TextDescription" parent="TextAppearance.AppCompat">
         <item name="android:textSize">11sp</item>
-        <item name="android:textColor">#501c10</item>
+        <item name="android:textColor">@color/darkred</item>
     </style>
     <!--  Disabled Button   -->
     <style name="DisabledButton" parent="Widget.Material3.Button">
         <item name="android:backgroundTint">@color/gray</item>
         <item name="android:textColor">@color/lightgrayText</item>
         <item name="android:enabled">false</item>
+    </style>
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">50%</item>
+        <item name="android:windowMinWidthMinor">50%</item>
     </style>
 
 </resources>

@@ -177,5 +177,9 @@ public class Entity {
 		return this.allegiance;
 	}
 
+	public String getSummary() {
+		return String.format("display_name: %s, id: %s, health: %d, stats: %s, ", 
+			getDisplayName(), getId(), getHealth(), getStats().toString());
+	}
 }
 

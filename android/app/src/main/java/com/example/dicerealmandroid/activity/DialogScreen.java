@@ -3,6 +3,7 @@ package com.example.dicerealmandroid.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -28,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
@@ -54,11 +56,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO: Add player edit text input
+// TODO: Add player edit text input(Optional)
 // TODO: Add player inventory interface
 
 public class DialogScreen extends AppCompatActivity {
     private CardView selectedCardView;
+    private CardView waitingForPartyCard;
     private GameStateHolder gameSh;
     private PlayerStateHolder playerSh;
     private RoomStateHolder roomSh;
@@ -86,7 +89,6 @@ public class DialogScreen extends AppCompatActivity {
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         dialogSh = new ViewModelProvider(this).get(DialogStateHolder.class);
 
-//        this.getTurnHistory(messageLayout);
         this.trackTurns(messageLayout, actionLayout);
         this.displayPlayerDetails(itemInventoryView);
         this.openItemInventory(itemInventoryModal, itemInventoryView);
@@ -99,18 +101,19 @@ public class DialogScreen extends AppCompatActivity {
 
         // Set LayoutParams for CardView
         LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 300
+                ViewGroup.LayoutParams.MATCH_PARENT, 150
         );
-        cardLayoutParams.setMargins(40, 40, 40, 40);
+        cardLayoutParams.setMargins(30, 15, 30, 15);
 
         // dm prop
-        dmCard.setCardBackgroundColor(Color.parseColor("#FFC0CB"));
+        dmCard.setCardBackgroundColor(getResources().getColor(R.color.lightgrayText, null));
         dmCard.setRadius(10);
         dmCard.setPadding(40, 40, 40, 40);
         dmCard.setLayoutParams(cardLayoutParams);
 
         dmMessage.setText("Dungeon Master is thinking...");
-        dmMessage.setTextSize(24);
+        dmMessage.setTextSize(18);
+        dmMessage.setTextColor(getColor(R.color.darkred));
         dmMessage.setPadding(20, 20, 20, 20);
         dmMessage.setGravity(Gravity.CENTER);
         dmCard.addView(dmMessage);
@@ -120,9 +123,17 @@ public class DialogScreen extends AppCompatActivity {
             @Override
             public void onChanged(RoomState.State state) {
                 if (state == RoomState.State.DIALOGUE_PROCESSING) {
+                    // Remove "Waiting for Party" card if it exists
+                    if (waitingForPartyCard != null) {
+                        messageLayout.removeView(waitingForPartyCard);
+                        waitingForPartyCard = null;
+                    }
+
                     // Show dungeon master is thinking and disable action buttons
-                    messageLayout.addView(dmCard);
-                    disableButtons(actionLayout);
+                    if (dmCard.getParent() == null){
+                        messageLayout.addView(dmCard);
+                        disableButtons(actionLayout);
+                    }
                 }else if (state == RoomState.State.DIALOGUE_TURN){
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
@@ -184,7 +195,6 @@ public class DialogScreen extends AppCompatActivity {
             messageLayout.addView(turnContainer);
         }
     }
-
 
 
     // Keeps track of the dialog latest turn only, type out the message character by character
@@ -360,8 +370,51 @@ public class DialogScreen extends AppCompatActivity {
         this.selectedCardView = selectedCardView;
         dialogSh.sendPlayerDialogAction(action);
 
-        //TODO: Add note to player who already selected, "waiting for party to choose their actions", terminate when roomstate is DIALOGUE_PROCESSING
+        // Check if player has selected an action this turn, if so add the "Waiting for Party" card
+        dialogSh.subscribeDialogLatestTurn().observe(this, new Observer<Dialog>() {
+            @Override
+            public void onChanged(Dialog turn) {
+                if (turn.getSender().isPresent() && turn.getSender().get().equals(playerSh.getPlayerId())) {
+                    LinearLayout messageLayout = findViewById(R.id.messageContainer);
 
+                    // Remove previous "Waiting for Party" card if it exists
+                    if (waitingForPartyCard != null) {
+                        messageLayout.removeView(waitingForPartyCard);
+                        waitingForPartyCard = null;
+                    }
+                    // Player has selected an action, add the "Waiting for Party" card
+                    waitingForPartyCard = new CardView(DialogScreen.this);
+                    TextView waitMessage = new TextView(DialogScreen.this);
+
+                    // Set LayoutParams for CardView
+                    LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, 150
+                    );
+                    cardLayoutParams.setMargins(40, 40, 40, 40);
+
+                    // Waiting card
+                    waitingForPartyCard.setRadius(10);
+                    waitingForPartyCard.setPadding(30, 15, 30, 15);
+                    waitingForPartyCard.setLayoutParams(cardLayoutParams);
+
+                    waitMessage.setText("Waiting for Party to do their action...");
+                    waitMessage.setTextColor(getColor(R.color.darkred));
+                    waitMessage.setTextSize(18);
+                    waitMessage.setPadding(20, 20, 20, 20);
+                    waitMessage.setGravity(Gravity.CENTER);
+
+                    try {
+                        if (roomSh.getRoomState() != RoomState.State.DIALOGUE_PROCESSING) {
+                            waitingForPartyCard.addView(waitMessage);
+                            Log.d("WaitingForParty", "Waiting for party card is not null");
+                            messageLayout.addView(waitingForPartyCard);
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d("Error", "Waiting for party card is null");
+                    }
+                }
+            }
+        });
     }
 
     private void displayPlayerDetails(View itemInventoryView){
@@ -370,45 +423,27 @@ public class DialogScreen extends AppCompatActivity {
         TextView race_entityclass = findViewById(R.id.race_entityclass);
         int[] statsIds = gameSh.getStatsIds();
 
-        // Initialize player details
-        Player currentPlayer = playerSh.getPlayer().getValue();
-        username.setText(currentPlayer.getDisplayName());
-        health.setText(playerSh.remainingHealth());
-        race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
-        // Initialize player stats
-        try {
-            List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
-            Collections.sort(sortedStats, Comparator.comparing(Enum::name));
-            Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
-            int currentStatId = 0;
-            for (Stat stat : sortedStats) {
-                int id = statsIds[currentStatId++];
-                TextView currentStat = findViewById(id);
-                currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
-            }
-        }
-        catch (NullPointerException e){
-            e.printStackTrace();
-        }
-        displayItemInventory(currentPlayer, itemInventoryView);
-
         playerSh.getPlayer().observe(this, new Observer<Player>() {
            @Override
            public void onChanged(Player player){
                // When player details change, update the UI
                username.setText(player.getDisplayName());
                health.setText(playerSh.remainingHealth());
-               race_entityclass.setText(currentPlayer.getRace().name() + " " + currentPlayer.getEntityClass().name());
+               race_entityclass.setText(player.getRace().name() + " " + player.getEntityClass().name());
                // Update player stats
                try {
-                   List<Stat> sortedStats = new ArrayList<>(currentPlayer.getStats().keySet());
+                   List<Stat> sortedStats = new ArrayList<>(player.getStats().keySet());
                    Collections.sort(sortedStats, Comparator.comparing(Enum::name));
                    Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
                    int currentStatId = 0;
                    for (Stat stat : sortedStats) {
+                       // we render max health separately
+                       if (stat == Stat.MAX_HEALTH) {
+                           continue;
+                       }
                        int id = statsIds[currentStatId++];
                        TextView currentStat = findViewById(id);
-                       currentStat.setText(stat.name() + ": " + currentPlayer.getStat(stat));
+                       currentStat.setText(StatsMap.getStatText(stat) + ": " + player.getStat(stat));
                    }
                }
                catch (NullPointerException e){

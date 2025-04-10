@@ -13,6 +13,7 @@ import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.Stats;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
+import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
 
@@ -53,12 +54,15 @@ public class PlayerStateHolder extends ViewModel{
 
 
     public LiveData<EquippableItem> getEquippedItem(BodyPart bodyPart){
-        Log.d("PlayerStateHolder", "getEquippedItem: " + playerRepo.getPlayer().getValue().getEquippedItems().get(bodyPart).getClass());
         return Transformations.map(playerRepo.getPlayer(), player -> player.getEquippedItems().get(bodyPart));
     }
 
 
     public LiveData<InventoryOf<Skill>> getSkills(){
         return Transformations.map(playerRepo.getPlayer(), Entity::getSkillsInventory);
+    }
+
+    public LiveData<InventoryOf<Item>> getScrolls_Potions(){
+       return Transformations.map(playerRepo.getPlayer(), Entity::getInventory);
     }
 }

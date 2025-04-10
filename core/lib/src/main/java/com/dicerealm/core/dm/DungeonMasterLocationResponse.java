@@ -1,12 +1,17 @@
 package com.dicerealm.core.dm;
 
+import com.dicerealm.core.dm.DungeonMasterResponse.Stats;
+import com.dicerealm.core.entity.EntityClass;
+import com.dicerealm.core.entity.Race;
+
 public class DungeonMasterLocationResponse {
-    public LocationList[] locations;
+    public Location[] locations;
     public PathList[] paths;
 
-    public class LocationList {
+    public class Location {
         public String displayName;
         public String description;
+				public Enemy[] enemies;
     }
 
     public class PathList {
@@ -14,4 +19,11 @@ public class DungeonMasterLocationResponse {
         public String to;
         public int distance;
     }
+
+		public class Enemy {
+			public String name;
+			public Race race;
+			public EntityClass entityClass;
+			public Stats stats;
+		}
 }

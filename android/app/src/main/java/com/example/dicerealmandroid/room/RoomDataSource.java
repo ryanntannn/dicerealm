@@ -58,14 +58,27 @@ public class RoomDataSource {
 
     public void leaveRoom(){
         dicerealmClient.close(1000, 1000, "Leaving room");
-        dicerealmClient = null;
     }
 
     public DicerealmClient getDiceRealmClient(){
         return dicerealmClient;
     }
 
+    public void removeServerInstance(){
+        this.dicerealmClient = null;
+    }
+
     public void sendMessageToServer(String message){
         dicerealmClient.send(message);
+    }
+
+
+    // Reset all cache data while leaving the singleton instance
+    // Maintain observers connections :>
+    public static void destroy(){
+        if(instance != null){
+            instance.setRoomState(null);
+            instance.removeServerInstance();
+        }
     }
 }

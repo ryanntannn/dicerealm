@@ -32,6 +32,7 @@ public class RoomState {
 		private LocationGraph locationGraph = MockLocationGraph.makeLocationGraph();
 		private List<DialogueTurn> dialogueTurns = new ArrayList<DialogueTurn>();
 		private int roomLevel = 1;
+		private int roomExperience = 0;
 
 
 		public RoomState() {
@@ -43,6 +44,17 @@ public class RoomState {
 
 		public Player[] getPlayers() {
 			return playerMap.values().toArray(new Player[playerMap.size()]);
+		}
+
+		public String getPlayerSummaries() {
+			StringBuilder sb = new StringBuilder();
+			for (Player player : playerMap.values()) {
+				sb.append(player.getSummary()).append(", ");
+			}
+			if (sb.length() > 0) {
+				sb.setLength(sb.length() - 2); // remove last comma and space
+			}
+			return sb.toString();
 		}
 
 		public Map<UUID, Player> getPlayerMap() {
@@ -99,5 +111,11 @@ public class RoomState {
 		}
 		public int getRoomLevel() {
 			return roomLevel;
+		}
+		public void addRoomExperience(int xp) {
+			roomExperience += xp;
+		}
+		public int getRoomExperience() {
+			return roomExperience;
 		}
 }

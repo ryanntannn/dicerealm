@@ -33,6 +33,9 @@ import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.example.dicerealmandroid.util.Loading;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class CharacterScreen extends AppCompatActivity {
     private Player selectedPlayer;
@@ -52,12 +55,10 @@ public class CharacterScreen extends AppCompatActivity {
             return insets;
         });
 
-
-
         // Access PlayerStateHolder
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
-        BackButtonHandler.setupBackImageButtonHandler(this, R.id.backToLobby);
+        this.backToHome();
         this.setRoomCode();
 
         TextView chara_name1 = findViewById(R.id.chara_name1);
@@ -69,11 +70,12 @@ public class CharacterScreen extends AppCompatActivity {
         TextView chara_description3 = findViewById(R.id.chara_description3);
         TextView chara_description4 = findViewById(R.id.chara_description4);
 
-        // Randomized Preset Character Names
-        chara_name1.setText(PresetPlayerFactory.getRandomCharacterName());
-        chara_name2.setText(PresetPlayerFactory.getRandomCharacterName());
-        chara_name3.setText(PresetPlayerFactory.getRandomCharacterName());
-        chara_name4.setText(PresetPlayerFactory.getRandomCharacterName());
+        // Randomized Preset Character Names, Make sure that the names are unique
+        Set<String> uniqueNames = new HashSet<>();
+        chara_name1.setText(getUniqueCharacterName(uniqueNames));
+        chara_name2.setText(getUniqueCharacterName(uniqueNames));
+        chara_name3.setText(getUniqueCharacterName(uniqueNames));
+        chara_name4.setText(getUniqueCharacterName(uniqueNames));
 
         // Preset Character Races and Entity Classes
         chara_description1.setText("DWARF" + " " + "WARRIOR");
@@ -131,10 +133,22 @@ public class CharacterScreen extends AppCompatActivity {
         });
     }
 
+    private void backToHome(){
+        BackButtonHandler.setupBackImageButtonHandler(this, R.id.backToLobby);
+    }
+
     private void setRoomCode(){
         TextView roomCode = findViewById(R.id.roomCode);
         String roomCodeText = "Room Code: " + roomSh.getRoomCode();
         roomCode.setText(roomCodeText);
+    }
+    private String getUniqueCharacterName(Set<String> uniqueNames) {
+        String name;
+        do {
+            name = PresetPlayerFactory.getRandomCharacterName();
+        } while (uniqueNames.contains(name));
+        uniqueNames.add(name);
+        return name;
     }
 
     // Handle selected character clicked

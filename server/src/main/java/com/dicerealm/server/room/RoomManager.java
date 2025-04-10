@@ -81,16 +81,8 @@ public class RoomManager {
 			}
 			room.handlePlayerCommand(playerId, (String) payload);
 		} catch (Exception e) {
-			sendErrorMessage(session, e.getMessage());
 			logger.error("Error handling message", e);
 		}
 	}
 
-	private void sendErrorMessage(WebSocketSession session, String message) {
-		try {
-			session.sendMessage(new TextMessage("ERROR: " + message));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

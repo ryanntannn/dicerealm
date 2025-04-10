@@ -28,6 +28,7 @@ import java.util.Objects;
 public class HomeActivity extends AppCompatActivity {
     private String roomId;
     private Loading loading;
+    private RoomStateHolder roomSh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +39,13 @@ public class HomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
         Button join = findViewById(R.id.joinBtn);
         // Disable join button by default
         join.setEnabled(false);
         TextInputLayout textInputLayout = findViewById(R.id.textInputLayout2);
 
-        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
 
 
         // Enable join button when input is in focus and valid code is entered
@@ -100,24 +101,26 @@ public class HomeActivity extends AppCompatActivity {
 
         // Navigate when state changes to LOBBY
         roomSh.trackState().observe(this,  new Observer<RoomState.State>() {
-           @Override
-           public void onChanged(RoomState.State state){
-               if(state == RoomState.State.LOBBY){
-                   loading.hide();
-                   Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
-                   startActivity(intent);
-                   Log.d("Info", "Room created with code: " + roomId);
-               }
-           }
+            @Override
+            public void onChanged(RoomState.State state){
+                if(state == RoomState.State.LOBBY){
+                    loading.hide();
+                    Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
+                    startActivity(intent);
+                    Log.d("Info", "Room created with code: " + roomId);
+                }
+            }
         });
+
+
     }
 
-    // If user navigates back to the home screen, leave the room.
+    // If user navigates back to the home screen
     @Override
     public void onResume(){
         super.onResume();
-        RoomStateHolder roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         roomSh.leaveRoom();
+
         // Clear the room code input field and clear its focus
         TextInputLayout textInputLayout = findViewById(R.id.textInputLayout2);
         Objects.requireNonNull(textInputLayout.getEditText()).setText("");

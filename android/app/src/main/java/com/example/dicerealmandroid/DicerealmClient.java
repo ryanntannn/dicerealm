@@ -9,12 +9,15 @@ import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.command.combat.CombatEndCommand;
+import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
-import com.dicerealm.core.command.combat.CommandEndTurnCommand;
+import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 
@@ -41,7 +44,7 @@ public class DicerealmClient extends WebSocketClient {
 
     private String roomCode;
 
-    private final static String baseUrl = "wss://50e2-2406-3003-2007-1f2b-adee-b5d3-1440-32e1.ngrok-free.app/room/";
+    private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
     private final PlayerRepo playerRepo = new PlayerRepo();
     private final RoomRepo roomRepo = new RoomRepo();
     private final DialogRepo dialogRepo = new DialogRepo();
@@ -156,16 +159,38 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "COMBAT_START_TURN":
                     CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
-                    Message.showMessage("Your turn!");
+                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
+                        Message.showMessage("Your turn!");
+                    }
                     break;
 
                 case "COMBAT_END_TURN":
-                    CommandEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CommandEndTurnCommand.class);
+                    CombatEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CombatEndTurnCommand.class);
                     if(combatEndTurnCommand.getCombatResult() != null){
+                        UUID targetId = combatEndTurnCommand.getCombatResult().getTargetID();
+                        combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
+                        String damageLog = "";
+                        if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
+                            damageLog = combatEndTurnCommand.getCombatResult().getDamageLog();
+                        }
+                        combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog() + "\n" + damageLog);
                         combatRepo.rotateCombatSequence();
                     }
+                    break;
 
-                    Message.showMessage("Turn ended.");
+                case "COMBAT_END":
+                    // TODO: Add combat end navigate back to the main menu and leave the room/server
+                    // TODO: Add left hand attack
+                    // TODO: Show the initial combat msg as a seperate overlay
+                    CombatEndCommand combatEndCommand = gson.fromJson(message, CombatEndCommand.class);
+                    if(combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.WIN){
+                        roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
+                        Message.showMessage("You won the battle!");
+                    }
+                    else if (combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.LOSE){
+                        roomRepo.leaveRoom();
+                        Message.showMessage("You have died! Returning back to main menu.");
+                    }
                     break;
 
                 default:

@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.locations.Location;
-import com.example.dicerealmandroid.game.dialog.DialogDataSource;
 
 public class GameDataSource {
     private static GameDataSource instance;
@@ -32,7 +31,6 @@ public class GameDataSource {
             R.id.stat_constitution,
             R.id.stat_dexterity,
             R.id.stat_intelligence,
-            R.id.stat_maxhealth,
             R.id.stat_strength,
             R.id.stat_wisdom
     };
@@ -47,5 +45,13 @@ public class GameDataSource {
 
     public void setCurrentLocation(Location location){
         currentLocation.postValue(location);
+    }
+
+
+    // Destroy the singleton instance
+    public static void destroy(){
+        if(instance != null){
+            instance.setCurrentLocation(null);
+        }
     }
 }
