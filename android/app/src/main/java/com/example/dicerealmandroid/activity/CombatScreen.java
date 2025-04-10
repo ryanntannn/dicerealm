@@ -35,6 +35,7 @@ import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
+import com.example.dicerealmandroid.MainActivity;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
@@ -162,7 +163,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                                 Log.d("skill", "Skill: " + skills.getDisplayName());
                             }
                             //Call recycleview
-                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell");
+                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell",combatSh);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
@@ -223,7 +224,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                             spellaction.setVisibility(View.VISIBLE);
 
                             //Call recycleview
-                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item");
+                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item",combatSh);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
@@ -356,32 +357,6 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClick(int position ,String type ) {
-        if (Objects.equals(type, "Spell")) {
-            playerSh.getSkills().observe(this, new Observer<InventoryOf<Skill>>() {
-                @Override
-                public void onChanged(InventoryOf<Skill> skills) {
-                    if (skills != null) {
-                        List<Skill> skillList = new ArrayList<>(skills.getItems());
-                        combatSh.performAction(skillList.get(position), CombatTurnActionCommand.ActionType.SKILL);
-                        Log.d("Spell", "Spell: " + skillList.get(position).getDisplayName() + " used");
-                        close();
-                    }
-                }
-            });
-        }
-        else if (Objects.equals(type, "Item")){
-            playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
-                @Override
-                public void onChanged(InventoryOf<Item> Potions_Scrolls) {
-                    if (Potions_Scrolls != null) {
-                        List<Item> potions_scroll_list = new ArrayList<>(Potions_Scrolls.getItems());
-
-                        Log.d("Item", "Item: " + potions_scroll_list.get(position).getDisplayName() + " used");
-                        close();
-                    }
-                }
-            });
-        }
-
+        close();
     }
 }
