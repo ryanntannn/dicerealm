@@ -110,6 +110,7 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.LEFT_HAND, axe);
                 player.equipItem(BodyPart.HEAD, helmet);
 				player.equipItem(BodyPart.TORSO, chestpiece);
+				
 
 				player.getInventory().addItem(new MinorHealthPotion());
             }
@@ -123,7 +124,7 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.RIGHT_HAND, staff);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
-
+				
 				player.getInventory().addItem(new MinorHealthPotion());
             }
             case ROGUE -> {
@@ -133,7 +134,7 @@ public class PresetPlayerFactory {
 				player.getInventory().addItem(necklace);
                 player.equipItem(BodyPart.RIGHT_HAND, dagger);
 				player.equipItem(BodyPart.NECK, necklace);
-
+			
 				player.getInventory().addItem(new MinorHealthPotion());
             }
             case RANGER -> {
@@ -145,8 +146,7 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.RIGHT_HAND, bow);
 				player.equipItem(BodyPart.TORSO, chestpiece);
 				player.equipItem(BodyPart.NECK, necklace);
-
-				player.getInventory().addItem(new MinorHealthPotion());
+				
             }
             case CLERIC -> {
 				Weapon staff = StaffFactory.createStaff(1); 
@@ -161,18 +161,18 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.HEAD, helmet);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
-				
+			
 				player.getInventory().addItem(new MinorHealthPotion());
             }
 
         }
 	}
 
-	private static void addDefaultSkills(Player player) {
+	public static void addDefaultSkills(Player player) {
 		EntityClass entityClass = player.getEntityClass();
 
 		// Retrieve level 1 skills for the player's class
-		List<Skill> level1Skills = SkillsRepository.getAvailableSkills(entityClass, 1);
+		List<Skill> level1Skills = SkillsRepository.getNewSkillsForLevel(entityClass, 1);
 
 		// Add all level 1 skills to the player's skill inventory
 		for (Skill skill : level1Skills) {

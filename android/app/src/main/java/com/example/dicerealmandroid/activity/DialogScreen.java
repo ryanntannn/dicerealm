@@ -26,12 +26,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.dicerealm.core.dialogue.SkillCheck;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Scroll;
+import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
 import com.example.dicerealmandroid.game.dialog.Dialog;
@@ -46,6 +50,7 @@ import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.example.dicerealmandroid.util.ScreenDimensions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -89,10 +94,52 @@ public class DialogScreen extends AppCompatActivity {
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         dialogSh = new ViewModelProvider(this).get(DialogStateHolder.class);
 
+        playerSh.getSpecificInventoryType(Scroll.class).observe(this, scrolls -> {
+            if (scrolls != null) {
+                // Use scrolls list here
+                for(Scroll scroll : scrolls){
+                    Log.d("Scrolls", "You have the following scroll: " + scroll.getDisplayName());
+                }
+            }
+        });
+
+        playerSh.getSpecificInventoryType(Potion.class).observe(this, potions -> {
+            if (potions != null) {
+                // Use potions list here
+                for(Potion potion : potions) {
+                    Log.d("Potions", "You have the following potion: " + potion.getDisplayName());
+                }
+            }
+        });
+
         this.trackTurns(messageLayout, actionLayout);
         this.displayPlayerDetails(itemInventoryView);
         this.openItemInventory(itemInventoryModal, itemInventoryView);
         this.trackGameServer(messageLayout, actionLayout, itemInventoryView);
+        this.trackLocation();
+        this.showActionResults();
+    }
+
+    private void showActionResults(){
+        dialogSh.subscribeDialogLatestActionResult().observe(this, new Observer<SkillCheck.ActionResultDetail>() {
+           @Override
+           public void onChanged(SkillCheck.ActionResultDetail actionResultDetail){
+               if(actionResultDetail == null) return;
+               
+               String actionResultsSummary = actionResultDetail.toString();
+           }
+        });
+    }
+
+    private void trackLocation(){
+        MaterialTextView locationText = findViewById(R.id.location);
+        locationText.setTextSize(10);
+        gameSh.subscribeCurrentLocation().observe(this, new Observer<Location>() {
+           @Override
+           public void onChanged(Location location){
+               locationText.setText(location.getDisplayName());
+            }
+        });
     }
 
     private void trackGameServer(LinearLayout messageLayout, LinearLayout actionLayout, View itemInventoryView){
@@ -253,10 +300,20 @@ public class DialogScreen extends AppCompatActivity {
                         turnContainer.setTag(id);
                         ownerView.setGravity(Gravity.END); // flush right
 
-                        if(playerId.orElse(null).equals(playerSh.getPlayerId())){
-                            ownerView.setText("You");
-                        }else{
-                            ownerView.setText("Other player");
+                        Player[] players = roomSh.getAllPlayers();
+                        Player player1 = playerSh.getPlayer().getValue();
+
+                        // Show all players name for their respective action
+                        for(Player player: players){
+                            if(playerId.orElse(null).equals(player.getId())){
+                                
+                                // Check if player is you
+                                if(playerId.orElse(null).equals(playerSh.getPlayerId())){
+                                    ownerView.setText("You");
+                                }else{
+                                    ownerView.setText(player.getDisplayName());
+                                }
+                            }
                         }
                     }
 

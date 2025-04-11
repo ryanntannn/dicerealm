@@ -90,6 +90,10 @@ public class Room {
 		broadcastStrategy.sendToPlayer(new FullRoomStateCommand(roomState, player.getId().toString()), player);
 	}
 
+	public void addBigScreen() {
+		broadcastStrategy.sendToBigScreen(new FullRoomStateCommand(roomState, "BIG_SCREEN"));
+	}
+
 	/**
 	 * Get a player by their ID
 	 * @param id

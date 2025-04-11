@@ -25,4 +25,14 @@ public class Dialog {
     public int getTurnNumber() {
         return turnNumber;
     }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    public void setSender(Optional<UUID> sender) {
+        this.sender = sender;
+    }
+    public void setTurnNumber(int turnNumber) {
+        this.turnNumber = turnNumber;
+    }
 }

@@ -3,8 +3,10 @@ package com.dicerealm.core.combat.managers;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import com.dicerealm.core.combat.ActionType;
 import com.dicerealm.core.combat.CombatLog;
 import com.dicerealm.core.combat.CombatResult;
 import com.dicerealm.core.combat.systems.InitiativeCalculator;
@@ -12,9 +14,12 @@ import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.dice.D20;
 import com.dicerealm.core.dice.FixedD20;
 import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.entity.Stat;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.item.Potion;
 import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.item.WeaponClass;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
@@ -84,7 +89,7 @@ public class CombatManager {
             return performPlayerAction((Player) attacker, target, action);
         } else if (attacker instanceof Monster) {
             return performMonsterAction((Monster) attacker, target, action);
-        }
+        } else 
         return null; // Return null or handle invalid action appropriately
     }
 
@@ -154,8 +159,9 @@ public class CombatManager {
                 return actionManager.usePotion(player, target, potion);
             }
             default -> {
-                combatLog.log(player.getDisplayName() + " attempted an unknown action!");
-                return null;
+                // combatLog.log(player.getDisplayName() + " attempted an unknown action!");
+                // return null;
+                return actionManager.performAttack(player, target, new Weapon("Fists", "Fists of Furry", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 0)), 4 )); // Default to a basic attack if action is unknown
             }
         }
         return null;

@@ -29,7 +29,7 @@ export function useRoomClient(
     } else {
       url.protocol = "ws:";
     }
-    url.pathname = `/room/${roomId}`;
+    url.pathname = `/big/${roomId}`;
     return url.toString();
   }, [options.serverUrl, roomId]);
 
@@ -42,6 +42,12 @@ export function useRoomClient(
   const [myId, setMyId] = useState<string | null>(null);
   const [actions, setActions] = useState<PlayerAction[]>([]);
   const [dialogueTurns, setDialogueTurns] = useState<DialogueTurn[]>([]);
+  const [initiativeResults, setInitiativeResults] = useState<
+    { entityId: string; displayName: string; initiative: number; log: string }[]
+  >([]);
+  const [currentCombatTurnId, setCurrentCombatTurnId] = useState<string | null>(
+    null
+  );
 
   const myPlayer = useMemo(() => {
     if (!myId) return null;
@@ -95,6 +101,7 @@ export function useRoomClient(
   }, [lastMessage]);
 
   useEffect(() => {
+    if (!lastJsonMessage) return;
     const { data: command, error } = commandSchema.safeParse(lastJsonMessage);
     console.log(lastJsonMessage);
     if (error) {
@@ -195,7 +202,6 @@ export function useRoomClient(
           return newTurns;
         });
         break;
-
       case "UPDATE_PLAYER_DETAILS":
         setPlayers((players) => {
           const newPlayers = { ...players };
@@ -207,6 +213,28 @@ export function useRoomClient(
           newPlayers[command.player.id] = command.player;
           return newPlayers;
         });
+        break;
+      case "COMBAT_START":
+        setState("COMBAT");
+        setInitiativeResults(
+          command.initiativeResults.map((result) => {
+            return {
+              entityId: result.entity.id,
+              displayName: result.entity.displayName,
+              initiative: result.totalInitiative,
+              log: result.initiativeLog,
+            };
+          })
+        );
+        setCurrentCombatTurnId(command.initiativeResults[0].entity.id);
+        break;
+      case "COMBAT_END":
+        setInitiativeResults([]);
+        setCurrentCombatTurnId(null);
+        setState("DIALOGUE_PROCESSING");
+        break;
+      case "COMBAT_START_TURN":
+        setCurrentCombatTurnId(command.currentTurnEntityId);
         break;
       default:
         console.warn("Unhandled command type", command);
@@ -229,5 +257,7 @@ export function useRoomClient(
     startGame,
     setPlayerDetails,
     dialogueTurns,
+    initiativeResults,
+    currentCombatTurnId,
   };
 }

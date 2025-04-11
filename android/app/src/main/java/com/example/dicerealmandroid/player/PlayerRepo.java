@@ -13,6 +13,7 @@ import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.room.RoomDataSource;
 import com.example.dicerealmandroid.room.RoomRepo;

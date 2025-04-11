@@ -3,6 +3,7 @@ package com.example.dicerealmandroid.player;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
@@ -17,6 +18,7 @@ import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -64,5 +66,19 @@ public class PlayerStateHolder extends ViewModel{
 
     public LiveData<InventoryOf<Item>> getScrolls_Potions(){
        return Transformations.map(playerRepo.getPlayer(), Entity::getInventory);
+    }
+
+    // Use this to get the specific inventory class you want (e.g. EquippableItems, Scrolls, Potions, etc)
+    // Skills is in a seperate inventory
+    public <T extends Item> LiveData<List<T>> getSpecificInventoryType(Class<T> itemClass){
+        return Transformations.map(playerRepo.getPlayer(), player -> {
+           List<T> specificInventory = new ArrayList<>();
+           for(Item item : player.getInventory().getItems()){
+               if(itemClass.isInstance(item)){
+                   specificInventory.add(itemClass.cast(item));
+               }
+           }
+           return specificInventory;
+        });
     }
 }

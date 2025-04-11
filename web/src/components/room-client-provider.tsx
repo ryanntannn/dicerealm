@@ -20,6 +20,7 @@ export default function RoomClientProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useRoomClientContext() {
   const context = useContext(roomClientContext);
   if (!context) {
