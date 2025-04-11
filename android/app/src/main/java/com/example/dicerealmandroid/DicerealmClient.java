@@ -43,8 +43,8 @@ public class DicerealmClient extends WebSocketClient {
     private Gson gson = Serialization.makeDicerealmGsonInstance();
 
     private String roomCode;
-		
-		private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
+
+    private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
     private final PlayerRepo playerRepo = new PlayerRepo();
     private final RoomRepo roomRepo = new RoomRepo();
     private final DialogRepo dialogRepo = new DialogRepo();
@@ -85,9 +85,6 @@ public class DicerealmClient extends WebSocketClient {
                 case "PLAYER_LEAVE":
                     String playerId = gson.fromJson(message, PlayerLeaveCommand.class).getPlayerId();
                     roomRepo.removeRoomStatePlayer(playerId);
-                    if(roomRepo.getRoomState().getState() == RoomState.State.BATTLE){
-                        combatRepo.removeCombatant(playerId);
-                    }
                     Message.showMessage("A player has left.");
                     break;
 
@@ -95,7 +92,6 @@ public class DicerealmClient extends WebSocketClient {
                     // Update player details
                     UpdatePlayerDetailsCommand updatePlayerDetailsCommand = gson.fromJson(message, UpdatePlayerDetailsCommand.class);
                     playerRepo.setPlayer(updatePlayerDetailsCommand.player);
-                    roomRepo.updatePlayersList(updatePlayerDetailsCommand.player);
                     break;
 
                 case "START_GAME":
@@ -125,6 +121,7 @@ public class DicerealmClient extends WebSocketClient {
                 case "DIALOGUE_TURN_ACTION":
                     // Get all messages/actions by other players as well
                     DialogueTurnActionCommand dialogueTurnActionCommand = gson.fromJson(message, DialogueTurnActionCommand.class);
+
                     Dialog dialogueTurnAction = new Dialog(dialogueTurnActionCommand.getAction(), dialogueTurnActionCommand.getPlayerId(), dialogueTurnActionCommand.getTurnNumber());
                     dialogRepo.updateTurnHistory(dialogueTurnAction);
                     break;
@@ -134,7 +131,6 @@ public class DicerealmClient extends WebSocketClient {
                     // Disable the buttons for the player
                     roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                     dialogRepo.setActionResult(endTurnCommand.getActionResultDetail());
-                    Message.showMessage(endTurnCommand.getActionResultDetail().toString());
                     Message.showMessage("Turn ended.");
                     break;
 
@@ -177,22 +173,21 @@ public class DicerealmClient extends WebSocketClient {
                         if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
                             damageLog = combatEndTurnCommand.getCombatResult().getDamageLog();
                         }
-
                         combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog() + "\n" + damageLog);
                         combatRepo.rotateCombatSequence();
                     }
                     break;
 
                 case "COMBAT_END":
+                    // TODO: Add combat end navigate back to the main menu and leave the room/server
+                    // TODO: Add left hand attack
                     // TODO: Show the initial combat msg as a seperate overlay
                     CombatEndCommand combatEndCommand = gson.fromJson(message, CombatEndCommand.class);
-
-                    // Check if the player is dead or not
-                    if(combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.WIN && playerRepo.getPlayer().getValue().isAlive()){
+                    if(combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.WIN){
                         roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
                         Message.showMessage("You won the battle!");
                     }
-                    else{
+                    else if (combatEndCommand.getStatus() == CombatEndCommand.CombatEndStatus.LOSE){
                         roomRepo.leaveRoom();
                         Message.showMessage("You have died! Returning back to main menu.");
                     }

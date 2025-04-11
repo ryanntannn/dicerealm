@@ -20,133 +20,6 @@
         app:layout_constraintTop_toBottomOf="@+id/messages"
         app:layout_constraintVertical_bias="0.39" />
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/Actions"
-    android:layout_width="match_parent"
-    android:layout_height="170dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="visible"
-        android:id="@+id/ActionsAvailable"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/spellButton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                android:text="Spell"
-                android:textSize="18sp"
-                app:cornerRadius="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/itemButton"
-                app:layout_constraintEnd_toStartOf="@+id/attackButtonRight"
-                app:layout_constraintStart_toEndOf="@+id/attackButtonLeft"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_bias="0.5" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/attackButtonLeft"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                android:text="Attack Left"
-                android:textSize="16sp"
-                app:cornerRadius="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/itemButton"
-                app:layout_constraintEnd_toStartOf="@+id/spellButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/attackButtonRight"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:text="Attack Right"
-                android:textSize="16sp"
-                app:cornerRadius="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/itemButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/spellButton"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/itemButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="14dp"
-                android:text="Inventory"
-                android:textSize="20dp"
-                app:cornerRadius="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/SpellActions"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-        <ScrollView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
-
-            <LinearLayout
-                android:id="@+id/spellayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <!-- Example of scrollable buttons -->
-                <!--button-->
-
-                <!-- Add more items as needed -->
-                <!-- You can even use custom views, images, buttons, etc. -->
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/cardRecycleView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="vertical"
-                    android:fadeScrollbars="false"
-                    android:scrollbarSize="20dp"
-                    android:layout_weight="0.70">
-
-                </androidx.recyclerview.widget.RecyclerView>
-
-            </LinearLayout>
-
-
-        </ScrollView>
-        <com.google.android.material.button.MaterialButton
-        android:id="@+id/BackButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:text="Go back"
-        android:textSize="20dp"
-        app:cornerRadius="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
-
     <ScrollView
         android:id="@+id/messages"
         android:layout_width="410dp"
@@ -207,29 +80,388 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/me" />
 
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="293dp"
+        android:layout_height="66dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintStart_toEndOf="@+id/me"
+        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintVertical_bias="1.0">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_constitution"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="0"
+                    android:src="@drawable/constitution" />
+
+                <TextView
+                    android:id="@+id/stat_constitution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center"
+                    android:text="con"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/img_constitution" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_charisma"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="0"
+                    android:src="@drawable/charisma" />
+
+                <TextView
+                    android:id="@+id/stat_charisma"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center"
+                    android:text="char"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/img_charisma" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_intelligence"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="0"
+                    android:src="@drawable/intelligence" />
+
+                <TextView
+                    android:id="@+id/stat_intelligence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center"
+                    android:text="int"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/img_intelligence" />
+
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:id="@+id/ll4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_strength"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="0"
+                    android:src="@drawable/strength" />
+
+                <TextView
+                    android:id="@+id/stat_strength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center"
+                    android:text="str"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/img_strength" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_wisdom"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="0"
+                    android:background="#00000000"
+                    android:src="@drawable/wisdom" />
+
+                <TextView
+                    android:id="@+id/stat_wisdom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center"
+                    android:text="wis"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/img_wisdom" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_dexterity"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="0"
+                    android:src="@drawable/dexterity" />
+
+                <TextView
+                    android:id="@+id/stat_dexterity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center"
+                    android:text="dex"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/img_dexterity" />
+
+            </LinearLayout>
+        </TableRow>
+
+
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/ll0"
+        android:layout_width="164dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintStart_toEndOf="@+id/me">
+
+        <ImageView
+
+            android:id="@+id/img_armourclass"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="0"
+            android:src="@drawable/ac" />
+
+        <TextView
+            android:id="@+id/stat_armourclass"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+            android:text="armour class"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/img_armourclass" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Actions"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ActionsAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/spellButton"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
+                android:text="Spell"
+                android:textSize="18sp"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/itemButton"
+                app:layout_constraintEnd_toStartOf="@+id/attackButtonRight"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/attackButtonLeft"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/attackButtonLeft"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
+                android:text="Attack Left"
+                android:textSize="16sp"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/itemButton"
+                app:layout_constraintEnd_toStartOf="@+id/spellButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/attackButtonRight"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="Attack Right"
+                android:textSize="16sp"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/itemButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/spellButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/itemButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:text="Inventory"
+                android:textSize="20dp"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/SpellActions"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:id="@+id/spellayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Example of scrollable buttons -->
+                    <!--button-->
+
+                    <!-- Add more items as needed -->
+                    <!-- You can even use custom views, images, buttons, etc. -->
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/cardRecycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.70"
+                        android:fadeScrollbars="false"
+                        android:scrollbarSize="20dp"
+                        android:scrollbars="vertical">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </LinearLayout>
+
+
+            </ScrollView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/BackButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:text="Go back"
+                android:textSize="20dp"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ImageView
+        android:id="@+id/healthicon"
+        android:layout_width="37dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="208dp"
+
+        android:layout_weight="0"
+
+        android:src="@drawable/hearticon"
+        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintStart_toEndOf="@+id/me"
+        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintVertical_bias="0.01" />
+
     <TextView
-        android:id="@+id/PlayerInfo"
+        android:id="@+id/statichealth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Player info here"
+        android:text="Health:"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/me"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        app:layout_constraintHorizontal_bias="0.675"
         app:layout_constraintStart_toEndOf="@+id/me"
-        app:layout_constraintTop_toBottomOf="@+id/yourHealth"
-        app:layout_constraintVertical_bias="0.368" />
+        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintVertical_bias="0.108" />
 
     <TextView
         android:id="@+id/yourHealth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="health"
+        android:text="0/0
+"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/me"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintHorizontal_bias="0.875"
         app:layout_constraintStart_toEndOf="@+id/me"
         app:layout_constraintTop_toTopOf="@+id/me"
-        app:layout_constraintVertical_bias="0.157" />
+        app:layout_constraintVertical_bias="0.108" />
 
     <TextView
         android:id="@+id/enemyName"
@@ -247,13 +479,35 @@
         android:id="@+id/enemyHealth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Health"
-        app:layout_constraintBottom_toTopOf="@+id/yourHealth"
+        android:text="0/0"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.925"
-        app:layout_constraintStart_toEndOf="@+id/yourHealth"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.151" />
+
+        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.086" />
+
+    <TextView
+        android:id="@+id/enemyHealthstatic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="Enemy Health:"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toStartOf="@+id/enemyHealth"
+        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.086" />
+
+    <ImageView
+        android:id="@+id/enemyicon"
+        android:layout_width="29dp"
+        android:layout_height="36dp"
+        android:layout_weight="0"
+        android:src="@drawable/enemyicon"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toStartOf="@+id/enemyHealthstatic"
+        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <!-- Action -->

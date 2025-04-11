@@ -27,6 +27,7 @@ import com.dicerealm.core.entity.ClassStats;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.Stats;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
@@ -35,6 +36,7 @@ import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
+import com.example.dicerealmandroid.MainActivity;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
@@ -49,6 +51,8 @@ import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,7 +69,8 @@ import java.util.UUID;
 //          - Maybe can make the DicerealmClient a singleton and can remove the roomDataSource
 // TODO: Refactor code again to implement dependencies injection if got time
 
-public class CombatScreen extends AppCompatActivity implements SelectListener {
+public class CombatScreen extends AppCompatActivity {
+    private GameStateHolder gameSh = new GameStateHolder();
     private RoomStateHolder roomSh = new RoomStateHolder();
     private PlayerStateHolder playerSh = new PlayerStateHolder();
     private CombatStateHolder combatSh = new CombatStateHolder();
@@ -120,17 +125,39 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
     }
 
     private void displayPlayerInfo(){
-        TextView playerInfo = findViewById(R.id.PlayerInfo);
         TextView playerName = findViewById(R.id.playerName);
         TextView yourHealth = findViewById(R.id.yourHealth);
+        int[] statsIds = gameSh.getStatsIds();
         playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
             public void onChanged(Player player) {
                 playerName.setText(player.getDisplayName() + "(you)");
                 yourHealth.setText(player.getHealth() + "/" + player.getStat(Stat.MAX_HEALTH));
 
-                playerInfo.setText("");
-                playerInfo.setText(player.getStats().toString());
+                try {
+                    List<Stat> sortedStats = new ArrayList<>(player.getStats().keySet());
+                    Collections.sort(sortedStats, Comparator.comparing(Enum::name));
+                    Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
+                    int currentStatId = 0;
+                    for (Stat stat : sortedStats) {
+                        // we render max health separately
+                        if (stat == Stat.MAX_HEALTH) {
+                            continue;
+                        }
+                        int id = statsIds[currentStatId++];
+                        TextView currentStat = findViewById(id);
+                        if (StatsMap.getStatText(stat) == "Armour Class"){
+                            currentStat.setText(StatsMap.getStatText(stat) + ": " + player.getStat(stat));
+                        }
+                        else{
+                            currentStat.setText(StatsMap.getStatText(stat).substring(0,3) + ": " + player.getStat(stat));
+                        }
+
+                    }
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -162,7 +189,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                                 Log.d("skill", "Skill: " + skills.getDisplayName());
                             }
                             //Call recycleview
-                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell");
+                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList,"Spell",combatSh , CombatScreen.this);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
@@ -175,25 +202,25 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
     }
 
     public void closespell(){
-
         // Hardcode the button to use the first skill
         MaterialButton skillButtons = findViewById(R.id.BackButton);
         skillButtons.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Make the actions layout invisible
-                ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
-                actions.setVisibility(View.VISIBLE);
-                //Show the spells layout
-                ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
-                spellaction.setVisibility(View.GONE);
-                //Scrollable view
-                RecyclerView cardRecycleView = (RecyclerView) findViewById(R.id.cardRecycleView);
-                cardRecycleView.removeAllViews();
-
-
+                close();
             }
         });
+    }
+    public void close(){
+        ConstraintLayout actions = (ConstraintLayout) findViewById(R.id.ActionsAvailable);
+        actions.setVisibility(View.VISIBLE);
+        //Show the spells layout
+        ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
+        spellaction.setVisibility(View.GONE);
+        //Scrollable view
+        RecyclerView cardRecycleView = (RecyclerView) findViewById(R.id.cardRecycleView);
+        cardRecycleView.removeAllViews();
     }
 
     public void useitems(){
@@ -221,7 +248,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                             spellaction.setVisibility(View.VISIBLE);
 
                             //Call recycleview
-                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item");
+                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist ,"Item",combatSh, CombatScreen.this);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
@@ -352,34 +379,5 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         backgroundThread.start();
     }
 
-    @Override
-    public void onItemClick(int position ,String type ) {
-        if (Objects.equals(type, "Spell")) {
-            playerSh.getSkills().observe(this, new Observer<InventoryOf<Skill>>() {
-                @Override
-                public void onChanged(InventoryOf<Skill> skills) {
-                    if (skills != null) {
-                        List<Skill> skillList = new ArrayList<>(skills.getItems());
 
-                        Log.d("Spell", "Spell: " + skillList.get(position).getDisplayName() + " used");
-                        closespell();
-                    }
-                }
-            });
-        }
-        else if (Objects.equals(type, "Item")){
-            playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
-                @Override
-                public void onChanged(InventoryOf<Item> Potions_Scrolls) {
-                    if (Potions_Scrolls != null) {
-                        List<Item> potions_scroll_list = new ArrayList<>(Potions_Scrolls.getItems());
-
-                        Log.d("Item", "Item: " + potions_scroll_list.get(position).getDisplayName() + " used");
-                        closespell();
-                    }
-                }
-            });
-        }
-
-    }
 }
