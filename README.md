@@ -1,4 +1,5 @@
-# Dicerealm Monorepo
+# Dicerealm
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?name=dicerealm&repository=ryanntannn%2Fdicerealm&branch=main&builder=dockerfile&regions=sin&env%5BOPENAI_API_KEY%5D=%7B%7B+secret.OPENAI_API_KEY+%7D%7D&ports=8080%3Bhttp%3B%2F&hc_protocol%5B8080%5D=tcp&hc_grace_period%5B8080%5D=5&hc_interval%5B8080%5D=30&hc_restart_limit%5B8080%5D=3&hc_timeout%5B8080%5D=5&hc_path%5B8080%5D=%2F&hc_method%5B8080%5D=get)
 
 Dicerealm is an AI powered multiplayer RPG experience, leveraging on cutting edge GenAI models to deliver an immersive and organic experience
 
