@@ -1,19 +1,17 @@
-import { useEffect, useRef } from "react";
-import TextMessageForm from "./TextMessageForm";
+import { useEffect, useMemo, useRef } from "react";
 import cn from "./lib/cn";
 import { ReadyState } from "react-use-websocket";
-import { DialogueTurn, PlayerAction } from "./lib/room-state";
+import { DialogueTurn } from "./lib/room-state";
 import { useParams } from "react-router";
 import { z } from "zod";
-import Layout from "./layout";
 import RoomClientProvider, {
   useRoomClientContext,
 } from "@/components/room-client-provider";
 import { Stats } from "./components/stats";
-import { SidebarTrigger } from "./components/ui/sidebar";
 import Lobby from "./lobby";
 import { Card, CardContent, CardHeader } from "./components/ui/card";
 import { Brain } from "lucide-react";
+import Combat from "./combat";
 
 function Messages({
   messages,
@@ -29,13 +27,16 @@ function Messages({
     }
   }, [messages]);
 
+  const latestTurn = useMemo(() => {
+    if (dialogueTurns.length === 0) return null;
+    return dialogueTurns[dialogueTurns.length - 1];
+  }, [dialogueTurns]);
+
   return (
     <div
       ref={scrollDivRef}
-      className="p-4 flex-grow overflow-y-auto flex flex-col gap-2">
-      {dialogueTurns.map((turn, index) => (
-        <DialogueTurnRenderer key={index} turn={turn} />
-      ))}
+      className="p-4 flex-grow overflow-y-auto flex flex-col items-center justify-center gap-2">
+      {latestTurn && <DialogueTurnRenderer turn={latestTurn} />}
       {state === "DIALOGUE_PROCESSING" && (
         <div className="flex flex-row items-center justify-center p-8 border-4 border-dashed rounded-xl gap-1 animate-pulse">
           <Brain />
@@ -88,29 +89,6 @@ function ReadStateChip({ readyState }: { readyState: number }) {
   return <Chip className={`bg-${color}-200`}>{text}</Chip>;
 }
 
-function Actions({
-  actions,
-  onAction,
-}: {
-  actions: PlayerAction[];
-  onAction: (action: PlayerAction) => void;
-}) {
-  return (
-    <div className="grid grid-cols-3 gap-2 px-4">
-      {actions.map((action) => (
-        <Card
-          onClick={() => onAction(action)}
-          className="cursor-pointer hover:-translate-y-1 transform transition-transform">
-          <CardHeader>{action.action}</CardHeader>
-          <CardContent>
-            <Stats stats={action.skillCheck} omitZero omitPositive />
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
 const paramsSchema = z.object({
   roomCode: z.string().min(4).max(4),
 });
@@ -119,14 +97,13 @@ function DialogueTurnRenderer({ turn }: { turn: DialogueTurn }) {
   return (
     <Card>
       <CardHeader>
-        <p>Turn {turn.turnNumber}</p>
-        <p>Dungeon Master: {turn.dungeonMasterText}</p>
+        <p className="text-xl font-bold text-center">Turn {turn.turnNumber}</p>
+        <p className="text-5xl">{turn.dungeonMasterText}</p>
       </CardHeader>
       <CardContent className="grid grid-cols-3 gap-2">
         {Object.entries(turn.actions).map(([playerId, action]) => (
           <Card key={playerId}>
-            <CardHeader>{playerId} is going to</CardHeader>
-            <CardContent>
+            <CardContent className="text-xl">
               {action.action}
               <Stats stats={action.skillCheck} omitZero omitPositive />
             </CardContent>
@@ -138,19 +115,11 @@ function DialogueTurnRenderer({ turn }: { turn: DialogueTurn }) {
 }
 
 function Chat({ roomCode }: { roomCode: string }) {
-  const {
-    messages,
-    sendTextMessage,
-    readyState,
-    actions,
-    chooseAction,
-    state,
-  } = useRoomClientContext();
+  const { messages, readyState } = useRoomClientContext();
   return (
     <div className="h-dvh max-h-dvh w-full flex flex-col top-0">
       <div className="p-4 flex flex-row items-center justify-between border-b border-gray-300">
         <div className="flex flex-row items-center gap-2">
-          <SidebarTrigger />
           <h1 className="font-medium text-lg flex flex-row items-center">
             DiceRealm
           </h1>
@@ -162,16 +131,6 @@ function Chat({ roomCode }: { roomCode: string }) {
         </div>
       </div>
       <Messages messages={messages} />
-      <div className="gap-2 p-4"></div>
-      <Actions
-        actions={actions}
-        onAction={(action) => chooseAction(action.action, action.skillCheck)}
-      />
-      <div className="flex flex-row items-center gap-4 p-4">
-        {state === "DIALOGUE_TURN" && (
-          <TextMessageForm onSend={sendTextMessage} />
-        )}
-      </div>
     </div>
   );
 }
@@ -182,11 +141,11 @@ function App({ roomCode }: ParamProps) {
   const { state } = useRoomClientContext();
 
   if (state === "DIALOGUE_TURN" || state === "DIALOGUE_PROCESSING") {
-    return (
-      <Layout>
-        <Chat roomCode={roomCode} />
-      </Layout>
-    );
+    return <Chat roomCode={roomCode} />;
+  }
+
+  if (state === "COMBAT") {
+    return <Combat />;
   }
 
   return <Lobby roomCode={roomCode} />;

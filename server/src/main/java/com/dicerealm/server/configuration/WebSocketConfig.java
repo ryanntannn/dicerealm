@@ -5,7 +5,9 @@ package com.dicerealm.server.configuration;
 // "/hello" endpoint. It also sets the allowed origins to
 // "*" so that other domains can also access the socket.
 
+import com.dicerealm.server.handlers.BigScreenConnectionHandler;
 import com.dicerealm.server.handlers.SocketConnectionHandler;
+import com.dicerealm.server.room.RoomRouter;
 
 import java.util.Map;
 
@@ -25,16 +27,15 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 public class WebSocketConfig
     implements WebSocketConfigurer {
 
+		public static RoomRouter router = new RoomRouter();
+
 
 		private HandshakeInterceptor getInter() {
 			return new HandshakeInterceptor() {
 				@Override
 				public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 					String path = request.getURI().getPath();
-					if (!path.startsWith("/room/")) {
-						attributes.put("roomId", "0000");
-						return true;
-					}
+					System.out.println("Path: " + path);
 					String roomId = path.substring(path.lastIndexOf('/') + 1);
 					attributes.put("roomId", roomId);
 					return true;
@@ -58,7 +59,8 @@ public class WebSocketConfig
         // the CORS policy for the handlers so that other
         // domains can also access the socket
         webSocketHandlerRegistry
-            .addHandler(new SocketConnectionHandler(),"/connect", "/room/*")
+            .addHandler(new SocketConnectionHandler(router),"/connect", "/room/*")
+						.addHandler(new BigScreenConnectionHandler(router), "/big/*")
 						.addInterceptors(getInter())
             .setAllowedOrigins("*");
     }
