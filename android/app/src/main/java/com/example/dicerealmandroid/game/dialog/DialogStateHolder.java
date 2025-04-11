@@ -12,7 +12,6 @@ import java.util.List;
 public class DialogStateHolder extends ViewModel {
     private final DialogRepo dialogRepo;
 
-
     public DialogStateHolder() {
         // Constructor
         dialogRepo = new DialogRepo();

@@ -59,6 +59,15 @@ public class RoomRepo {
         roomDataSource.setRoomState(roomState);
     }
 
+    public void updatePlayersList(Player player){
+        // Update the roomState Players List
+        RoomState roomState = roomDataSource.getRoomState().getValue();
+        if(roomState == null) return;
+        roomState.removePlayer(player.getId());
+        roomState.addPlayer(player);
+        roomDataSource.setRoomState(roomState);
+    }
+
     public void changeState(RoomState.State state){
         roomDataSource.changeState(state);
     }

@@ -21,6 +21,8 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.Item;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.game.GameStateHolder;
@@ -34,6 +36,7 @@ import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.example.dicerealmandroid.util.Loading;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -58,6 +61,7 @@ public class CharacterScreen extends AppCompatActivity {
         // Access PlayerStateHolder
         playerSh = new ViewModelProvider(this).get(PlayerStateHolder.class);
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
+
         this.backToHome();
         this.setRoomCode();
 
