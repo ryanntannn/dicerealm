@@ -43,8 +43,8 @@ public class DicerealmClient extends WebSocketClient {
     private Gson gson = Serialization.makeDicerealmGsonInstance();
 
     private String roomCode;
-
-    private final static String baseUrl = "ws://192.168.18.69:8080/room/";
+		
+		private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
     private final PlayerRepo playerRepo = new PlayerRepo();
     private final RoomRepo roomRepo = new RoomRepo();
     private final DialogRepo dialogRepo = new DialogRepo();
