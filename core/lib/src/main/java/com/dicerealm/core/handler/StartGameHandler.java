@@ -3,6 +3,7 @@ package com.dicerealm.core.handler;
 import java.util.UUID;
 
 import com.dicerealm.core.command.StartGameCommand;
+import com.dicerealm.core.command.UpdateLocationGraphCommand;
 import com.dicerealm.core.dialogue.DialogueManager;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.dicerealm.core.room.RoomContext;
@@ -21,6 +22,7 @@ public class StartGameHandler extends CommandHandler<StartGameCommand> {
 		context.getBroadcastStrategy().sendToAllPlayers(command);
 		context.getRoomState().setState(RoomState.State.DIALOGUE_TURN);
 		context.getDungeonMaster().handleLocationGeneration("Forgotten Kingdom of Shadows"); // Comment out this line to use mockLocationGraph.
+		context.getBroadcastStrategy().sendToAllPlayers(new UpdateLocationGraphCommand(context.getRoomState().getLocationGraph()));
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn("Start the adventure.");
 		DialogueManager.broadcastPlayerActions(response.actionChoices, context);
 		DialogueManager.broadcastLocationChange(response, context);
