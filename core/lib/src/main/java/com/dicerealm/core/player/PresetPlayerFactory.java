@@ -168,7 +168,7 @@ public class PresetPlayerFactory {
         }
 	}
 
-	private static void addDefaultSkills(Player player) {
+	public static void addDefaultSkills(Player player) {
 		EntityClass entityClass = player.getEntityClass();
 
 		// Retrieve level 1 skills for the player's class
