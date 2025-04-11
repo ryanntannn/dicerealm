@@ -34,6 +34,7 @@ public class SpellCardAdapter extends CardAdapter<Skill> {
 
     @Override
     public void onBindViewHolder(@NonNull CardAdapter.CardViewHolder holder, int position) {
+        
         Skill skill = item.get(position);
         holder.skillbutton.setText(skill.getDisplayName());
         if (skill.isUsable()){

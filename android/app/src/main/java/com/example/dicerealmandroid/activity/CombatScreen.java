@@ -27,6 +27,7 @@ import com.dicerealm.core.entity.ClassStats;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.Stats;
+import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
@@ -50,6 +51,8 @@ import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,6 +70,7 @@ import java.util.UUID;
 // TODO: Refactor code again to implement dependencies injection if got time
 
 public class CombatScreen extends AppCompatActivity {
+    private GameStateHolder gameSh = new GameStateHolder();
     private RoomStateHolder roomSh = new RoomStateHolder();
     private PlayerStateHolder playerSh = new PlayerStateHolder();
     private CombatStateHolder combatSh = new CombatStateHolder();
@@ -121,17 +125,39 @@ public class CombatScreen extends AppCompatActivity {
     }
 
     private void displayPlayerInfo(){
-        TextView playerInfo = findViewById(R.id.PlayerInfo);
         TextView playerName = findViewById(R.id.playerName);
         TextView yourHealth = findViewById(R.id.yourHealth);
+        int[] statsIds = gameSh.getStatsIds();
         playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
             public void onChanged(Player player) {
                 playerName.setText(player.getDisplayName() + "(you)");
                 yourHealth.setText(player.getHealth() + "/" + player.getStat(Stat.MAX_HEALTH));
 
-                playerInfo.setText("");
-                playerInfo.setText(player.getStats().toString());
+                try {
+                    List<Stat> sortedStats = new ArrayList<>(player.getStats().keySet());
+                    Collections.sort(sortedStats, Comparator.comparing(Enum::name));
+                    Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
+                    int currentStatId = 0;
+                    for (Stat stat : sortedStats) {
+                        // we render max health separately
+                        if (stat == Stat.MAX_HEALTH) {
+                            continue;
+                        }
+                        int id = statsIds[currentStatId++];
+                        TextView currentStat = findViewById(id);
+                        if (StatsMap.getStatText(stat) == "Armour Class"){
+                            currentStat.setText(StatsMap.getStatText(stat) + ": " + player.getStat(stat));
+                        }
+                        else{
+                            currentStat.setText(StatsMap.getStatText(stat).substring(0,3) + ": " + player.getStat(stat));
+                        }
+
+                    }
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
         });
     }
