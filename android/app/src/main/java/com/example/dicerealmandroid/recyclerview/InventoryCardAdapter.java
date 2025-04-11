@@ -18,8 +18,8 @@ import java.util.List;
 
 public class InventoryCardAdapter extends CardAdapter<Item>{
     CombatScreen Combat;
-    public InventoryCardAdapter(Context context, List<Item> item, SelectListener listener, String type , CombatStateHolder combatSh , CombatScreen Combat) {
-        super(context, item, listener, type , combatSh);
+    public InventoryCardAdapter(Context context, List<Item> item, String type , CombatStateHolder combatSh , CombatScreen Combat) {
+        super(context, item,  type , combatSh);
         this.Combat = Combat;
     }
 
@@ -27,7 +27,7 @@ public class InventoryCardAdapter extends CardAdapter<Item>{
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.skillcard, parent, false);
-        return new CardAdapter.CardViewHolder(itemView, listener );
+        return new CardAdapter.CardViewHolder(itemView);
     }
 
     @Override

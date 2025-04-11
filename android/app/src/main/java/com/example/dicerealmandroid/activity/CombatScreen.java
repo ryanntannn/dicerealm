@@ -66,7 +66,7 @@ import java.util.UUID;
 //          - Maybe can make the DicerealmClient a singleton and can remove the roomDataSource
 // TODO: Refactor code again to implement dependencies injection if got time
 
-public class CombatScreen extends AppCompatActivity implements SelectListener {
+public class CombatScreen extends AppCompatActivity {
     private RoomStateHolder roomSh = new RoomStateHolder();
     private PlayerStateHolder playerSh = new PlayerStateHolder();
     private CombatStateHolder combatSh = new CombatStateHolder();
@@ -163,7 +163,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                                 Log.d("skill", "Skill: " + skills.getDisplayName());
                             }
                             //Call recycleview
-                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell",combatSh , CombatScreen.this);
+                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList,"Spell",combatSh , CombatScreen.this);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
@@ -176,7 +176,6 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
     }
 
     public void closespell(){
-
         // Hardcode the button to use the first skill
         MaterialButton skillButtons = findViewById(R.id.BackButton);
         skillButtons.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +183,6 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
             public void onClick(View v) {
                 //Make the actions layout invisible
                 close();
-
             }
         });
     }
@@ -224,7 +222,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                             spellaction.setVisibility(View.VISIBLE);
 
                             //Call recycleview
-                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item",combatSh, CombatScreen.this);
+                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist ,"Item",combatSh, CombatScreen.this);
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
@@ -355,8 +353,5 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         backgroundThread.start();
     }
 
-    @Override
-    public void onItemClick(int position ,String type ) {
-        close();
-    }
+
 }

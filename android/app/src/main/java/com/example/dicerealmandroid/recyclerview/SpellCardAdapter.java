@@ -20,8 +20,8 @@ import java.util.List;
 
 public class SpellCardAdapter extends CardAdapter<Skill> {
     CombatScreen Combat;
-    public SpellCardAdapter(Context context, List<Skill> item, SelectListener listener, String type, CombatStateHolder combatSh , CombatScreen combat) {
-        super(context, item, listener,type,combatSh);
+    public SpellCardAdapter(Context context, List<Skill> item,  String type, CombatStateHolder combatSh , CombatScreen combat) {
+        super(context, item,type,combatSh);
         this.Combat = combat;
     }
 
@@ -29,7 +29,7 @@ public class SpellCardAdapter extends CardAdapter<Skill> {
     @Override
     public CardAdapter.CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.skillcard, parent, false);
-        return new CardAdapter.CardViewHolder(itemView, listener );
+        return new CardAdapter.CardViewHolder(itemView );
     }
 
     @Override
