@@ -3,6 +3,8 @@ package com.dicerealm.core.combat;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,8 @@ import com.dicerealm.core.entity.EntityClass;
 import com.dicerealm.core.entity.Race;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
+import com.dicerealm.core.item.Potion;
+import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.item.WeaponClass;
 import com.dicerealm.core.monster.Monster;
@@ -27,6 +31,8 @@ public class ActionManagerTest {
     private CombatLog combatLog;
     private Weapon weapon;
     private Skill skill;
+    private Scroll scroll;
+    private Potion potion;
     private CombatResult combatResult;
 
     @BeforeEach
@@ -51,8 +57,12 @@ public class ActionManagerTest {
         // Create a test weapon
         weapon = new Weapon("Sword", "Iron Sword forged from the Great Dwarfen Forges", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 1)), 1);
         skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3,2,1,2);
+        scroll = new Scroll("Fireball Scroll", "A scroll containing a powerful fireball spell",  1, 1);
+        potion = new Potion("Health Potion", "Health Potion", 1, 1);
+        player.getInventory().addItem(weapon);
         player.equipItem(BodyPart.RIGHT_HAND, weapon);
-
+        player.getInventory().addItem(scroll);
+        player.getInventory().addItem(potion);
     }
 
     @Test
@@ -107,6 +117,24 @@ public class ActionManagerTest {
 
         String log = combatResult.getHitLog();
         assertTrue(log.contains("MISS"), "Expected log to contain 'MISS'");
+    }
+
+    @Test
+    void testPotionUsage(){
+        assertNotNull(player.getInventory().getItem(potion.getId()));
+        player.takeDamage(1);
+        actionManager.usePotion(player, player, potion);
+        assertEquals(24, player.getHealth(), "Player should be at max health after using potion");
+        assertNull(player.getInventory().getItem(potion.getId()));
+    }
+
+    @Test
+    void testScrollUsage(){
+        assertNotNull(player.getInventory().getItem(scroll.getId()));
+        actionManager.rigDice(new FixedD20(19));
+        actionManager.useScroll(player, monster, scroll);
+        assertEquals(23, monster.getHealth(), "Player should be at max health after using potion");
+        assertNull(player.getInventory().getItem(scroll.getId()));
     }
 }
 

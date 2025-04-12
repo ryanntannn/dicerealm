@@ -59,6 +59,7 @@ public class ActionManager {
     public CombatResult performSkillAttack(Entity caster, Entity target, Skill skill) {
         ActionType actionType = ActionType.SKILL; // All skills are of type Skill attack
         HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
+        skill.activateCooldown();
         combatResult = new CombatResult(caster, target, skill);
         combatLog.log(hitResult.getHitLog());
         combatResult.fromHitResult(hitResult);
@@ -94,6 +95,7 @@ public class ActionManager {
             //Temp as all potions will be healing 
             combatResult.setPotionLog((user.getDisplayName() + " uses " + potion.getDisplayName() + " on " +
             target.getDisplayName() + " for " + damage + " health!"));
+            user.getInventory().removeItem(potion);
         }
         return combatResult;
 
@@ -113,7 +115,7 @@ public class ActionManager {
                 combatResult.fromDamageResult(damageResult);
                 combatLog.log(damageCalculator.readout());
             }
-
+            caster.getInventory().removeItem(scroll);
         }
         
         return combatResult;

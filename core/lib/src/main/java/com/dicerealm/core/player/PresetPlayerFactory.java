@@ -146,7 +146,8 @@ public class PresetPlayerFactory {
                 player.equipItem(BodyPart.RIGHT_HAND, bow);
 				player.equipItem(BodyPart.TORSO, chestpiece);
 				player.equipItem(BodyPart.NECK, necklace);
-				
+
+				player.getInventory().addItem(new MinorHealthPotion());
             }
             case CLERIC -> {
 				Weapon staff = StaffFactory.createStaff(1); 
