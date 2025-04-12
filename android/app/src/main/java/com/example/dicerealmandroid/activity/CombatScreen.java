@@ -23,32 +23,24 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dicerealm.core.combat.ActionType;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.entity.BodyPart;
-import com.dicerealm.core.entity.ClassStats;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
-import com.dicerealm.core.entity.Stats;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
-import com.dicerealm.core.item.Weapon;
-import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
-import com.example.dicerealmandroid.MainActivity;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
-import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.recyclerview.CardAdapter;
 import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
-import com.example.dicerealmandroid.recyclerview.SelectListener;
 import com.example.dicerealmandroid.recyclerview.SpellCardAdapter;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.google.android.material.button.MaterialButton;
@@ -57,9 +49,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 
 // TODO: Implement Weapon attack functionality (DONE)
@@ -328,10 +317,11 @@ public class CombatScreen extends AppCompatActivity {
                     nameView.setMaxWidth(400);
                     nameView.setBackgroundResource(R.drawable.cell_border);
                     CombatSequence sequence = combatSequences.get(i);
-                    if(i == 0){
+                    if(combatSh.isMyTurn()){
+                        Log.d("turn", combatSh.isMyTurn().toString());
                         // Mark first element as the current turn
                         nameView.setTypeface(null, Typeface.BOLD);
-                        nameView.setText(">>> " + sequence.getName() + " - " + sequence.getInitiative() + " <<<" );
+                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
                         nameView.setBackgroundResource(R.drawable.bold_cell_border);
                     } else {
                         nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
