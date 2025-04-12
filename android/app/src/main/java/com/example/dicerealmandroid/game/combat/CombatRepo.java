@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CombatRepo {
     private final CombatDataSource combatDataSource;
@@ -128,13 +129,29 @@ public class CombatRepo {
             return;
         }
 
-        for(int i =0; i < initiativeResults.size(); i++){
-            if(initiativeResults.get(i).getEntity().getId().equals(combatant)){
-                initiativeResults.remove(i);
-                break;
-            }
-        }
+        initiativeResults.removeIf(initiativeResult -> initiativeResult.getEntity().getId().equals(combatant));
         combatDataSource.setInitiativeResults(initiativeResults);
     }
 
+
+    public void setNextRound(int round){
+
+        // If its the same round
+        if(combatDataSource.getPrevRound() != round){
+            combatDataSource.setPrevRound(round);
+            combatDataSource.setCurrentRound(round);
+        }
+    }
+
+    public LiveData<Integer> getCurrentRound(){
+        return combatDataSource.getCurrentRound();
+    }
+
+    public Boolean isNewRound(){
+        Integer currRound = combatDataSource.getCurrentRound().getValue();
+        Integer prevRound = combatDataSource.getPrevRound();
+        if(currRound == null) return false;
+
+        return !currRound.equals(prevRound);
+    }
 }

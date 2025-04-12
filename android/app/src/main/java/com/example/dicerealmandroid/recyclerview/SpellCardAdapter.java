@@ -51,7 +51,6 @@ public class SpellCardAdapter extends CardAdapter<Skill> {
             public void onClick(View v) {
                 if (skill.isUsable()) {
                     combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL);
-                    skill.activateCooldown();
                     Combat.close();
                 }
             }

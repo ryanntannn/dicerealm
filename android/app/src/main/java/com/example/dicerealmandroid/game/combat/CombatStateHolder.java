@@ -33,6 +33,8 @@ public class CombatStateHolder extends ViewModel {
         // The CombatSequence class is a filtered version of InitiativeResult
         return Transformations.map(combatRepo.getInitiativeResults(), initiativeResults -> {
             List<CombatSequence> combatSequence = new ArrayList<>();
+            if(initiativeResults == null) return combatSequence;
+
             for(InitiativeResult initiativeResult : initiativeResults){
                 String name = initiativeResult.getEntity().getDisplayName();
                 int totalInitiative = initiativeResult.getTotalInitiative();
