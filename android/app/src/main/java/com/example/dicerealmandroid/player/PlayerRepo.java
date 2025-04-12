@@ -22,6 +22,8 @@ import com.example.dicerealmandroid.room.RoomRepo;
 import com.google.gson.Gson;
 import com.dicerealm.core.entity.BodyPart;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerRepo {
@@ -106,12 +108,17 @@ public class PlayerRepo {
         if(player == null) return;
 
         InventoryOf<Skill> skillsInventory = player.getSkillsInventory();
+        List<Skill> skillsToUpdate = new ArrayList<>();
         for(Skill skill : skillsInventory.getItems()){
             if(skill.getCooldown() > 0){
-                skill.reduceCooldown();
-                player.getSkillsInventory().removeItem(skill);
-                player.getSkillsInventory().addItem(skill);
+                skillsToUpdate.add(skill);
             }
+        }
+
+        for(Skill skill : skillsToUpdate){
+            skill.reduceCooldown();
+            player.getSkillsInventory().removeItem(skill);
+            player.getSkillsInventory().addItem(skill);
         }
         setPlayer(player);
     }

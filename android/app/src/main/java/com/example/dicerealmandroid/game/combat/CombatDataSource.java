@@ -18,6 +18,8 @@ public class CombatDataSource {
     private final MutableLiveData<String> currentTurn = new MutableLiveData<>();
     private final MutableLiveData<List<InitiativeResult>> initiativeResults = new MutableLiveData<>();
     private final MutableLiveData<Entity> monster = new MutableLiveData<>();
+    private final MutableLiveData<Integer> currentRound = new MutableLiveData<>(1);
+    private Integer prevRound = 0;
 
     private CombatDataSource(){}
 
@@ -53,6 +55,20 @@ public class CombatDataSource {
         return monster;
     }
 
+    public LiveData<Integer> getCurrentRound(){
+        return currentRound;
+    }
+
+    public void setCurrentRound(int round){
+        this.currentRound.postValue(round);
+    }
+
+    public int getPrevRound(){
+        return prevRound;
+    }
+    public void setPrevRound(int round){
+        this.prevRound = round;
+    }
 
 
     // Reset all cache data while leaving the singleton instance
