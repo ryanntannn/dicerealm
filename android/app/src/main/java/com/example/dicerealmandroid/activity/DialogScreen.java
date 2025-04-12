@@ -23,6 +23,8 @@ import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,6 +33,7 @@ import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
+import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.item.Potion;
@@ -38,12 +41,15 @@ import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
+import com.dicerealm.core.skills.Skill;
+import com.example.dicerealmandroid.fragments.InventoryDialogFragment;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.dialog.DialogStateHolder;
+import com.example.dicerealmandroid.player.PlayerInventoryWrapper;
 import com.example.dicerealmandroid.player.PlayerRepo;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
@@ -62,7 +68,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 // TODO: Add player edit text input(Optional)
-// TODO: Add player inventory interface
+// TODO: Roll dice modal when action has skillcheck
+// TODO: Add Location Visited traversal history
 
 public class DialogScreen extends AppCompatActivity {
     private CardView selectedCardView;
@@ -82,6 +89,14 @@ public class DialogScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        //Hide android bottom nav bar
+        View decorView = getWindow().getDecorView();
+        WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
+
+        if (controller != null) {
+            controller.hide(WindowInsetsCompat.Type.systemBars());
+            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
 
         LinearLayout messageLayout = findViewById(R.id.messageContainer);
         LinearLayout actionLayout = findViewById(R.id.playerActionsContainer);
@@ -94,27 +109,9 @@ public class DialogScreen extends AppCompatActivity {
         roomSh = new ViewModelProvider(this).get(RoomStateHolder.class);
         dialogSh = new ViewModelProvider(this).get(DialogStateHolder.class);
 
-        playerSh.getSpecificInventoryType(Scroll.class).observe(this, scrolls -> {
-            if (scrolls != null) {
-                // Use scrolls list here
-                for(Scroll scroll : scrolls){
-                    Log.d("Scrolls", "You have the following scroll: " + scroll.getDisplayName());
-                }
-            }
-        });
-
-        playerSh.getSpecificInventoryType(Potion.class).observe(this, potions -> {
-            if (potions != null) {
-                // Use potions list here
-                for(Potion potion : potions) {
-                    Log.d("Potions", "You have the following potion: " + potion.getDisplayName());
-                }
-            }
-        });
-
         this.trackTurns(messageLayout, actionLayout);
         this.displayPlayerDetails(itemInventoryView);
-        this.openItemInventory(itemInventoryModal, itemInventoryView);
+        this.openItemInventory();
         this.trackGameServer(messageLayout, actionLayout, itemInventoryView);
         this.trackLocation();
         this.showActionResults();
@@ -506,109 +503,30 @@ public class DialogScreen extends AppCompatActivity {
                catch (NullPointerException e){
                    e.printStackTrace();
                }
-               displayItemInventory(player, itemInventoryView);
             }
         });
     }
 
-    private void openItemInventory(BottomSheetDialog itemInventoryModal, View bottomSheetView){
+    private void openItemInventory(){
         FloatingActionButton itemInventory= findViewById(R.id.itemInventory);
-        // Open player inventory
+        // Open player inventory dialog
         itemInventory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
+                    // Player inventory interface for All Items: EquippableItems, EquippedItems, Potions, Scrolls
 
-                // Set fixed height
-                bottomSheetView.setLayoutParams(new FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        ScreenDimensions.getScreenHeight() / 2
-                ));
-                itemInventoryModal.setContentView(bottomSheetView);
-                itemInventoryModal.show();
+                PlayerInventoryWrapper inventoryData = new PlayerInventoryWrapper(
+                        playerSh.getSpecificInventoryType(EquippableItem.class),
+                        playerSh.getEquippedItems(),
+                        playerSh.getSpecificInventoryType(Potion.class),
+                        playerSh.getSpecificInventoryType(Scroll.class)
+                );
+                InventoryDialogFragment inventoryDialog = InventoryDialogFragment.newInstance(inventoryData, playerSh);
+
+                    inventoryDialog.show(getSupportFragmentManager(), "InventoryDialog");
+
             }
         });
     }
 
-    private void displayItemInventory(Player player, View itemInventoryView){
-
-        // Display player items in modal
-        LinearLayout itemInventoryLayout = itemInventoryView.findViewById(R.id.itemInventoryList);
-        itemInventoryLayout.removeAllViews();
-
-        // Set LayoutParams for CardView
-        LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 200
-        );
-        cardLayoutParams.setMargins(40, 40, 40, 40);
-
-
-        LinearLayout.LayoutParams btnLayoutParams = new LinearLayout.LayoutParams(
-                500, 100
-        );
-        btnLayoutParams.setLayoutDirection(LinearLayout.HORIZONTAL);
-
-        // Display player equipped items
-        for(BodyPart bodypart : player.getEquippedItems().keySet()){
-            EquippableItem item = player.getEquippedItems().get(bodypart);
-
-            TextView itemView = new TextView(DialogScreen.this);
-            CardView itemCard = new CardView(DialogScreen.this);
-
-            itemCard.setLayoutParams(cardLayoutParams);
-
-            itemView.append(item.getDisplayName() + " equipped on " + bodypart);
-            itemView.append("\n" + item.getDescription());
-
-            itemCard.addView(itemView);
-            itemInventoryLayout.addView(itemCard);
-        }
-
-        // Display player unequipped items
-        for(Item item : player.getInventory().getItems()){
-            TextView itemTitle = new TextView(DialogScreen.this);
-            TextView itemDescription = new TextView(DialogScreen.this);
-
-            LinearLayout itemCardLayout = new LinearLayout(DialogScreen.this);
-            CardView itemCard = new CardView(DialogScreen.this);
-
-            // item card layout
-            itemCardLayout.setOrientation(LinearLayout.VERTICAL);
-
-            // Card properties
-            itemCard.setLayoutParams(cardLayoutParams);
-
-            // title properties
-            itemTitle.setText(item.getDisplayName());
-
-            // desc properties
-            itemDescription.setText(item.getDescription());
-
-            // check if equippable
-            if (item instanceof EquippableItem) {
-                EquippableItem equippableItem = (EquippableItem) item;
-
-                // btn properties
-                for (BodyPart bodyPart : equippableItem.getSuitableBodyParts()) {
-                    Button equipButton = new Button(DialogScreen.this);
-                    equipButton.setText("Equip to " + bodyPart);
-                    equipButton.setGravity(Gravity.RIGHT);
-                    equipButton.setLayoutParams(btnLayoutParams);
-
-                    // Hardcode the body part for now, make it more dynamic later
-                    equipButton.setOnClickListener(v -> {
-                        Log.d("info", "Equip button clicked");
-                        playerSh.equipItemRequest(equippableItem.getId(), bodyPart);
-                    });
-
-                    itemCardLayout.addView(equipButton);
-                }
-            }
-
-            itemCardLayout.addView(itemTitle);
-            itemCardLayout.addView(itemDescription);
-
-            itemCard.addView(itemCardLayout);
-            itemInventoryLayout.addView(itemCard);
-        }
-    }
 }

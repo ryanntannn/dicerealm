@@ -24,10 +24,25 @@
         <item name="android:textColor">@color/lightgrayText</item>
         <item name="android:enabled">false</item>
     </style>
-    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowMinWidthMajor">50%</item>
-        <item name="android:windowMinWidthMinor">50%</item>
+    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="shapeAppearanceOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
     </style>
+    // TODO: Fix dialog animation (Change the fly in from top right)
+
+    <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textColor">@color/darkpurple</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/cardview_light_background</item>
+    </style>
+
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+
 
 </resources>
 

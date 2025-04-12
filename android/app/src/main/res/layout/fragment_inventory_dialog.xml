@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Inventory"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/darkpurple"
+        android:paddingBottom="8dp" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightgrayText"
+        android:layout_marginBottom="16dp" />
+
+    <!-- No Items Message -->
+    <TextView
+        android:id="@+id/noItemsTextview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No items in inventory"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/darkred"
+        android:padding="16dp" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/inventoryRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+</LinearLayout>

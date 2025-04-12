@@ -14,7 +14,20 @@
         <!-- Android -->
         <item name="android:textColor">@color/darkText</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="android:windowFullscreen">true</item>
+
+    </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/darkpurple</item>
+        <item name="colorSecondary">@color/darkpurple</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
     </style>
 
     <style name="Theme.DicerealmAndroid" parent="Base.Theme.DicerealmAndroid" />
+
 </resources>

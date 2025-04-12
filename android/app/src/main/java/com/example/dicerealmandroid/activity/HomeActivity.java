@@ -111,8 +111,6 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     // If user navigates back to the home screen
