@@ -240,13 +240,17 @@ class CombatManagerTest {
         combatManager.executeCombatTurn(attacker, player_1, skill);
         assertEquals(skill.getRemainingCooldown(), skill.getCooldown(), "The skill's cooldown should be activated after use.");
 
-        // Complete multiple rounds until the cooldown expires
-        for (int i = 0; i < skill.getCooldown(); i++) {
-            combatManager.endTurn(); // Monster's turn ends
-            combatManager.endTurn(); // Player 2's turn ends
-            combatManager.endTurn(); // Player 1's turn ends (round ends)
-        }
-
+      
+        combatManager.endTurn(); // Monster's turn ends
+        combatManager.endTurn(); // Player 2's turn ends
+        combatManager.endTurn(); // Player 1's turn ends (round ends)
+        assertEquals(2, combatManager.getCurrentRoundIndex(), "The current round index should be incremented after a full round.");
+        assertEquals(1, skill.getRemainingCooldown(), "The skill's cooldown should be reduced after a full round.");
+        combatManager.endTurn(); // Monster's turn ends
+        combatManager.endTurn(); // Player 2's turn ends
+        combatManager.endTurn(); // Player 1's turn ends (round ends)
+        assertEquals(3, combatManager.getCurrentRoundIndex(), "The current round index should be incremented after a full round.");
+       
         // Verify the cooldown is fully expired
         assertEquals(0, skill.getRemainingCooldown(), "The skill's cooldown should be fully expired after the required number of rounds.");
         assertTrue(skill.isUsable(), "The skill should be usable after its cooldown expires.");

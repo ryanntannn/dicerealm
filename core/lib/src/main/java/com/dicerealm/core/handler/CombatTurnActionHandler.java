@@ -58,7 +58,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
         // Execute the combat action
         CombatResult result = combatManager.executeCombatTurn((Player)attacker, (Monster)target, command.getAction());
 
-				int currentTurnIndex = combatManager.getCurrentTurnIndex();
+		int currentTurnIndex = combatManager.getCurrentTurnIndex();
 
         // End the turn
         combatManager.endTurn();
@@ -93,7 +93,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(),  combatManager.getCurrentTurnEntity().getId()));
+				context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(), combatManager.getCurrentRoundIndex(),  combatManager.getCurrentTurnEntity().getId()));
 				CombatResult monsterResult = monsterAI.handleMonsterTurn(combatManager.getParticipants(), combatManager.getCurrentTurnEntity());
         int currentTurn = combatManager.getCurrentTurnIndex();
 				combatManager.endTurn();
@@ -110,7 +110,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 			} else {
 					// Start the next turn
 					combatManager.startTurn();
-					context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(),  combatManager.getCurrentTurnEntity().getId()));
+					context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(), combatManager.getCurrentRoundIndex(), combatManager.getCurrentTurnEntity().getId()));
 			}
 		}
 

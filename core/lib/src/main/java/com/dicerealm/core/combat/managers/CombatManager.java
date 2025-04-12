@@ -33,6 +33,7 @@ public class CombatManager {
     private ActionManager actionManager;
     private CombatLog combatLog;
     private int currentTurnIndex;
+    private int currentRoundIndex;
 
     public CombatManager(){
 		}
@@ -269,6 +270,7 @@ public class CombatManager {
             combatLog.log("The round has ended.");
             reduceAllSkillCooldowns();
             startRound(); // Start a new round
+            currentRoundIndex++;
         }
     }
 
@@ -286,6 +288,10 @@ public class CombatManager {
         return currentTurnIndex;
     }
 
+    public Integer getCurrentRoundIndex() {
+        return currentRoundIndex;
+    }
+
     public void newCombat(List<Entity> participants) {
         this.participants = participants;
         this.initiativeResults = new ArrayList<>();
@@ -293,6 +299,7 @@ public class CombatManager {
         this.currentTurnIndex = 0;
         this.combatLog = new CombatLog();
         this.actionManager = new ActionManager(combatLog);
+        this.currentRoundIndex = 1;
     }
 
     public List<Entity> getParticipants() {
