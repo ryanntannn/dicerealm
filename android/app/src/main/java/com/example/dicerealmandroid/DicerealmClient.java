@@ -25,7 +25,6 @@ import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.game.GameRepo;
 import com.example.dicerealmandroid.game.combat.CombatRepo;
-import com.example.dicerealmandroid.game.combat.CombatTurnModal;
 import com.example.dicerealmandroid.game.dialog.DialogRepo;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.player.PlayerRepo;
@@ -157,22 +156,16 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "COMBAT_START":
                     CombatStartCommand combatStartCommand = gson.fromJson(message, CombatStartCommand.class);
-//                    combatRepo.setLatestTurn(combatStartCommand.getDisplayText());
+                    combatRepo.setLatestTurn(combatStartCommand.getDisplayText());
                     combatRepo.setInitiativeResults(combatStartCommand.getInitiativeResults());
-                    Message.showMessage("Round " + 1);
                     Message.showMessage("Enemies found! Switching to combat mode.");
                     roomRepo.changeState(RoomState.State.BATTLE);
                     break;
 
                 case "COMBAT_START_TURN":
                     CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
-                    int round = combatStartTurnCommand.getRoundNumber();
-                    combatRepo.setNextRound(round);
-                    if(combatRepo.isNewRound()){
-                        Message.showMessage("Round " + round);
-                        playerRepo.continueSkillCoolDown();
-                    }
-
+                    int turn = combatStartTurnCommand.getTurnNumber();
+                    playerRepo.continueSkillCoolDown();
                     if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
                         Message.showMessage("Your turn!");
                     }
@@ -191,8 +184,7 @@ public class DicerealmClient extends WebSocketClient {
                         if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
                             damageLog = combatEndTurnCommand.getCombatResult().getDamageLog();
                         }
-                        CombatTurnModal combatTurnModal = new CombatTurnModal(combatEndTurnCommand.getCombatResult().getHitLog(), damageLog, combatEndTurnCommand.getTurnNumber());
-                        combatRepo.setLatestTurn(damageLog);
+                        combatRepo.setLatestTurn("Turn " + combatEndTurnCommand.getTurnNumber() + "\n" + combatEndTurnCommand.getCombatResult().getHitLog() + "\n" + damageLog);
                         combatRepo.rotateCombatSequence();
                     }
                     break;

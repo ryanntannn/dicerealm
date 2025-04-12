@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.entity.Entity;
@@ -77,8 +78,10 @@ public class CombatScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        List<InitiativeResult> initiativeResults = combatSh.initiativeResults();
 
-        this.combatSequence();
+
+        this.combatSequence(initiativeResults);
         this.trackCurrentTurn();
         this.attackLeft();
         this.attackRight();
@@ -194,7 +197,6 @@ public class CombatScreen extends AppCompatActivity {
     }
 
     public void closespell(){
-        // Hardcode the button to use the first skill
         MaterialButton skillButtons = findViewById(R.id.BackButton);
         skillButtons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,9 +224,12 @@ public class CombatScreen extends AppCompatActivity {
                 if (Potions_Scroll != null) {
                     List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
 
-                    for (Item potion_scroll : Potions_Scrolllist) {
-                        Log.d("skill", "Skill: " + potion_scroll.getDisplayName());
+                    for (int i = 0 ; i < Potions_Scrolllist.size(); i++) {
+                        if (Potions_Scrolllist.get(i).getType() != "POTION" || Potions_Scrolllist.get(i).getType() != "SCROLL"){
+                            Potions_Scrolllist.remove(i);
+                        }
                     }
+
 
                     // Hardcode the button to use the first skill
                     MaterialButton Itembutton = findViewById(R.id.itemButton);
@@ -301,30 +306,52 @@ public class CombatScreen extends AppCompatActivity {
 
     }
 
-    private void combatSequence(){
-
+    private void combatSequence(List<InitiativeResult> initiativeResults){
         TableLayout turntable = findViewById(R.id.turnCombatSquence);
+
         combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
             @Override
             public void onChanged(List<CombatSequence> combatSequences){
-
+                Log.d("combat", "Initiative Results:" + initiativeResults.toString());
                 turntable.removeAllViews();
-                for(int i = 0; i < combatSequences.size(); i++){
+//                for(int i = 0; i < combatSequences.size(); i++){
+//                    TableRow newtablerow = new TableRow(CombatScreen.this);
+//                    TextView nameView = new TextView(CombatScreen.this);
+//                    int padding = 16;
+//                    nameView.setPadding(padding, padding, padding, padding);
+//                    nameView.setMaxWidth(400);
+//                    nameView.setBackgroundResource(R.drawable.cell_border);
+//                    CombatSequence sequence = combatSequences.get(i);
+//                    if(combatSh.isMyTurn()){
+//                        Log.d("turn", combatSh.isMyTurn().toString());
+//                        // Mark first element as the current turn
+//                        nameView.setTypeface(null, Typeface.BOLD);
+//                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
+//                        nameView.setBackgroundResource(R.drawable.bold_cell_border);
+//                    } else {
+//                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
+//                        nameView.setBackgroundResource(R.drawable.cell_border);
+//                    }
+//                    newtablerow.addView(nameView);
+//                    turntable.addView(newtablerow);
+//                }
+
+                for(int i = 0; i < initiativeResults.size(); i++){
                     TableRow newtablerow = new TableRow(CombatScreen.this);
                     TextView nameView = new TextView(CombatScreen.this);
                     int padding = 16;
                     nameView.setPadding(padding, padding, padding, padding);
                     nameView.setMaxWidth(400);
                     nameView.setBackgroundResource(R.drawable.cell_border);
-                    CombatSequence sequence = combatSequences.get(i);
-                    if(combatSh.isMyTurn()){
-                        Log.d("turn", combatSh.isMyTurn().toString());
+                    InitiativeResult sequence = initiativeResults.get(i);
+                    Log.d("nameofevery",sequence.getEntity().getDisplayName() +"    " +combatSequences.get(0).getName());
+                    if(sequence.getEntity().getDisplayName().equals(combatSequences.get(0).getName())){
                         // Mark first element as the current turn
                         nameView.setTypeface(null, Typeface.BOLD);
-                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
+                        nameView.setText(sequence.getEntity().getDisplayName() + " - " + sequence.getInitiativeRoll());
                         nameView.setBackgroundResource(R.drawable.bold_cell_border);
                     } else {
-                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
+                        nameView.setText(sequence.getEntity().getDisplayName() + " - " + sequence.getInitiativeRoll());
                         nameView.setBackgroundResource(R.drawable.cell_border);
                     }
                     newtablerow.addView(nameView);
