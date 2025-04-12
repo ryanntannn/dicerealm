@@ -61,7 +61,7 @@ public class InventoryDialogAdapter extends RecyclerView.Adapter<InventoryDialog
                 holder.itemEquipButton.setText("Equip to " + bodyPart);
 
                 // Enable if item not equipped
-                if (equippableItem != null && equippedItems != null && !equippedItems.contains(equippableItem)){
+                if (equippableItem != null && equippedItems != null && !equippedItems.contains(equippableItem)) {
                     holder.itemEquipButton.setEnabled(true);
                     holder.itemEquipButton.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.button_bg_selector));
                     holder.itemEquipButton.setOnClickListener(v -> {
@@ -74,8 +74,7 @@ public class InventoryDialogAdapter extends RecyclerView.Adapter<InventoryDialog
                             Log.e("InventoryAdapter", "Error equipping item: " + e.getMessage());
                         }
                     });
-                }
-                else {
+                } else {
                     holder.itemEquipButton.setEnabled(false);
                     holder.itemEquipButton.setText("Equipped");
                 }
@@ -84,6 +83,7 @@ public class InventoryDialogAdapter extends RecyclerView.Adapter<InventoryDialog
             holder.itemEquipButton.setVisibility(View.GONE);
         }
     }
+
     @Override
     public int getItemCount() {
         return getAllItems().size();
@@ -125,10 +125,14 @@ public class InventoryDialogAdapter extends RecyclerView.Adapter<InventoryDialog
 
     private int getIconResId(Item item) {
         switch (item.getType()) {
-            case "WEAPON": return R.drawable.weapon;
-            case "POTION": return R.drawable.potion;
-            case "SCROLL": return R.drawable.scroll;
-            case "EQUIPPABLE_ITEM": return R.drawable.weaponshield;
+            case "WEAPON":
+                return R.drawable.weapon;
+            case "POTION":
+                return R.drawable.potion;
+            case "SCROLL":
+                return R.drawable.scroll;
+            case "EQUIPPABLE_ITEM":
+                return R.drawable.weaponshield;
             default:
                 Log.d("InventoryAdapter", "Other item type: " + item.getType());
                 return R.drawable.weaponshield;

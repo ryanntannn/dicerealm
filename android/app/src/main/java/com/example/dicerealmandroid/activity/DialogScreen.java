@@ -117,29 +117,29 @@ public class DialogScreen extends AppCompatActivity {
         this.showActionResults();
     }
 
-    private void showActionResults(){
+    private void showActionResults() {
         dialogSh.subscribeDialogLatestActionResult().observe(this, new Observer<SkillCheck.ActionResultDetail>() {
-           @Override
-           public void onChanged(SkillCheck.ActionResultDetail actionResultDetail){
-               if(actionResultDetail == null) return;
-               
-               String actionResultsSummary = actionResultDetail.toString();
-           }
-        });
-    }
+            @Override
+            public void onChanged(SkillCheck.ActionResultDetail actionResultDetail) {
+                if (actionResultDetail == null) return;
 
-    private void trackLocation(){
-        MaterialTextView locationText = findViewById(R.id.location);
-        locationText.setTextSize(10);
-        gameSh.subscribeCurrentLocation().observe(this, new Observer<Location>() {
-           @Override
-           public void onChanged(Location location){
-               locationText.setText(location.getDisplayName());
+                String actionResultsSummary = actionResultDetail.toString();
             }
         });
     }
 
-    private void trackGameServer(LinearLayout messageLayout, LinearLayout actionLayout, View itemInventoryView){
+    private void trackLocation() {
+        MaterialTextView locationText = findViewById(R.id.location);
+        locationText.setTextSize(10);
+        gameSh.subscribeCurrentLocation().observe(this, new Observer<Location>() {
+            @Override
+            public void onChanged(Location location) {
+                locationText.setText(location.getDisplayName());
+            }
+        });
+    }
+
+    private void trackGameServer(LinearLayout messageLayout, LinearLayout actionLayout, View itemInventoryView) {
         CardView dmCard = new CardView(DialogScreen.this);
         TextView dmMessage = new TextView(DialogScreen.this);
 
@@ -163,7 +163,7 @@ public class DialogScreen extends AppCompatActivity {
         dmCard.addView(dmMessage);
 
         // Tracks turn status and set accordingly the message and button's status
-        roomSh.trackState().observe(this, new Observer<RoomState.State> () {
+        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
             @Override
             public void onChanged(RoomState.State state) {
                 if (state == RoomState.State.DIALOGUE_PROCESSING) {
@@ -174,11 +174,11 @@ public class DialogScreen extends AppCompatActivity {
                     }
 
                     // Show dungeon master is thinking and disable action buttons
-                    if (dmCard.getParent() == null){
+                    if (dmCard.getParent() == null) {
                         messageLayout.addView(dmCard);
                         disableButtons(actionLayout);
                     }
-                }else if (state == RoomState.State.DIALOGUE_TURN){
+                } else if (state == RoomState.State.DIALOGUE_TURN) {
                     // Remove dungeon master is thinking and enable action buttons
                     messageLayout.removeView(dmCard);
                     enableButtons(actionLayout);
@@ -191,10 +191,10 @@ public class DialogScreen extends AppCompatActivity {
         });
     }
 
-    private void disableButtons(LinearLayout actionLayout){
-        FloatingActionButton itemInventory= findViewById(R.id.itemInventory);
+    private void disableButtons(LinearLayout actionLayout) {
+        FloatingActionButton itemInventory = findViewById(R.id.itemInventory);
         // Disable action buttons
-        for(int i = 0; i < actionLayout.getChildCount(); i++){
+        for (int i = 0; i < actionLayout.getChildCount(); i++) {
             CardView actionContainer = (CardView) actionLayout.getChildAt(i);
             actionContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCardPress, null));
             actionContainer.setClickable(false);
@@ -203,10 +203,10 @@ public class DialogScreen extends AppCompatActivity {
         itemInventory.setEnabled(false);
     }
 
-    private void enableButtons(LinearLayout actionLayout){
-        FloatingActionButton itemInventory= findViewById(R.id.itemInventory);
+    private void enableButtons(LinearLayout actionLayout) {
+        FloatingActionButton itemInventory = findViewById(R.id.itemInventory);
         // Enable action btns
-        for(int i = 0; i < actionLayout.getChildCount(); i++){
+        for (int i = 0; i < actionLayout.getChildCount(); i++) {
             CardView actionContainer = (CardView) actionLayout.getChildAt(i);
             actionContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));
             actionContainer.setClickable(true);
@@ -215,8 +215,8 @@ public class DialogScreen extends AppCompatActivity {
         itemInventory.setEnabled(true);
     }
 
-    private void getTurnHistory(LinearLayout messageLayout){
-        for(Dialog turn : dialogSh.getDialogTurnHistory()){
+    private void getTurnHistory(LinearLayout messageLayout) {
+        for (Dialog turn : dialogSh.getDialogTurnHistory()) {
             // Each turn number
             TextView numberOfTurns = new TextView(DialogScreen.this);
             numberOfTurns.setText("Turn " + turn.getTurnNumber());
@@ -232,7 +232,7 @@ public class DialogScreen extends AppCompatActivity {
             turnContainer.setPadding(0, 10, 0, 10);
             turnContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));  // Set background color
             eachTurnView.setText(turn.getMessage());
-            eachTurnView.setPadding(20,20,20,20);
+            eachTurnView.setPadding(20, 20, 20, 20);
 
             turnContainer.addView(eachTurnView);
             messageLayout.addView(numberOfTurns);
@@ -242,12 +242,12 @@ public class DialogScreen extends AppCompatActivity {
 
 
     // Keeps track of the dialog latest turn only, type out the message character by character
-    private void trackTurns(LinearLayout messageLayout, LinearLayout actionLayout){
+    private void trackTurns(LinearLayout messageLayout, LinearLayout actionLayout) {
 
         dialogSh.subscribeDialogLatestTurn().observe(this, new Observer<Dialog>() {
 
             @Override
-            public void onChanged(Dialog turn){
+            public void onChanged(Dialog turn) {
                 int currTurn = turn.getTurnNumber();
                 Optional<UUID> playerId = turn.getSender();
                 String id = currTurn + playerId.toString();
@@ -256,13 +256,13 @@ public class DialogScreen extends AppCompatActivity {
                 TextView currentTurnView;
                 TextView ownerView;
 
-                if(turnContainer != null){
+                if (turnContainer != null) {
 
                     // Player alrdy has a card for this turn
                     currentTurnView = (TextView) turnContainer.getChildAt(0);
                     currentTurnView.setText(turn.getMessage());
 
-                }else{
+                } else {
 
                     // Create a new card for this turn
                     turnContainer = new CardView(DialogScreen.this);
@@ -273,13 +273,13 @@ public class DialogScreen extends AppCompatActivity {
                     turnContainer.setRadius(20);
                     turnContainer.setPadding(0, 20, 0, 0);
 
-                    currentTurnView.setPadding(20,20,20,20);
+                    currentTurnView.setPadding(20, 20, 20, 20);
 
                     ownerView.setTextSize(9);
-                    ownerView.setPadding(0,0,0,10);
+                    ownerView.setPadding(0, 0, 0, 10);
 
                     // Check if its DM or Player
-                    if(playerId.isEmpty()){
+                    if (playerId.isEmpty()) {
                         // DM
                         TextView numberOfTurns = new TextView(DialogScreen.this);
                         numberOfTurns.setPadding(20, 0, 20, 20);
@@ -292,7 +292,7 @@ public class DialogScreen extends AppCompatActivity {
                         ownerView.setGravity(Gravity.START); // flush left
 
                         messageLayout.addView(numberOfTurns);
-                    }else{
+                    } else {
                         // Player
                         turnContainer.setTag(id);
                         ownerView.setGravity(Gravity.END); // flush right
@@ -301,13 +301,13 @@ public class DialogScreen extends AppCompatActivity {
                         Player player1 = playerSh.getPlayer().getValue();
 
                         // Show all players name for their respective action
-                        for(Player player: players){
-                            if(playerId.orElse(null).equals(player.getId())){
-                                
+                        for (Player player : players) {
+                            if (playerId.orElse(null).equals(player.getId())) {
+
                                 // Check if player is you
-                                if(playerId.orElse(null).equals(playerSh.getPlayerId())){
+                                if (playerId.orElse(null).equals(playerSh.getPlayerId())) {
                                     ownerView.setText("You");
-                                }else{
+                                } else {
                                     ownerView.setText(player.getDisplayName());
                                 }
                             }
@@ -329,20 +329,20 @@ public class DialogScreen extends AppCompatActivity {
         });
     }
 
-    private void displayMessageStream(String message, TextView currentTurnView){
+    private void displayMessageStream(String message, TextView currentTurnView) {
         ScrollView messagesScroll = findViewById(R.id.messages);
         // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
-        Thread backgroundThread = new Thread(() ->{
-            for(int i = 0; i < message.length(); i++){
+        Thread backgroundThread = new Thread(() -> {
+            for (int i = 0; i < message.length(); i++) {
                 char currChar = message.charAt(i);
-                try{
+                try {
                     Thread.sleep(5);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                     return;
                 }
                 // Important to run on UI thread
-                runOnUiThread(() ->{
+                runOnUiThread(() -> {
                     currentTurnView.append(String.valueOf(currChar));
                     messagesScroll.fullScroll(ScrollView.FOCUS_DOWN);
                 });
@@ -394,10 +394,10 @@ public class DialogScreen extends AppCompatActivity {
 
                     // SkillChecks
                     // Show relevant skills required using java reflection to loop through every attributes in class
-                    for (Field skill : action.skillCheck.getClass().getFields()){
+                    for (Field skill : action.skillCheck.getClass().getFields()) {
                         try {
                             int currentFieldVal = skill.getInt(action.skillCheck);
-                            if(currentFieldVal > 0){
+                            if (currentFieldVal > 0) {
                                 actionView.append("\n" + skill.getName() + ": " + currentFieldVal);
                             }
                         } catch (IllegalAccessException e) {
@@ -412,9 +412,9 @@ public class DialogScreen extends AppCompatActivity {
         });
     }
 
-    private void setSelectedActon(CardView selectedCardView, DungeonMasterResponse.PlayerAction action){
+    private void setSelectedActon(CardView selectedCardView, DungeonMasterResponse.PlayerAction action) {
         // Unselect prev card
-        if(!selectedCardView.equals(this.selectedCardView) && this.selectedCardView != null){
+        if (!selectedCardView.equals(this.selectedCardView) && this.selectedCardView != null) {
             this.selectedCardView.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));
             this.selectedCardView.setCardElevation(20f);
         }
@@ -471,49 +471,48 @@ public class DialogScreen extends AppCompatActivity {
         });
     }
 
-    private void displayPlayerDetails(View itemInventoryView){
+    private void displayPlayerDetails(View itemInventoryView) {
         TextView username = findViewById(R.id.username);
         TextView health = findViewById(R.id.health);
         TextView race_entityclass = findViewById(R.id.race_entityclass);
         int[] statsIds = gameSh.getStatsIds();
 
         playerSh.getPlayer().observe(this, new Observer<Player>() {
-           @Override
-           public void onChanged(Player player){
-               // When player details change, update the UI
-               username.setText(player.getDisplayName());
-               health.setText(playerSh.remainingHealth());
-               race_entityclass.setText(player.getRace().name() + " " + player.getEntityClass().name());
-               // Update player stats
-               try {
-                   List<Stat> sortedStats = new ArrayList<>(player.getStats().keySet());
-                   Collections.sort(sortedStats, Comparator.comparing(Enum::name));
-                   Log.d("DisplayStats", "displayPlayerDetails: "+sortedStats);
-                   int currentStatId = 0;
-                   for (Stat stat : sortedStats) {
-                       // we render max health separately
-                       if (stat == Stat.MAX_HEALTH) {
-                           continue;
-                       }
-                       int id = statsIds[currentStatId++];
-                       TextView currentStat = findViewById(id);
-                       currentStat.setText(StatsMap.getStatText(stat) + ": " + player.getStat(stat));
-                   }
-               }
-               catch (NullPointerException e){
-                   e.printStackTrace();
-               }
+            @Override
+            public void onChanged(Player player) {
+                // When player details change, update the UI
+                username.setText(player.getDisplayName());
+                health.setText(playerSh.remainingHealth());
+                race_entityclass.setText(player.getRace().name() + " " + player.getEntityClass().name());
+                // Update player stats
+                try {
+                    List<Stat> sortedStats = new ArrayList<>(player.getStats().keySet());
+                    Collections.sort(sortedStats, Comparator.comparing(Enum::name));
+                    Log.d("DisplayStats", "displayPlayerDetails: " + sortedStats);
+                    int currentStatId = 0;
+                    for (Stat stat : sortedStats) {
+                        // we render max health separately
+                        if (stat == Stat.MAX_HEALTH) {
+                            continue;
+                        }
+                        int id = statsIds[currentStatId++];
+                        TextView currentStat = findViewById(id);
+                        currentStat.setText(StatsMap.getStatText(stat) + ": " + player.getStat(stat));
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    private void openItemInventory(){
-        FloatingActionButton itemInventory= findViewById(R.id.itemInventory);
+    private void openItemInventory() {
+        FloatingActionButton itemInventory = findViewById(R.id.itemInventory);
         // Open player inventory dialog
         itemInventory.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                    // Player inventory interface for All Items: EquippableItems, EquippedItems, Potions, Scrolls
+            public void onClick(View v) {
+                // Player inventory interface for All Items: EquippableItems, EquippedItems, Potions, Scrolls
 
                 PlayerInventoryWrapper inventoryData = new PlayerInventoryWrapper(
                         playerSh.getSpecificInventoryType(EquippableItem.class),
@@ -523,7 +522,7 @@ public class DialogScreen extends AppCompatActivity {
                 );
                 InventoryDialogFragment inventoryDialog = InventoryDialogFragment.newInstance(inventoryData, playerSh);
 
-                    inventoryDialog.show(getSupportFragmentManager(), "InventoryDialog");
+                inventoryDialog.show(getSupportFragmentManager(), "InventoryDialog");
 
             }
         });

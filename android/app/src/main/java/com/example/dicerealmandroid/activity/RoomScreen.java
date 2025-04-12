@@ -50,7 +50,7 @@ public class RoomScreen extends AppCompatActivity {
                     Intent intent = new Intent(RoomScreen.this, DialogScreen.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                }else if (state == RoomState.State.DIALOGUE_PROCESSING){
+                } else if (state == RoomState.State.DIALOGUE_PROCESSING) {
                     loading.show();
                 }
             }
@@ -67,16 +67,16 @@ public class RoomScreen extends AppCompatActivity {
         this.trackPlayers(roomSh);
     }
 
-    private void setRoomCode(RoomStateHolder roomSh){
+    private void setRoomCode(RoomStateHolder roomSh) {
         TextView roomCode = findViewById(R.id.roomCode);
         String roomCodeText = "Room Code: " + roomSh.getRoomCode();
         roomCode.setText(roomCodeText);
     }
 
-    private void trackPlayers(RoomStateHolder roomSh){
+    private void trackPlayers(RoomStateHolder roomSh) {
         roomSh.trackAllPlayers().observe(this, new Observer<Player[]>() {
             @Override
-            public void onChanged(Player[] players){
+            public void onChanged(Player[] players) {
                 TextView playerCount = findViewById(R.id.amtOfPlayers);
                 String counter = players.length + "/4";
                 playerCount.setText(counter);
@@ -84,11 +84,11 @@ public class RoomScreen extends AppCompatActivity {
         });
     }
 
-    private void startGame(int id, GameStateHolder gameSh){
+    private void startGame(int id, GameStateHolder gameSh) {
         Button startGame = findViewById(id);
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 gameSh.startGame();
                 startGame.setEnabled(false);
             }

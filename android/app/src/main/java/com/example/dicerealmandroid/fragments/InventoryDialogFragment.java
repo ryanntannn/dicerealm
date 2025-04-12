@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -85,17 +86,26 @@ public class InventoryDialogFragment extends androidx.fragment.app.DialogFragmen
         }
 
         // Build using the Material 3 dialog builder
-        Dialog inventoryDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        Dialog inventoryDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_App)
                 .setView(view)
                 .setPositiveButton("Close", (dialog, which) -> dismiss())
                 .create();
 
-        inventoryDialog.setOnShowListener(dialogInterface -> {
-            // Fixed height for inventory dialog
-            int maxHeight = (int) (Resources.getSystem().getDisplayMetrics().heightPixels * 0.7);
-            inventoryDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, maxHeight);
-        });
+        // Apply window attributes before showing the dialog
+        Window window = inventoryDialog.getWindow();
+        if (window != null) {
+            // Set window animations
+            window.setWindowAnimations(R.style.DialogAnimation_App);
 
+            // Apply gravity immediately
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.gravity = Gravity.CENTER;
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(params);
+        }
+
+        inventoryDialog.show();
         return inventoryDialog;
     }
 

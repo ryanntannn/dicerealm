@@ -90,9 +90,9 @@ public class CharacterScreen extends AppCompatActivity {
 
         playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
-            public void onChanged(Player player){
-                if (player != null){
-                    Log.d("Player", "Player has been updated"+player.getId());
+            public void onChanged(Player player) {
+                if (player != null) {
+                    Log.d("Player", "Player has been updated" + player.getId());
                 }
             }
         });
@@ -127,7 +127,7 @@ public class CharacterScreen extends AppCompatActivity {
             public void onChanged(RoomState.State state) {
                 if (state == RoomState.State.DIALOGUE_PROCESSING) {
                     loading.show();
-                }else if (state == RoomState.State.DIALOGUE_TURN){
+                } else if (state == RoomState.State.DIALOGUE_TURN) {
                     loading.hide();
                     Intent intent = new Intent(CharacterScreen.this, DialogScreen.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -137,15 +137,16 @@ public class CharacterScreen extends AppCompatActivity {
         });
     }
 
-    private void backToHome(){
+    private void backToHome() {
         BackButtonHandler.setupBackImageButtonHandler(this, R.id.backToLobby);
     }
 
-    private void setRoomCode(){
+    private void setRoomCode() {
         TextView roomCode = findViewById(R.id.roomCode);
         String roomCodeText = "Room Code: " + roomSh.getRoomCode();
         roomCode.setText(roomCodeText);
     }
+
     private String getUniqueCharacterName(Set<String> uniqueNames) {
         String name;
         do {
@@ -166,8 +167,7 @@ public class CharacterScreen extends AppCompatActivity {
         // If a character was previously selected, Remove the previous border
         if (previousSelected != null) {
             previousSelected.setBackgroundResource(0);
-        }
-        else {
+        } else {
             nextButton.setEnabled(true);
         }
 
@@ -179,29 +179,29 @@ public class CharacterScreen extends AppCompatActivity {
 
         if (viewId == R.id.character1) {
             selectedPlayer = new Player(chara_name1.getText().toString(),
-                    Race.DWARF ,
+                    Race.DWARF,
                     EntityClass.WARRIOR,
                     ClassStats.getStatsForClass(EntityClass.WARRIOR));
 
         } else if (viewId == R.id.character2) {
             selectedPlayer = new Player(chara_name2.getText().toString(),
-                    Race.HUMAN ,
+                    Race.HUMAN,
                     EntityClass.WIZARD,
                     ClassStats.getStatsForClass(EntityClass.WIZARD));
 
         } else if (viewId == R.id.character3) {
             selectedPlayer = new Player(chara_name3.getText().toString(),
-                    Race.TIEFLING ,
+                    Race.TIEFLING,
                     EntityClass.ROGUE,
                     ClassStats.getStatsForClass(EntityClass.ROGUE));
 
         } else if (viewId == R.id.character4) {
             // Archer
             selectedPlayer = new Player(chara_name4.getText().toString(),
-                    Race.ELF ,
+                    Race.ELF,
                     EntityClass.RANGER,
                     ClassStats.getStatsForClass(EntityClass.RANGER));
         }
-        Log.d("CharacterScreen", "Selected Player: " + selectedPlayer.getDisplayName()+" "+selectedPlayer.getRace()+" "+selectedPlayer.getEntityClass());
+        Log.d("CharacterScreen", "Selected Player: " + selectedPlayer.getDisplayName() + " " + selectedPlayer.getRace() + " " + selectedPlayer.getEntityClass());
     }
 }

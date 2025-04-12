@@ -26,8 +26,14 @@
         <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
         <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text</item>
         <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@style/DialogAnimation.App</item>
     </style>
 
+    <style name="DialogAnimation.App" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
     <style name="Theme.DicerealmAndroid" parent="Base.Theme.DicerealmAndroid" />
 
 </resources>
