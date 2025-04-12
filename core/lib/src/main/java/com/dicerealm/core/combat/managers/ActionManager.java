@@ -94,6 +94,7 @@ public class ActionManager {
             //Temp as all potions will be healing 
             combatResult.setPotionLog((user.getDisplayName() + " uses " + potion.getDisplayName() + " on " +
             target.getDisplayName() + " for " + damage + " health!"));
+            user.getInventory().removeItem(potion);
         }
         return combatResult;
 
@@ -113,7 +114,7 @@ public class ActionManager {
                 combatResult.fromDamageResult(damageResult);
                 combatLog.log(damageCalculator.readout());
             }
-
+            caster.getInventory().removeItem(scroll);
         }
         
         return combatResult;
