@@ -113,7 +113,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     actionManager.rigDice(d20);
                     return actionManager.performSkillAttack(player, target, (Skill) action);
                 } else {
@@ -144,7 +143,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     return actionManager.performSkillAttack(player, target, (Skill) action);
                 } else {
                     combatLog.log(player.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
@@ -172,7 +170,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     return actionManager.performSkillAttack(monster, target, (Skill) action);
                 } else {
                     combatLog.log(monster.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
@@ -193,7 +190,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     actionManager.rigDice(d20); // Example of rigging the dice
                     return actionManager.performSkillAttack(monster, target, (Skill) action);
                 } else {
@@ -268,9 +264,9 @@ public class CombatManager {
         // If all participants have acted, the round ends
         if (currentTurnIndex >= turnOrder.size()) {
             combatLog.log("The round has ended.");
-            reduceAllSkillCooldowns();
             startRound(); // Start a new round
             currentRoundIndex++;
+            reduceAllSkillCooldowns();
         }
     }
 

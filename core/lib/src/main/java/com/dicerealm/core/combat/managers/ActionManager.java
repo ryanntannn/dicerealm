@@ -59,6 +59,7 @@ public class ActionManager {
     public CombatResult performSkillAttack(Entity caster, Entity target, Skill skill) {
         ActionType actionType = ActionType.SKILL; // All skills are of type Skill attack
         HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
+        skill.activateCooldown();
         combatResult = new CombatResult(caster, target, skill);
         combatLog.log(hitResult.getHitLog());
         combatResult.fromHitResult(hitResult);
