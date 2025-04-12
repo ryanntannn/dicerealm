@@ -283,20 +283,22 @@ public class CombatManager {
         .findFirst()
         .orElse(null);
 
-    if (playerToRemove != null) {
-        participants.remove(playerToRemove);
-        turnOrder.remove(playerToRemove);
 
-        combatLog.log(playerToRemove.getDisplayName() + " has left the combat.");
 
-        if (currentTurnIndex >= turnOrder.size()) {
-            currentTurnIndex = 0;
+        if (playerToRemove != null) {
+            participants.remove(playerToRemove);
+            turnOrder.remove(playerToRemove);
+
+            combatLog.log(playerToRemove.getDisplayName() + " has left the combat.");
+
+            if (currentTurnIndex >= turnOrder.size()) {
+                currentTurnIndex = 0;
+            }
+
+            if (isCombatOver()) {
+                combatLog.log("Combat has ended due to player leaving.");
+            }
         }
-
-        if (isCombatOver()) {
-            combatLog.log("Combat has ended due to player leaving.");
-        }
-    }
 
     }
 
@@ -319,6 +321,11 @@ public class CombatManager {
         this.combatLog = new CombatLog();
         this.actionManager = new ActionManager(combatLog);
         this.currentRoundIndex = 1;
+
+        for (Entity entity : participants) {
+            entity.getSkillsInventory().getItems().forEach(skill -> skill.setRemainingCooldown(0));
+        }
+
     }
 
     public List<Entity> getParticipants() {

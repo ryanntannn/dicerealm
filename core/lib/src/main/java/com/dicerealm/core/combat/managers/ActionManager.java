@@ -59,7 +59,15 @@ public class ActionManager {
     public CombatResult performSkillAttack(Entity caster, Entity target, Skill skill) {
         ActionType actionType = ActionType.SKILL; // All skills are of type Skill attack
         HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
-        skill.activateCooldown();
+        
+        // Check for skill in caster's inventory and then activates its cooldown
+        Skill usedSkill = caster.getSkillsInventory().getItem(skill.getId());
+        if (usedSkill == null) {
+            skill.activateCooldown();
+        } else {
+            usedSkill.activateCooldown();
+        }
+
         combatResult = new CombatResult(caster, target, skill);
         combatLog.log(hitResult.getHitLog());
         combatResult.fromHitResult(hitResult);
