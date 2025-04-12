@@ -7,18 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".activity.CombatScreen">
 
-    <TextView
-        android:id="@+id/CombatSequence"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
 
-        android:text="Combat Sequence"
+    <TableLayout
+        android:id="@+id/turnCombatSquence"
+        android:layout_width="400px"
+        android:layout_height="171dp"
         app:layout_constraintBottom_toTopOf="@+id/playerName"
         app:layout_constraintEnd_toStartOf="@+id/enemyHealth"
-        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.39" />
+        app:layout_constraintVertical_bias="0.384" />
 
     <ScrollView
         android:id="@+id/messages"

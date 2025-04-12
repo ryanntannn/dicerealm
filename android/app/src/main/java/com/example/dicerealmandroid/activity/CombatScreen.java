@@ -2,11 +2,14 @@ package com.example.dicerealmandroid.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -310,21 +313,34 @@ public class CombatScreen extends AppCompatActivity {
     }
 
     private void combatSequence(){
-        TextView turnText = findViewById(R.id.CombatSequence);
 
+        TableLayout turntable = findViewById(R.id.turnCombatSquence);
         combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
             @Override
             public void onChanged(List<CombatSequence> combatSequences){
-                turnText.setText("");
+
+                turntable.removeAllViews();
                 for(int i = 0; i < combatSequences.size(); i++){
+                    TableRow newtablerow = new TableRow(CombatScreen.this);
+                    TextView nameView = new TextView(CombatScreen.this);
+                    int padding = 16;
+                    nameView.setPadding(padding, padding, padding, padding);
+                    nameView.setMaxWidth(400);
+                    nameView.setBackgroundResource(R.drawable.cell_border);
                     CombatSequence sequence = combatSequences.get(i);
                     if(i == 0){
                         // Mark first element as the current turn
-                        turnText.append(">>> " + sequence.getName() + " - " + sequence.getInitiative() + " <<<" + "\n");
+                        nameView.setTypeface(null, Typeface.BOLD);
+                        nameView.setText(">>> " + sequence.getName() + " - " + sequence.getInitiative() + " <<<" );
+                        nameView.setBackgroundResource(R.drawable.bold_cell_border);
                     } else {
-                        turnText.append(sequence.getName() + " - " + sequence.getInitiative() + "\n");
+                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
+                        nameView.setBackgroundResource(R.drawable.cell_border);
                     }
+                    newtablerow.addView(nameView);
+                    turntable.addView(newtablerow);
                 }
+
             }
         });
     }
