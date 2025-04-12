@@ -281,6 +281,29 @@ public class CombatManager {
         }
     }
 
+    public void removePlayerFromCombat(UUID playerId){
+        Entity playerToRemove = participants.stream()
+        .filter(entity -> entity.getId().equals(playerId))
+        .findFirst()
+        .orElse(null);
+
+    if (playerToRemove != null) {
+        participants.remove(playerToRemove);
+        turnOrder.remove(playerToRemove);
+
+        combatLog.log(playerToRemove.getDisplayName() + " has left the combat.");
+
+        if (currentTurnIndex >= turnOrder.size()) {
+            currentTurnIndex = 0;
+        }
+
+        if (isCombatOver()) {
+            combatLog.log("Combat has ended due to player leaving.");
+        }
+    }
+
+    }
+
     public List<InitiativeResult> getInitiativeResults() {
         return new ArrayList<>(initiativeResults);
     }
