@@ -20,4 +20,9 @@ public class MockBroadcastStrategy implements BroadcastStrategy {
 	public void sendToAllPlayersExcept(Command command, Player player) {
 		System.out.println("MockBroadcastStrategy: " + command + " except " + player);
 	}
+
+	@Override
+	public void sendToBigScreen(Command command) {
+		System.out.println("MockBroadcastStrategy: " + command + " to big screen");
+	}
 }

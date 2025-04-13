@@ -1,7 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { z } from "zod";
 
 import { motion } from "framer-motion";
 import { Dice5, Swords, Shield, Scroll, Users } from "lucide-react";
@@ -14,55 +11,14 @@ import {
   CardContent,
   CardFooter,
 } from "./components/ui/card";
-import { Input } from "./components/ui/input";
-import { Label } from "./components/ui/label";
 
-const roomFormSchema = z.object({
-  roomCode: z
-    .string()
-    .min(4, "must be 4 characters")
-    .max(4, "must be 4 characters"),
-});
-
-function RoomForm({
-  onSubmit,
-}: {
-  onSubmit: (data: { roomCode: string }) => void;
-}) {
-  const { register, handleSubmit, formState } = useForm({
-    resolver: zodResolver(roomFormSchema),
-  });
-
-  const { errors, isDirty, isSubmitting } = formState;
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-row gap-2">
-      <div className="grid w-full items-center gap-4">
-        <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="roomCode">Room Code</Label>
-          <div className="relative">
-            <Input
-              id="roomCode"
-              placeholder="Enter 4-digit code"
-              {...register("roomCode")}
-              className="text-center text-2xl tracking-widest font-mono h-14"
-              maxLength={4}
-              inputMode="numeric"
-            />
-            {errors.roomCode && (
-              <p className="text-red-500 text-sm">{errors.roomCode.message}</p>
-            )}
-          </div>
-          <Button
-            className="w-full"
-            type="submit"
-            disabled={!isDirty || !!errors.roomCode}>
-            {isSubmitting ? "Joining..." : "Join Room"}
-          </Button>
-        </div>
-      </div>
-    </form>
-  );
+function getRandomRoomCode() {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let result = "";
+  for (let i = 0; i < 4; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 }
 
 export default function Home() {
@@ -135,15 +91,16 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.3 }}>
             <Card className="w-full max-w-md mx-auto">
               <CardHeader>
-                <CardTitle>Join a Room</CardTitle>
+                <CardTitle>Create a New Room</CardTitle>
                 <CardDescription>
-                  Enter the 4-digit room code provided by your Dungeon Master
+                  Connect your mobile devices to join the game
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <RoomForm
-                  onSubmit={({ roomCode }) => navigate(`/room/${roomCode}`)}
-                />
+                <Button
+                  onClick={() => navigate(`/room/${getRandomRoomCode()}`)}>
+                  Start a New Game
+                </Button>
               </CardContent>
               <CardFooter className="flex justify-between pt-4"></CardFooter>
             </Card>

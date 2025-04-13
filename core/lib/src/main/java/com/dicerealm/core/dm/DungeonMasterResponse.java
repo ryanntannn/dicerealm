@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
-import com.dicerealm.core.monster.Monster;
 
 /**
  * Response from the Dungeon Master should be serialized to this class

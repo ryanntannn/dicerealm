@@ -142,6 +142,8 @@ public class DialogueManager {
 			context.getBroadcastStrategy().sendToPlayer(new EndTurnCommand(context.getRoomState().getCurrentDialogueTurnNumber(), actionResult), player);
 		}
 
+		context.getBroadcastStrategy().sendToBigScreen(new EndTurnCommand(context.getRoomState().getCurrentDialogueTurnNumber(), new SkillCheck.ActionResultDetail()));
+
 		DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(dungeonMasterPrompt.toString());
 
 		handleDungeonMasterResponse(response, context);

@@ -2,8 +2,8 @@ package com.dicerealm.core.handler;
 
 import java.util.UUID;
 
-import com.dicerealm.core.command.UpdatePlayerDetailsRequestCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
+import com.dicerealm.core.command.UpdatePlayerDetailsRequestCommand;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.player.PresetPlayerFactory;
 import com.dicerealm.core.room.RoomContext;
@@ -29,6 +29,7 @@ public class UpdatePlayerDetailsHandler extends CommandHandler<UpdatePlayerDetai
 		Player newPlayer = new Player(command.displayName, command.race, command.entityClass, command.baseStats);
 
 		PresetPlayerFactory.addDefaultItems(newPlayer);
+		PresetPlayerFactory.addDefaultSkills(newPlayer);
 
 		newPlayer.setId(playerId);
 

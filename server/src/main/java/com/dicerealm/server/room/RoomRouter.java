@@ -22,7 +22,10 @@ public class RoomRouter {
 	 */
 	private RoomManager getRoomManager(WebSocketSession session) {
 		String roomId = (String) session.getAttributes().get("roomId");
+		// trim and uppercase
+		roomId = roomId.trim().toUpperCase();
 		if (!roomManagers.containsKey(roomId)) {
+			System.out.println("Making new room manager");
 			roomManagers.put(roomId, new RoomManager());
 		}
 		return roomManagers.get(roomId);
@@ -32,9 +35,23 @@ public class RoomRouter {
 		getRoomManager(session).onJoin(session);
 	}
 
+	public void onBigScreenJoin(WebSocketSession session) {
+		getRoomManager(session).onBigScreenJoin(session);
+	}
+	
+
 	public void onLeave(WebSocketSession session) {
 		RoomManager roomManager = getRoomManager(session);
 		roomManager.onLeave(session);
+		if (roomManager.isEmpty()) {
+			logger.info("Closing room: " + session.getAttributes().get("roomId") + " because it is empty.");
+			roomManagers.remove((String) session.getAttributes().get("roomId"));
+		}
+	}
+
+	public void onBigScreenLeave(WebSocketSession session) {
+		RoomManager roomManager = getRoomManager(session);
+		roomManager.onBigScreenLeave(session);
 		if (roomManager.isEmpty()) {
 			logger.info("Closing room: " + session.getAttributes().get("roomId") + " because it is empty.");
 			roomManagers.remove((String) session.getAttributes().get("roomId"));

@@ -1,14 +1,13 @@
 package com.dicerealm.server.room;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -16,7 +15,6 @@ import com.dicerealm.core.player.Player;
 import com.dicerealm.core.player.PresetPlayerFactory;
 import com.dicerealm.core.room.Room;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
-import com.dicerealm.mock.MockLLMStrategy;
 import com.dicerealm.server.strategy.GsonSerializer;
 import com.dicerealm.server.strategy.OpenAI;
 import com.dicerealm.server.strategy.WebsocketBroadcaster;
@@ -29,23 +27,19 @@ public class RoomManager {
 	private Logger logger = LoggerFactory.getLogger(RoomManager.class);
 	private Map<UUID, WebSocketSession> playerSessions = Collections.synchronizedMap(new HashMap<UUID, WebSocketSession>());
 	private Map<String, UUID> sessionIdToPlayerIdMap = Collections.synchronizedMap(new HashMap<String, UUID>());
+	private Optional<WebSocketSession> bigScreenSession = Optional.empty();
 	
 	// We use the OpenAI LLMStrategy and the WebsocketBroadcaster BroadcastStrategy for this room
 	private JsonSerializationStrategy serializer = new GsonSerializer();
 	// private MockLLMStrategy llm = new MockLLMStrategy(serializer);
 	private OpenAI llm = new OpenAI(serializer);
-	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions, serializer);
+	private WebsocketBroadcaster broadcaster = new WebsocketBroadcaster(playerSessions, bigScreenSession, serializer);
 
 	private Room room = Room.builder()
 		.setBroadcastStrategy(broadcaster)
 		.setLLMStrategy(llm)
 		.setJsonSerializationStrategy(serializer)
 		.build();
-
-	// public RoomManager() {
-	// 	llm.setResponse("{\"displayText\": \"This is a mock response\", \"actionChoices\":[]}");
-	// }
-
 	
 	public void onJoin(WebSocketSession session) {
 		Player newPlayer = PresetPlayerFactory.createPresetPlayer();
@@ -54,6 +48,19 @@ public class RoomManager {
 		room.addPlayer(newPlayer);	
 
 		logger.info("Player joined room: " + newPlayer.getId() + " with session: " + session.getId());
+	}
+
+	public void onBigScreenJoin(WebSocketSession session) {
+		bigScreenSession = Optional.of(session);
+		broadcaster.setBigScreenSession(Optional.of(session));
+		room.addBigScreen();
+		logger.info("Big screen joined room");
+	}
+
+	public void onBigScreenLeave(WebSocketSession session) {
+		bigScreenSession = Optional.empty();
+		broadcaster.setBigScreenSession(Optional.empty());
+		logger.info("Big screen left room");
 	}
 
 	public void onLeave(WebSocketSession session) {
@@ -66,9 +73,8 @@ public class RoomManager {
 	}
 
 	public boolean isEmpty() {
-		return room.isEmpty();
+		return room.isEmpty() && bigScreenSession.isEmpty();
 	}
-
 
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
 		try {

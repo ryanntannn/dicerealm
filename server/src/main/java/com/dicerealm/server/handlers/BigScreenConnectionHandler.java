@@ -8,11 +8,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.dicerealm.server.room.RoomRouter;
 
 // Socket-Connection Configuration class
-public class SocketConnectionHandler extends TextWebSocketHandler {
+public class BigScreenConnectionHandler extends TextWebSocketHandler {
 
 		private RoomRouter router;
-
-		public SocketConnectionHandler(RoomRouter router) {
+		public BigScreenConnectionHandler(RoomRouter router) {
 				this.router = router;
 		}
 		
@@ -22,7 +21,7 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
         throws Exception
     {
 				super.afterConnectionEstablished(session);
-				router.onJoin(session);
+				router.onBigScreenJoin(session);
     }
 
     @Override
@@ -30,7 +29,7 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
                           CloseStatus status)throws Exception
     {
 				super.afterConnectionClosed(session, status);
-				router.onLeave(session);
+				router.onBigScreenLeave(session);
     }
 
     @Override
@@ -39,6 +38,5 @@ public class SocketConnectionHandler extends TextWebSocketHandler {
         throws Exception
     {
         super.handleMessage(session, message);
-				router.handleMessage(session, message);
     }
 }

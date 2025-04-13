@@ -1,7 +1,6 @@
 package com.example.dicerealmandroid.fragments;
 
 import android.app.Dialog;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class InventoryDialogFragment extends androidx.fragment.app.DialogFragment {
     private PlayerInventoryWrapper playerInventoryWrapper;
@@ -102,6 +100,7 @@ public class InventoryDialogFragment extends androidx.fragment.app.DialogFragmen
             params.gravity = Gravity.CENTER;
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            //TODO: if possible, wrapcontent until a maxheight of 0.5 of the screen
             window.setAttributes(params);
         }
 

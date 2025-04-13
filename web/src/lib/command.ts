@@ -99,6 +99,29 @@ export const dialogueTurnActionCommandSchema = z.object({
   skillCheck: z.record(z.number()),
 });
 
+export const combatStartCommandSchema = z.object({
+  type: z.literal("COMBAT_START"),
+  initiativeResults: z.array(
+    z.object({
+      totalInitiative: z.number(),
+      initiativeLog: z.string(),
+      entity: z.object({
+        id: z.string(),
+        displayName: z.string(),
+      }),
+    })
+  ),
+});
+
+export const combatStartTurnCommandSchema = z.object({
+  type: z.literal("COMBAT_START_TURN"),
+  currentTurnEntityId: z.string(),
+});
+
+export const combatEndCommandSchema = z.object({
+  type: z.literal("COMBAT_END"),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
@@ -114,4 +137,7 @@ export const commandSchema = z.discriminatedUnion("type", [
   dialogueStartTurnCommandSchema,
   dialogueEndTurnCommandSchema,
   dialogueTurnActionCommandSchema,
+  combatStartCommandSchema,
+  combatEndCommandSchema,
+  combatStartTurnCommandSchema,
 ]);
