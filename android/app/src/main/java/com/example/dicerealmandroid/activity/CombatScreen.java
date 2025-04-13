@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,6 +81,14 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        //Hide android bottom nav bar
+        View decorView = getWindow().getDecorView();
+        WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
+
+        if (controller != null) {
+            controller.hide(WindowInsetsCompat.Type.systemBars());
+            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
 
         this.combatSequence();
         this.trackCurrentTurn();
@@ -92,34 +101,34 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         this.useitems();
 
         roomSh.trackState().observe(this, new Observer<RoomState.State>() {
-           @Override
-           public void onChanged(RoomState.State roomState) {
-               if (roomState == null){
-                     Log.d("CombatScreen", "Navigating back to home screen");
-                     Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
-                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                     startActivity(intent);
-               }else if(roomState == RoomState.State.DIALOGUE_PROCESSING){
-                   Log.d("CombatScreen", "Navigating back to dialog screen");
-                   CombatScreen.this.finish();
-               }
-           }
+            @Override
+            public void onChanged(RoomState.State roomState) {
+                if (roomState == null) {
+                    Log.d("CombatScreen", "Navigating back to home screen");
+                    Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else if (roomState == RoomState.State.DIALOGUE_PROCESSING) {
+                    Log.d("CombatScreen", "Navigating back to dialog screen");
+                    CombatScreen.this.finish();
+                }
+            }
         });
     }
 
-    private void displayEnemyInfo(){
+    private void displayEnemyInfo() {
         TextView enemyName = findViewById(R.id.enemyName);
         TextView enemyHealth = findViewById(R.id.enemyHealth);
-        combatSh.getMonster().observe(this, new Observer<Entity>(){
+        combatSh.getMonster().observe(this, new Observer<Entity>() {
             @Override
-            public void onChanged(Entity monster){
+            public void onChanged(Entity monster) {
                 enemyName.setText(monster.getDisplayName());
                 enemyHealth.setText(monster.getHealth() + "/" + monster.getStat(Stat.MAX_HEALTH));
             }
         });
     }
 
-    private void displayPlayerInfo(){
+    private void displayPlayerInfo() {
         TextView playerInfo = findViewById(R.id.PlayerInfo);
         TextView playerName = findViewById(R.id.playerName);
         TextView yourHealth = findViewById(R.id.yourHealth);
@@ -135,7 +144,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         });
     }
 
-    public void openSpells(){
+    public void openSpells() {
         playerSh.getSkills().observe(this, new Observer<InventoryOf<Skill>>() {
             @Override
             public void onChanged(InventoryOf<Skill> skills) {
@@ -148,7 +157,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
 
                     // Hardcode the button to use the first skill
                     MaterialButton skillButtons = findViewById(R.id.spellButton);
-                    skillButtons.setOnClickListener(new View.OnClickListener(){
+                    skillButtons.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
@@ -158,14 +167,14 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                             //Show the spells layout
                             ConstraintLayout spellaction = (ConstraintLayout) findViewById(R.id.SpellActions);
                             spellaction.setVisibility(View.VISIBLE);
-                            for (Skill skills : skillList){
+                            for (Skill skills : skillList) {
                                 Log.d("skill", "Skill: " + skills.getDisplayName());
                             }
                             //Call recycleview
-                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList, CombatScreen.this ,"Spell");
+                            CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this, skillList, CombatScreen.this, "Spell");
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
-                            recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
+                            recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this, 2));
 
                         }
                     });
@@ -174,7 +183,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         });
     }
 
-    public void closespell(){
+    public void closespell() {
 
         // Hardcode the button to use the first skill
         MaterialButton skillButtons = findViewById(R.id.BackButton);
@@ -196,7 +205,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         });
     }
 
-    public void useitems(){
+    public void useitems() {
         playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
             @Override
             public void onChanged(InventoryOf<Item> Potions_Scroll) {
@@ -209,7 +218,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
 
                     // Hardcode the button to use the first skill
                     MaterialButton Itembutton = findViewById(R.id.itemButton);
-                    Itembutton.setOnClickListener(new View.OnClickListener(){
+                    Itembutton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Log.d("Open Inventory", "Inventory Opened");
@@ -221,10 +230,10 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                             spellaction.setVisibility(View.VISIBLE);
 
                             //Call recycleview
-                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist, CombatScreen.this ,"Item");
+                            CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this, Potions_Scrolllist, CombatScreen.this, "Item");
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
-                            recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this,2));
+                            recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this, 2));
 
                         }
                     });
@@ -233,7 +242,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
         });
     }
 
-    private void attackRight(){
+    private void attackRight() {
         MaterialButton attackBtnRight = findViewById(R.id.attackButtonRight);
 
         playerSh.getEquippedItem(BodyPart.RIGHT_HAND).observe(this, new Observer<EquippableItem>() {
@@ -258,7 +267,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
 
     }
 
-    private void attackLeft(){
+    private void attackLeft() {
         MaterialButton attackBtnLeft = findViewById(R.id.attackButtonLeft);
 
         playerSh.getEquippedItem(BodyPart.LEFT_HAND).observe(this, new Observer<EquippableItem>() {
@@ -270,7 +279,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                     attackBtnLeft.setText("Left-H Attack: Fist");
                 }
 
-                attackBtnLeft.setOnClickListener(new View.OnClickListener()  {
+                attackBtnLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.d("action left", "Attack with left hand");
@@ -282,16 +291,16 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
 
     }
 
-    private void combatSequence(){
+    private void combatSequence() {
         TextView turnText = findViewById(R.id.CombatSequence);
 
         combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
             @Override
-            public void onChanged(List<CombatSequence> combatSequences){
+            public void onChanged(List<CombatSequence> combatSequences) {
                 turnText.setText("");
-                for(int i = 0; i < combatSequences.size(); i++){
+                for (int i = 0; i < combatSequences.size(); i++) {
                     CombatSequence sequence = combatSequences.get(i);
-                    if(i == 0){
+                    if (i == 0) {
                         // Mark first element as the current turn
                         turnText.append(">>> " + sequence.getName() + " - " + sequence.getInitiative() + " <<<" + "\n");
                     } else {
@@ -307,43 +316,43 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
 
 
         combatSh.subscribeCombatLatestTurn().observe(this, new Observer<String>() {
-           @Override
-           public void onChanged(String currTurn){
-               CardView currentTurnCard = new CardView(CombatScreen.this);
-               TextView currentTurnText = new TextView(CombatScreen.this);
+            @Override
+            public void onChanged(String currTurn) {
+                CardView currentTurnCard = new CardView(CombatScreen.this);
+                TextView currentTurnText = new TextView(CombatScreen.this);
 
-               currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
-               currentTurnCard.setCardElevation(10);
-               currentTurnCard.setRadius(20);
+                currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
+                currentTurnCard.setCardElevation(10);
+                currentTurnCard.setRadius(20);
 
-               currentTurnText.setPadding(10, 10, 10, 10);
+                currentTurnText.setPadding(10, 10, 10, 10);
 
-               messageView.setPadding(10, 10, 10, 10);
-               messageView.setVerticalScrollBarEnabled(true);
+                messageView.setPadding(10, 10, 10, 10);
+                messageView.setVerticalScrollBarEnabled(true);
 
-               currentTurnCard.addView(currentTurnText);
-               messageView.addView(currentTurnCard);
+                currentTurnCard.addView(currentTurnText);
+                messageView.addView(currentTurnCard);
 
-               currentTurnText.setText(""); // Reset the text view before displaying the new message
-               displayMessageStream(currTurn, currentTurnText);
-           }
+                currentTurnText.setText(""); // Reset the text view before displaying the new message
+                displayMessageStream(currTurn, currentTurnText);
+            }
         });
     }
 
-    private void displayMessageStream(String message, TextView currentTurnView){
+    private void displayMessageStream(String message, TextView currentTurnView) {
         ScrollView messagesScroll = findViewById(R.id.messages);
         // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
-        Thread backgroundThread = new Thread(() ->{
-            for(int i = 0; i < message.length(); i++){
+        Thread backgroundThread = new Thread(() -> {
+            for (int i = 0; i < message.length(); i++) {
                 char currChar = message.charAt(i);
-                try{
+                try {
                     Thread.sleep(5);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                     return;
                 }
                 // Important to run on UI thread
-                runOnUiThread(() ->{
+                runOnUiThread(() -> {
                     currentTurnView.append(String.valueOf(currChar));
                     messagesScroll.fullScroll(ScrollView.FOCUS_DOWN);
                 });
@@ -353,7 +362,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
     }
 
     @Override
-    public void onItemClick(int position ,String type ) {
+    public void onItemClick(int position, String type) {
         if (Objects.equals(type, "Spell")) {
             playerSh.getSkills().observe(this, new Observer<InventoryOf<Skill>>() {
                 @Override
@@ -366,8 +375,7 @@ public class CombatScreen extends AppCompatActivity implements SelectListener {
                     }
                 }
             });
-        }
-        else if (Objects.equals(type, "Item")){
+        } else if (Objects.equals(type, "Item")) {
             playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
                 @Override
                 public void onChanged(InventoryOf<Item> Potions_Scrolls) {
