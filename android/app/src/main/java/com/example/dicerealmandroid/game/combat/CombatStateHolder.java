@@ -37,7 +37,8 @@ public class CombatStateHolder extends ViewModel {
             for(InitiativeResult initiativeResult : initiativeResults){
                 String name = initiativeResult.getEntity().getDisplayName();
                 int totalInitiative = initiativeResult.getTotalInitiative();
-                combatSequence.add(new CombatSequence(name, totalInitiative));
+                int health = initiativeResult.getEntity().getHealth();
+                combatSequence.add(new CombatSequence(name, totalInitiative, health));
             }
             return combatSequence;
         });

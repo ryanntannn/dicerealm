@@ -15,6 +15,7 @@ import com.example.dicerealmandroid.activity.CombatScreen;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
 
 import java.util.List;
+import java.util.Objects;
 
 public class InventoryCardAdapter extends CardAdapter<Item>{
     CombatScreen Combat;
@@ -39,7 +40,11 @@ public class InventoryCardAdapter extends CardAdapter<Item>{
             int pos = holder.getAdapterPosition();
             @Override
             public void onClick(View v) {
-                combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL);
+                if (Objects.equals(item.get(pos).getType(), "SCROLL")) {
+                    combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SCROLL);
+                }else if (Objects.equals(item.get(pos).getType(), "POTION")){
+                    combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.POTION);
+                }
                 Combat.close();
             }
         });

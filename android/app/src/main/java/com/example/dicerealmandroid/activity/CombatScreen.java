@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -167,9 +168,6 @@ public class CombatScreen extends AppCompatActivity {
                 if (skills != null) {
                     List<Skill> skillList = new ArrayList<>(skills.getItems());
 
-                    for (Skill skill : skillList) {
-                        Log.d("skill", "Skill: " + skill.getDisplayName());
-                    }
 
                     // Hardcode the button to use the first skill
                     MaterialButton skillButtons = findViewById(R.id.spellButton);
@@ -226,12 +224,16 @@ public class CombatScreen extends AppCompatActivity {
             public void onChanged(InventoryOf<Item> Potions_Scroll) {
                 if (Potions_Scroll != null) {
                     List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
-
+                    List<Item> remove_item = new ArrayList<>();
                     for (int i = 0 ; i < Potions_Scrolllist.size(); i++) {
-                        if (Potions_Scrolllist.get(i).getType() != "POTION" || Potions_Scrolllist.get(i).getType() != "SCROLL"){
-                            Potions_Scrolllist.remove(i);
+                        if (!Objects.equals(Potions_Scrolllist.get(i).getType(), "POTION") || !Objects.equals(Potions_Scrolllist.get(i).getType(), "SCROLL")){
+                            remove_item.add(Potions_Scrolllist.remove(i));
                         }
                     }
+                    for (Item removeitem : remove_item) {
+                        Potions_Scrolllist.remove(removeitem);
+                    }
+
 
 
                     // Hardcode the button to use the first skill
@@ -339,42 +341,44 @@ public class CombatScreen extends AppCompatActivity {
 //                    turntable.addView(newtablerow);
 //                }
                 List<InitiativeResult> removeplayer = new ArrayList<>();
-                for (InitiativeResult player_init : initiativeResults) {
-                    boolean player_present = false;
-                    for(CombatSequence player_combat: combatSequences){
-                        if(player_init.getEntity().getDisplayName().equals(player_combat.getName())){
-                            player_present = true;
-                        }
-                    }
-                    if(!player_present){
-                        removeplayer.add(player_init);
+
+                for(CombatSequence player_combat: combatSequences){
+
+                    if(player_combat.getHealth() <= 0 ){
+                        Log.d("health", player_combat.getName().toString());
+                        initiativeResults.remove(player_combat);
                     }
                 }
+
                 for (InitiativeResult remove : removeplayer) {
                     initiativeResults.remove(remove);
                 }
 
-                for(int i = 0; i < initiativeResults.size(); i++){
-                    TableRow newtablerow = new TableRow(CombatScreen.this);
-                    TextView nameView = new TextView(CombatScreen.this);
-                    int padding = 16;
-                    nameView.setPadding(padding, padding, padding, padding);
-                    nameView.setMaxWidth(400);
-                    nameView.setBackgroundResource(R.drawable.cell_border);
-                    InitiativeResult sequence = initiativeResults.get(i);
-                    Log.d("nameofevery",sequence.getEntity().getDisplayName() +"    " +combatSequences.get(0).getName());
-                    if(sequence.getEntity().getDisplayName().equals(combatSequences.get(0).getName())){
-                        // Mark first element as the current turn
-                        nameView.setTypeface(null, Typeface.BOLD);
-                        nameView.setText(sequence.getEntity().getDisplayName() + " - " + sequence.getInitiativeRoll());
-                        nameView.setBackgroundResource(R.drawable.bold_cell_border);
-                    } else {
-                        nameView.setText(sequence.getEntity().getDisplayName() + " - " + sequence.getInitiativeRoll());
+                for(InitiativeResult player_enemy : initiativeResults){
+                    if (combatSequences.stream().anyMatch(r -> r.getName().equals(player_enemy.getEntity().getDisplayName()))) {
+                        TableRow newtablerow = new TableRow(CombatScreen.this);
+                        TextView nameView = new TextView(CombatScreen.this);
+                        int padding = 16;
+                        nameView.setPadding(padding, padding, padding, padding);
+                        nameView.setMaxWidth(400);
                         nameView.setBackgroundResource(R.drawable.cell_border);
+                        Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    " + combatSequences.get(0).getName());
+                        // TODO change this to UUID
+                        if (player_enemy.getEntity().getDisplayName().equals(combatSequences.get(0).getName())) {
+                            // Mark first element as the current turn
+                            nameView.setTypeface(null, Typeface.BOLD);
+                            nameView.setText(player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll());
+                            nameView.setBackgroundResource(R.drawable.bold_cell_border);
+                        } else {
+                            nameView.setText(player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll());
+                            nameView.setBackgroundResource(R.drawable.cell_border);
+                        }
+                        newtablerow.addView(nameView);
+                        turntable.addView(newtablerow);
                     }
-                    newtablerow.addView(nameView);
-                    turntable.addView(newtablerow);
+
                 }
+
 
             }
         });
