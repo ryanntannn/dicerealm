@@ -81,25 +81,38 @@ public class CombatScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         List<InitiativeResult> initiativeRes = combatSh.initiativeResults();
         List<InitiativeResult> copy = new ArrayList<>();
         for (InitiativeResult result : initiativeRes) {
             copy.add(result.clone());  // or use a custom copy constructor
         }
 
+        //Hide android bottom nav bar
+        View decorView = getWindow().getDecorView();
+        WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
+
+        if (controller != null) {
+            controller.hide(WindowInsetsCompat.Type.systemBars());
+            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
+
+
+
+
         roomSh.trackState().observe(this, new Observer<RoomState.State>() {
-           @Override
-           public void onChanged(RoomState.State roomState) {
-               if (roomState == null){
-                     Log.d("CombatScreen", "Navigating back to home screen");
-                     Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
-                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                     startActivity(intent);
-               }else if(roomState == RoomState.State.DIALOGUE_PROCESSING){
-                   Log.d("CombatScreen", "Navigating back to dialog screen");
-                   CombatScreen.this.finish();
-               }
-           }
+            @Override
+            public void onChanged(RoomState.State roomState) {
+                if (roomState == null) {
+                    Log.d("CombatScreen", "Navigating back to home screen");
+                    Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else if (roomState == RoomState.State.DIALOGUE_PROCESSING) {
+                    Log.d("CombatScreen", "Navigating back to dialog screen");
+                    CombatScreen.this.finish();
+                }
+            }
         });
 
         this.combatSequence(copy);
@@ -125,7 +138,9 @@ public class CombatScreen extends AppCompatActivity {
         });
     }
 
+
     private void displayPlayerInfo(){
+
         TextView playerName = findViewById(R.id.playerName);
         TextView yourHealth = findViewById(R.id.yourHealth);
         int[] statsIds = gameSh.getStatsIds();
@@ -187,7 +202,9 @@ public class CombatScreen extends AppCompatActivity {
                                 Log.d("skill", "Skill: " + skills.getDisplayName());
                             }
                             //Call recycleview
+
                             CardAdapter cardAdapter = new SpellCardAdapter(CombatScreen.this,skillList,"Spell",combatSh , CombatScreen.this);
+
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this, 2));
@@ -199,7 +216,11 @@ public class CombatScreen extends AppCompatActivity {
         });
     }
 
-    public void closespell(){
+
+    public void closespell() {
+
+        // Hardcode the button to use the first skill
+
         MaterialButton skillButtons = findViewById(R.id.BackButton);
         skillButtons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,7 +273,9 @@ public class CombatScreen extends AppCompatActivity {
                             spellaction.setVisibility(View.VISIBLE);
 
                             //Call recycleview
+
                             CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist ,"Item",combatSh, CombatScreen.this);
+
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this, 2));
@@ -313,6 +336,7 @@ public class CombatScreen extends AppCompatActivity {
 
     }
 
+
     private void combatSequence(List<InitiativeResult> initiativeResults){
         TableLayout turntable = findViewById(R.id.turnCombatSquence);
 
@@ -356,6 +380,7 @@ public class CombatScreen extends AppCompatActivity {
                         }
                         newtablerow.addView(nameView);
                         turntable.addView(newtablerow);
+
                     }
 
                 }
@@ -414,6 +439,8 @@ public class CombatScreen extends AppCompatActivity {
         });
         backgroundThread.start();
     }
+
+
 
 
 }
