@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 // TODO: Implement Weapon attack functionality (DONE)
@@ -78,10 +79,13 @@ public class CombatScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        List<InitiativeResult> initiativeResults = combatSh.initiativeResults();
+        List<InitiativeResult> initiativeRes = combatSh.initiativeResults();
+        List<InitiativeResult> copy = new ArrayList<>();
+        for (InitiativeResult result : initiativeRes) {
+            copy.add(result.clone());  // or use a custom copy constructor
+        }
 
-
-        this.combatSequence(initiativeResults);
+        this.combatSequence(copy);
         this.trackCurrentTurn();
         this.attackLeft();
         this.attackRight();
