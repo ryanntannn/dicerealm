@@ -13,6 +13,7 @@ public class CombatStartTurnCommand extends Command {
 		private final int roundNumber;
 		private final UUID currentTurnEntityId;
 
+
     public CombatStartTurnCommand(int turnNumber, int roundNumber, UUID currentTurnEntityId) {
         super.type = "COMBAT_START_TURN";
 				this.turnNumber = turnNumber;
@@ -31,4 +32,5 @@ public class CombatStartTurnCommand extends Command {
 		public UUID getCurrentTurnEntityId() {
 			return currentTurnEntityId;
 		}
+
 }

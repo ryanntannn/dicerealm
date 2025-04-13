@@ -52,6 +52,8 @@ public class Serialization {
 								return context.deserialize(json, Scroll.class);
 						case "POTION":
 								return context.deserialize(json, Potion.class);
+						case "SKILL":
+								return context.deserialize(json, Skill.class);
 						default:
 								throw new JsonParseException(itemType + " not handled");
 				}
@@ -103,34 +105,6 @@ public class Serialization {
 				}
 			}
 
-//			static class EquippedItemsDeserializer implements JsonDeserializer<Map<BodyPart, EquippableItem>>{
-//				@Override
-//				public Map<BodyPart, EquippableItem> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException{
-//					Map<BodyPart, EquippableItem> equippedItems = new HashMap<>();
-//					JsonObject object = json.getAsJsonObject();
-//
-//					// Loops through every equipped item
-//					for (Map.Entry<String, JsonElement> entry : object.entrySet()){
-//						String key = entry.getKey();
-//						BodyPart bodyPart = BodyPart.valueOf(key.toUpperCase());
-//
-//						// Each equipped item
-//						JsonObject equippedObj = entry.getValue().getAsJsonObject();
-//						EquippableItem item;
-//
-//						// Check if weapon
-//						JsonElement actionType = equippedObj.get("actionType");
-//						if(actionType != null && actionType.getAsString().equals("MELEE")){
-//							item = context.deserialize(entry.getValue(), Weapon.class);
-//						}else{
-//							item = context.deserialize(entry.getValue(), EquippableItem.class);
-//						}
-//						equippedItems.put(bodyPart, item);
-//					}
-//
-//					return equippedItems;
-//				}
-//			}
 
 			static class CombatTurnActionCommandDeserializer implements JsonDeserializer<CombatTurnActionCommand> {
 			@Override
@@ -175,7 +149,6 @@ public class Serialization {
 								.registerTypeAdapter(Item.class, new ItemDeserializer())
 								.registerTypeAdapter(EquippableItem.class, new ItemDeserializer.EquippableItemDeserializer())
 								.registerTypeAdapter(CombatTurnActionCommand.class, new CombatTurnActionCommandDeserializer())
-//								.registerTypeAdapter(equippedItemsType, new EquippedItemsDeserializer())
 								.create();
 			}
 

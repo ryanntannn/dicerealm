@@ -40,7 +40,7 @@ public class DialogDataSource {
     }
 
     public void updateTurnHistory(Dialog currentTurn){
-        turnHistory.add(currentTurn);
+        //turnHistory.add(currentTurn);
         this.currentTurn.postValue(currentTurn);
     }
 

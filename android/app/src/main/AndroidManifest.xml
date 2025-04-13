@@ -17,21 +17,27 @@
         tools:targetApi="31">
         <activity
             android:name=".activity.CombatScreen"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.DialogScreen"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.RoomScreen"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.CharacterScreen"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
