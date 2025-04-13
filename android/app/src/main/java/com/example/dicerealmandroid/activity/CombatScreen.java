@@ -321,27 +321,6 @@ public class CombatScreen extends AppCompatActivity {
             public void onChanged(List<CombatSequence> combatSequences){
                 Log.d("combat", "Initiative Results:" + initiativeResults.toString());
                 turntable.removeAllViews();
-//                for(int i = 0; i < combatSequences.size(); i++){
-//                    TableRow newtablerow = new TableRow(CombatScreen.this);
-//                    TextView nameView = new TextView(CombatScreen.this);
-//                    int padding = 16;
-//                    nameView.setPadding(padding, padding, padding, padding);
-//                    nameView.setMaxWidth(400);
-//                    nameView.setBackgroundResource(R.drawable.cell_border);
-//                    CombatSequence sequence = combatSequences.get(i);
-//                    if(combatSh.isMyTurn()){
-//                        Log.d("turn", combatSh.isMyTurn().toString());
-//                        // Mark first element as the current turn
-//                        nameView.setTypeface(null, Typeface.BOLD);
-//                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
-//                        nameView.setBackgroundResource(R.drawable.bold_cell_border);
-//                    } else {
-//                        nameView.setText(sequence.getName() + " - " + sequence.getInitiative());
-//                        nameView.setBackgroundResource(R.drawable.cell_border);
-//                    }
-//                    newtablerow.addView(nameView);
-//                    turntable.addView(newtablerow);
-//                }
                 List<InitiativeResult> removeplayer = new ArrayList<>();
 
                 for(CombatSequence player_combat: combatSequences){
