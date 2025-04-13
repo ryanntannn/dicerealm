@@ -47,7 +47,6 @@ public class HomeActivity extends AppCompatActivity {
         TextInputLayout textInputLayout = findViewById(R.id.textInputLayout2);
 
 
-
         // Enable join button when input is in focus and valid code is entered
         textInputLayout.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -89,7 +88,7 @@ public class HomeActivity extends AppCompatActivity {
         loading = new Loading(HomeActivity.this, "Joining room...");
         join.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 loading.show();
                 roomId = textInputLayout.getEditText().getText().toString().trim();
                 // Remove all spaces and newlines
@@ -100,10 +99,10 @@ public class HomeActivity extends AppCompatActivity {
 
 
         // Navigate when state changes to LOBBY
-        roomSh.trackState().observe(this,  new Observer<RoomState.State>() {
+        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
             @Override
-            public void onChanged(RoomState.State state){
-                if(state == RoomState.State.LOBBY){
+            public void onChanged(RoomState.State state) {
+                if (state == RoomState.State.LOBBY) {
                     loading.hide();
                     Intent intent = new Intent(HomeActivity.this, CharacterScreen.class);
                     startActivity(intent);
@@ -111,13 +110,11 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     // If user navigates back to the home screen
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         roomSh.leaveRoom();
 
