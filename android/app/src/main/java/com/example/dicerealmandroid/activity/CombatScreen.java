@@ -85,6 +85,20 @@ public class CombatScreen extends AppCompatActivity {
             copy.add(result.clone());  // or use a custom copy constructor
         }
 
+        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
+            @Override
+            public void onChanged(RoomState.State roomState) {
+                if (roomState == null){
+                    Log.d("CombatScreen", "Navigating back to home screen");
+                    Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }else if(roomState == RoomState.State.DIALOGUE_PROCESSING){
+                    Log.d("CombatScreen", "Navigating back to dialog screen");
+                    CombatScreen.this.finish();
+                }
+            }
+        });
         this.combatSequence(copy);
         this.trackCurrentTurn();
         this.attackLeft();
@@ -94,21 +108,6 @@ public class CombatScreen extends AppCompatActivity {
         this.displayEnemyInfo();
         this.closespell();
         this.useitems();
-
-        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
-           @Override
-           public void onChanged(RoomState.State roomState) {
-               if (roomState == null){
-                     Log.d("CombatScreen", "Navigating back to home screen");
-                     Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
-                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                     startActivity(intent);
-               }else if(roomState == RoomState.State.DIALOGUE_PROCESSING){
-                   Log.d("CombatScreen", "Navigating back to dialog screen");
-                   CombatScreen.this.finish();
-               }
-           }
-        });
     }
 
     private void displayEnemyInfo(){
@@ -339,6 +338,7 @@ public class CombatScreen extends AppCompatActivity {
 //                    newtablerow.addView(nameView);
 //                    turntable.addView(newtablerow);
 //                }
+                List<InitiativeResult> removeplayer = new ArrayList<>();
                 for (InitiativeResult player_init : initiativeResults) {
                     boolean player_present = false;
                     for(CombatSequence player_combat: combatSequences){
@@ -347,9 +347,13 @@ public class CombatScreen extends AppCompatActivity {
                         }
                     }
                     if(!player_present){
-                        initiativeResults.remove(player_init);
+                        removeplayer.add(player_init);
                     }
                 }
+                for (InitiativeResult remove : removeplayer) {
+                    initiativeResults.remove(remove);
+                }
+
                 for(int i = 0; i < initiativeResults.size(); i++){
                     TableRow newtablerow = new TableRow(CombatScreen.this);
                     TextView nameView = new TextView(CombatScreen.this);
