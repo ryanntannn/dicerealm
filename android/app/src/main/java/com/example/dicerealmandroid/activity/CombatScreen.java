@@ -339,7 +339,17 @@ public class CombatScreen extends AppCompatActivity {
 //                    newtablerow.addView(nameView);
 //                    turntable.addView(newtablerow);
 //                }
-
+                for (InitiativeResult player_init : initiativeResults) {
+                    boolean player_present = false;
+                    for(CombatSequence player_combat: combatSequences){
+                        if(player_init.getEntity().getDisplayName().equals(player_combat.getName())){
+                            player_present = true;
+                        }
+                    }
+                    if(!player_present){
+                        initiativeResults.remove(player_init);
+                    }
+                }
                 for(int i = 0; i < initiativeResults.size(); i++){
                     TableRow newtablerow = new TableRow(CombatScreen.this);
                     TextView nameView = new TextView(CombatScreen.this);
