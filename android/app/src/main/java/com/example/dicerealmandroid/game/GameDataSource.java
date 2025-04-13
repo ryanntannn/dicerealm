@@ -8,12 +8,14 @@ package com.example.dicerealmandroid.game;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.dicerealm.core.locations.LocationGraph;
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.locations.Location;
 
 public class GameDataSource {
     private static GameDataSource instance;
-    private final MutableLiveData<Location> currentLocation = new MutableLiveData<>();
+//    private final MutableLiveData<Location> currentLocation = new MutableLiveData<>();
+    private final MutableLiveData<LocationGraph> currentLocationGraph = new MutableLiveData<>();
 
     private GameDataSource(){}
 
@@ -35,23 +37,32 @@ public class GameDataSource {
             R.id.stat_wisdom
     };
 
-    public LiveData<Location> subscribeCurrentLocation(){
-        return currentLocation;
+//    public LiveData<Location> subscribeCurrentLocation(){
+//        return currentLocation;
+//    }
+//
+//    public Location getCurrentLocation(){
+//        return currentLocation.getValue();
+//    }
+//
+//    public void setCurrentLocation(Location location){
+//        currentLocation.postValue(location);
+//    }
+
+    public void setCurrentLocationGraph(LocationGraph locationGraph){
+        currentLocationGraph.postValue(locationGraph);
     }
 
-    public Location getCurrentLocation(){
-        return currentLocation.getValue();
-    }
-
-    public void setCurrentLocation(Location location){
-        currentLocation.postValue(location);
+    public LiveData<LocationGraph> getCurrentLocationGraph(){
+        return currentLocationGraph;
     }
 
 
     // Destroy the singleton instance
     public static void destroy(){
         if(instance != null){
-            instance.setCurrentLocation(null);
+            instance.setCurrentLocationGraph(null);
+//            instance.setCurrentLocation(null);
         }
     }
 }

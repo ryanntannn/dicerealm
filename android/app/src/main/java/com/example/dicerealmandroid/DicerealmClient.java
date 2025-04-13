@@ -8,6 +8,7 @@ import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.command.UpdateLocationGraphCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.command.combat.CombatEndCommand;
 import com.dicerealm.core.command.combat.CombatEndTurnCommand;
@@ -70,7 +71,6 @@ public class DicerealmClient extends WebSocketClient {
 
                     roomRepo.setRoomState(roomState);
                     playerRepo.setPlayer(myPlayer);
-                    gameRepo.changeLocation(roomState.getLocationGraph().getCurrentLocation());
                     break;
 
                 case "PLAYER_JOIN":
@@ -146,7 +146,6 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "CHANGE_LOCATION":
                     ChangeLocationCommand changeLocationCommand = gson.fromJson(message, ChangeLocationCommand.class);
-                    gameRepo.changeLocation(changeLocationCommand.getLocation());
                     Message.showMessage("Party has moved to " + changeLocationCommand.getLocation().getDisplayName());
                     break;
 
@@ -193,6 +192,11 @@ public class DicerealmClient extends WebSocketClient {
                         roomRepo.leaveRoom();
                         Message.showMessage("You have died! Returning back to main menu.");
                     }
+                    break;
+
+                case "UPDATE_LOCATION_GRAPH":
+                    UpdateLocationGraphCommand updateLocationGraphCommand = gson.fromJson(message, UpdateLocationGraphCommand.class);
+                    gameRepo.updateLocationGraph(updateLocationGraphCommand.getGraph());
                     break;
 
                 default:

@@ -3,15 +3,12 @@ package com.example.dicerealmandroid.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,24 +21,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.dicerealm.core.dialogue.SkillCheck;
-import com.dicerealm.core.entity.BodyPart;
-import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
-import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
-import com.dicerealm.core.item.Item;
 import com.dicerealm.core.item.Potion;
 import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
-import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.fragments.InventoryDialogFragment;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
@@ -49,11 +40,9 @@ import com.dicerealm.core.command.ShowPlayerActionsCommand;
 import com.dicerealm.core.dm.DungeonMasterResponse;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.dialog.DialogStateHolder;
-import com.example.dicerealmandroid.player.PlayerInventoryWrapper;
-import com.example.dicerealmandroid.player.PlayerRepo;
+import com.example.dicerealmandroid.player.wrapper.PlayerInventoryWrapper;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
-import com.example.dicerealmandroid.util.ScreenDimensions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
@@ -62,7 +51,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -131,7 +119,7 @@ public class DialogScreen extends AppCompatActivity {
     private void trackLocation() {
         MaterialTextView locationText = findViewById(R.id.location);
         locationText.setTextSize(10);
-        gameSh.subscribeCurrentLocation().observe(this, new Observer<Location>() {
+        gameSh.getCurrentLocation().observe(this, new Observer<Location>() {
             @Override
             public void onChanged(Location location) {
                 locationText.setText(location.getDisplayName());
@@ -213,31 +201,6 @@ public class DialogScreen extends AppCompatActivity {
         }
         // Enable item inventory
         itemInventory.setEnabled(true);
-    }
-
-    private void getTurnHistory(LinearLayout messageLayout) {
-        for (Dialog turn : dialogSh.getDialogTurnHistory()) {
-            // Each turn number
-            TextView numberOfTurns = new TextView(DialogScreen.this);
-            numberOfTurns.setText("Turn " + turn.getTurnNumber());
-            numberOfTurns.setPadding(20, 20, 20, 20);
-            numberOfTurns.setGravity(1);
-            numberOfTurns.setTextColor(Color.parseColor("#000000"));
-            numberOfTurns.setTextSize(12);
-
-            // Each turn messages
-            CardView turnContainer = new CardView(DialogScreen.this);
-            TextView eachTurnView = new TextView(DialogScreen.this);
-
-            turnContainer.setPadding(0, 10, 0, 10);
-            turnContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));  // Set background color
-            eachTurnView.setText(turn.getMessage());
-            eachTurnView.setPadding(20, 20, 20, 20);
-
-            turnContainer.addView(eachTurnView);
-            messageLayout.addView(numberOfTurns);
-            messageLayout.addView(turnContainer);
-        }
     }
 
 

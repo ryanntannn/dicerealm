@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import com.dicerealm.core.command.StartGameCommand;
 import com.dicerealm.core.locations.Location;
+import com.dicerealm.core.locations.LocationGraph;
 import com.example.dicerealmandroid.room.RoomDataSource;
 import com.google.gson.Gson;
 
@@ -30,16 +31,16 @@ public class GameRepo {
         }
         return this.gameDataSource.statsIdArray;
     }
-    public void changeLocation(Location location){
-        if(location.equals(gameDataSource.getCurrentLocation())){
-            return;
-        }
-        gameDataSource.setCurrentLocation(location);
-    }
-
-    public LiveData<Location> subscribeCurrentLocation(){
-        return gameDataSource.subscribeCurrentLocation();
-    }
+//    public void changeLocation(Location location){
+//        if(location.equals(gameDataSource.getCurrentLocation())){
+//            return;
+//        }
+//        gameDataSource.setCurrentLocation(location);
+//    }
+//
+//    public LiveData<Location> subscribeCurrentLocation(){
+//        return gameDataSource.subscribeCurrentLocation();
+//    }
 
 
     // Send user game input text to server
@@ -48,6 +49,16 @@ public class GameRepo {
             return;
         }
         roomDataSource.sendMessageToServer(text);
+    }
+
+    public void updateLocationGraph(LocationGraph locationGraph){
+        LocationGraph currLocGraph = gameDataSource.getCurrentLocationGraph().getValue();
+        if(currLocGraph == null || currLocGraph.equals(locationGraph)) return;
+        gameDataSource.setCurrentLocationGraph(locationGraph);
+    }
+
+    public LiveData<LocationGraph> getLocationGraph(){
+        return gameDataSource.getCurrentLocationGraph();
     }
 
 }
