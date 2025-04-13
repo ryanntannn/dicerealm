@@ -78,6 +78,8 @@ public class CombatDataSource {
             instance.setMonster(null);
             instance.setInitiativeResults(null);
             instance.updateTurnHistory(null);
+            instance.setCurrentRound(1);
+            instance.setPrevRound(0);
         }
     }
 }

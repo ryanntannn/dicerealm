@@ -151,7 +151,11 @@ public class CombatRepo {
         Integer currRound = combatDataSource.getCurrentRound().getValue();
         Integer prevRound = combatDataSource.getPrevRound();
         if(currRound == null) return false;
-
         return !currRound.equals(prevRound);
+    }
+
+    public void resetRounds(){
+        combatDataSource.setPrevRound(0);
+        combatDataSource.setCurrentRound(1);
     }
 }

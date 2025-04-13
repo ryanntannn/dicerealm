@@ -158,6 +158,7 @@ public class DicerealmClient extends WebSocketClient {
                 case "COMBAT_START":
                     CombatStartCommand combatStartCommand = gson.fromJson(message, CombatStartCommand.class);
 //                    combatRepo.setLatestTurn(combatStartCommand.getDisplayText());
+                    combatRepo.resetRounds(); // Ensure the round counter is reset so that the comparator works
                     combatRepo.setInitiativeResults(combatStartCommand.getInitiativeResults());
                     Message.showMessage("Round " + 1);
                     Message.showMessage("Enemies found! Switching to combat mode.");
