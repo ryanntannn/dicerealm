@@ -66,12 +66,12 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				// Broadcast the end of turn command containing the result
         context.getBroadcastStrategy().sendToAllPlayers(new CombatEndTurnCommand(currentTurnIndex, result));
 
-				if (combatManager.isCombatOver()) {
-					handleCombatOver(context);
-				} else {
-					handleNextTurn(context);
-				}
-    }
+		if (combatManager.isCombatOver()) {
+			handleCombatOver(context);
+		} else {
+			handleNextTurn(context);
+			}
+    	}
 
 		public static void handleNextTurn(RoomContext context) {
 			CombatManager combatManager = context.getCombatManager();
@@ -95,7 +95,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 				}
 				context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(), combatManager.getCurrentRoundIndex(),  combatManager.getCurrentTurnEntity().getId()));
 				CombatResult monsterResult = monsterAI.handleMonsterTurn(combatManager.getParticipants(), combatManager.getCurrentTurnEntity());
-        int currentTurn = combatManager.getCurrentTurnIndex();
+        		int currentTurn = combatManager.getCurrentTurnIndex();
 				combatManager.endTurn();
 				context.getBroadcastStrategy().sendToAllPlayers(new CombatEndTurnCommand(currentTurn, monsterResult));
 				if (combatManager.isCombatOver()) {
@@ -111,8 +111,8 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 					// Start the next turn
 					combatManager.startTurn();
 					context.getBroadcastStrategy().sendToAllPlayers(new CombatStartTurnCommand(combatManager.getCurrentTurnIndex(), combatManager.getCurrentRoundIndex(), combatManager.getCurrentTurnEntity().getId()));
+				}
 			}
-		}
 
 		public static void handleCombatOver(RoomContext context) {
 			if (context.getCombatManager().isPlayersWin()){
@@ -123,23 +123,23 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 					.sum();
 				LevelManager levelManager = new LevelManager();
 				levelManager.addExperience(totalXP, context.getRoomState());
-        if (levelManager.checkLevelUp(context.getRoomState())) {
-              // Notify players about level up
-              int roomLevel = context.getRoomState().getRoomLevel();
-              for (Player player : context.getRoomState().getPlayers()) {
-                if (player == null) {
-                  throw new IllegalArgumentException("Player not found in room.");
-                }
-                List<Skill> availableSkills = levelManager.preparePlayerSkillSelection(player, roomLevel);
-                context.getBroadcastStrategy().sendToPlayer(new SkillSelectionCommand(player.getId(), availableSkills, player.getSkillsInventory().getItems(), roomLevel), player);
-             }
-        }
-				// TODO: Handle prompt for the DM to end the combat
-				String prompt = "The combat has ended and the players are victorious!";
-				DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(prompt);
-				DialogueManager.handleDungeonMasterResponse(response, context);
-			} else {
-				context.getBroadcastStrategy().sendToAllPlayers(new CombatEndCommand(CombatEndStatus.LOSE));
+			if (levelManager.checkLevelUp(context.getRoomState())) {
+				// Notify players about level up
+				int roomLevel = context.getRoomState().getRoomLevel();
+				for (Player player : context.getRoomState().getPlayers()) {
+					if (player == null) {
+					throw new IllegalArgumentException("Player not found in room.");
+					}
+					List<Skill> availableSkills = levelManager.preparePlayerSkillSelection(player, roomLevel);
+					context.getBroadcastStrategy().sendToPlayer(new SkillSelectionCommand(player.getId(), availableSkills, player.getSkillsInventory().getItems(), roomLevel), player);
+				}
 			}
-		}
+					// TODO: Handle prompt for the DM to end the combat
+					String prompt = "The combat has ended and the players are victorious!";
+					DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(prompt);
+					DialogueManager.handleDungeonMasterResponse(response, context);
+				} else {
+					context.getBroadcastStrategy().sendToAllPlayers(new CombatEndCommand(CombatEndStatus.LOSE));
+				}
+			}
 }

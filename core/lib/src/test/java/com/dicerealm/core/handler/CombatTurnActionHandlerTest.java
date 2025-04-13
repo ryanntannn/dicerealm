@@ -45,6 +45,7 @@ public class CombatTurnActionHandlerTest {
     private Monster monster;
     private Skill skill;
     private Weapon weapon;
+    private Weapon weapon_2;
     private Potion potion;
 
     @BeforeEach
@@ -71,9 +72,12 @@ public class CombatTurnActionHandlerTest {
         player_2 = new Player("Don", Race.HUMAN, EntityClass.WARRIOR, baseStats);
         monster = new Monster("Demon King", Race.DEMON, EntityClass.WARRIOR, baseStats); // Assume Monster class exists
         weapon = new DummyWeapon();
+        weapon_2 = new DummyWeapon();
         skill = new DummySkill();
         monster.getInventory().addItem(weapon); // Add weapon to monster's inventory
         monster.equipItem(BodyPart.LEFT_HAND, weapon);
+        player_2.getInventory().addItem(weapon_2); // Add weapon to player_2's inventory
+        player_2.equipItem(BodyPart.LEFT_HAND, weapon_2);
         // Add them to a list of participants
         List<Entity> participants = new ArrayList<>();
         participants.add(monster);
@@ -121,7 +125,8 @@ public class CombatTurnActionHandlerTest {
         // Verify the skill is on cooldown
         assertEquals(5, skill.getRemainingCooldown(), "Fireball should be on cooldown after use.");
 
-        command = new CombatTurnActionCommand(player_2, monster, weapon, ActionType.SKILL);
+
+        command = new CombatTurnActionCommand(player_2, monster, weapon_2, ActionType.SKILL);
         combatTurnActionHandler.handle(player_2.getId(), command, roomContext);
 
         assertEquals(2, combatManager.getCurrentRoundIndex());

@@ -89,7 +89,8 @@ public class SkillsRepository {
                 availableSkills.addAll(skillsByLevel.get(i));
             }
         }
-        return availableSkills;
+
+        return createUniqueSkillInstances(availableSkills);
     }
     
     public static List<Skill> getNewSkillsForLevel(EntityClass entityClass, int level) {
@@ -97,17 +98,37 @@ public class SkillsRepository {
         if (skillsByLevel == null || !skillsByLevel.containsKey(level)) {
             return new ArrayList<>();
         }
-        
-        return skillsByLevel.get(level);
+
+        return createUniqueSkillInstances(skillsByLevel.get(level));
     }
     
     public static List<Skill> filterNewSkills(List<Skill> availableSkills, List<Skill> knownSkills) {
         List<String> knownSkillNames = knownSkills.stream()
             .map(Skill::getDisplayName)
             .collect(Collectors.toList());
-            
-        return availableSkills.stream()
+
+        List<Skill> filteredSkills = availableSkills.stream()
             .filter(skill -> !knownSkillNames.contains(skill.getDisplayName()))
             .collect(Collectors.toList());
+
+        return createUniqueSkillInstances(filteredSkills);
     }
+
+    private static List<Skill> createUniqueSkillInstances(List<Skill> originalSkills) {
+        List<Skill> uniqueSkills = new ArrayList<>();
+        for (Skill skill : originalSkills) {
+            uniqueSkills.add(new Skill(
+                skill.getDisplayName(),
+                skill.getDescription(),
+                skill.getEntityClass(),
+                skill.getActionType(),
+                skill.getSpellSlotCost(),
+                skill.getDamageDice().getNumDice(),
+                skill.getDamageDice().getSides(),
+                skill.getCooldown()
+            ));
+        }
+        return uniqueSkills;
+    }
+
 }
