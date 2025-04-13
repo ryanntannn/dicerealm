@@ -24,6 +24,7 @@ import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.item.WeaponClass;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.skills.DummySkill;
 import com.dicerealm.core.skills.Skill;
 
 class CombatManagerTest {
@@ -35,6 +36,8 @@ class CombatManagerTest {
     private Monster monster;
     private Weapon weapon;
     private Skill skill;
+    private Skill skill_2;
+    private Skill skill_3;
 
     @BeforeEach
     void setUp() {
@@ -54,8 +57,13 @@ class CombatManagerTest {
         monster = new Monster("Demon King", Race.DEMON, EntityClass.WARRIOR, baseStats); // Assume Monster class exists
         weapon = new Weapon("Sword", "Iron Sword forged from the Great Dwarfen Forges", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 1)), 1);
         skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3,2,1,2);
+        skill_2 = new DummySkill(); // Dummy skill for testing
+        skill_3 = new DummySkill(); // Dummy skill for testing
         monster.getInventory().addItem(weapon); // Add weapon to monster's inventory
         monster.equipItem(BodyPart.LEFT_HAND, weapon);
+        player_1.addSkill(skill); // Add skill to player_1's inventory
+        player_2.addSkill(skill_2); // Add skill to player_2's inventory
+        monster.addSkill(skill_3);
         // Add them to a list of participants
         List<Entity> participants = new ArrayList<>();
         participants.add(player_1);
@@ -102,10 +110,10 @@ class CombatManagerTest {
         combatManager.endTurn(); 
         Entity attacker = combatManager.getCurrentTurnEntity();
         Entity target = monster;
-        CombatResult result = combatManager.executeRiggedCombatTurn(attacker, target, skill, new FixedD20(20));
+        CombatResult result = combatManager.executeRiggedCombatTurn(attacker, target, skill_2, new FixedD20(20));
         assertEquals(result.getAttacker(), player_2, "The attacker should be Player 2.");
         assertEquals(result.getTarget(), monster, "The target should be the monster.");
-        assertEquals(result.getDamageLog(), "Don casts Fireball on Demon King for 4 damage!");
+        assertEquals(result.getDamageLog(), "Don casts Dummy Skill on Demon King for 2 damage!");
     }
 
     @Test
@@ -187,8 +195,8 @@ class CombatManagerTest {
 
         // Use a skill and activate its cooldown
         Entity attacker = combatManager.getCurrentTurnEntity();
-        CombatResult result = combatManager.executeCombatTurn(attacker, player_1, skill);
-        assertEquals(skill.getRemainingCooldown(), skill.getCooldown(), "The skill's cooldown should be activated after use.");
+        CombatResult result = combatManager.executeCombatTurn(attacker, player_1, skill_3);
+        assertEquals(skill_3.getRemainingCooldown(), skill_3.getCooldown(), "The skill's cooldown should be activated after use.");
     }
 
     @Test
@@ -199,9 +207,8 @@ class CombatManagerTest {
 
         // Use a skill and activate its cooldown
         Entity attacker = combatManager.getCurrentTurnEntity();
-        attacker.getSkillsInventory().addItem(skill); // Add the skill to the attacker
-        combatManager.executeCombatTurn(attacker, player_1, skill);
-        assertEquals(skill.getRemainingCooldown(), skill.getCooldown(), "The skill's cooldown should be activated after use.");
+        combatManager.executeCombatTurn(attacker, player_1, skill_3);
+        assertEquals(skill_3.getRemainingCooldown(), skill_3.getCooldown(), "The skill's cooldown should be activated after use.");
 
         // Complete a full round
         combatManager.endTurn();
@@ -211,7 +218,7 @@ class CombatManagerTest {
         combatManager.endTurn();
 
         // Verify the cooldown is reduced
-        assertEquals(skill.getCooldown() - 1, skill.getRemainingCooldown(), "The skill's cooldown should be reduced by 1 after a full round.");
+        assertEquals(skill_3.getCooldown() - 1, skill_3.getRemainingCooldown(), "The skill's cooldown should be reduced by 1 after a full round.");
     }
 
     @Test
@@ -221,11 +228,11 @@ class CombatManagerTest {
 
         // Use a skill and activate its cooldown
         Entity attacker = combatManager.getCurrentTurnEntity();
-        combatManager.executeCombatTurn(attacker, player_1, skill);
-        assertEquals(skill.getRemainingCooldown(), skill.getCooldown(), "The skill's cooldown should be activated after use.");
+        combatManager.executeCombatTurn(attacker, player_1, skill_3);
+        assertEquals(skill_3.getRemainingCooldown(), skill_3.getCooldown(), "The skill's cooldown should be activated after use.");
 
         // Attempt to use the skill again while it's on cooldown
-        CombatResult result = combatManager.executeCombatTurn(attacker, player_1, skill);
+        CombatResult result = combatManager.executeCombatTurn(attacker, player_1, skill_3);
         assertNull(result, "The skill should not be usable while on cooldown.");
     }
 
@@ -236,19 +243,28 @@ class CombatManagerTest {
 
         // Use a skill and activate its cooldown
         Entity attacker = combatManager.getCurrentTurnEntity();
-        attacker.getSkillsInventory().addItem(skill);
-        combatManager.executeCombatTurn(attacker, player_1, skill);
-        assertEquals(skill.getRemainingCooldown(), skill.getCooldown(), "The skill's cooldown should be activated after use.");
+        combatManager.executeCombatTurn(attacker, player_1, skill_3);
+        assertEquals(skill_3.getRemainingCooldown(), skill_3.getCooldown(), "The skill's cooldown should be activated after use.");
 
-        // Complete multiple rounds until the cooldown expires
-        for (int i = 0; i < skill.getCooldown(); i++) {
+      
+        combatManager.endTurn(); // Monster's turn ends
+        combatManager.endTurn(); // Player 2's turn ends
+        combatManager.endTurn(); // Player 1's turn ends (round ends)
+        assertEquals(2, combatManager.getCurrentRoundIndex(), "The current round index should be incremented after a full round.");
+        assertEquals(4, skill_3.getRemainingCooldown(), "The skill's cooldown should be reduced after a full round.");
+        combatManager.endTurn(); // Monster's turn ends
+        combatManager.endTurn(); // Player 2's turn ends
+        combatManager.endTurn(); // Player 1's turn ends (round ends)
+        assertEquals(3, combatManager.getCurrentRoundIndex(), "The current round index should be incremented after a full round.");
+       
+        for (int i = 0; i < 3; i++) {
             combatManager.endTurn(); // Monster's turn ends
             combatManager.endTurn(); // Player 2's turn ends
             combatManager.endTurn(); // Player 1's turn ends (round ends)
         }
-
+        
         // Verify the cooldown is fully expired
-        assertEquals(0, skill.getRemainingCooldown(), "The skill's cooldown should be fully expired after the required number of rounds.");
-        assertTrue(skill.isUsable(), "The skill should be usable after its cooldown expires.");
+        assertEquals(0, skill_3.getRemainingCooldown(), "The skill's cooldown should be fully expired after the required number of rounds.");
+        assertTrue(skill_3.isUsable(), "The skill should be usable after its cooldown expires.");
     }
 }

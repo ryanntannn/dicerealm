@@ -87,4 +87,9 @@ public class Skill implements Identifiable {
 		public String getType() {
 			return type;
 		}
+
+    public void setRemainingCooldown(int i) {
+        this.remainingCooldown = i;
+    }
+
 }

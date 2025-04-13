@@ -112,6 +112,9 @@ public class Room {
 		Player player = roomState.getPlayerMap().get(id);
 		roomState.getPlayerMap().remove(id);
 		broadcastStrategy.sendToAllPlayers(new PlayerLeaveCommand(player));
+		if(roomState.getState() == RoomState.State.BATTLE) {
+			combatManager.removePlayerFromCombat(id);
+		}
 	}
 
 	/**

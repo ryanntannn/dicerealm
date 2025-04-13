@@ -37,15 +37,21 @@ public class ActionManager {
      * Handles a basic melee or ranged attack action.
      */
     public CombatResult performAttack(Entity attacker, Entity target, Weapon weapon) {
-        ActionType actionType = determineWeaponActionType(weapon);
+        Weapon equippedWeapon = attacker.getEquippedItems().values().stream()
+            .filter(item -> item instanceof Weapon && item.getId().equals(weapon.getId()))
+            .map(item -> (Weapon) item)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Attacker does not have the specified weapon equipped."));
+
+        ActionType actionType = determineWeaponActionType(equippedWeapon);
         HitResult hitResult = hitCalculator.doesAttackHit(attacker, target, actionType);
         combatLog.log(hitResult.getHitLog());
-        combatResult = new CombatResult(attacker, target, weapon);
+        combatResult = new CombatResult(attacker, target, equippedWeapon);
         combatResult.fromHitResult(hitResult);
 
         if (hitResult.getAttackResult() == AttackResult.HIT || hitResult.getAttackResult() == AttackResult.CRIT_HIT) {
             boolean isCritical = hitResult.getAttackResult() == AttackResult.CRIT_HIT;
-            DamageResult damageResult = damageCalculator.applyWeaponDamage(attacker, target, weapon, isCritical);
+            DamageResult damageResult = damageCalculator.applyWeaponDamage(attacker, target, equippedWeapon, isCritical);
             combatResult.fromDamageResult(damageResult);
             combatLog.log(damageCalculator.readout());
         }
@@ -57,16 +63,21 @@ public class ActionManager {
      * Handles skill-based attacks.
      */
     public CombatResult performSkillAttack(Entity caster, Entity target, Skill skill) {
-        ActionType actionType = ActionType.SKILL; // All skills are of type Skill attack
+        ActionType actionType = skill.getActionType();
         HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
-        combatResult = new CombatResult(caster, target, skill);
+        
+        // Check for skill in caster's inventory and then activates its cooldown
+        Skill usedSkill = caster.getSkillsInventory().getItem(skill.getId());
+        usedSkill.activateCooldown();
+
+        combatResult = new CombatResult(caster, target, usedSkill);
         combatLog.log(hitResult.getHitLog());
         combatResult.fromHitResult(hitResult);
 
 
         if (hitResult.getAttackResult() == AttackResult.HIT || hitResult.getAttackResult() == AttackResult.CRIT_HIT) {
             boolean isCritical = hitResult.getAttackResult() == AttackResult.CRIT_HIT;
-            DamageResult damageResult = damageCalculator.applySkillDamage(caster, target, skill, isCritical);
+            DamageResult damageResult = damageCalculator.applySkillDamage(caster, target, usedSkill, isCritical);
             combatResult.fromDamageResult(damageResult);
             combatLog.log(damageCalculator.readout());
         }
@@ -86,35 +97,39 @@ public class ActionManager {
     }*/
 
     public CombatResult usePotion(Entity user, Entity target, Potion potion) {
-        boolean useable = potion.useOn(target);
+        // Check if the potion is in the user's inventory
+        Potion potionInInventory = (Potion) user.getInventory().getItem(potion.getId());
+
+        boolean useable = potionInInventory.useOn(target);
         if (useable) {
-            int damage = potion.rollDamage();
+            int damage = potionInInventory.rollDamage();
             target.takeDamage(-damage);
-            combatResult = new CombatResult(user, target, potion);
+            combatResult = new CombatResult(user, target, potionInInventory);
             //Temp as all potions will be healing 
-            combatResult.setPotionLog((user.getDisplayName() + " uses " + potion.getDisplayName() + " on " +
+            combatResult.setPotionLog((user.getDisplayName() + " uses " + potionInInventory.getDisplayName() + " on " +
             target.getDisplayName() + " for " + damage + " health!"));
-            user.getInventory().removeItem(potion);
+            user.getInventory().removeItem(potionInInventory);
         }
         return combatResult;
 
     }
 
     public CombatResult useScroll(Entity caster, Entity target, Scroll scroll) {
-        boolean useable = false;
-        useable = scroll.useOn(target);
+        Scroll scrollInInventory = (Scroll) caster.getInventory().getItem(scroll.getId());
+        
+        boolean useable = scrollInInventory.useOn(target);
 
         if (useable) {
             ActionType actionType = ActionType.MAGIC;
             HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
-            combatResult = new CombatResult(caster, target, scroll);
+            combatResult = new CombatResult(caster, target, scrollInInventory);
             if (hitResult.getAttackResult() == AttackResult.HIT || hitResult.getAttackResult() == AttackResult.CRIT_HIT) {
                 boolean isCritical = hitResult.getAttackResult() == AttackResult.CRIT_HIT;
-                DamageResult damageResult = damageCalculator.applyScrollDamage(caster, target, scroll, isCritical);
+                DamageResult damageResult = damageCalculator.applyScrollDamage(caster, target, scrollInInventory, isCritical);
                 combatResult.fromDamageResult(damageResult);
                 combatLog.log(damageCalculator.readout());
             }
-            caster.getInventory().removeItem(scroll);
+            caster.getInventory().removeItem(scrollInInventory);
         }
         
         return combatResult;

@@ -12,6 +12,7 @@ public class MultiDice extends Dice {
         return numDice;
     }
     
+    
     @Override
     public int roll() {
         int total = 0;

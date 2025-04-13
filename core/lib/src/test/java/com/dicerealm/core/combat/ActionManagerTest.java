@@ -61,6 +61,7 @@ public class ActionManagerTest {
         potion = new Potion("Health Potion", "Health Potion", 1, 1);
         player.getInventory().addItem(weapon);
         player.equipItem(BodyPart.RIGHT_HAND, weapon);
+        player.addSkill(skill);
         player.getInventory().addItem(scroll);
         player.getInventory().addItem(potion);
     }

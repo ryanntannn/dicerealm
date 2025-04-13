@@ -33,6 +33,7 @@ public class CombatManager {
     private ActionManager actionManager;
     private CombatLog combatLog;
     private int currentTurnIndex;
+    private int currentRoundIndex;
 
     public CombatManager(){
 		}
@@ -112,7 +113,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     actionManager.rigDice(d20);
                     return actionManager.performSkillAttack(player, target, (Skill) action);
                 } else {
@@ -143,7 +143,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     return actionManager.performSkillAttack(player, target, (Skill) action);
                 } else {
                     combatLog.log(player.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
@@ -171,7 +170,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     return actionManager.performSkillAttack(monster, target, (Skill) action);
                 } else {
                     combatLog.log(monster.getDisplayName() + " tried to use " + skill.getDisplayName() + ", but it's on cooldown!");
@@ -192,7 +190,6 @@ public class CombatManager {
         switch (action) {
             case Skill skill -> {
                 if (skill.isUsable()) {
-                    skill.activateCooldown(); // Start the cooldown for the skill
                     actionManager.rigDice(d20); // Example of rigging the dice
                     return actionManager.performSkillAttack(monster, target, (Skill) action);
                 } else {
@@ -267,8 +264,9 @@ public class CombatManager {
         // If all participants have acted, the round ends
         if (currentTurnIndex >= turnOrder.size()) {
             combatLog.log("The round has ended.");
-            reduceAllSkillCooldowns();
             startRound(); // Start a new round
+            currentRoundIndex++;
+            reduceAllSkillCooldowns();
         }
     }
 
@@ -279,11 +277,40 @@ public class CombatManager {
         }
     }
 
+    public void removePlayerFromCombat(UUID playerId){
+        Entity playerToRemove = participants.stream()
+        .filter(entity -> entity.getId().equals(playerId))
+        .findFirst()
+        .orElse(null);
+
+
+
+        if (playerToRemove != null) {
+            participants.remove(playerToRemove);
+            turnOrder.remove(playerToRemove);
+
+            combatLog.log(playerToRemove.getDisplayName() + " has left the combat.");
+
+            if (currentTurnIndex >= turnOrder.size()) {
+                currentTurnIndex = 0;
+            }
+
+            if (isCombatOver()) {
+                combatLog.log("Combat has ended due to player leaving.");
+            }
+        }
+
+    }
+
     public List<InitiativeResult> getInitiativeResults() {
         return new ArrayList<>(initiativeResults);
     }
     public Integer getCurrentTurnIndex() {
         return currentTurnIndex;
+    }
+
+    public Integer getCurrentRoundIndex() {
+        return currentRoundIndex;
     }
 
     public void newCombat(List<Entity> participants) {
@@ -293,6 +320,12 @@ public class CombatManager {
         this.currentTurnIndex = 0;
         this.combatLog = new CombatLog();
         this.actionManager = new ActionManager(combatLog);
+        this.currentRoundIndex = 1;
+
+        for (Entity entity : participants) {
+            entity.getSkillsInventory().getItems().forEach(skill -> skill.setRemainingCooldown(0));
+        }
+
     }
 
     public List<Entity> getParticipants() {
