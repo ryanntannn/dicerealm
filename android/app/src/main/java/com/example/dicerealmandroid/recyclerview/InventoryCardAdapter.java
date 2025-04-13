@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.item.Item;
 import com.dicerealm.core.item.Potion;
 import com.dicerealm.core.skills.Skill;
@@ -18,9 +19,11 @@ import java.util.List;
 
 public class InventoryCardAdapter extends CardAdapter<Item>{
     CombatScreen Combat;
+    Entity target;
     public InventoryCardAdapter(Context context, List<Item> item, String type , CombatStateHolder combatSh , CombatScreen Combat) {
         super(context, item,  type , combatSh);
         this.Combat = Combat;
+        this.target = target;
     }
 
     @NonNull
@@ -39,8 +42,11 @@ public class InventoryCardAdapter extends CardAdapter<Item>{
             int pos = holder.getAdapterPosition();
             @Override
             public void onClick(View v) {
-                combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL);
-                Combat.close();
+                Entity target = combatsh.getSelectedTarget().getValue();
+                if (target != null) {
+                    combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL, target);
+                    Combat.close();
+                }
             }
         });
     }

@@ -78,6 +78,7 @@ public class CombatScreen extends AppCompatActivity {
     private PlayerStateHolder playerSh = new PlayerStateHolder();
     private CombatStateHolder combatSh = new CombatStateHolder();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +96,8 @@ public class CombatScreen extends AppCompatActivity {
         this.attackRight();
         this.openSpells();
         this.displayPlayerInfo();
-        this.displayEnemyInfo();
+        this.selectMonster();
+//        this.updateEnemyInfo();
         this.closespell();
         this.useitems();
 
@@ -115,17 +117,37 @@ public class CombatScreen extends AppCompatActivity {
         });
     }
 
-    private void displayEnemyInfo(){
-        TextView enemyName = findViewById(R.id.enemyName);
-        TextView enemyHealth = findViewById(R.id.enemyHealth);
-        combatSh.getMonster().observe(this, new Observer<Entity>(){
-            @Override
-            public void onChanged(Entity monster){
-                enemyName.setText(monster.getDisplayName());
-                enemyHealth.setText(monster.getHealth() + "/" + monster.getStat(Stat.MAX_HEALTH));
+    private void selectMonster() {
+        combatSh.getMonsters().observe(this, monsters -> {
+            if (monsters != null && !monsters.isEmpty()) {
+                // Set initial target if needed
+                combatSh.setInitialTarget();
+
+                // Create monster selection button
+                MaterialButton selectTargetButton = findViewById(R.id.selectTargetButton);
+                selectTargetButton.setOnClickListener(v -> {
+                    combatSh.selectNextTarget();
+                });
+            }
+        });
+
+        // Observe selected target changes
+        combatSh.getSelectedTarget().observe(this, target -> {
+            if (target != null) {
+                updateEnemyInfo();
             }
         });
     }
+    private void updateEnemyInfo() {
+        TextView enemyName = findViewById(R.id.enemyName);
+        TextView enemyHealth = findViewById(R.id.enemyHealth);
+        Entity target = combatSh.getSelectedTarget().getValue();
+        if (target != null) {
+            enemyName.setText(target.getDisplayName());
+            enemyHealth.setText(target.getHealth() + "/" + target.getStat(Stat.MAX_HEALTH));
+        }
+    }
+
 
     private void displayPlayerInfo(){
         TextView playerName = findViewById(R.id.playerName);
@@ -279,7 +301,12 @@ public class CombatScreen extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Log.d("action right", "Attack with right hand");
-                        combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
+                        Entity target = combatSh.getSelectedTarget().getValue();
+                        if (target != null) {
+                            combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON, target);
+                        } else {
+                            Log.d("Combat", "No target selected");
+                        }
                     }
                 });
             }
@@ -303,8 +330,13 @@ public class CombatScreen extends AppCompatActivity {
                 attackBtnLeft.setOnClickListener(new View.OnClickListener()  {
                     @Override
                     public void onClick(View v) {
-                        Log.d("action left", "Attack with left hand");
-                        combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
+                        Log.d("action right", "Attack with right hand");
+                        Entity target = combatSh.getSelectedTarget().getValue();
+                        if (target != null) {
+                            combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON, target);
+                        } else {
+                            Log.d("Combat", "No target selected");
+                        }
                     }
                 });
             }

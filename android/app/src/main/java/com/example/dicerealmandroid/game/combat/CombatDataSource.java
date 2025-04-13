@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.entity.Entity;
-import com.dicerealm.core.monster.Monster;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -17,7 +17,7 @@ public class CombatDataSource {
     private static CombatDataSource instance;
     private final MutableLiveData<String> currentTurn = new MutableLiveData<>();
     private final MutableLiveData<List<InitiativeResult>> initiativeResults = new MutableLiveData<>();
-    private final MutableLiveData<Entity> monster = new MutableLiveData<>();
+    private final MutableLiveData<List<Entity>> monsters = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Integer> currentRound = new MutableLiveData<>(1);
     private Integer prevRound = 0;
 
@@ -47,12 +47,12 @@ public class CombatDataSource {
         this.initiativeResults.postValue(initiativeResult);
     }
 
-    public void setMonster(Entity monster){
-        this.monster.postValue(monster);
+    public void setMonsters(List<Entity> monsterList) {
+        this.monsters.postValue(monsterList);
     }
 
-    public LiveData<Entity> getMonster(){
-        return monster;
+    public LiveData<List<Entity>> getMonsters() {
+        return monsters;
     }
 
     public LiveData<Integer> getCurrentRound(){
@@ -75,7 +75,7 @@ public class CombatDataSource {
     // Maintain observers connections :>
     public static void destroy(){
         if(instance != null){
-            instance.setMonster(null);
+            instance.setMonsters(null);
             instance.setInitiativeResults(null);
             instance.updateTurnHistory(null);
             instance.setCurrentRound(1);

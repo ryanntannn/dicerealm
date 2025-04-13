@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.activity.CombatScreen;
@@ -20,9 +21,11 @@ import java.util.List;
 
 public class SpellCardAdapter extends CardAdapter<Skill> {
     CombatScreen Combat;
+    Entity target;
     public SpellCardAdapter(Context context, List<Skill> item,  String type, CombatStateHolder combatSh , CombatScreen combat) {
         super(context, item,type,combatSh);
         this.Combat = combat;
+        this.target = target;
     }
 
     @NonNull
@@ -47,9 +50,12 @@ public class SpellCardAdapter extends CardAdapter<Skill> {
         int pos = holder.getAdapterPosition();
             @Override
             public void onClick(View v) {
+                Entity target = combatsh.getSelectedTarget().getValue();
                 if (skill.isUsable()) {
-                    combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL);
-                    Combat.close();
+                    if (target != null) {
+                        combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SKILL, target);
+                        Combat.close();
+                    }
                 }
             }
         });

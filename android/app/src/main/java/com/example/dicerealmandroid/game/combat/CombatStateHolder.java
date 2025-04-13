@@ -1,6 +1,7 @@
 package com.example.dicerealmandroid.game.combat;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
@@ -17,6 +18,9 @@ import java.util.UUID;
 public class CombatStateHolder extends ViewModel {
     private CombatRepo combatRepo;
     private PlayerRepo playerRepo;
+    private MutableLiveData<Entity> selectedTarget = new MutableLiveData<>();
+    private int currentTargetIndex = 0;
+
 
     public CombatStateHolder() {
         combatRepo = new CombatRepo();
@@ -47,12 +51,32 @@ public class CombatStateHolder extends ViewModel {
         });
     }
 
-    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType){
-        combatRepo.performAction(action, actionType);
+    public void setInitialTarget() {
+        List<Entity> monsters = getMonsters().getValue();
+        if (monsters != null && !monsters.isEmpty() && selectedTarget.getValue() == null) {
+            selectedTarget.setValue(monsters.get(0));
+            currentTargetIndex = 0;
+        }
     }
 
-    public LiveData<Entity> getMonster(){
-        return combatRepo.getMonster();
+    public void selectNextTarget() {
+        List<Entity> monsters = getMonsters().getValue();
+        if (monsters != null && !monsters.isEmpty()) {
+            currentTargetIndex = (currentTargetIndex + 1) % monsters.size();
+            selectedTarget.setValue(monsters.get(currentTargetIndex));
+        }
+    }
+
+    public LiveData<Entity> getSelectedTarget() {
+        return selectedTarget;
+    }
+
+    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType, Entity selectedTarget) {
+        combatRepo.performAction(action, actionType, selectedTarget);
+    }
+
+    public LiveData<List<Entity>> getMonsters(){
+        return combatRepo.getMonsters();
     }
 
 

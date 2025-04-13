@@ -50,11 +50,16 @@ public class CombatRepo {
         }
         else if (!Objects.equals(initiativeResults, combatDataSource.getInitiativeResults())){
             // get monster details
+            List<Entity> monsters = new ArrayList<>();
+
             for(InitiativeResult initiativeResult : initiativeResults){
-                if(initiativeResult.getEntity().getAllegiance() == Entity.Allegiance.ENEMY){
-                    combatDataSource.setMonster(initiativeResult.getEntity());
+                Entity entity = initiativeResult.getEntity();
+                if(entity.getAllegiance() == Entity.Allegiance.ENEMY){
+                    monsters.add(entity);
                 }
             }
+            // Set Monster details
+            combatDataSource.setMonsters(monsters);
 
             // Set the initiative results
             combatDataSource.setInitiativeResults(initiativeResults);
@@ -62,9 +67,8 @@ public class CombatRepo {
     }
 
     // action represents the sub-classes of Item, Skill or Weapon
-    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType){
+    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType, Entity target){
         Player attacker = playerDataSource.getPlayer().getValue();
-        Entity target = combatDataSource.getMonster().getValue();
         if (attacker == null || target == null) {
             throw new IllegalArgumentException("Player or Monster cannot be null");
         }
@@ -87,38 +91,86 @@ public class CombatRepo {
     }
 
 
-    public LiveData<Entity> getMonster(){
-        return combatDataSource.getMonster();
+    public LiveData<List<Entity>> getMonsters() {
+        return combatDataSource.getMonsters();
     }
 
 
-    public void takeDamage(UUID targetId, int damage) throws IllegalArgumentException{
+//    public void takeDamage(UUID targetId, int damage) throws IllegalArgumentException{
+//        UUID playerId = playerDataSource.getPlayerId();
+//        Entity enemy = getMonster(targetId).getValue();
+//        if(enemy == null){
+//            throw new IllegalArgumentException("There doesn't exist a monster");
+//        }
+//        UUID enemyId = enemy.getId();
+//
+//        Entity targetEntity;
+//
+//        // If target is the player (you) or enemy
+//        if (playerId.equals(targetId)){
+//            targetEntity = playerDataSource.getPlayer().getValue();
+//            if(targetEntity == null){
+//                throw new IllegalArgumentException("Player cannot be null");
+//            }
+//            targetEntity.takeDamage(damage);
+//            if (!targetEntity.isAlive()) removeCombatant(targetEntity.getId().toString());
+//
+//            playerDataSource.setPlayer((Player) targetEntity);
+//        }
+//        else if (enemyId.equals(targetId)){
+//            targetEntity = getMonster(targetId);
+//            targetEntity.takeDamage(damage);
+//            combatDataSource.setMonster(targetEntity);
+//        }
+//    }
+
+    public void takeDamage(UUID targetId, int damage) throws IllegalArgumentException {
         UUID playerId = playerDataSource.getPlayerId();
-        Entity enemy = getMonster().getValue();
-        if(enemy == null){
-            throw new IllegalArgumentException("There doesn't exist a monster");
-        }
-        UUID enemyId = enemy.getId();
 
-        Entity targetEntity;
-
-        // If target is the player (you) or enemy
-        if (playerId.equals(targetId)){
-            targetEntity = playerDataSource.getPlayer().getValue();
-            if(targetEntity == null){
+        // If target is the player
+        if (playerId.equals(targetId)) {
+            Player targetPlayer = playerDataSource.getPlayer().getValue();
+            if (targetPlayer == null) {
                 throw new IllegalArgumentException("Player cannot be null");
             }
-            targetEntity.takeDamage(damage);
-            if (!targetEntity.isAlive()) removeCombatant(targetEntity.getId().toString());
+            targetPlayer.takeDamage(damage);
+            if (!targetPlayer.isAlive()) {
+                removeCombatant(targetPlayer.getId().toString());
+            }
+            playerDataSource.setPlayer(targetPlayer);
+        }
 
-            playerDataSource.setPlayer((Player) targetEntity);
+        // If target is a monster
+        List<Entity> monsters = combatDataSource.getMonsters().getValue();
+        if (monsters == null) {
+            throw new IllegalArgumentException("Monster list cannot be null");
         }
-        else if (enemyId.equals(targetId)){
-            targetEntity = getMonster().getValue();
-            targetEntity.takeDamage(damage);
-            combatDataSource.setMonster(targetEntity);
+
+        // Find the monster by ID
+        for (int i = 0; i < monsters.size(); i++) {
+            Entity monster = monsters.get(i);
+            if (monster.getId().equals(targetId)) {
+                // Apply damage
+                monster.takeDamage(damage);
+
+                // If monster died, remove from combat
+                if (!monster.isAlive()) {
+                    removeCombatant(monster.getId().toString());
+                    monsters.remove(i);
+                } else {
+                    // Replace with updated monster
+                    monsters.set(i, monster);
+                }
+
+                // Update monster list
+                combatDataSource.setMonsters(new ArrayList<>(monsters));
+            }
         }
+
+        // If we get here, no monster was found
+        throw new IllegalArgumentException("No monster found with ID: " + targetId);
     }
+
 
 
     // Remove combatant from the initiative list, maintaining the order
