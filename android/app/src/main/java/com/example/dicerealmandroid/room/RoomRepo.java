@@ -93,11 +93,11 @@ public class RoomRepo {
         roomDataSource.leaveRoom();
 
         // Destroy all cached data but keep the singleton instance
+        RoomDataSource.destroy();
         PlayerDataSource.destroy();
         DialogDataSource.destroy();
         GameDataSource.destroy();
         CombatDataSource.destroy();
-        RoomDataSource.destroy();
     }
 
     // Room Code input validation: Returns list with boolean and error message

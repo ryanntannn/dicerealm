@@ -110,10 +110,12 @@ public class PlayerRepo {
         InventoryOf<Skill> skillsInventory = player.getSkillsInventory();
         List<Skill> skillsToUpdate = new ArrayList<>();
         for(Skill skill : skillsInventory.getItems()){
-            if(skill.getCooldown() > 0){
+            if(skill.getRemainingCooldown() > 0){
                 skillsToUpdate.add(skill);
             }
         }
+
+        if(skillsToUpdate.isEmpty()) return;
 
         for(Skill skill : skillsToUpdate){
             skill.reduceCooldown();

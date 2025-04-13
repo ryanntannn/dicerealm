@@ -28,6 +28,8 @@ public class CombatResult {
     private Dice damageDice;
     private Weapon weapon;
     private Skill skill;
+    private Scroll scroll;
+    private Potion potion;
     private String potionLog;
 
     // Default Constructor
@@ -39,6 +41,7 @@ public class CombatResult {
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
         this.damageDice = weapon.getDamageDice();
+        this.weapon = weapon;
     }
 
     public CombatResult(Entity attacker, Entity target, Skill skill){
@@ -48,7 +51,9 @@ public class CombatResult {
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
         this.damageDice = skill.getDamageDice();
+        this.skill = skill;
     }
+
 
     public CombatResult(Entity attacker, Entity target, Scroll scroll){
         this.attacker = attacker;
@@ -57,6 +62,7 @@ public class CombatResult {
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
         this.damageDice = scroll.getDamageDice();
+        this.scroll = scroll;
     }
 
     public CombatResult(Entity attacker, Entity target, Potion potion){
@@ -66,6 +72,7 @@ public class CombatResult {
         targetID = target.getId();
         targetAC = target.getStat(Stat.ARMOUR_CLASS);
         this.damageDice = potion.getDamageDice();
+        this.potion = potion;
     }
 
     public void fromHitResult(HitResult hitResult) {
@@ -90,12 +97,14 @@ public class CombatResult {
     public Dice getDamageDice(){ return damageDice; }
     public String getHitLog(){ return hitLog; }
     public String getDamageLog(){ return damageLog; }
-		public int getDamageRoll(){ return damageRoll; }
-		public int getAttackRoll(){ return attackRoll; }
-		public int getAttackBonus(){ return attackBonus; }
-		public int getTargetAC(){ return targetAC; }
-		public AttackResult getAttackResult(){ return attackResult; }
-		public String getPotionLog(){ return potionLog; }
-		public Weapon getWeapon(){ return weapon; }
-		public Skill getSkill(){ return skill; }
+    public int getDamageRoll(){ return damageRoll; }
+    public int getAttackRoll(){ return attackRoll; }
+    public int getAttackBonus(){ return attackBonus; }
+    public int getTargetAC(){ return targetAC; }
+    public AttackResult getAttackResult(){ return attackResult; }
+    public String getPotionLog(){ return potionLog; }
+    public Weapon getWeapon(){ return weapon; }
+    public Skill getSkill(){ return skill; }
+    public Scroll getScroll(){ return scroll; }
+    public Potion getPotion(){ return potion; }
 }	
