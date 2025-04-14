@@ -172,12 +172,12 @@ public class DicerealmClient extends WebSocketClient {
                     combatRepo.setNextRound(round);
                     if(combatRepo.isNewRound()){
                         Message.showMessage("Round " + round);
-                        playerRepo.continueSkillCoolDown();
+//                        playerRepo.continueSkillCoolDown();
                     }
 
-                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
-                        Message.showMessage("Your turn!");
-                    }
+//                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
+//                        Message.showMessage("Your turn!");
+//                    }
                     break;
 
                 case "COMBAT_END_TURN":

@@ -19,7 +19,7 @@ import com.dicerealm.core.skills.Skill;
 public class Entity {
 
 	public static enum Allegiance {
-		PLAYER, FRIENDLY, ENEMY
+		PLAYER, ENEMY
 	}
 
 	private UUID id;
@@ -30,11 +30,11 @@ public class Entity {
 	private Map<BodyPart, EquippableItem> equippedItems = new HashMap<BodyPart, EquippableItem>();
 	private StatsMap baseStats;
 	private StatsMap stats;
-	protected Allegiance allegiance = Allegiance.FRIENDLY;
+	protected Allegiance allegiance;
 
 	private InventoryOf<Item> inventory = new InventoryOf<Item>("ITEM");
 
-	private InventoryOf<Skill> skillsInventory = new InventoryOf<Skill>("SKILL",4);
+	private InventoryOf<Skill> skillsInventory = new InventoryOf<Skill>("SKILL", 4);
 
 	public Entity(String displayName, Race race, EntityClass entityClass, StatsMap baseStats) {
 		this.id = UUID.randomUUID();
@@ -42,7 +42,7 @@ public class Entity {
 		this.race = race;
 		this.entityClass = entityClass;
 
-		//Get base stats from ClassStats class
+		// Get base stats from ClassStats class
 		this.baseStats = ClassStats.getStatsForClass(entityClass);
 		this.health = baseStats.get(Stat.MAX_HEALTH);
 
@@ -76,7 +76,7 @@ public class Entity {
 		return inventory;
 	}
 
-	public InventoryOf<Skill> getSkillsInventory(){
+	public InventoryOf<Skill> getSkillsInventory() {
 		return skillsInventory;
 	}
 
@@ -130,7 +130,7 @@ public class Entity {
 		return out;
 	}
 
-	public void displayStats(){
+	public void displayStats() {
 		System.out.println("Name: " + getDisplayName());
 		System.out.println("Race: " + getRace());
 		System.out.println("Class: " + getEntityClass());
@@ -178,8 +178,8 @@ public class Entity {
 	}
 
 	public String getSummary() {
-		return String.format("display_name: %s, id: %s, health: %d, stats: %s, ", 
-			getDisplayName(), getId(), getHealth(), getStats().toString());
+		return String.format("display_name: %s, id: %s, health: %d, stats: %s, ", getDisplayName(),
+				getId(), getHealth(), getStats().toString());
 	}
 }
 
