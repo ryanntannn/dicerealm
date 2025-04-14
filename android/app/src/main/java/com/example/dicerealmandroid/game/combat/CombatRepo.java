@@ -155,44 +155,6 @@ public class CombatRepo {
         }
     }
 
-    public void takeDamage(UUID targetId, int damage) throws IllegalArgumentException{
-        UUID playerId = playerDataSource.getPlayerId();
-        Entity enemy = getMonster().getValue();
-        if(enemy == null){
-            throw new IllegalArgumentException("There doesn't exist a monster");
-        }
-        UUID enemyId = enemy.getId();
-
-        Entity targetEntity;
-
-        if(!enemyId.equals(targetId)){
-            // If target is not a monster
-            RoomState roomState = roomDataSource.getRoomState().getValue();
-            if(roomState == null) return;
-
-            targetEntity = roomState.getPlayerMap().get(targetId);
-            if(targetEntity == null) return;
-            targetEntity.takeDamage(damage);
-
-            // If target is player (you)
-            if(targetId.equals(playerId)) playerDataSource.setPlayer((Player) targetEntity);
-
-            // If your friends is dead, remove them from the combat
-            if(!targetEntity.isAlive()) {
-                removeCombatant(targetId.toString());
-                roomState.removePlayer(targetId);
-                return;
-            }
-            roomState.removePlayer(targetId);
-            roomState.addPlayer((Player) targetEntity);
-
-        }else{
-            // If target is monster
-            targetEntity = getMonster().getValue();
-            targetEntity.takeDamage(damage);
-            combatDataSource.setMonster(targetEntity);
-        }
-    }
 
 
     // Remove combatant from the initiative list, maintaining the order

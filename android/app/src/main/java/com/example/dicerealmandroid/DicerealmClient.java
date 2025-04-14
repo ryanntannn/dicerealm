@@ -172,7 +172,6 @@ public class DicerealmClient extends WebSocketClient {
                     combatRepo.setNextRound(round);
                     if(combatRepo.isNewRound()){
                         Message.showMessage("Round " + round);
-//                        playerRepo.continueSkillCoolDown();
                     }
 
 //                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
@@ -187,8 +186,7 @@ public class DicerealmClient extends WebSocketClient {
                         Entity target = combatEndTurnCommand.getCombatResult().getTarget();
                         Entity attacker = combatEndTurnCommand.getCombatResult().getAttacker();
                         combatRepo.updateCombatantsDetails(target, attacker);
-//                        combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
-//                        playerRepo.startSkillCoolDown(attackerId, combatEndTurnCommand.getCombatResult().getSkill());
+
 
                         String damageLog = "";
                         if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
