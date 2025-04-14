@@ -104,11 +104,11 @@ public class ActionManager {
         if (useable) {
             int damage = potionInInventory.rollDamage();
             target.takeDamage(-damage);
+            user.getInventory().removeItem(potionInInventory);
             combatResult = new CombatResult(user, target, potionInInventory);
             //Temp as all potions will be healing 
             combatResult.setPotionLog((user.getDisplayName() + " uses " + potionInInventory.getDisplayName() + " on " +
             target.getDisplayName() + " for " + damage + " health!"));
-            user.getInventory().removeItem(potionInInventory);
         }
         return combatResult;
 
@@ -122,6 +122,7 @@ public class ActionManager {
         if (useable) {
             ActionType actionType = ActionType.MAGIC;
             HitResult hitResult = hitCalculator.doesAttackHit(caster, target, actionType);
+            caster.getInventory().removeItem(scrollInInventory);
             combatResult = new CombatResult(caster, target, scrollInInventory);
             if (hitResult.getAttackResult() == AttackResult.HIT || hitResult.getAttackResult() == AttackResult.CRIT_HIT) {
                 boolean isCritical = hitResult.getAttackResult() == AttackResult.CRIT_HIT;
@@ -129,7 +130,6 @@ public class ActionManager {
                 combatResult.fromDamageResult(damageResult);
                 combatLog.log(damageCalculator.readout());
             }
-            caster.getInventory().removeItem(scrollInInventory);
         }
         
         return combatResult;
