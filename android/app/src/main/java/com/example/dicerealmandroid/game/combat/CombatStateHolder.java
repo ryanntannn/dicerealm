@@ -23,7 +23,7 @@ public class CombatStateHolder extends ViewModel {
         playerRepo = new PlayerRepo();
     }
 
-    public LiveData<String> subscribeCombatLatestTurn() {
+    public LiveData<CombatTurnModal> subscribeCombatLatestTurn() {
         return combatRepo.subscribeLatestTurn();
     }
 
@@ -38,7 +38,8 @@ public class CombatStateHolder extends ViewModel {
                 String name = initiativeResult.getEntity().getDisplayName();
                 int totalInitiative = initiativeResult.getTotalInitiative();
                 int health = initiativeResult.getEntity().getHealth();
-                combatSequence.add(new CombatSequence(name, totalInitiative, health));
+                UUID entity_uuid = initiativeResult.getEntity().getId();
+                combatSequence.add(new CombatSequence(name, totalInitiative, health, entity_uuid));
             }
             return combatSequence;
         });
@@ -65,5 +66,9 @@ public class CombatStateHolder extends ViewModel {
             }
         }
         return false;
+    }
+
+    public LiveData<Integer> getCurrentRound(){
+        return combatRepo.getCurrentRound();
     }
 }

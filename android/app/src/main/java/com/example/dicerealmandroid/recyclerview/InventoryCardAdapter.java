@@ -1,6 +1,7 @@
 package com.example.dicerealmandroid.recyclerview;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,11 +36,12 @@ public class InventoryCardAdapter extends CardAdapter<Item>{
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Item potionsandscrolls = item.get(position);
         holder.skillbutton.setText(potionsandscrolls.getDisplayName());
-        holder.textViewName.setText("One time usage");
+        holder.textViewName.setText("One time use");
         holder.skillbutton.setOnClickListener(new View.OnClickListener() {
             int pos = holder.getAdapterPosition();
             @Override
             public void onClick(View v) {
+                Log.d("itemtype", item.get(pos).getType());
                 if (Objects.equals(item.get(pos).getType(), "SCROLL")) {
                     combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SCROLL);
                 }else if (Objects.equals(item.get(pos).getType(), "POTION")){

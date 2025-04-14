@@ -40,6 +40,7 @@ import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
+import com.example.dicerealmandroid.game.combat.CombatTurnModal;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.recyclerview.CardAdapter;
 import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
@@ -124,6 +125,7 @@ public class CombatScreen extends AppCompatActivity {
         this.displayEnemyInfo();
         this.closespell();
         this.useitems();
+        this.trackCurrentRound();
     }
 
     private void displayEnemyInfo() {
@@ -249,8 +251,9 @@ public class CombatScreen extends AppCompatActivity {
                     List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
                     List<Item> remove_item = new ArrayList<>();
                     for (int i = 0 ; i < Potions_Scrolllist.size(); i++) {
-                        if (!Objects.equals(Potions_Scrolllist.get(i).getType(), "POTION") || !Objects.equals(Potions_Scrolllist.get(i).getType(), "SCROLL")){
-                            remove_item.add(Potions_Scrolllist.remove(i));
+                        Log.d("itemtype", Potions_Scrolllist.get(i).getType());
+                        if (!Objects.equals(Potions_Scrolllist.get(i).getType(), "POTION") && !Objects.equals(Potions_Scrolllist.get(i).getType(), "SCROLL")){
+                            remove_item.add(Potions_Scrolllist.get(i));
                         }
                     }
                     for (Item removeitem : remove_item) {
@@ -347,20 +350,8 @@ public class CombatScreen extends AppCompatActivity {
                 turntable.removeAllViews();
                 List<InitiativeResult> removeplayer = new ArrayList<>();
 
-                for(CombatSequence player_combat: combatSequences){
-
-                    if(player_combat.getHealth() <= 0 ){
-                        Log.d("health", player_combat.getName().toString());
-                        initiativeResults.remove(player_combat);
-                    }
-                }
-
-                for (InitiativeResult remove : removeplayer) {
-                    initiativeResults.remove(remove);
-                }
-
                 for(InitiativeResult player_enemy : initiativeResults){
-                    if (combatSequences.stream().anyMatch(r -> r.getName().equals(player_enemy.getEntity().getDisplayName()))) {
+                    if (combatSequences.stream().anyMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
                         TableRow newtablerow = new TableRow(CombatScreen.this);
                         TextView nameView = new TextView(CombatScreen.this);
                         int padding = 16;
@@ -368,8 +359,7 @@ public class CombatScreen extends AppCompatActivity {
                         nameView.setMaxWidth(400);
                         nameView.setBackgroundResource(R.drawable.cell_border);
                         Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    " + combatSequences.get(0).getName());
-                        // TODO change this to UUID
-                        if (player_enemy.getEntity().getDisplayName().equals(combatSequences.get(0).getName())) {
+                        if (player_enemy.getEntity().getId().equals(combatSequences.get(0).getuuid())) {
                             // Mark first element as the current turn
                             nameView.setTypeface(null, Typeface.BOLD);
                             nameView.setText(player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll());
@@ -391,35 +381,48 @@ public class CombatScreen extends AppCompatActivity {
     }
 
     private void trackCurrentTurn() {
-        LinearLayout messageView = findViewById(R.id.CombatMessageLayout);
+        LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
 
-
-        combatSh.subscribeCombatLatestTurn().observe(this, new Observer<String>() {
+        combatSh.subscribeCombatLatestTurn().observe(this, new Observer<CombatTurnModal>() {
             @Override
-            public void onChanged(String currTurn) {
-                CardView currentTurnCard = new CardView(CombatScreen.this);
-                TextView currentTurnText = new TextView(CombatScreen.this);
+            public void onChanged(CombatTurnModal currTurn) {
+                TextView currentTurn = new TextView(CombatScreen.this);
+                TextView currentTurnMessage = new TextView(CombatScreen.this);
 
-                currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
-                currentTurnCard.setCardElevation(10);
-                currentTurnCard.setRadius(20);
+                // Create proper layout params with margins
 
-                currentTurnText.setPadding(10, 10, 10, 10);
 
-                messageView.setPadding(10, 10, 10, 10);
-                messageView.setVerticalScrollBarEnabled(true);
+                currentTurn.setPadding(10, 10, 10, 10);
+                currentTurnMessage.setPadding(10, 10, 10, 10);
 
-                currentTurnCard.addView(currentTurnText);
-                messageView.addView(currentTurnCard);
+                messageLayout.setPadding(10, 10, 10, 10);
+                messageLayout.setVerticalScrollBarEnabled(true);
 
-                currentTurnText.setText(""); // Reset the text view before displaying the new message
-                displayMessageStream(currTurn, currentTurnText);
+                messageLayout.addView(currentTurn);
+                messageLayout.addView(currentTurnMessage);
+
+                currentTurnMessage.setText(""); // Reset the text view before displaying the new message
+                displayMessageStream(currTurn.getMessage(), currentTurnMessage);
+            }
+        });
+    }
+
+    private void trackCurrentRound(){
+        LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
+
+        combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer round){
+                TextView currentRound = new TextView(CombatScreen.this);
+                currentRound.setText("Round: " + round);
+                messageLayout.addView(currentRound);
             }
         });
     }
 
     private void displayMessageStream(String message, TextView currentTurnView) {
         ScrollView messagesScroll = findViewById(R.id.messages);
+
         // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
         Thread backgroundThread = new Thread(() -> {
             if (message == null || message.isEmpty()) return;
@@ -441,8 +444,5 @@ public class CombatScreen extends AppCompatActivity {
         });
         backgroundThread.start();
     }
-
-
-
 
 }
