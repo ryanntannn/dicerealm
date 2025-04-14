@@ -107,7 +107,7 @@ public class RoomRepo {
                GameDataSource.destroy();
                CombatDataSource.destroy();
            }
-        }, 3000); // 3s delay
+        }, 2000); // 2s delay
 
     }
 

@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -94,7 +95,7 @@ public class CombatRepo {
     }
 
     // Logic to update all the combatant details
-    public void updateCombatantsDetails(Entity target, Entity attacker){
+    public void updateCombatantsDetails(Entity target, Entity attacker) throws NoSuchElementException{
         Entity enemy = getMonster().getValue();
         UUID targetId = target.getId();
         UUID attackerId = attacker.getId();
@@ -111,7 +112,7 @@ public class CombatRepo {
             // Target is player, attacker is monster
 
             currTarget = roomState.getPlayerMap().get(targetId);
-            if(currTarget == null) return;
+            if(currTarget == null) throw new NoSuchElementException("Player not found");
 
             // If target is you
             if(targetId.equals(playerId)) playerDataSource.setPlayer((Player) target);
@@ -135,12 +136,14 @@ public class CombatRepo {
 
             // I am assuming 1 monster here, if theres more than 1 monster than you should change this line
             currTarget = getMonster().getValue();
-            if(currTarget == null) return;
+            if(currTarget == null) throw new NoSuchElementException("Monster not found");
 
             // if attacker is you
             if(attackerId.equals(playerId)){
                 playerDataSource.setPlayer((Player) attacker);
-            }else if (roomState.getPlayerMap().get(attackerId) != null){
+            }
+            else if (roomState.getPlayerMap().get(attackerId) != null)
+            {
 
                 // Attacker is other player
                 roomState.removePlayer(attackerId);

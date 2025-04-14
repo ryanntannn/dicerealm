@@ -88,9 +88,9 @@ public class CharacterScreen extends AppCompatActivity {
         chara_description4.setText("ELF" + " " + "RANGER");
 
 
-        playerSh.getPlayer().observe(this, new Observer<Entity>() {
+        playerSh.getPlayer().observe(this, new Observer<Player>() {
             @Override
-            public void onChanged(Entity player) {
+            public void onChanged(Player player) {
                 if (player != null) {
                     Log.d("Player", "Player has been updated" + player.getId());
                 }
