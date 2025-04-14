@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.item.Item;
-import com.dicerealm.core.item.Potion;
-import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.activity.CombatScreen;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
@@ -20,11 +18,9 @@ import java.util.Objects;
 
 public class InventoryCardAdapter extends CardAdapter<Item>{
     CombatScreen Combat;
-    Entity target;
     public InventoryCardAdapter(Context context, List<Item> item, String type , CombatStateHolder combatSh , CombatScreen Combat) {
         super(context, item,  type , combatSh);
         this.Combat = Combat;
-        this.target = target;
     }
 
     @NonNull
@@ -44,13 +40,13 @@ public class InventoryCardAdapter extends CardAdapter<Item>{
             @Override
             public void onClick(View v) {
                 Entity target = combatsh.getSelectedTarget().getValue();
-                if(target != null){
+                if(target != null) {
                     if (Objects.equals(item.get(pos).getType(), "SCROLL")) {
                         combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.SCROLL, target);
-                    }else if (Objects.equals(item.get(pos).getType(), "POTION")){
+                    } else if (Objects.equals(item.get(pos).getType(), "POTION")) {
                         combatsh.performAction(item.get(pos), CombatTurnActionCommand.ActionType.POTION, target);
                     }
-                Combat.close();
+                    Combat.close();
                 }
             }
         });
