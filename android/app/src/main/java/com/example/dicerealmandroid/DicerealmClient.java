@@ -1,5 +1,8 @@
 package com.example.dicerealmandroid;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Intent;
 import android.util.Log;
 
 import com.dicerealm.core.command.ChangeLocationCommand;
@@ -16,6 +19,7 @@ import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 
@@ -180,10 +184,11 @@ public class DicerealmClient extends WebSocketClient {
                     // TODO: Update the user skills cooldown manually by referencing the Skills and the attacker.id respectively
                     CombatEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CombatEndTurnCommand.class);
                     if(combatEndTurnCommand.getCombatResult() != null){
-                        UUID targetId = combatEndTurnCommand.getCombatResult().getTargetID();
-                        UUID attackerId = combatEndTurnCommand.getCombatResult().getAttacker().getId();
-                        combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
-                        playerRepo.startSkillCoolDown(attackerId, combatEndTurnCommand.getCombatResult().getSkill());
+                        Entity target = combatEndTurnCommand.getCombatResult().getTarget();
+                        Entity attacker = combatEndTurnCommand.getCombatResult().getAttacker();
+                        combatRepo.updateCombatantsDetails(target, attacker);
+//                        combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
+//                        playerRepo.startSkillCoolDown(attackerId, combatEndTurnCommand.getCombatResult().getSkill());
 
                         String damageLog = "";
                         if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
