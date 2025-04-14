@@ -21,6 +21,7 @@ import com.dicerealm.core.skills.Skill;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class PlayerStateHolder extends ViewModel{
@@ -59,6 +60,10 @@ public class PlayerStateHolder extends ViewModel{
         return Transformations.map(playerRepo.getPlayer(), player -> player.getEquippedItems().get(bodyPart));
     }
 
+    public LiveData<Map<BodyPart, EquippableItem>> getEquippedItems(){
+        return Transformations.map(playerRepo.getPlayer(), Entity::getEquippedItems);
+    }
+
 
     public LiveData<InventoryOf<Skill>> getSkills(){
         return Transformations.map(playerRepo.getPlayer(), Entity::getSkillsInventory);
@@ -68,11 +73,14 @@ public class PlayerStateHolder extends ViewModel{
        return Transformations.map(playerRepo.getPlayer(), Entity::getInventory);
     }
 
-    // Use this to get the specific inventory class you want (e.g. EquippableItems, Scrolls, Potions, etc)
-    // Skills is in a seperate inventory
+    // use this to get the specific inventory class you want thats under the InventoryOf<Item> in the Entity class
+    // E.g. Equippableitem, Scrolls, Potions, etc
+    // Skills is in a seperate inventory and so isnt covered in this (Inventory<Skill>)
     public <T extends Item> LiveData<List<T>> getSpecificInventoryType(Class<T> itemClass){
         return Transformations.map(playerRepo.getPlayer(), player -> {
            List<T> specificInventory = new ArrayList<>();
+           if (player == null) return specificInventory;
+
            for(Item item : player.getInventory().getItems()){
                if(itemClass.isInstance(item)){
                    specificInventory.add(itemClass.cast(item));
