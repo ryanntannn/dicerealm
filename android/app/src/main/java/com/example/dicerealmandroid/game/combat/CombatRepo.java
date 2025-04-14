@@ -34,11 +34,11 @@ public class CombatRepo {
         roomDataSource = RoomDataSource.getInstance();
     }
 
-    public LiveData<String> subscribeLatestTurn(){
+    public LiveData<CombatTurnModal> subscribeLatestTurn(){
         return combatDataSource.subscribeLatestTurn();
     }
 
-    public void setLatestTurn(String currentTurn){
+    public void setLatestTurn(CombatTurnModal currentTurn){
         combatDataSource.updateTurnHistory(currentTurn);
     }
 

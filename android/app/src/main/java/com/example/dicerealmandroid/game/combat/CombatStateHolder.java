@@ -23,7 +23,7 @@ public class CombatStateHolder extends ViewModel {
         playerRepo = new PlayerRepo();
     }
 
-    public LiveData<String> subscribeCombatLatestTurn() {
+    public LiveData<CombatTurnModal> subscribeCombatLatestTurn() {
         return combatRepo.subscribeLatestTurn();
     }
 
@@ -65,5 +65,9 @@ public class CombatStateHolder extends ViewModel {
             }
         }
         return false;
+    }
+
+    public LiveData<Integer> getCurrentRound(){
+        return combatRepo.getCurrentRound();
     }
 }

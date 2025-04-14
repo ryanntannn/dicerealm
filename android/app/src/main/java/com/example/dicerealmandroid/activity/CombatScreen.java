@@ -40,6 +40,7 @@ import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
+import com.example.dicerealmandroid.game.combat.CombatTurnModal;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.recyclerview.CardAdapter;
 import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
@@ -124,6 +125,7 @@ public class CombatScreen extends AppCompatActivity {
         this.displayEnemyInfo();
         this.closespell();
         this.useitems();
+        this.trackCurrentRound();
     }
 
     private void displayEnemyInfo() {
@@ -391,35 +393,51 @@ public class CombatScreen extends AppCompatActivity {
     }
 
     private void trackCurrentTurn() {
-        LinearLayout messageView = findViewById(R.id.CombatMessageLayout);
+        LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
 
-
-        combatSh.subscribeCombatLatestTurn().observe(this, new Observer<String>() {
+        combatSh.subscribeCombatLatestTurn().observe(this, new Observer<CombatTurnModal>() {
             @Override
-            public void onChanged(String currTurn) {
+            public void onChanged(CombatTurnModal currTurn) {
                 CardView currentTurnCard = new CardView(CombatScreen.this);
-                TextView currentTurnText = new TextView(CombatScreen.this);
+                TextView currentTurn = new TextView(CombatScreen.this);
+                TextView currentTurnMessage = new TextView(CombatScreen.this);
 
                 currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
                 currentTurnCard.setCardElevation(10);
                 currentTurnCard.setRadius(20);
+                currentTurnCard.setPadding(10, 10, 10, 40);
 
-                currentTurnText.setPadding(10, 10, 10, 10);
+                currentTurn.setPadding(10, 10, 10, 10);
 
-                messageView.setPadding(10, 10, 10, 10);
-                messageView.setVerticalScrollBarEnabled(true);
+                messageLayout.setPadding(10, 10, 10, 10);
+                messageLayout.setVerticalScrollBarEnabled(true);
 
-                currentTurnCard.addView(currentTurnText);
-                messageView.addView(currentTurnCard);
+                currentTurnCard.addView(currentTurn);
+                currentTurnCard.addView(currentTurnMessage);
+                messageLayout.addView(currentTurnCard);
 
-                currentTurnText.setText(""); // Reset the text view before displaying the new message
-                displayMessageStream(currTurn, currentTurnText);
+                currentTurnMessage.setText(""); // Reset the text view before displaying the new message
+                displayMessageStream(currTurn.getMessage(), currentTurnMessage);
+            }
+        });
+    }
+
+    private void trackCurrentRound(){
+        LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
+
+        combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer round){
+                TextView currentRound = new TextView(CombatScreen.this);
+                currentRound.setText("Round: " + round);
+                messageLayout.addView(currentRound);
             }
         });
     }
 
     private void displayMessageStream(String message, TextView currentTurnView) {
         ScrollView messagesScroll = findViewById(R.id.messages);
+
         // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
         Thread backgroundThread = new Thread(() -> {
             for (int i = 0; i < message.length(); i++) {
@@ -439,8 +457,5 @@ public class CombatScreen extends AppCompatActivity {
         });
         backgroundThread.start();
     }
-
-
-
 
 }
