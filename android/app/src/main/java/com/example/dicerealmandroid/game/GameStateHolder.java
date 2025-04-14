@@ -48,4 +48,8 @@ public class GameStateHolder extends ViewModel {
     public void sendTextInput(String text) {
         gameRepo.sendTextInput(text);
     }
+
+    public String getplayercolor(UUID uuid){
+        return gameRepo.getplayercolor(uuid);
+    }
 }

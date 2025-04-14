@@ -73,6 +73,8 @@ public class PlayerStateHolder extends ViewModel{
        return Transformations.map(playerRepo.getPlayer(), Entity::getInventory);
     }
 
+
+
     // use this to get the specific inventory class you want thats under the InventoryOf<Item> in the Entity class
     // E.g. Equippableitem, Scrolls, Potions, etc
     // Skills is in a seperate inventory and so isnt covered in this (Inventory<Skill>)

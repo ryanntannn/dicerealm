@@ -79,6 +79,7 @@ public class DicerealmClient extends WebSocketClient {
                     Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
                     roomRepo.addRoomStatePlayer(player);
                     Message.showMessage(player.getDisplayName() + " has joined.");
+                    gameRepo.setplayercolor(playerRepo.getPlayerId());
                     break;
 
                 case "PLAYER_LEAVE":
