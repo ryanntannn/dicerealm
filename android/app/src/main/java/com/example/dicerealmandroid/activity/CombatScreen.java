@@ -388,18 +388,6 @@ public class CombatScreen extends AppCompatActivity {
                 turntable.removeAllViews();
                 List<InitiativeResult> removeplayer = new ArrayList<>();
 
-                for(CombatSequence player_combat: combatSequences){
-
-                    if(player_combat.getHealth() <= 0 ){
-                        Log.d("health", player_combat.getName().toString());
-                        initiativeResults.remove(player_combat);
-                    }
-                }
-
-                for (InitiativeResult remove : removeplayer) {
-                    initiativeResults.remove(remove);
-                }
-
                 for(InitiativeResult player_enemy : initiativeResults){
                     if (combatSequences.stream().anyMatch(r -> r.getName().equals(player_enemy.getEntity().getDisplayName()))) {
                         TableRow newtablerow = new TableRow(CombatScreen.this);
