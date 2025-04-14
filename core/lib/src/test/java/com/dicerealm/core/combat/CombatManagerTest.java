@@ -183,7 +183,7 @@ class CombatManagerTest {
         // Verify the target is the player with the lowest health
         Entity target = result.getTarget();
         assertEquals(monster, result.getAttacker(), "The attacker should be the monster.");
-        assertEquals(player_1, target, "The monster should target the player with the lowest health.");
+        assertEquals(player_2, target, "The monster should target the player with the highest health.");
 
     }
 
