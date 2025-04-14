@@ -398,31 +398,20 @@ public class CombatScreen extends AppCompatActivity {
         combatSh.subscribeCombatLatestTurn().observe(this, new Observer<CombatTurnModal>() {
             @Override
             public void onChanged(CombatTurnModal currTurn) {
-                CardView currentTurnCard = new CardView(CombatScreen.this);
                 TextView currentTurn = new TextView(CombatScreen.this);
                 TextView currentTurnMessage = new TextView(CombatScreen.this);
 
                 // Create proper layout params with margins
-                LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-                cardParams.setMargins(8, 12, 8, 12);
-                
-                currentTurnCard.setLayoutParams(cardParams);
-                currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
-                currentTurnCard.setCardElevation(10);
-                currentTurnCard.setRadius(20);
-                currentTurnCard.setPadding(10, 10, 10, 40);
+
 
                 currentTurn.setPadding(10, 10, 10, 10);
+                currentTurnMessage.setPadding(10, 10, 10, 10);
 
                 messageLayout.setPadding(10, 10, 10, 10);
                 messageLayout.setVerticalScrollBarEnabled(true);
 
-                currentTurnCard.addView(currentTurn);
-                currentTurnCard.addView(currentTurnMessage);
-                messageLayout.addView(currentTurnCard);
+                messageLayout.addView(currentTurn);
+                messageLayout.addView(currentTurnMessage);
 
                 currentTurnMessage.setText(""); // Reset the text view before displaying the new message
                 displayMessageStream(currTurn.getMessage(), currentTurnMessage);
