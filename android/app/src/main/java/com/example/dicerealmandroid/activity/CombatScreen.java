@@ -118,9 +118,10 @@ public class CombatScreen extends AppCompatActivity {
     }
 
     private void selectMonster() {
+        // Observe the monsters list and set the initial target
         combatSh.getMonsters().observe(this, monsters -> {
             if (monsters != null && !monsters.isEmpty()) {
-                // Set initial target if needed
+                // Set the initial target if needed
                 combatSh.setInitialTarget();
 
                 // Create monster selection button
@@ -128,23 +129,35 @@ public class CombatScreen extends AppCompatActivity {
                 selectTargetButton.setOnClickListener(v -> {
                     combatSh.selectNextTarget();
                 });
+
+                // Update the UI dynamically when the monsters list changes
+                Entity currentTarget = combatSh.getSelectedTarget().getValue();
+                if (currentTarget != null) {
+                    for (Entity monster : monsters) {
+                        if (monster.getId().equals(currentTarget.getId())) {
+                            updateEnemyInfo(monster);
+                            break;
+                        }
+                    }
+                }
             }
         });
 
         // Observe selected target changes
-        combatSh.getSelectedTarget().observe(this, target -> {
-            if (target != null) {
-                updateEnemyInfo();
-            }
-        });
+        combatSh.getSelectedTarget().observe(this, this::updateEnemyInfo);
     }
-    private void updateEnemyInfo() {
+
+
+    private void updateEnemyInfo(Entity target) {
         TextView enemyName = findViewById(R.id.enemyName);
         TextView enemyHealth = findViewById(R.id.enemyHealth);
-        Entity target = combatSh.getSelectedTarget().getValue();
+
         if (target != null) {
             enemyName.setText(target.getDisplayName());
             enemyHealth.setText(target.getHealth() + "/" + target.getStat(Stat.MAX_HEALTH));
+        } else {
+            enemyName.setText("No target");
+            enemyHealth.setText("0/0");
         }
     }
 
