@@ -51,9 +51,14 @@ public class GameRepo {
         roomDataSource.sendMessageToServer(text);
     }
 
+    public void updateCurrentLocation(Location location){
+        LocationGraph locationGraph = gameDataSource.getCurrentLocationGraph().getValue();
+        if(locationGraph == null) throw new IllegalStateException("LocationGraph is null");
+        locationGraph.setCurrentLocation(location);
+        updateLocationGraph(locationGraph);
+    }
+
     public void updateLocationGraph(LocationGraph locationGraph){
-        LocationGraph currLocGraph = gameDataSource.getCurrentLocationGraph().getValue();
-        if(currLocGraph == null || currLocGraph.equals(locationGraph)) return;
         gameDataSource.setCurrentLocationGraph(locationGraph);
     }
 

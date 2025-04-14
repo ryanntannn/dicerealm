@@ -2,6 +2,8 @@ package com.example.dicerealmandroid.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -23,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicerealm.core.dialogue.SkillCheck;
 import com.dicerealm.core.entity.Stat;
@@ -33,6 +37,7 @@ import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
+import com.example.dicerealmandroid.adapters.LocationAdapter;
 import com.example.dicerealmandroid.fragments.InventoryDialogFragment;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
@@ -43,6 +48,7 @@ import com.example.dicerealmandroid.game.dialog.DialogStateHolder;
 import com.example.dicerealmandroid.player.wrapper.PlayerInventoryWrapper;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.ScreenDimensions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
@@ -66,6 +72,7 @@ public class DialogScreen extends AppCompatActivity {
     private PlayerStateHolder playerSh;
     private RoomStateHolder roomSh;
     private DialogStateHolder dialogSh;
+    private LocationAdapter locationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,9 @@ public class DialogScreen extends AppCompatActivity {
         //Hide android bottom nav bar
         View decorView = getWindow().getDecorView();
         WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
+
+        // Connect to adapter
+        locationAdapter = new LocationAdapter();
 
         if (controller != null) {
             controller.hide(WindowInsetsCompat.Type.systemBars());
@@ -117,12 +127,65 @@ public class DialogScreen extends AppCompatActivity {
     }
 
     private void trackLocation() {
-        MaterialTextView locationText = findViewById(R.id.location);
-        locationText.setTextSize(10);
+        // For the location dropdown styling
+        GradientDrawable shape = new GradientDrawable();
+        shape.setCornerRadius(15); // 15dp rounded corners
+        shape.setColor(Color.argb(204, 255, 255, 255)); // White with 80% opacity (204/255 = 80%)
+
+        LinearLayout locationDropdown = findViewById(R.id.topBarRight);
+
+        MaterialTextView currentLocationText = findViewById(R.id.location);
+        currentLocationText.setTextSize(11);
+        currentLocationText.setTextColor(getResources().getColor(R.color.white, null));
+
+        locationDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Inflate the custom layout for the spinner
+                View dropdownView = LayoutInflater.from(DialogScreen.this)
+                        .inflate(R.layout.location_dropdown, null);
+
+                TextView currentLocationDialogText = dropdownView.findViewById(R.id.currLocation);
+                TextView currentLocationDialogDesc = dropdownView.findViewById(R.id.currLocationDesc);
+
+                // Set the current location text in the spinner dialog through the adapter
+                if (locationAdapter.getCurrentLocation() != null) {
+                    currentLocationDialogText.setText(locationAdapter.getCurrentLocation().getDisplayName());
+                    currentLocationDialogDesc.setText(locationAdapter.getCurrentLocation().getDescription());
+                }
+
+                RecyclerView locationRecyclerView = dropdownView.findViewById(R.id.locationRecyclerView);
+                locationRecyclerView.setAdapter(locationAdapter);
+
+                PopupWindow popupWindow = new PopupWindow(
+                        dropdownView,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        true
+                );
+
+                popupWindow.setElevation(10);
+                popupWindow.setBackgroundDrawable(shape);
+                popupWindow.setHeight(ScreenDimensions.getScreenHeight() / 3);
+                popupWindow.setWidth(3*ScreenDimensions.getScreenWidth() / 4);
+                popupWindow.showAsDropDown(locationDropdown, 0, 0);
+            }
+        });
+
+
         gameSh.getCurrentLocation().observe(this, new Observer<Location>() {
             @Override
             public void onChanged(Location location) {
-                locationText.setText(location.getDisplayName());
+                locationAdapter.updateCurrentLocation(location);
+                currentLocationText.setText(location.getDisplayName());
+            }
+        });
+
+        gameSh.getAdjacentLocations().observe(this, new Observer<List<Location>>() {
+            @Override
+            public void onChanged(List<Location> locations) {
+                locationAdapter.updateAdjacentLocations(locations);
             }
         });
     }

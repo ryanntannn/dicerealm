@@ -148,6 +148,7 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "CHANGE_LOCATION":
                     ChangeLocationCommand changeLocationCommand = gson.fromJson(message, ChangeLocationCommand.class);
+                    gameRepo.updateCurrentLocation(changeLocationCommand.getLocation());
                     Message.showMessage("Party has moved to " + changeLocationCommand.getLocation().getDisplayName());
                     break;
 

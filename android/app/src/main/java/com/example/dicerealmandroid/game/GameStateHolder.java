@@ -56,8 +56,19 @@ public class GameStateHolder extends ViewModel {
         return Transformations.map(gameRepo.getLocationGraph(), LocationGraph::getCurrentLocation);
     }
 
-    public LiveData<Location[]> getAdjacentLocations(){
-        return Transformations.map(gameRepo.getLocationGraph(), LocationGraph::getAdjacentLocations);
+    public LiveData<List<Location>> getAdjacentLocations(){
+        return Transformations.map(gameRepo.getLocationGraph(), locationGraph -> {
+            List<Location> locations = new ArrayList<>();
+            Location[] adjacentLocations = locationGraph.getAdjacentLocations();
+            if (adjacentLocations == null) return locations;
+
+            for (Location location : adjacentLocations) {
+                if (location != null) {
+                    locations.add(location);
+                }
+            }
+            return locations;
+        });
     }
 
 }
