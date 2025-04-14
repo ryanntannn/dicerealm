@@ -15,7 +15,7 @@ import java.util.List;
  * */
 public class CombatDataSource {
     private static CombatDataSource instance;
-    private final MutableLiveData<String> currentTurn = new MutableLiveData<>();
+    private final MutableLiveData<CombatTurnModal> currentTurn = new MutableLiveData<>();
     private final MutableLiveData<List<InitiativeResult>> initiativeResults = new MutableLiveData<>();
     private final MutableLiveData<Entity> monster = new MutableLiveData<>();
     private final MutableLiveData<Integer> currentRound = new MutableLiveData<>(1);
@@ -30,11 +30,11 @@ public class CombatDataSource {
         return instance;
     }
 
-    public LiveData<String> subscribeLatestTurn(){
+    public LiveData<CombatTurnModal> subscribeLatestTurn(){
         return currentTurn;
     }
 
-    public void updateTurnHistory(String currentTurn){
+    public void updateTurnHistory(CombatTurnModal currentTurn){
         this.currentTurn.postValue(currentTurn);
     }
 

@@ -17,7 +17,20 @@ public class Graph<N extends Node, E extends Edge<N>> {
 	}
 
 	public N getN(UUID id) {
-		return nodes.get(id);
+		// Check if the node exists
+		if (nodes.containsKey(id)) {
+			return nodes.get(id);
+		}
+
+		// Id might be dereferenced, so we need to check if the node exists
+		for (N node : nodes.values()) {
+			if (node.getId().equals(id)) {
+				return node;
+			}
+		}
+
+		// If the node does not exist, return null
+		return null;
 	}
 
 	public void addE(E edge) {
@@ -28,7 +41,16 @@ public class Graph<N extends Node, E extends Edge<N>> {
 		return edges.get(id);
 	}
 
-	@SuppressWarnings("unchecked")
+	public E[] getEdges() {
+		return edges.values().toArray(
+				(E[]) Array.newInstance(edges.values().iterator().next().getClass(), edges.size()));
+	}
+
+	public N[] getNodes() {
+		return nodes.values().toArray(
+				(N[]) Array.newInstance(nodes.values().iterator().next().getClass(), nodes.size()));
+	}
+
 	public N[] getNeighbors(N node) {
 		ArrayList<N> neighbors = new ArrayList<N>();
 		for (E edge : edges.values()) {
@@ -39,7 +61,6 @@ public class Graph<N extends Node, E extends Edge<N>> {
 		return neighbors.toArray((N[]) Array.newInstance(node.getClass(), neighbors.size()));
 	}
 
-	@SuppressWarnings("unchecked")
 	public N[] shortestPath(N start, N end) {
 		Queue<ArrayList<N>> queue = new Queue<ArrayList<N>>();
 		ArrayList<N> visited = new ArrayList<N>();

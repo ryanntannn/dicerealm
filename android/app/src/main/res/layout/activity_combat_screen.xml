@@ -23,6 +23,9 @@
         android:id="@+id/messages"
         android:layout_width="410dp"
         android:layout_height="100dp"
+        android:padding="5dp"
+        android:background="@color/palepurpleCard"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/combatTitle">

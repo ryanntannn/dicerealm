@@ -215,30 +215,6 @@ public class DialogScreen extends AppCompatActivity {
         itemInventory.setEnabled(true);
     }
 
-    private void getTurnHistory(LinearLayout messageLayout) {
-        for (Dialog turn : dialogSh.getDialogTurnHistory()) {
-            // Each turn number
-            TextView numberOfTurns = new TextView(DialogScreen.this);
-            numberOfTurns.setText("Turn " + turn.getTurnNumber());
-            numberOfTurns.setPadding(20, 20, 20, 20);
-            numberOfTurns.setGravity(1);
-            numberOfTurns.setTextColor(Color.parseColor("#000000"));
-            numberOfTurns.setTextSize(12);
-
-            // Each turn messages
-            CardView turnContainer = new CardView(DialogScreen.this);
-            TextView eachTurnView = new TextView(DialogScreen.this);
-
-            turnContainer.setPadding(0, 10, 0, 10);
-            turnContainer.setCardBackgroundColor(getResources().getColor(R.color.palepurpleCard, null));  // Set background color
-            eachTurnView.setText(turn.getMessage());
-            eachTurnView.setPadding(20, 20, 20, 20);
-
-            turnContainer.addView(eachTurnView);
-            messageLayout.addView(numberOfTurns);
-            messageLayout.addView(turnContainer);
-        }
-    }
 
 
     // Keeps track of the dialog latest turn only, type out the message character by character

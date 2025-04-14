@@ -1,5 +1,7 @@
 package com.example.dicerealmandroid.room;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -94,10 +96,19 @@ public class RoomRepo {
 
         // Destroy all cached data but keep the singleton instance
         RoomDataSource.destroy();
-        PlayerDataSource.destroy();
-        DialogDataSource.destroy();
-        GameDataSource.destroy();
-        CombatDataSource.destroy();
+
+        // Don't ask :<
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+           @Override
+           public void run(){
+               PlayerDataSource.destroy();
+               DialogDataSource.destroy();
+               GameDataSource.destroy();
+               CombatDataSource.destroy();
+           }
+        }, 2000); // 2s delay
+
     }
 
     // Room Code input validation: Returns list with boolean and error message

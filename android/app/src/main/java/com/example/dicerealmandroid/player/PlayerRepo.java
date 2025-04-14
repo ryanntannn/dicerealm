@@ -85,43 +85,4 @@ public class PlayerRepo {
         return false;
     }
 
-
-    // Only for the player (you) not other players when you choose to attack using a skill
-    public void startSkillCoolDown(UUID attackerId ,Skill skill){
-
-        if(!attackerId.equals(getPlayerId()) || skill == null) return;
-        Player player = getPlayer().getValue();
-
-        if(player == null) return;
-        Skill playerSkill = player.getSkillsInventory().getItem(skill.getId());
-
-        // Check if the skill exist, if so replace it with the new skill with the new cooldown
-        if(playerSkill != null) {
-            player.getSkillsInventory().removeItem(playerSkill);
-            player.getSkillsInventory().addItem(skill);
-        }
-        setPlayer(player);
-    }
-
-    public void continueSkillCoolDown(){
-        Player player = getPlayer().getValue();
-        if(player == null) return;
-
-        InventoryOf<Skill> skillsInventory = player.getSkillsInventory();
-        List<Skill> skillsToUpdate = new ArrayList<>();
-        for(Skill skill : skillsInventory.getItems()){
-            if(skill.getRemainingCooldown() > 0){
-                skillsToUpdate.add(skill);
-            }
-        }
-
-        if(skillsToUpdate.isEmpty()) return;
-
-        for(Skill skill : skillsToUpdate){
-            skill.reduceCooldown();
-            player.getSkillsInventory().removeItem(skill);
-            player.getSkillsInventory().addItem(skill);
-        }
-        setPlayer(player);
-    }
 }
