@@ -124,7 +124,7 @@ public class ActionManagerTest {
     void testPotionUsage(){
         assertNotNull(player.getInventory().getItem(potion.getId()));
         player.takeDamage(1);
-        actionManager.usePotion(player, player, potion);
+        actionManager.usePotion(player, potion);
         assertEquals(24, player.getHealth(), "Player should be at max health after using potion");
         assertNull(player.getInventory().getItem(potion.getId()));
     }
