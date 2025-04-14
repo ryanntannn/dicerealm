@@ -8,6 +8,7 @@ import com.dicerealm.core.command.combat.CombatTurnActionCommand;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.player.PlayerDataSource;
 import com.example.dicerealmandroid.room.RoomDataSource;
@@ -15,6 +16,8 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,11 +34,11 @@ public class CombatRepo {
         roomDataSource = RoomDataSource.getInstance();
     }
 
-    public LiveData<String> subscribeLatestTurn(){
+    public LiveData<CombatTurnModal> subscribeLatestTurn(){
         return combatDataSource.subscribeLatestTurn();
     }
 
-    public void setLatestTurn(String currentTurn){
+    public void setLatestTurn(CombatTurnModal currentTurn){
         combatDataSource.updateTurnHistory(currentTurn);
     }
 
@@ -91,34 +94,67 @@ public class CombatRepo {
         return combatDataSource.getMonster();
     }
 
-
-    public void takeDamage(UUID targetId, int damage) throws IllegalArgumentException{
-        UUID playerId = playerDataSource.getPlayerId();
+    // Logic to update all the combatant details
+    public void updateCombatantsDetails(Entity target, Entity attacker) throws NoSuchElementException{
         Entity enemy = getMonster().getValue();
-        if(enemy == null){
-            throw new IllegalArgumentException("There doesn't exist a monster");
-        }
-        UUID enemyId = enemy.getId();
+        UUID targetId = target.getId();
+        UUID attackerId = attacker.getId();
+        UUID playerId = playerDataSource.getPlayerId();
+        RoomState roomState = roomDataSource.getRoomState().getValue();
+        Entity currTarget;
 
-        Entity targetEntity;
+        if(roomState == null) return;
+        if(enemy == null) return;
 
-        // If target is the player (you) or enemy
-        if (playerId.equals(targetId)){
-            targetEntity = playerDataSource.getPlayer().getValue();
-            if(targetEntity == null){
-                throw new IllegalArgumentException("Player cannot be null");
+        // If the target is player, the attacker is a monster
+        // If the target is a monster, the attacker is a player
+        if(target.getAllegiance() != Entity.Allegiance.ENEMY){
+            // Target is player, attacker is monster
+
+            currTarget = roomState.getPlayerMap().get(targetId);
+            if(currTarget == null) throw new NoSuchElementException("Player not found");
+
+            // If target is you
+            if(targetId.equals(playerId)) playerDataSource.setPlayer((Player) target);
+
+            // Check if players are alive
+            if(!target.isAlive()){
+                removeCombatant(targetId.toString());
+                roomState.removePlayer(targetId);
+                return;
             }
-            targetEntity.takeDamage(damage);
-            if (!targetEntity.isAlive()) removeCombatant(targetEntity.getId().toString());
 
-            playerDataSource.setPlayer((Player) targetEntity);
-        }
-        else if (enemyId.equals(targetId)){
-            targetEntity = getMonster().getValue();
-            targetEntity.takeDamage(damage);
-            combatDataSource.setMonster(targetEntity);
+            // Update the combatants details that's in the room state
+            roomState.removePlayer(targetId);
+            roomState.addPlayer((Player) target);
+
+            // Update monster details
+            combatDataSource.setMonster(attacker);
+
+        }else{
+            // Target is monster, attacker is player
+
+            // I am assuming 1 monster here, if theres more than 1 monster than you should change this line
+            currTarget = getMonster().getValue();
+            if(currTarget == null) throw new NoSuchElementException("Monster not found");
+
+            // if attacker is you
+            if(attackerId.equals(playerId)){
+                playerDataSource.setPlayer((Player) attacker);
+            }
+            else if (roomState.getPlayerMap().get(attackerId) != null)
+            {
+
+                // Attacker is other player
+                roomState.removePlayer(attackerId);
+                roomState.addPlayer((Player) attacker);
+            }
+
+            // Here i am just assuming there's only 1 monster, change this line if there are more than 1 monster
+            combatDataSource.setMonster(target);
         }
     }
+
 
 
     // Remove combatant from the initiative list, maintaining the order
