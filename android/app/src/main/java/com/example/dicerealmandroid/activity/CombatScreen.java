@@ -249,8 +249,9 @@ public class CombatScreen extends AppCompatActivity {
                     List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
                     List<Item> remove_item = new ArrayList<>();
                     for (int i = 0 ; i < Potions_Scrolllist.size(); i++) {
-                        if (!Objects.equals(Potions_Scrolllist.get(i).getType(), "POTION") || !Objects.equals(Potions_Scrolllist.get(i).getType(), "SCROLL")){
-                            remove_item.add(Potions_Scrolllist.remove(i));
+                        Log.d("itemtype", Potions_Scrolllist.get(i).getType());
+                        if (!Objects.equals(Potions_Scrolllist.get(i).getType(), "POTION") && !Objects.equals(Potions_Scrolllist.get(i).getType(), "SCROLL")){
+                            remove_item.add(Potions_Scrolllist.get(i));
                         }
                     }
                     for (Item removeitem : remove_item) {
