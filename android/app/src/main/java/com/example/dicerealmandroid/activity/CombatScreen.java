@@ -347,20 +347,8 @@ public class CombatScreen extends AppCompatActivity {
                 turntable.removeAllViews();
                 List<InitiativeResult> removeplayer = new ArrayList<>();
 
-                for(CombatSequence player_combat: combatSequences){
-
-                    if(player_combat.getHealth() <= 0 ){
-                        Log.d("health", player_combat.getName().toString());
-                        initiativeResults.remove(player_combat);
-                    }
-                }
-
-                for (InitiativeResult remove : removeplayer) {
-                    initiativeResults.remove(remove);
-                }
-
                 for(InitiativeResult player_enemy : initiativeResults){
-                    if (combatSequences.stream().anyMatch(r -> r.getName().equals(player_enemy.getEntity().getDisplayName()))) {
+                    if (combatSequences.stream().anyMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
                         TableRow newtablerow = new TableRow(CombatScreen.this);
                         TextView nameView = new TextView(CombatScreen.this);
                         int padding = 16;
@@ -368,8 +356,7 @@ public class CombatScreen extends AppCompatActivity {
                         nameView.setMaxWidth(400);
                         nameView.setBackgroundResource(R.drawable.cell_border);
                         Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    " + combatSequences.get(0).getName());
-                        // TODO change this to UUID
-                        if (player_enemy.getEntity().getDisplayName().equals(combatSequences.get(0).getName())) {
+                        if (player_enemy.getEntity().getId().equals(combatSequences.get(0).getuuid())) {
                             // Mark first element as the current turn
                             nameView.setTypeface(null, Typeface.BOLD);
                             nameView.setText(player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll());
