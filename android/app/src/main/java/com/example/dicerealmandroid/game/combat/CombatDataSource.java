@@ -8,6 +8,7 @@ import com.dicerealm.core.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /*
  * Singleton pattern to ensure only 1 instance of CombatDataSource exists so that it persists throughout the lifecycle of the app.
@@ -15,7 +16,7 @@ import java.util.List;
  * */
 public class CombatDataSource {
     private static CombatDataSource instance;
-    private final MutableLiveData<String> currentTurn = new MutableLiveData<>();
+    private final MutableLiveData<CombatTurnModal> currentTurn = new MutableLiveData<>();
     private final MutableLiveData<List<InitiativeResult>> initiativeResults = new MutableLiveData<>();
     private final MutableLiveData<List<Entity>> monsters = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Integer> currentRound = new MutableLiveData<>(1);
@@ -30,11 +31,11 @@ public class CombatDataSource {
         return instance;
     }
 
-    public LiveData<String> subscribeLatestTurn(){
+    public LiveData<CombatTurnModal> subscribeLatestTurn(){
         return currentTurn;
     }
 
-    public void updateTurnHistory(String currentTurn){
+    public void updateTurnHistory(CombatTurnModal currentTurn){
         this.currentTurn.postValue(currentTurn);
     }
 
@@ -49,6 +50,34 @@ public class CombatDataSource {
 
     public void setMonsters(List<Entity> monsterList) {
         this.monsters.postValue(monsterList);
+    }
+    public void setMonster(Entity updatedMonster) {
+        List<Entity> currentMonsters = monsters.getValue();
+        if (currentMonsters != null) {
+            for (int i = 0; i < currentMonsters.size(); i++) {
+                if (currentMonsters.get(i).getId().equals(updatedMonster.getId())) {
+                    currentMonsters.set(i, updatedMonster); // Replace the existing monster
+                    break;
+                }
+            }
+            monsters.postValue(currentMonsters); // Update LiveData
+        } else {
+            List<Entity> newMonsters = new ArrayList<>();
+            newMonsters.add(updatedMonster);
+            monsters.postValue(newMonsters);
+        }
+    }
+
+    public Entity getMonster(UUID monsterId) {
+        List<Entity> currentMonsters = monsters.getValue();
+        if (currentMonsters != null) {
+            for (Entity monster : currentMonsters) {
+                if (monster.getId().equals(monsterId)) {
+                    return monster; // Return the matching monster
+                }
+            }
+        }
+        return null;
     }
 
     public LiveData<List<Entity>> getMonsters() {

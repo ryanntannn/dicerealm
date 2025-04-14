@@ -24,4 +24,12 @@ public class Edge<N extends Node> {
 	public N getTarget() {
 		return target;
 	}
+
+	public void setSource(N source) {
+		this.source = source;
+	}
+
+	public void setTarget(N target) {
+		this.target = target;
+	}
 }

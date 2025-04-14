@@ -30,8 +30,8 @@ public class MonsterAI {
 
         // Determine the target based on some strategy (e.g., lowest health)
         Entity target = participants.stream()
-            .filter(entity -> entity.getAllegiance() == Allegiance.PLAYER)
-            .min((e1, e2) -> Integer.compare(e1.getHealth(), e2.getHealth()))
+            .filter(entity -> entity.getAllegiance() == Allegiance.PLAYER && entity.isAlive())
+            .max((e1, e2) -> Integer.compare(e1.getHealth(), e2.getHealth()))
             .orElseThrow(() -> new IllegalArgumentException("No valid player targets available."));
 
         // Search for a weapon or skill to use

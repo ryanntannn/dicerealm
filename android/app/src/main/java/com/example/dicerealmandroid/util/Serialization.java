@@ -11,6 +11,7 @@ import com.dicerealm.core.item.Potion;
 import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.UseableItem;
 import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.locations.Path;
 import com.dicerealm.core.skills.Skill;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +28,9 @@ import com.dicerealm.core.entity.Entity;
 import com.google.gson.reflect.TypeToken;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.monster.Monster;
+import com.dicerealm.core.player.Player;
+import com.dicerealm.core.locations.LocationGraph;
 
 
 import java.lang.reflect.Type;
@@ -86,31 +90,30 @@ public class Serialization {
 	static class InventoryOfItemDeserializer<T extends Identifiable>
 			implements JsonDeserializer<InventoryOf<T>> {
 
-		public InventoryOf<T> deserialize(JsonElement json, Type typeOfT,
-				JsonDeserializationContext context) throws JsonParseException {
-			JsonObject object = json.getAsJsonObject();
-			String type = object.get("type").getAsString();
-			int size = object.get("inventorySize").getAsInt();
-			List<JsonElement> items = object.get("items").getAsJsonArray().asList();
-			// handle based on inventory type
-			switch (type) {
-				case "ITEM":
-					InventoryOf<T> itemInventory = new InventoryOf<>("ITEM", size);
-					for (JsonElement item : items) {
-						itemInventory.addItem(context.deserialize(item, Item.class));
-					}
-					return itemInventory;
-				case "SKILL":
-					InventoryOf<T> skillInventory = new InventoryOf<>("SKILL", size);
-					for (JsonElement item : items) {
-						skillInventory.addItem(context.deserialize(item, Skill.class));
-					}
-					return skillInventory;
-				default:
-					throw new JsonParseException(type + " not handled");
+				public InventoryOf<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+						JsonObject object = json.getAsJsonObject();
+						String type = object.get("type").getAsString();
+						int size = object.get("inventorySize").getAsInt();
+						List<JsonElement> items = object.get("items").getAsJsonArray().asList();
+						// handle based on inventory type
+						switch (type) {
+								case "ITEM":
+										InventoryOf<T> itemInventory = new InventoryOf<>("ITEM", size);
+										for (JsonElement item : items) {
+												itemInventory.addItem(context.deserialize(item, Item.class));
+										}
+										return itemInventory;
+								case "SKILL":
+										InventoryOf<T> skillInventory = new InventoryOf<>("SKILL", size);
+										for (JsonElement item : items) {
+												skillInventory.addItem(context.deserialize(item, Skill.class));
+										}
+										return skillInventory;
+								default:
+										throw new JsonParseException(type + " not handled");
+						}
+				}
 			}
-		}
-	}
 
 
 	static class CombatTurnActionCommandDeserializer
@@ -167,6 +170,23 @@ public class Serialization {
 		}
 	}
 
+	static class LocationGraphDeserializer implements JsonDeserializer<LocationGraph> {
+		Gson baseGson = new Gson();
+
+		@Override
+		public LocationGraph deserialize(JsonElement json, Type typeOfT,
+				JsonDeserializationContext context) throws JsonParseException {
+			LocationGraph graph = baseGson.fromJson(json, LocationGraph.class);
+
+			for (Path path : graph.getEdges()) {
+				path.setSource(graph.getN(path.getSource().getId()));
+				path.setTarget(graph.getN(path.getTarget().getId()));
+			}
+
+			return graph;
+		}
+	}
+
 	public static Gson makeDicerealmGsonInstance() {
 		// Create custom equippedItemsType for the map of BodyPart to EquippableItem
 		Type equippedItemsType = new TypeToken<Map<BodyPart, EquippableItem>>() {}.getType();
@@ -177,6 +197,7 @@ public class Serialization {
 						new ItemDeserializer.EquippableItemDeserializer())
 				.registerTypeAdapter(CombatTurnActionCommand.class,
 						new CombatTurnActionCommandDeserializer())
-				.registerTypeAdapter(Entity.class, new EntityDeserializer()).create();
+				.registerTypeAdapter(Entity.class, new EntityDeserializer())
+				.registerTypeAdapter(LocationGraph.class, new LocationGraphDeserializer()).create();
 	}
 }

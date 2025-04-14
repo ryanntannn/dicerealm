@@ -1,5 +1,8 @@
 package com.example.dicerealmandroid;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Intent;
 import android.util.Log;
 
 import com.dicerealm.core.command.ChangeLocationCommand;
@@ -16,6 +19,7 @@ import com.dicerealm.core.command.combat.CombatStartTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
+import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 
@@ -168,29 +172,28 @@ public class DicerealmClient extends WebSocketClient {
                     combatRepo.setNextRound(round);
                     if(combatRepo.isNewRound()){
                         Message.showMessage("Round " + round);
-                        playerRepo.continueSkillCoolDown();
                     }
 
-                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
-                        Message.showMessage("Your turn!");
-                    }
+//                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
+//                        Message.showMessage("Your turn!");
+//                    }
                     break;
 
                 case "COMBAT_END_TURN":
                     // TODO: Update the user skills cooldown manually by referencing the Skills and the attacker.id respectively
                     CombatEndTurnCommand combatEndTurnCommand = gson.fromJson(message, CombatEndTurnCommand.class);
                     if(combatEndTurnCommand.getCombatResult() != null){
-                        UUID targetId = combatEndTurnCommand.getCombatResult().getTargetID();
-                        UUID attackerId = combatEndTurnCommand.getCombatResult().getAttacker().getId();
-                        combatRepo.takeDamage(targetId, combatEndTurnCommand.getCombatResult().getDamageRoll());
-                        playerRepo.startSkillCoolDown(attackerId, combatEndTurnCommand.getCombatResult().getSkill());
+                        Entity target = combatEndTurnCommand.getCombatResult().getTarget();
+                        Entity attacker = combatEndTurnCommand.getCombatResult().getAttacker();
+                        combatRepo.updateCombatantsDetails(target, attacker);
+
 
                         String damageLog = "";
                         if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {
                             damageLog = combatEndTurnCommand.getCombatResult().getDamageLog();
                         }
                         CombatTurnModal combatTurnModal = new CombatTurnModal(combatEndTurnCommand.getCombatResult().getHitLog(), damageLog, combatEndTurnCommand.getTurnNumber());
-                        combatRepo.setLatestTurn(damageLog);
+                        combatRepo.setLatestTurn(combatTurnModal);
                         combatRepo.rotateCombatSequence();
                     }
                     break;
