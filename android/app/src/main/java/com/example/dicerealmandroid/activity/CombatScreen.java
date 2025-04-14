@@ -402,6 +402,14 @@ public class CombatScreen extends AppCompatActivity {
                 TextView currentTurn = new TextView(CombatScreen.this);
                 TextView currentTurnMessage = new TextView(CombatScreen.this);
 
+                // Create proper layout params with margins
+                LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                cardParams.setMargins(8, 12, 8, 12);
+                
+                currentTurnCard.setLayoutParams(cardParams);
                 currentTurnCard.setCardBackgroundColor(Color.parseColor("#D9D9D9"));
                 currentTurnCard.setCardElevation(10);
                 currentTurnCard.setRadius(20);
