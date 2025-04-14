@@ -21,5 +21,6 @@ public class InitiativeResult {
     public int getInitiativeRoll(){ return initiativeRoll; }
     public int getInitiativeModifier() { return initiativeModifier; }
     public String getInitiativeLog() { return initiativeLog; }
+    public InitiativeResult clone() {return new InitiativeResult(this.entity, this.totalInitiative,this.initiativeRoll,this.initiativeModifier,this.initiativeLog);}
 
 }

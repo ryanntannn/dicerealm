@@ -21,7 +21,7 @@ public class SkillsRepository {
         // Initialize Warrior skills
         Map<Integer, List<Skill>> warriorSkills = new HashMap<>();
         warriorSkills.put(1, List.of(
-            new Skill("Slash", "A powerful slash attack", EntityClass.WARRIOR, ActionType.SKILL, 0, 1, 6, 1),
+            new Skill("Slash", "A powerful slash attack", EntityClass.WARRIOR, ActionType.SKILL, 0, 1, 6, 3),
             new Skill("Shield Bash", "Bash enemy with your shield, stunning them", EntityClass.WARRIOR, ActionType.MELEE, 0, 1, 4, 2)
         ));
         warriorSkills.put(2, List.of(
@@ -35,8 +35,8 @@ public class SkillsRepository {
         // Initialize Wizard skills
         Map<Integer, List<Skill>> wizardSkills = new HashMap<>();
         wizardSkills.put(1, List.of(
-            new Skill("Magic Missile", "A reliable magical projectile", EntityClass.WIZARD, ActionType.MAGIC, 1, 1, 4, 1),
-            new Skill("Frost Ray", "A ray of frost that slows enemies", EntityClass.WIZARD, ActionType.MAGIC, 1, 1, 3, 1)
+            new Skill("Magic Missile", "A reliable magical projectile", EntityClass.WIZARD, ActionType.MAGIC, 1, 3, 2, 4),
+            new Skill("Frost Ray", "A ray of frost that slows enemies", EntityClass.WIZARD, ActionType.MAGIC, 1, 1, 3, 2)
         ));
         wizardSkills.put(2, List.of(
             new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3, 2, 6, 3)
@@ -48,7 +48,7 @@ public class SkillsRepository {
 
         Map<Integer, List<Skill>> rogueSkills = new HashMap<>();
         rogueSkills.put(1, List.of(
-            new Skill("Backstab", "A deadly attack from behind", EntityClass.ROGUE, ActionType.SKILL, 0, 10, 3)
+            new Skill("Backstab", "A deadly attack from behind", EntityClass.ROGUE, ActionType.SKILL, 0, 10, 4)
         ));
         rogueSkills.put(2, List.of(
             new Skill("Rapid Strike", "Strike Rapidly", EntityClass.ROGUE, ActionType.SKILL, 0, 4, 3, 4)
@@ -57,8 +57,8 @@ public class SkillsRepository {
 
         Map<Integer, List<Skill>> rangerSkills = new HashMap<>();
         rangerSkills.put(1, List.of(
-            new Skill("Arrow Shot", "A precise arrow attack", EntityClass.RANGER, ActionType.SKILL, 0, 2,4, 6),
-            new Skill("Hunter's Mark", "Mark an enemy to deal extra damage", EntityClass.RANGER, ActionType.SKILL, 0, 8, 0)
+            new Skill("Arrow Shot", "A precise arrow attack", EntityClass.RANGER, ActionType.SKILL, 0, 2,4, 5),
+            new Skill("Hunter's Mark", "Mark an enemy to deal extra damage", EntityClass.RANGER, ActionType.SKILL, 0, 8, 4)
         ));
         rangerSkills.put(2, List.of(
             new Skill("Multi-Shot", "Shoot multiple arrows at once", EntityClass.RANGER, ActionType.SKILL, 0, 4, 4, 8)
@@ -67,8 +67,8 @@ public class SkillsRepository {
 
         Map<Integer, List<Skill>> clericSkills = new HashMap<>();
         clericSkills.put(1, List.of(
-            new Skill("Smite", "A divine attack against enemies", EntityClass.CLERIC, ActionType.MAGIC, 2, 1, 8, 6),
-            new Skill("Holy Light", "A beam of Light", EntityClass.CLERIC, ActionType.MAGIC, 2, 1, 5, 8)
+            new Skill("Smite", "A divine attack against enemies", EntityClass.CLERIC, ActionType.MAGIC, 2, 1, 8, 5),
+            new Skill("Holy Light", "A beam of Light", EntityClass.CLERIC, ActionType.MAGIC, 2, 1, 5, 4)
         ));
         clericSkills.put(2, List.of(
             new Skill("Holy Blast", "Blasting Spell", EntityClass.CLERIC, ActionType.MAGIC, 0, 1, 8)
@@ -89,7 +89,8 @@ public class SkillsRepository {
                 availableSkills.addAll(skillsByLevel.get(i));
             }
         }
-        return availableSkills;
+
+        return createUniqueSkillInstances(availableSkills);
     }
     
     public static List<Skill> getNewSkillsForLevel(EntityClass entityClass, int level) {
@@ -97,17 +98,37 @@ public class SkillsRepository {
         if (skillsByLevel == null || !skillsByLevel.containsKey(level)) {
             return new ArrayList<>();
         }
-        
-        return skillsByLevel.get(level);
+
+        return createUniqueSkillInstances(skillsByLevel.get(level));
     }
     
     public static List<Skill> filterNewSkills(List<Skill> availableSkills, List<Skill> knownSkills) {
         List<String> knownSkillNames = knownSkills.stream()
             .map(Skill::getDisplayName)
             .collect(Collectors.toList());
-            
-        return availableSkills.stream()
+
+        List<Skill> filteredSkills = availableSkills.stream()
             .filter(skill -> !knownSkillNames.contains(skill.getDisplayName()))
             .collect(Collectors.toList());
+
+        return createUniqueSkillInstances(filteredSkills);
     }
+
+    private static List<Skill> createUniqueSkillInstances(List<Skill> originalSkills) {
+        List<Skill> uniqueSkills = new ArrayList<>();
+        for (Skill skill : originalSkills) {
+            uniqueSkills.add(new Skill(
+                skill.getDisplayName(),
+                skill.getDescription(),
+                skill.getEntityClass(),
+                skill.getActionType(),
+                skill.getSpellSlotCost(),
+                skill.getDamageDice().getNumDice(),
+                skill.getDamageDice().getSides(),
+                skill.getCooldown()
+            ));
+        }
+        return uniqueSkills;
+    }
+
 }

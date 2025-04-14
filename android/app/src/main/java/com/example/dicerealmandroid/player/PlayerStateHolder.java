@@ -79,6 +79,8 @@ public class PlayerStateHolder extends ViewModel{
     public <T extends Item> LiveData<List<T>> getSpecificInventoryType(Class<T> itemClass){
         return Transformations.map(playerRepo.getPlayer(), player -> {
            List<T> specificInventory = new ArrayList<>();
+           if (player == null) return specificInventory;
+
            for(Item item : player.getInventory().getItems()){
                if(itemClass.isInstance(item)){
                    specificInventory.add(itemClass.cast(item));
