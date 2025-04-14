@@ -11,6 +11,7 @@ import com.dicerealm.core.item.Potion;
 import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.UseableItem;
 import com.dicerealm.core.item.Weapon;
+import com.dicerealm.core.locations.Path;
 import com.dicerealm.core.skills.Skill;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +28,7 @@ import com.dicerealm.core.entity.Entity;
 import com.google.gson.reflect.TypeToken;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.locations.LocationGraph;
 
 
 import java.lang.reflect.Type;
@@ -167,6 +169,23 @@ public class Serialization {
 		}
 	}
 
+	static class LocationGraphDeserializer implements JsonDeserializer<LocationGraph> {
+		Gson baseGson = new Gson();
+
+		@Override
+		public LocationGraph deserialize(JsonElement json, Type typeOfT,
+				JsonDeserializationContext context) throws JsonParseException {
+			LocationGraph graph = baseGson.fromJson(json, LocationGraph.class);
+
+			for (Path path : graph.getEdges()) {
+				path.setSource(graph.getN(path.getSource().getId()));
+				path.setTarget(graph.getN(path.getTarget().getId()));
+			}
+
+			return graph;
+		}
+	}
+
 	public static Gson makeDicerealmGsonInstance() {
 		// Create custom equippedItemsType for the map of BodyPart to EquippableItem
 		Type equippedItemsType = new TypeToken<Map<BodyPart, EquippableItem>>() {}.getType();
@@ -177,6 +196,7 @@ public class Serialization {
 						new ItemDeserializer.EquippableItemDeserializer())
 				.registerTypeAdapter(CombatTurnActionCommand.class,
 						new CombatTurnActionCommandDeserializer())
-				.registerTypeAdapter(Entity.class, new EntityDeserializer()).create();
+				.registerTypeAdapter(Entity.class, new EntityDeserializer())
+				.registerTypeAdapter(LocationGraph.class, new LocationGraphDeserializer()).create();
 	}
 }
