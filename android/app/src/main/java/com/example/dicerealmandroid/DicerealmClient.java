@@ -13,11 +13,9 @@ import com.dicerealm.core.command.combat.CombatEndCommand;
 import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.combat.CombatStartCommand;
 import com.dicerealm.core.command.combat.CombatStartTurnCommand;
-import com.dicerealm.core.command.combat.CombatEndTurnCommand;
 import com.dicerealm.core.command.dialogue.DialogueTurnActionCommand;
 import com.dicerealm.core.command.dialogue.EndTurnCommand;
 import com.dicerealm.core.command.dialogue.StartTurnCommand;
-import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 
@@ -36,7 +34,6 @@ import com.google.gson.Gson;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.UUID;
 
 import dev.gustavoavila.websocketclient.WebSocketClient;
@@ -46,7 +43,7 @@ public class DicerealmClient extends WebSocketClient {
 
     private String roomCode;
 		
-		private final static String baseUrl = "wss://4652-115-66-9-157.ngrok-free.app/room/";
+		private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
     private final PlayerRepo playerRepo = new PlayerRepo();
     private final RoomRepo roomRepo = new RoomRepo();
     private final DialogRepo dialogRepo = new DialogRepo();
@@ -158,7 +155,7 @@ public class DicerealmClient extends WebSocketClient {
                 case "COMBAT_START":
                     CombatStartCommand combatStartCommand = gson.fromJson(message, CombatStartCommand.class);
 //                    combatRepo.setLatestTurn(combatStartCommand.getDisplayText());
-                    combatRepo.resetRounds(); // Ensure the round counter is reset so that the comparator works
+                    combatRepo.resetRounds();
                     combatRepo.setInitiativeResults(combatStartCommand.getInitiativeResults());
                     Message.showMessage("Round " + 1);
                     Message.showMessage("Enemies found! Switching to combat mode.");

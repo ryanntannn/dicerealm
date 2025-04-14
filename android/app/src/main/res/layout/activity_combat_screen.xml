@@ -13,11 +13,11 @@
         android:layout_width="400px"
         android:layout_height="171dp"
         app:layout_constraintBottom_toTopOf="@+id/playerName"
-        app:layout_constraintEnd_toStartOf="@+id/enemyHealth"
-        app:layout_constraintHorizontal_bias="0.097"
+        app:layout_constraintEnd_toStartOf="@+id/enemyicon"
+        app:layout_constraintHorizontal_bias="0.761"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.384" />
+        app:layout_constraintVertical_bias="0.371" />
 
     <ScrollView
         android:id="@+id/messages"
@@ -66,6 +66,18 @@
         app:layout_constraintTop_toBottomOf="@+id/messages"
         app:layout_constraintVertical_bias="0.936"
         app:srcCompat="@drawable/kid1" />
+
+    <TextView
+        android:layout_width="157dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="Combat turn"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/turnCombatSquence"
+        app:layout_constraintEnd_toEndOf="@+id/turnCombatSquence"
+        app:layout_constraintStart_toStartOf="@+id/turnCombatSquence"
+        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/playerName"

@@ -142,6 +142,7 @@
             android:textStyle="bold"
             android:id="@+id/race_entityclass"
             style="@style/TextDescription"
+            android:paddingVertical="6dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -355,12 +356,12 @@
 
         </TableLayout>
 
-        <!-- Add this weight=1 View to push the FAB container to the bottom -->
+        <!-- Add this weight to View to push the FAB container to the bottom -->
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="0.5" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

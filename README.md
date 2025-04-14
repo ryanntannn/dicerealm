@@ -7,7 +7,7 @@ This is the monorepo for the dicerealm project. It contains the following packag
 
 - [server](server/README.md) - The websocket server written in Java + Spring Boot
 - [android](android/README.md) - The android application written in Java
-- [web](web/README.md) - The web client application written in Vite + React + TS
+- [web](web/README.md) - The web client application written in Vite + React + TS. This is for a jackbox party/kahoot like experience.
 - [core](core/README.md) - The shared core library written in Java
 
 ## App Overview

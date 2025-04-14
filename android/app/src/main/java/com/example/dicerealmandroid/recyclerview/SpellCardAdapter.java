@@ -40,8 +40,10 @@ public class SpellCardAdapter extends CardAdapter<Skill> {
         
         Skill skill = item.get(position);
         holder.skillbutton.setText(skill.getDisplayName());
+        // rmb to disable button
         if (skill.isUsable()){
             holder.textViewName.setText("Usable, Cooldown:" + (skill.getCooldown()) + " turns");
+            holder.skillbutton.setBackgroundColor(Color.BLACK);
         }else {
             holder.textViewName.setText("Remaining Cooldown:" + skill.getRemainingCooldown());
             holder.skillbutton.setBackgroundColor(Color.GRAY);

@@ -31,7 +31,6 @@ public class CombatStateHolder extends ViewModel {
         return combatRepo.subscribeLatestTurn();
     }
 
-
     public LiveData<List<CombatSequence>> getCombatSequence(){
         // Only used for UI display only, so placed here instead of in the repo
         // The CombatSequence class is a filtered version of InitiativeResult
@@ -42,10 +41,8 @@ public class CombatStateHolder extends ViewModel {
             for(InitiativeResult initiativeResult : initiativeResults){
                 String name = initiativeResult.getEntity().getDisplayName();
                 int totalInitiative = initiativeResult.getTotalInitiative();
-                if(initiativeResult.getEntity().getId().equals(playerRepo.getPlayerId())){
-                    name = "You";
-                }
-                combatSequence.add(new CombatSequence(name, totalInitiative));
+                int health = initiativeResult.getEntity().getHealth();
+                combatSequence.add(new CombatSequence(name, totalInitiative, health));
             }
             return combatSequence;
         });
@@ -79,7 +76,9 @@ public class CombatStateHolder extends ViewModel {
         return combatRepo.getMonsters();
     }
 
-
+    public List<InitiativeResult> initiativeResults(){
+        return combatRepo.getInitiativeResults().getValue();
+    }
 
     public Boolean isMyTurn(){
         List<InitiativeResult> initiativeResults = combatRepo.getInitiativeResults().getValue();
