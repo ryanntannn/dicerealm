@@ -333,8 +333,13 @@ public class CombatScreen extends AppCompatActivity {
                 attackBtnRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Entity target = combatSh.getSelectedTarget().getValue();
                         Log.d("action right", "Attack with right hand");
-                        combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
+                        if (target != null) {
+                            combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON, target);
+                        } else {
+                            Log.d("Combat", "No target selected");
+                        }
                     }
                 });
             }
@@ -358,8 +363,13 @@ public class CombatScreen extends AppCompatActivity {
                 attackBtnLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Entity target = combatSh.getSelectedTarget().getValue();
                         Log.d("action left", "Attack with left hand");
-                        combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON);
+                        if (target != null) {
+                            combatSh.performAction(equippableItem, CombatTurnActionCommand.ActionType.WEAPON, target);
+                        } else {
+                            Log.d("Combat", "No target selected");
+                        }
                     }
                 });
             }
