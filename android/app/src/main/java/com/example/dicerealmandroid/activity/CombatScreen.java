@@ -438,6 +438,7 @@ public class CombatScreen extends AppCompatActivity {
 
         // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
         Thread backgroundThread = new Thread(() -> {
+            if (message == null || message.isEmpty()) return;
             for (int i = 0; i < message.length(); i++) {
                 char currChar = message.charAt(i);
                 try {
