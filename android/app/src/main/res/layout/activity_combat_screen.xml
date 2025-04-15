@@ -11,8 +11,8 @@
 
     <TableLayout
         android:id="@+id/turnCombatSquence"
-        android:layout_width="160dp"
-        android:layout_height="239dp"
+        android:layout_width="153dp"
+        android:layout_height="235dp"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="0.263"
