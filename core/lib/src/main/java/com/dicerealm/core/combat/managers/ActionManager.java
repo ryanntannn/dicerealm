@@ -96,9 +96,10 @@ public class ActionManager {
         return Skill.getActionType().isMelee() ? ActionType.MELEE: ActionType.RANGED ;
     }*/
 
-    public CombatResult usePotion(Entity user, Entity target, Potion potion) {
+    public CombatResult usePotion(Entity user, Potion potion) {
         // Check if the potion is in the user's inventory
         Potion potionInInventory = (Potion) user.getInventory().getItem(potion.getId());
+        Entity target = user; // Potions are self-targeting for now
 
         boolean useable = potionInInventory.useOn(target);
         if (useable) {

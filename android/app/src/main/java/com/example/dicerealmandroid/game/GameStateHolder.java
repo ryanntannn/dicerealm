@@ -26,49 +26,55 @@ import java.util.UUID;
 
 public class GameStateHolder extends ViewModel {
 
-    private GameRepo gameRepo;
-    public GameStateHolder() {
-        gameRepo = new GameRepo();
-    }
+	private GameRepo gameRepo;
 
-    public void startGame() {
-        gameRepo.startGame();
-    }
+	public GameStateHolder() {
+		gameRepo = new GameRepo();
+	}
 
-
-    public int[] getStatsIds() {
-        return gameRepo.getStatsIds();
-    }
+	public void startGame() {
+		gameRepo.startGame();
+	}
 
 
-    // Location
-//    public LiveData<Location> subscribeCurrentLocation() {
-//        return gameRepo.subscribeCurrentLocation();
-//    }
-
-    // Send text input to server
-    public void sendTextInput(String text) {
-        gameRepo.sendTextInput(text);
-    }
+	public int[] getStatsIds() {
+		return gameRepo.getStatsIds();
+	}
 
 
-    public LiveData<Location> getCurrentLocation(){
-        return Transformations.map(gameRepo.getLocationGraph(), LocationGraph::getCurrentLocation);
-    }
+	// Location
+	// public LiveData<Location> subscribeCurrentLocation() {
+	// return gameRepo.subscribeCurrentLocation();
+	// }
 
-    public LiveData<List<Location>> getAdjacentLocations(){
-        return Transformations.map(gameRepo.getLocationGraph(), locationGraph -> {
-            List<Location> locations = new ArrayList<>();
-            Location[] adjacentLocations = locationGraph.getAdjacentLocations();
-            if (adjacentLocations == null) return locations;
+	// Send text input to server
+	public void sendTextInput(String text) {
+		gameRepo.sendTextInput(text);
+	}
 
-            for (Location location : adjacentLocations) {
-                if (location != null) {
-                    locations.add(location);
-                }
-            }
-            return locations;
-        });
-    }
+	public String getplayercolor(UUID uuid) {
+		return gameRepo.getplayercolor(uuid);
+	}
+
+
+	public LiveData<Location> getCurrentLocation() {
+		return Transformations.map(gameRepo.getLocationGraph(), LocationGraph::getCurrentLocation);
+	}
+
+	public LiveData<List<Location>> getAdjacentLocations() {
+		return Transformations.map(gameRepo.getLocationGraph(), locationGraph -> {
+			List<Location> locations = new ArrayList<>();
+			Location[] adjacentLocations = locationGraph.getAdjacentLocations();
+			if (adjacentLocations == null)
+				return locations;
+
+			for (Location location : adjacentLocations) {
+				if (location != null) {
+					locations.add(location);
+				}
+			}
+			return locations;
+		});
+	}
 
 }
