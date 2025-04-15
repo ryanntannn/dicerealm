@@ -69,7 +69,8 @@ public class GameRepo {
 		LocationGraph locationGraph = gameDataSource.getCurrentLocationGraph().getValue();
 		if (locationGraph == null)
 			throw new IllegalStateException("LocationGraph is null");
-		locationGraph.setCurrentLocation(location);
+		Location inMemoryLocation = locationGraph.getN(location.getId());
+		locationGraph.setCurrentLocation(inMemoryLocation);
 		updateLocationGraph(locationGraph);
 	}
 
