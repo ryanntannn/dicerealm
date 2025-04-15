@@ -71,4 +71,6 @@ public class CombatStateHolder extends ViewModel {
     public LiveData<Integer> getCurrentRound(){
         return combatRepo.getCurrentRound();
     }
+
+    public String getinitmessage(){return combatRepo.getinitmessage();}
 }

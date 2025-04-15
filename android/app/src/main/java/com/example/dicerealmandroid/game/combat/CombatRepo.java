@@ -28,6 +28,7 @@ public class CombatRepo {
     private final RoomDataSource roomDataSource;
     private final Gson gson = new Gson();
 
+
     public CombatRepo(){
         combatDataSource = CombatDataSource.getInstance();
         playerDataSource = PlayerDataSource.getInstance();
@@ -42,6 +43,11 @@ public class CombatRepo {
         combatDataSource.updateTurnHistory(currentTurn);
     }
 
+    public void setinitmessage(String message){combatDataSource.setinitmessage(message);}
+
+    public String getinitmessage(){
+        return combatDataSource.getinitmessage();
+    }
 
     public LiveData<List<InitiativeResult>> getInitiativeResults(){
         return combatDataSource.getInitiativeResults();

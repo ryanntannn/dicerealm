@@ -49,6 +49,7 @@ import com.example.dicerealmandroid.recyclerview.CardAdapter;
 import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
 import com.example.dicerealmandroid.recyclerview.SpellCardAdapter;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.Initcombat;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -74,6 +75,8 @@ public class CombatScreen extends AppCompatActivity {
 	private RoomStateHolder roomSh = new RoomStateHolder();
 	private PlayerStateHolder playerSh = new PlayerStateHolder();
 	private CombatStateHolder combatSh = new CombatStateHolder();
+
+	private Initcombat initcombatscreen;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,33 +107,34 @@ public class CombatScreen extends AppCompatActivity {
 
 
 
-		roomSh.trackState().observe(this, new Observer<RoomState.State>() {
-			@Override
-			public void onChanged(RoomState.State roomState) {
-				if (roomState == null) {
-					Log.d("CombatScreen", "Navigating back to home screen");
-					Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					startActivity(intent);
-					finish();
-				} else if (roomState == RoomState.State.DIALOGUE_PROCESSING) {
-					Log.d("CombatScreen", "Navigating back to dialog screen");
-					CombatScreen.this.finish();
-				}
-			}
-		});
-
-		this.combatSequence(copy);
-		this.trackCurrentTurn();
-		this.attackLeft();
-		this.attackRight();
-		this.openSpells();
-		this.displayPlayerInfo();
-		this.displayEnemyInfo();
-		this.closespell();
-		this.useitems();
-		this.trackCurrentRound();
-	}
+        roomSh.trackState().observe(this, new Observer<RoomState.State>() {
+            @Override
+            public void onChanged(RoomState.State roomState) {
+                if (roomState == null) {
+                    Log.d("CombatScreen", "Navigating back to home screen");
+                    Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else if (roomState == RoomState.State.DIALOGUE_PROCESSING) {
+                    Log.d("CombatScreen", "Navigating back to dialog screen");
+                    CombatScreen.this.finish();
+                }
+            }
+        });
+        Log.d("InitMessage:" , "CombatScreen " + combatSh.getinitmessage());
+        initcombatscreen = new Initcombat(this, combatSh.getinitmessage());
+        initcombatscreen.show();
+        this.combatSequence(copy);
+        this.trackCurrentTurn();
+        this.attackLeft();
+        this.attackRight();
+        this.openSpells();
+        this.displayPlayerInfo();
+        this.displayEnemyInfo();
+        this.closespell();
+        this.useitems();
+        this.trackCurrentRound();
+    }
 
 	private void displayEnemyInfo() {
 		TextView enemyName = findViewById(R.id.enemyName);
@@ -463,8 +467,9 @@ public class CombatScreen extends AppCompatActivity {
 		});
 	}
 
-	private void trackCurrentRound() {
-		LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
+    private void trackCurrentRound(){
+        LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
+        TextView turncombattext = findViewById(R.id.turnCombat);
 
 		combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
 			@Override
@@ -480,6 +485,7 @@ public class CombatScreen extends AppCompatActivity {
 				// Round header text
 				TextView roundText = new TextView(CombatScreen.this);
 				roundText.setText("Round: " + round);
+                turncombattext.setText("Combat Round: " + round);
 				roundText.setTextSize(18);
 				roundText.setTypeface(null, Typeface.BOLD);
 				roundText.setTextColor(Color.WHITE);
@@ -496,8 +502,8 @@ public class CombatScreen extends AppCompatActivity {
 		});
 	}
 
-	private void displayMessageStream(String message, TextView currentTurnView) {
-		ScrollView messagesScroll = findViewById(R.id.messages);
+    private void displayMessageStream(String message, TextView currentTurnView) {
+        ScrollView messagesScroll = findViewById(R.id.messages);
 
 		// Run this on another thread/logical core to achieve true parallelism unlike python which
 		// thread is limited by GIL
