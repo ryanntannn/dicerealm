@@ -91,15 +91,15 @@ public class CombatScreen extends AppCompatActivity {
             copy.add(result.clone());  // or use a custom copy constructor
         }
 
-        //Hide android bottom nav bar
-        View decorView = getWindow().getDecorView();
-        WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
+		// Hide android bottom nav bar
+		View decorView = getWindow().getDecorView();
+		WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
 
-        if (controller != null) {
-            controller.hide(WindowInsetsCompat.Type.systemBars());
-            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        }
-
+		if (controller != null) {
+			controller.hide(WindowInsetsCompat.Type.systemBars());
+			controller.setSystemBarsBehavior(
+					WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+		}
 
 
 
@@ -109,8 +109,9 @@ public class CombatScreen extends AppCompatActivity {
                 if (roomState == null) {
                     Log.d("CombatScreen", "Navigating back to home screen");
                     Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    finish();
                 } else if (roomState == RoomState.State.DIALOGUE_PROCESSING) {
                     Log.d("CombatScreen", "Navigating back to dialog screen");
                     CombatScreen.this.finish();
@@ -442,45 +443,96 @@ public class CombatScreen extends AppCompatActivity {
     private void trackCurrentTurn() {
         LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
 
-        combatSh.subscribeCombatLatestTurn().observe(this, new Observer<CombatTurnModal>() {
-            @Override
-            public void onChanged(CombatTurnModal currTurn) {
-                TextView currentTurn = new TextView(CombatScreen.this);
-                TextView currentTurnMessage = new TextView(CombatScreen.this);
+		combatSh.subscribeCombatLatestTurn().observe(this, new Observer<CombatTurnModal>() {
+			@Override
+			public void onChanged(CombatTurnModal currTurn) {
+				if(currTurn == null) return;
 
-                // Create proper layout params with margins
+				// Card design
+				CardView messageCard = new CardView(CombatScreen.this);
+				LayoutParams cardParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				cardParams.setMargins(8, 8, 8, 8);
+				messageCard.setLayoutParams(cardParams);
+				messageCard.setCardElevation(4);
+				messageCard.setRadius(12);
 
+				// Create content layout inside card
+				LinearLayout cardContent = new LinearLayout(CombatScreen.this);
+				cardContent.setOrientation(LinearLayout.VERTICAL);
+				cardContent.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+				cardContent.setPadding(16, 16, 16, 16);
 
-                currentTurn.setPadding(10, 10, 10, 10);
-                currentTurnMessage.setPadding(10, 10, 10, 10);
+				// Turn number header
+				TextView turnHeader = new TextView(CombatScreen.this);
+				turnHeader.setText("Turn " + currTurn.getTurn());
+				turnHeader.setTypeface(null, Typeface.BOLD);
+				turnHeader.setTextSize(16);
+				cardContent.addView(turnHeader);
 
-                messageLayout.setPadding(10, 10, 10, 10);
-                messageLayout.setVerticalScrollBarEnabled(true);
+				// Message content
+				String messageContent = "";
+				if (currTurn.getHitLog() != null) {
+					messageContent = currTurn.getHitLog();
+				}
+				if (currTurn.getMessage() != null) {
+					if (!messageContent.isEmpty()) {
+						messageContent += "  ";
+					}
+					messageContent += currTurn.getMessage();
+				}
 
-                messageLayout.addView(currentTurn);
-                messageLayout.addView(currentTurnMessage);
+				// Message text view
+				TextView messageText = new TextView(CombatScreen.this);
+				messageText.setPadding(0, 8, 0, 0);
+				messageText.setTextSize(14);
+				cardContent.addView(messageText);
 
-                currentTurnMessage.setText(""); // Reset the text view before displaying the new message
-                displayMessageStream(currTurn.getMessage(), currentTurnMessage);
-            }
-        });
-    }
+				messageCard.addView(cardContent);
+				messageLayout.addView(messageCard);
+
+				messageText.setText("");
+
+				// Display msg with animation
+				displayMessageStream(messageContent, messageText);
+			}
+		});
+	}
 
     private void trackCurrentRound(){
         LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
-        TextView turncombattext = findViewById(R.id.turnCombat);
+//        TextView turncombattext = findViewById(R.id.turnCombat);
 
-//add combat round
-        combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer round){
-                TextView currentRound = new TextView(CombatScreen.this);
-                currentRound.setText("Round: " + round);
-                turncombattext.setText("Combat Round: " + round);
-                messageLayout.addView(currentRound);
-            }
-        });
-    }
+		combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
+			@Override
+			public void onChanged(Integer round) {
+//                turncombattext.setText("Combat Round: " + round);
+
+				CardView roundCard = new CardView(CombatScreen.this);
+				LayoutParams cardParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				cardParams.setMargins(8, 20, 8, 4);
+				roundCard.setLayoutParams(cardParams);
+				roundCard.setCardElevation(6); // Higher elevation than message cards
+				roundCard.setRadius(12);
+				roundCard.setCardBackgroundColor(Color.TRANSPARENT);
+
+				// Round header text
+				TextView roundText = new TextView(CombatScreen.this);
+				roundText.setText("Round: " + round);
+				roundText.setTextSize(18);
+				roundText.setTypeface(null, Typeface.BOLD);
+				roundText.setTextColor(Color.WHITE);
+				roundText.setPadding(16, 12, 16, 12);
+				roundText.setGravity(android.view.Gravity.CENTER);
+				roundText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
+				// Add text to card
+				roundCard.addView(roundText);
+
+				// Add round header to layout
+				messageLayout.addView(roundCard);
+				}
+		});
+	}
 
     private void displayMessageStream(String message, TextView currentTurnView) {
         ScrollView messagesScroll = findViewById(R.id.messages);
