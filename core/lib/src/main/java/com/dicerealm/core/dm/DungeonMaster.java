@@ -69,7 +69,7 @@ public class DungeonMaster {
 					- A list of objects, each representing a location. Each object must contain:
 						- displayName: A string representing the name of the location.
 						- description: A string describing the location in detail.
-						- enemies: A list of objects, each representing an enemy. This should exactly have two enemy.
+						- enemies: A list of objects, each representing an enemy. This should exactly have 4 enemies.
 							Each object must contain:
 							- name: A string representing the name of the enemy
 							- race: A string representing the race of the enemy out of these options: HUMAN, ELF, DEMON, DWARF, TIEFLING
@@ -121,10 +121,14 @@ public class DungeonMaster {
 	public LocationGraph generateLocations(DungeonMasterLocationResponse response){
 		ArrayList<Location> locations = new ArrayList<>();
 		ArrayList<Path> paths = new ArrayList<>();
+		int playerCount = roomState.getPlayerMap().size();
 		for (DungeonMasterLocationResponse.Location location : response.locations) {
 			Location loc = new Location(location.displayName, location.description);
+			int i = 0;
 			for (DungeonMasterLocationResponse.Enemy enemy : location.enemies) {
+				if (i >= playerCount) break; // Stop after generating monsters equal to the player count
 				loc.getEntities().add(MonsterGenerator.generateMonster(enemy.name, enemy.entityClass, enemy.race, roomState.getRoomLevel()));
+				i++;
 			}
 			locations.add(loc);
 		}
