@@ -504,12 +504,12 @@ public class CombatScreen extends AppCompatActivity {
 
     private void trackCurrentRound(){
         LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
-//        TextView turncombattext = findViewById(R.id.turnCombat);
+        TextView turncombattext = findViewById(R.id.turnCombat);
 
 		combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
 			@Override
 			public void onChanged(Integer round) {
-//                turncombattext.setText("Combat Round: " + round);
+                turncombattext.setText("Combat Round: " + round);
 
 				CardView roundCard = new CardView(CombatScreen.this);
 				LayoutParams cardParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
