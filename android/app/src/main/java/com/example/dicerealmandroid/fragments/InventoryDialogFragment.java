@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.adapters.InventoryDialogAdapter;
-import com.example.dicerealmandroid.player.PlayerInventoryWrapper;
+import com.example.dicerealmandroid.player.wrapper.PlayerInventoryWrapper;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

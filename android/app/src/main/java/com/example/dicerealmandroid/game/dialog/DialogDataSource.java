@@ -74,10 +74,11 @@ public class DialogDataSource {
     // Maintain observers connections :>
     public static void destroy(){
         if(instance != null){
-            instance.turnHistory = null;
-            instance.currentTurn.postValue(null);
-            instance.setPlayerActions(null);
-            instance.setLatestActionResult(null);
+            instance = null;
+//            instance.turnHistory = null;
+//            instance.currentTurn.postValue(null);
+//            instance.setPlayerActions(null);
+//            instance.setLatestActionResult(null);
         }
     }
 }
