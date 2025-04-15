@@ -24,7 +24,6 @@ import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 
 import com.dicerealm.core.room.RoomState;
-import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.game.GameRepo;
 import com.example.dicerealmandroid.game.combat.CombatRepo;
 import com.example.dicerealmandroid.game.combat.CombatTurnModal;
@@ -138,8 +137,10 @@ public class DicerealmClient extends WebSocketClient {
                     EndTurnCommand endTurnCommand = gson.fromJson(message, EndTurnCommand.class);
                     // Disable the buttons for the player
                     roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
-                    dialogRepo.setActionResult(endTurnCommand.getActionResultDetail());
-                    Message.showMessage("Turn ended.");
+                    Message.showMessage(endTurnCommand.getActionResultDetail().toString());
+                    if (endTurnCommand.getActionResultDetail().getRollResultDetails().length > 0) {
+                        dialogRepo.setActionResult(endTurnCommand.getActionResultDetail());
+                    }
                     break;
 
                 case "PLAYER_EQUIP_ITEM_RESPONSE":
