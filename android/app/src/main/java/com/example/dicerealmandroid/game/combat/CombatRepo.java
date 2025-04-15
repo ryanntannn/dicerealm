@@ -158,6 +158,12 @@ public class CombatRepo {
 
             // Here i am just assuming there's only 1 monster, change this line if there are more than 1 monster
             combatDataSource.setMonster(target);
+
+            if(!target.isAlive()){
+                combatDataSource.setMonster(null);
+                targetId = target.getId();
+                removeCombatant(targetId.toString());
+            }
         }
     }
 
