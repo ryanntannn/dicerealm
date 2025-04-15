@@ -31,23 +31,37 @@ import com.dicerealm.core.skills.SkillsRepository;
 public class PresetPlayerFactory {
 	private static final Random random = new Random();
 
-	public static final String[] CHARACTER_NAMES = {
-			"Kael'thas Sunstrider",
-			"Jaina Proudmoore",
-			"Thrall",
-			"Garrosh Hellscream",
-			"Uther Lightbringer",
-			"Sylvanas Windrunner",
-			"Illidan Stormrage",
-			"Baine Bronze",
-			"Renard Moon",
-			"Arnien Grey",
-			"Reagan Arc",
-			"Donotello",
-			"Wellington",
-			"Ragnarok",
-			"Starknight",
-	};
+	public static final String[] CHARACTER_NAMES =
+			{"Thalor Doomshade", "Seraphina Brightfall", "Kelvyn Ironbrow", "Alaric Flameheart",
+					"Nymerra Duskwind", "Varnok Stonefist", "Elaria Moonwhisper", "Drogan Steelvein",
+					"Cassian Emberthorn", "Lyssa Starbrook", "Rurik Ironmane", "Vexia Shadowglen",
+					"Darian Frostforge", "Nimue Lightweaver", "Grondar Bonecrusher", "Elowen Rainvale",
+					"Korran Ashmane", "Zephyra Galecrest", "Magnus Frosthelm", "Liora Dreamveil",
+					"Tarnok Bloodhowl", "Vaelis Sunborn", "Thessa Duskblade", "Erevan Thorncloak",
+					"Brynjar Hollowfang", "Selene Mistshade", "Draven Nightflame", "Miraeth Skydancer",
+					"Torian Flameveil", "Kaelen Darkridge", "Orion Wolfbrook", "Ravena Coldspire",
+					"Sareth Emberlash", "Galrik Moonfang", "Ysolde Dawnsworn", "Fenric Ghostwalker",
+					"Kaelor Hollowbrook", "Isolde Nightglen", "Brannock Warshade", "Talindra Whisperwind",
+					"Karnak Ironsoul", "Serenya Brightgrove", "Morwin Stonecloak", "Thalindra Gloomspire",
+					"Korvus Blackthorn", "Aelwyn Starshard", "Trogath Doomspire", "Zaryna Windreaver",
+					"Faelric Mistcloak", "Maelis Wildblossom", "Drakar Flameborn", "Araleth Moonshade",
+					"Vareth Swiftthorn", "Gwyndor Dreadhelm", "Nareth Windwalker", "Soraya Duskveil",
+					"Thorne Emberstrike", "Kaelis Moonward", "Garrik Stormbrand", "Ilyana Mistveil",
+					"Tharos Coldfang", "Velora Stormwhisper", "Rendar Ashglen", "Calyra Lightthorn",
+					"Durik Earthborn", "Lirael Nightwind", "Kovar Thundergrim", "Nyessa Wildthorn",
+					"Fendrel Stormcloak", "Shael Winterthorn", "Bryndis Firecloak", "Zarik Coldshade",
+					"Aeron Dawnspear", "Mirella Skythorn", "Torvald Frostglen", "Ysolyn Emberdusk",
+					"Gorak Doomshard", "Evaline Windlash", "Thandor Stonefang", "Seraphiel Dawnshard",
+					"Kareth Ironveil", "Lysara Moonlance", "Brannik Bloodthorn", "Elenya Starweaver",
+					"Drogun Steelthorn", "Thalindra Moonscar", "Volgrim Earthshade", "Mirethiel Dreamthorn",
+					"Bromir Warborn", "Faelyn Stormveil", "Korvax Firevein", "Selara Mistthorn",
+					"Grimnar Nightbrand", "Aurelia Skyglen", "Kelrik Ashborn", "Nerissa Stormglen",
+
+					// ultra rare italian brainrot names
+					"Barella Nutella Cucurella", "Bombardiro Crocodilo", "Tralalero Tralala",
+					"Giambattista Lasagna", "Mozzarello Spadaccino", "Don Alfonso al Pomodoro",
+					"Velocità Spaghetti", "Giuseppe Fettuccini Supremo", "Raviolino da Firenze",
+					"Pavarotti Lamborghini Espresso"};
 
 	public static String getRandomCharacterName() {
 		return CHARACTER_NAMES[random.nextInt(CHARACTER_NAMES.length)];
@@ -72,17 +86,11 @@ public class PresetPlayerFactory {
 	 * @see Player
 	 */
 	public static Player createPresetPlayer() {
-		StatsMap baseStats = new StatsMap(Map.of(
-				Stat.MAX_HEALTH, 20,
-				Stat.ARMOUR_CLASS, 0,
-				Stat.STRENGTH, 0,
-				Stat.DEXTERITY, 0,
-				Stat.CONSTITUTION, 0,
-				Stat.INTELLIGENCE, 0,
-				Stat.WISDOM, 0,
-				Stat.CHARISMA, 0));
-		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(), getRandomCharacterClass(),
-				baseStats);
+		StatsMap baseStats = new StatsMap(
+				Map.of(Stat.MAX_HEALTH, 20, Stat.ARMOUR_CLASS, 0, Stat.STRENGTH, 0, Stat.DEXTERITY, 0,
+						Stat.CONSTITUTION, 0, Stat.INTELLIGENCE, 0, Stat.WISDOM, 0, Stat.CHARISMA, 0));
+		Player player = new Player(getRandomCharacterName(), getRandomCharacterRace(),
+				getRandomCharacterClass(), baseStats);
 		addDefaultItems(player);
 		addDefaultSkills(player);
 		return player;
@@ -96,79 +104,80 @@ public class PresetPlayerFactory {
 	public static void addDefaultItems(Player player) {
 		EntityClass entityClass = player.getEntityClass();
 
-        switch (entityClass) {
-            case WARRIOR -> {
-                Weapon sword = SwordFactory.createSword(1); 
-                Weapon axe = AxeFactory.createAxe(1);
-                Helmet helmet = new Helmet("Iron Helmet", 2);
+		switch (entityClass) {
+			case WARRIOR -> {
+				Weapon sword = SwordFactory.createSword(1);
+				Weapon axe = AxeFactory.createAxe(1);
+				Helmet helmet = new Helmet("Iron Helmet", 2);
 				Chestpiece chestpiece = new Chestpiece("Iron Chestplate", 3);
-                player.getInventory().addItem(sword);
-                player.getInventory().addItem(axe);
-                player.getInventory().addItem(helmet);
+				player.getInventory().addItem(sword);
+				player.getInventory().addItem(axe);
+				player.getInventory().addItem(helmet);
 				player.getInventory().addItem(chestpiece);
-                player.equipItem(BodyPart.RIGHT_HAND, sword);
-                player.equipItem(BodyPart.LEFT_HAND, axe);
-                player.equipItem(BodyPart.HEAD, helmet);
+				player.equipItem(BodyPart.RIGHT_HAND, sword);
+				player.equipItem(BodyPart.LEFT_HAND, axe);
+				player.equipItem(BodyPart.HEAD, helmet);
 				player.equipItem(BodyPart.TORSO, chestpiece);
-				
+
 
 				player.getInventory().addItem(new MinorHealthPotion());
-            }
-            case WIZARD -> {
-                Weapon staff = StaffFactory.createStaff(1);
+			}
+			case WIZARD -> {
+				Weapon staff = StaffFactory.createStaff(1);
 				Necklace necklace = new Necklace("Necklace of Wizardy", Stat.INTELLIGENCE, 1);
 				Chestpiece chestpiece = new Chestpiece("Robe of Wizardy", 1);
-                player.getInventory().addItem(staff);
-                player.getInventory().addItem(new FireballScroll());
+				player.getInventory().addItem(staff);
+				player.getInventory().addItem(new FireballScroll());
+				player.getInventory().addItem(chestpiece);
 				player.getInventory().addItem(necklace);
-                player.equipItem(BodyPart.RIGHT_HAND, staff);
+				player.equipItem(BodyPart.RIGHT_HAND, staff);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
-				
+
 				player.getInventory().addItem(new MinorHealthPotion());
-            }
-            case ROGUE -> {
-                Weapon dagger = DaggerFactory.createDagger(1);
+			}
+			case ROGUE -> {
+				Weapon dagger = DaggerFactory.createDagger(1);
 				Necklace necklace = new Necklace("Rogue's Stealth", Stat.DEXTERITY, 2);
 				Chestpiece chestpiece = new Chestpiece("Rogue's Cloak", 1);
-                player.getInventory().addItem(dagger);
+				player.getInventory().addItem(dagger);
 				player.getInventory().addItem(necklace);
 				player.getInventory().addItem(chestpiece);
-                player.equipItem(BodyPart.RIGHT_HAND, dagger);
+				player.equipItem(BodyPart.RIGHT_HAND, dagger);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
 				player.getInventory().addItem(new MinorHealthPotion());
-            }
-            case RANGER -> {
-                Weapon bow = BowFactory.createBow(1);
+			}
+			case RANGER -> {
+				Weapon bow = BowFactory.createBow(1);
 				Necklace necklace = new Necklace("Ranger's Shot", Stat.DEXTERITY, 1);
 				Chestpiece chestpiece = new Chestpiece("Ranger's Chestplate", 2);
-                player.getInventory().addItem(bow);
+				player.getInventory().addItem(bow);
 				player.equipItem(BodyPart.NECK, necklace);
-                player.equipItem(BodyPart.RIGHT_HAND, bow);
+				player.equipItem(BodyPart.RIGHT_HAND, bow);
 				player.equipItem(BodyPart.TORSO, chestpiece);
 				player.equipItem(BodyPart.NECK, necklace);
 
 				player.getInventory().addItem(new MinorHealthPotion());
-            }
-            case CLERIC -> {
-				Weapon staff = StaffFactory.createStaff(1); 
-                Helmet helmet = new Helmet("Cleric's Helmet", 2);
+			}
+			case CLERIC -> {
+				Weapon staff = StaffFactory.createStaff(1);
+				Helmet helmet = new Helmet("Cleric's Helmet", 2);
 				Necklace necklace = new Necklace("Necklace of Wisdom", Stat.WISDOM, 1);
 				Chestpiece chestpiece = new Chestpiece("Robe of Wisdom", 1);
-                player.getInventory().addItem(staff);
-                player.getInventory().addItem(helmet);
+				player.getInventory().addItem(staff);
+				player.getInventory().addItem(helmet);
 				player.getInventory().addItem(chestpiece);
 				player.getInventory().addItem(necklace);
-                player.equipItem(BodyPart.RIGHT_HAND, staff);
-                player.equipItem(BodyPart.HEAD, helmet);
+				player.equipItem(BodyPart.RIGHT_HAND, staff);
+				player.equipItem(BodyPart.HEAD, helmet);
 				player.equipItem(BodyPart.NECK, necklace);
 				player.equipItem(BodyPart.TORSO, chestpiece);
-			
-				player.getInventory().addItem(new MinorHealthPotion());
-            }
 
-        }
+				player.getInventory().addItem(new MinorHealthPotion());
+			}
+
+		}
 	}
 
 	public static void addDefaultSkills(Player player) {
@@ -181,6 +190,6 @@ public class PresetPlayerFactory {
 		for (Skill skill : level1Skills) {
 			player.getSkillsInventory().addItem(skill);
 		}
-	}	
-	
+	}
+
 }
