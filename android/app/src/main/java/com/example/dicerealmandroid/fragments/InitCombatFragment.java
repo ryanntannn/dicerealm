@@ -26,6 +26,7 @@ import androidx.fragment.app.DialogFragment;
 import com.dicerealm.core.dialogue.SkillCheck;
 import com.example.dicerealmandroid.R;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.Arrays;
 
@@ -45,7 +46,6 @@ public class InitCombatFragment extends DialogFragment {
     @Nullable
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
         TextView textView = new TextView(requireContext());
         textView.setTextSize(14); // Optional
         textView.setPadding(32, 32, 32, 32); // Optional

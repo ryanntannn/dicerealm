@@ -10,15 +10,15 @@
 
     <TableLayout
         android:id="@+id/turnCombatSquence"
-        android:layout_width="400px"
-        android:layout_height="171dp"
+        android:layout_width="154dp"
+        android:layout_height="220dp"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
 
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.292"
+        app:layout_constraintHorizontal_bias="0.257"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.346" />
+        app:layout_constraintVertical_bias="0.591" />
 
     <ScrollView
         android:id="@+id/messages"
@@ -86,7 +86,6 @@
         android:text="0/0"
         app:layout_constraintBottom_toBottomOf="@+id/enemyHealthstatic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/enemyHealthstatic"
         app:layout_constraintTop_toTopOf="@+id/enemyHealthstatic"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -126,7 +125,7 @@
         app:layout_constraintHorizontal_bias="0.032"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.936"
+        app:layout_constraintVertical_bias="0.982"
         app:srcCompat="@drawable/kid1" />
 
     <TextView
@@ -150,7 +149,7 @@
         android:text="Your name"
         app:layout_constraintBottom_toTopOf="@+id/me"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.028"
         app:layout_constraintStart_toStartOf="@+id/me" />
 
     <TableLayout

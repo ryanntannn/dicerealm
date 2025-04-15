@@ -40,6 +40,7 @@ import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.Color_hashmap.Colorhashmap;
 import com.example.dicerealmandroid.R;
+import com.example.dicerealmandroid.fragments.InitCombatFragment;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
@@ -119,7 +120,6 @@ public class CombatScreen extends AppCompatActivity {
         Log.d("InitMessage:" , "CombatScreen " + combatSh.getinitmessage());
         InitCombatFragment combatinit = InitCombatFragment.newInstance(combatSh.getinitmessage() , this);
         combatinit.show(getSupportFragmentManager(), "InitCombatFragment");
-
 
         this.combatSequence(copy);
         this.trackCurrentTurn();
@@ -425,14 +425,12 @@ public class CombatScreen extends AppCompatActivity {
 
     private void trackCurrentRound(){
         LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
-        TextView conbatturn = findViewById(R.id.Combatturntext);
 
         combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer round){
                 TextView currentRound = new TextView(CombatScreen.this);
                 currentRound.setText("Round: " + round);
-                conbatturn.setText("Combat turn " + round);
                 messageLayout.addView(currentRound);
             }
         });
