@@ -38,14 +38,14 @@ public class DaggerFactory {
     }
 
     private static int calculateDamageDice(int level) {
-        return 1 + (level / 5); // Add 1 die every 5 levels
+        return 2 + (level / 5); // Add 1 die every 5 levels
     }
 
     private static int calculateDiceSides(int level) {
-        return 4 + (level / 3); // Add 1 side every 3 levels
+        return 2 + (level / 3); // Add 1 side every 3 levels
     }
 
     private static int calculateStatBonus(int level) {
-        return 2 + (level / 4); // Add 1 stat bonus every 4 levels
+        return 1 + (level / 4); // Add 1 stat bonus every 4 levels
     }
 }

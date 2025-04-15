@@ -14,7 +14,7 @@ public class ClassStats {
     static {
         // Warrior starting stats
         classStatsMap.put(EntityClass.WARRIOR, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 24,
+                Stat.MAX_HEALTH, 28,
                 Stat.ARMOUR_CLASS, 13,
                 Stat.STRENGTH, 16,
                 Stat.DEXTERITY, 12,
@@ -26,8 +26,8 @@ public class ClassStats {
 
         // Wizard starting stats
         classStatsMap.put(EntityClass.WIZARD, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 17,
-                Stat.ARMOUR_CLASS, 11,
+                Stat.MAX_HEALTH, 21,
+                Stat.ARMOUR_CLASS, 10,
                 Stat.STRENGTH, 8,
                 Stat.DEXTERITY, 11,
                 Stat.CONSTITUTION, 10,
@@ -38,8 +38,8 @@ public class ClassStats {
 
         // CLERIC starting stats
         classStatsMap.put(EntityClass.CLERIC, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 18,
-                Stat.ARMOUR_CLASS, 11,
+                Stat.MAX_HEALTH, 22,
+                Stat.ARMOUR_CLASS, 10,
                 Stat.STRENGTH, 8,
                 Stat.DEXTERITY, 10,
                 Stat.CONSTITUTION, 12,
@@ -50,8 +50,8 @@ public class ClassStats {
 
         // Rogue starting stats
         classStatsMap.put(EntityClass.ROGUE, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 16,
-                Stat.ARMOUR_CLASS, 12,
+                Stat.MAX_HEALTH, 20,
+                Stat.ARMOUR_CLASS, 10,
                 Stat.STRENGTH, 12,
                 Stat.DEXTERITY, 16,
                 Stat.CONSTITUTION, 8,
@@ -62,8 +62,8 @@ public class ClassStats {
 
         // Ranger starting stats
         classStatsMap.put(EntityClass.RANGER, new StatsMap(Map.of(
-                Stat.MAX_HEALTH, 18,
-                Stat.ARMOUR_CLASS, 12,
+                Stat.MAX_HEALTH, 22,
+                Stat.ARMOUR_CLASS, 10,
                 Stat.STRENGTH, 15,
                 Stat.DEXTERITY, 16,
                 Stat.CONSTITUTION, 12,

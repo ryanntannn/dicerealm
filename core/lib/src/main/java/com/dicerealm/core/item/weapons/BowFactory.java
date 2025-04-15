@@ -42,10 +42,10 @@ public class BowFactory {
     }
 
     private static int calculateDiceSides(int level) {
-        return 6 + (level / 3); // Add 1 side every 3 levels
+        return 5 + (level / 3); // Add 1 side every 3 levels
     }
 
     private static int calculateStatBonus(int level) {
-        return 2 + (level / 4); // Add 1 stat bonus every 4 levels
+        return 1 + (level / 4); // Add 1 stat bonus every 4 levels
     }
 }
