@@ -82,14 +82,10 @@ public class CombatStateHolder extends ViewModel {
     }
 
     public Boolean isMyTurn(){
-        List<InitiativeResult> initiativeResults = combatRepo.getInitiativeResults().getValue();
-        if(initiativeResults != null || !initiativeResults.isEmpty()){
-            UUID currPlayer = initiativeResults.get(0).getEntity().getId();
-            if(currPlayer.equals(playerRepo.getPlayerId())){
-                return true;
-            }
-        }
-        return false;
+        UUID currEntityTurn = combatRepo.getplayerturn().getValue();
+        UUID playerId = playerRepo.getPlayerId();
+        if(currEntityTurn == null || playerId == null) return false;
+        return currEntityTurn.equals(playerId);
     }
 
     public LiveData<Integer> getCurrentRound(){
