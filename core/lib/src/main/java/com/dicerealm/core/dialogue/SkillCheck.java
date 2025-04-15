@@ -1,6 +1,7 @@
 package com.dicerealm.core.dialogue;
 
 import com.dicerealm.core.dice.D20;
+import com.dicerealm.core.entity.AbilityModifierCalculator;
 import com.dicerealm.core.entity.Stat;
 import com.dicerealm.core.entity.StatsMap;
 import com.dicerealm.core.strategy.RandomStrategy;
@@ -12,20 +13,20 @@ public class SkillCheck {
 
 	public static String getResultsText(Result result) {
 		switch (result) {
-		case SUCCESS:
-			return "Success";
-		case FAILURE:
-			return "Failure";
-		case CRITICAL_SUCCESS:
-			return "Critical Success";
-		case CRITICAL_FAILURE:
-			return "Critical Failure";
-		default:
-			return "Unknown";
+			case SUCCESS:
+				return "Success";
+			case FAILURE:
+				return "Failure";
+			case CRITICAL_SUCCESS:
+				return "Critical Success";
+			case CRITICAL_FAILURE:
+				return "Critical Failure";
+			default:
+				return "Unknown";
 		}
 	}
 
-	public static class RollResultDetail{
+	public static class RollResultDetail {
 		private Result result;
 		private int roll;
 		private int target;
@@ -40,7 +41,7 @@ public class SkillCheck {
 			this.stat = stat;
 		}
 
-		public Result getResult() { 
+		public Result getResult() {
 			return result;
 		}
 
@@ -62,11 +63,12 @@ public class SkillCheck {
 
 		@Override
 		public String toString() {
-			return StatsMap.getStatText(stat) + " check: Rolled " + roll + " + " + modifier + "(modifier) vs " + target + " - " + getResultsText(result);
+			return StatsMap.getStatText(stat) + " check: Rolled " + roll + " + " + modifier
+					+ "(modifier) vs " + target + " - " + getResultsText(result);
 		}
 	}
 
-	public static class ActionResultDetail{
+	public static class ActionResultDetail {
 		private RollResultDetail[] rollResultDetails;
 		private String action;
 
@@ -91,7 +93,8 @@ public class SkillCheck {
 		public Result getResult() {
 			boolean success = true;
 			for (RollResultDetail rollResultDetail : rollResultDetails) {
-				if (rollResultDetail.getResult() == Result.FAILURE || rollResultDetail.getResult() == Result.CRITICAL_FAILURE) {
+				if (rollResultDetail.getResult() == Result.FAILURE
+						|| rollResultDetail.getResult() == Result.CRITICAL_FAILURE) {
 					success = false;
 					break;
 				}
@@ -140,7 +143,7 @@ public class SkillCheck {
 		for (Stat key : filteredSkillCheck.keySet()) {
 			int roll = d20.roll();
 			int target = filteredSkillCheck.get(key);
-			int modifier = playerStats.get(key);
+			int modifier = AbilityModifierCalculator.getAbilityModifier(playerStats, key);
 			Result result = Result.FAILURE;
 			if (roll >= 20) {
 				result = Result.CRITICAL_SUCCESS;
