@@ -63,6 +63,7 @@ public class DialogRepo {
 
     // Action result
     public void setActionResult(SkillCheck.ActionResultDetail actionResult){
+        if(actionResult == null) return;
         dialogDataSource.setLatestActionResult(actionResult);
     }
 
