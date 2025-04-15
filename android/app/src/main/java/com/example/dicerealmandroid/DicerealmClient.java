@@ -160,7 +160,8 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "COMBAT_START":
                     CombatStartCommand combatStartCommand = gson.fromJson(message, CombatStartCommand.class);
-//                    combatRepo.setLatestTurn(combatStartCommand.getDisplayText());
+                    Log.d("initmessage", "DicerealmClient: " + combatStartCommand.getDisplayText());
+                    combatRepo.setinitmessage(combatStartCommand.getDisplayText());
                     combatRepo.resetRounds();
                     combatRepo.setInitiativeResults(combatStartCommand.getInitiativeResults());
                     Message.showMessage("Round " + 1);

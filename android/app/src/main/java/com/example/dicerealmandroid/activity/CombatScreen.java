@@ -40,6 +40,7 @@ import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.Color_hashmap.Colorhashmap;
 import com.example.dicerealmandroid.R;
+import com.example.dicerealmandroid.fragments.InitCombatFragment;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
@@ -57,6 +58,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import android.widget.LinearLayout.LayoutParams;
+
+import org.w3c.dom.Text;
 
 // TODO: Implement Weapon attack functionality (DONE)
 // TODO: Implement spell functionality
@@ -84,7 +87,6 @@ public class CombatScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         List<InitiativeResult> initiativeRes = combatSh.initiativeResults();
         List<InitiativeResult> copy = new ArrayList<>();
         for (InitiativeResult result : initiativeRes) {
@@ -117,6 +119,10 @@ public class CombatScreen extends AppCompatActivity {
                 }
             }
         });
+        Log.d("InitMessage:" , "CombatScreen " + combatSh.getinitmessage());
+        InitCombatFragment combatinit = InitCombatFragment.newInstance(combatSh.getinitmessage() , this);
+        combatinit.show(getSupportFragmentManager(), "InitCombatFragment");
+
 
         this.combatSequence(copy);
         this.trackCurrentTurn();
@@ -422,12 +428,14 @@ public class CombatScreen extends AppCompatActivity {
 
     private void trackCurrentRound(){
         LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
+        TextView conbatturn = findViewById(R.id.Combatturntext);
 
         combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer round){
                 TextView currentRound = new TextView(CombatScreen.this);
                 currentRound.setText("Round: " + round);
+                conbatturn.setText("Combat turn " + round);
                 messageLayout.addView(currentRound);
             }
         });

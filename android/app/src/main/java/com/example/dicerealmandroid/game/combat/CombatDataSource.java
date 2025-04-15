@@ -21,6 +21,8 @@ public class CombatDataSource {
     private final MutableLiveData<Integer> currentRound = new MutableLiveData<>(1);
     private Integer prevRound = 0;
 
+    private String initmessage;
+
     private CombatDataSource(){}
 
     public static CombatDataSource getInstance(){
@@ -69,7 +71,8 @@ public class CombatDataSource {
     public void setPrevRound(int round){
         this.prevRound = round;
     }
-
+    public String getinitmessage(){return initmessage;}
+    public void setinitmessage(String message){initmessage = message;}
 
     // Reset all cache data while leaving the singleton instance
     // Maintain observers connections :>
