@@ -59,11 +59,16 @@ public class CombatRepo {
         }
         else if (!Objects.equals(initiativeResults, combatDataSource.getInitiativeResults())){
             // get monster details
+            List<Entity> monsters = new ArrayList<>();
+
             for(InitiativeResult initiativeResult : initiativeResults){
-                if(initiativeResult.getEntity().getAllegiance() == Entity.Allegiance.ENEMY){
-                    combatDataSource.setMonster(initiativeResult.getEntity());
+                Entity entity = initiativeResult.getEntity();
+                if(entity.getAllegiance() == Entity.Allegiance.ENEMY){
+                    monsters.add(entity);
                 }
             }
+            // Set Monster details
+            combatDataSource.setMonsters(monsters);
 
             // Set the initiative results
             combatDataSource.setInitiativeResults(initiativeResults);
@@ -71,9 +76,8 @@ public class CombatRepo {
     }
 
     // action represents the sub-classes of Item, Skill or Weapon
-    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType){
+    public void performAction(Object action, CombatTurnActionCommand.ActionType actionType, Entity target){
         Player attacker = playerDataSource.getPlayer().getValue();
-        Entity target = combatDataSource.getMonster().getValue();
         if (attacker == null || target == null) {
             throw new IllegalArgumentException("Player or Monster cannot be null");
         }
@@ -96,13 +100,13 @@ public class CombatRepo {
     }
 
 
-    public LiveData<Entity> getMonster(){
-        return combatDataSource.getMonster();
+    public LiveData<List<Entity>> getMonsters() {
+        return combatDataSource.getMonsters();
     }
 
     // Logic to update all the combatant details
     public void updateCombatantsDetails(Entity target, Entity attacker) throws NoSuchElementException{
-        Entity enemy = getMonster().getValue();
+        List<Entity> monsters = combatDataSource.getMonsters().getValue();
         UUID targetId = target.getId();
         UUID attackerId = attacker.getId();
         UUID playerId = playerDataSource.getPlayerId();
@@ -110,7 +114,7 @@ public class CombatRepo {
         Entity currTarget;
 
         if(roomState == null) return;
-        if(enemy == null) return;
+        if(monsters == null) return;
 
         // If the target is player, the attacker is a monster
         // If the target is a monster, the attacker is a player
@@ -134,6 +138,7 @@ public class CombatRepo {
             roomState.removePlayer(targetId);
             roomState.addPlayer((Player) target);
 
+
             // Update monster details
             combatDataSource.setMonster(attacker);
 
@@ -141,7 +146,8 @@ public class CombatRepo {
             // Target is monster, attacker is player
 
             // I am assuming 1 monster here, if theres more than 1 monster than you should change this line
-            currTarget = getMonster().getValue();
+
+            currTarget = combatDataSource.getMonster(target.getId());
             if(currTarget == null) throw new NoSuchElementException("Monster not found");
 
             // if attacker is you
@@ -158,6 +164,13 @@ public class CombatRepo {
 
             // Here i am just assuming there's only 1 monster, change this line if there are more than 1 monster
             combatDataSource.setMonster(target);
+
+            if(!target.isAlive()){
+                combatDataSource.deleteMonsterById(currTarget.getId());
+                targetId = target.getId();
+                removeCombatant(targetId.toString());
+
+            }
         }
     }
 

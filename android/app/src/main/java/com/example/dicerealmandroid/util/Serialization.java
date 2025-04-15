@@ -28,6 +28,8 @@ import com.dicerealm.core.entity.Entity;
 import com.google.gson.reflect.TypeToken;
 import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
+import com.dicerealm.core.monster.Monster;
+import com.dicerealm.core.player.Player;
 import com.dicerealm.core.locations.LocationGraph;
 
 
@@ -88,31 +90,30 @@ public class Serialization {
 	static class InventoryOfItemDeserializer<T extends Identifiable>
 			implements JsonDeserializer<InventoryOf<T>> {
 
-		public InventoryOf<T> deserialize(JsonElement json, Type typeOfT,
-				JsonDeserializationContext context) throws JsonParseException {
-			JsonObject object = json.getAsJsonObject();
-			String type = object.get("type").getAsString();
-			int size = object.get("inventorySize").getAsInt();
-			List<JsonElement> items = object.get("items").getAsJsonArray().asList();
-			// handle based on inventory type
-			switch (type) {
-				case "ITEM":
-					InventoryOf<T> itemInventory = new InventoryOf<>("ITEM", size);
-					for (JsonElement item : items) {
-						itemInventory.addItem(context.deserialize(item, Item.class));
-					}
-					return itemInventory;
-				case "SKILL":
-					InventoryOf<T> skillInventory = new InventoryOf<>("SKILL", size);
-					for (JsonElement item : items) {
-						skillInventory.addItem(context.deserialize(item, Skill.class));
-					}
-					return skillInventory;
-				default:
-					throw new JsonParseException(type + " not handled");
+				public InventoryOf<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+						JsonObject object = json.getAsJsonObject();
+						String type = object.get("type").getAsString();
+						int size = object.get("inventorySize").getAsInt();
+						List<JsonElement> items = object.get("items").getAsJsonArray().asList();
+						// handle based on inventory type
+						switch (type) {
+								case "ITEM":
+										InventoryOf<T> itemInventory = new InventoryOf<>("ITEM", size);
+										for (JsonElement item : items) {
+												itemInventory.addItem(context.deserialize(item, Item.class));
+										}
+										return itemInventory;
+								case "SKILL":
+										InventoryOf<T> skillInventory = new InventoryOf<>("SKILL", size);
+										for (JsonElement item : items) {
+												skillInventory.addItem(context.deserialize(item, Skill.class));
+										}
+										return skillInventory;
+								default:
+										throw new JsonParseException(type + " not handled");
+						}
+				}
 			}
-		}
-	}
 
 
 	static class CombatTurnActionCommandDeserializer

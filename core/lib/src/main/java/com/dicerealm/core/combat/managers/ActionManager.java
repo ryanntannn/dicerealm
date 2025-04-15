@@ -15,7 +15,6 @@ import com.dicerealm.core.item.Scroll;
 import com.dicerealm.core.item.Weapon;
 import com.dicerealm.core.skills.Skill;
 
-//TODO:Currently Incomplete Pushing Old Version with CombatLog to test if Logger Works Properly
 public class ActionManager {
     private CombatLog combatLog;
     private CombatResult combatResult;

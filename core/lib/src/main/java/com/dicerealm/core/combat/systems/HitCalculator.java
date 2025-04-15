@@ -1,8 +1,7 @@
 package com.dicerealm.core.combat.systems;
 
-import static com.dicerealm.core.combat.systems.AttackBonusCalculator.getAttackBonus;
-
 import com.dicerealm.core.combat.ActionType;
+import static com.dicerealm.core.combat.systems.AttackBonusCalculator.getAttackBonus;
 import com.dicerealm.core.dice.D20;
 import com.dicerealm.core.entity.Entity;
 import com.dicerealm.core.entity.Stat;
@@ -31,7 +30,6 @@ public class HitCalculator {
         this.d20 = d20;
     }
 
-    // TODO: Possibly include Proficiencies
     public HitResult doesAttackHit(Entity attacker, Entity target, ActionType actionType) {
         int attackRoll = d20.roll();
         int attackBonus = getAttackBonus(attacker, actionType);

@@ -24,8 +24,6 @@ import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
 
-//TODO: Properly Do CombatManager Sequencing
-
 public class CombatManager {
     private List<Entity> participants;
     private List<Entity> turnOrder;
