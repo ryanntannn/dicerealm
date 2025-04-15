@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".activity.CombatScreen">
 
 
@@ -18,7 +19,7 @@
         app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.463" />
+        app:layout_constraintVertical_bias="0.250" />
 
     <ScrollView
         android:id="@+id/messages"
@@ -60,7 +61,7 @@
         app:layout_constraintHorizontal_bias="0.772"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.3"
         app:srcCompat="@drawable/kid2" />
 
     <TextView
@@ -123,10 +124,10 @@
         android:layout_height="139dp"
         app:layout_constraintBottom_toTopOf="@+id/Actions"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintHorizontal_bias="0.014"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.982"
+        app:layout_constraintVertical_bias="0.948"
         app:srcCompat="@drawable/kid1" />
 
     <TextView
@@ -138,6 +139,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/turnCombatSquence"
         app:layout_constraintEnd_toEndOf="@+id/turnCombatSquence"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/turnCombatSquence"
         app:layout_constraintTop_toBottomOf="@+id/messages"
         app:layout_constraintVertical_bias="1.0" />
@@ -146,7 +148,7 @@
         android:id="@+id/playerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:maxWidth="300dp"
         android:layout_marginBottom="4dp"
         android:text="Your name"
         app:layout_constraintBottom_toTopOf="@+id/me"
