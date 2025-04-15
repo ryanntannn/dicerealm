@@ -95,6 +95,7 @@ export const roomStateSchema = z.object({
     })
   ),
   dialogueTurns: z.array(dialogueTurnSchema),
+  theme: z.string(),
 });
 
 export type RoomState = z.infer<typeof roomStateSchema>;

@@ -78,7 +78,9 @@ public class RoomDataSource {
     public static void destroy(){
         if(instance != null){
             instance.setRoomState(null);
-            instance.removeServerInstance();
+            instance = null;
+
+//            instance.removeServerInstance();
         }
     }
 }
