@@ -101,7 +101,7 @@ public class PresetPlayerFactory {
                 Weapon sword = SwordFactory.createSword(1); 
                 Weapon axe = AxeFactory.createAxe(1);
                 Helmet helmet = new Helmet("Iron Helmet", 2);
-				Chestpiece chestpiece = new Chestpiece("Iron Chestplate", 2);
+				Chestpiece chestpiece = new Chestpiece("Iron Chestplate", 3);
                 player.getInventory().addItem(sword);
                 player.getInventory().addItem(axe);
                 player.getInventory().addItem(helmet);
@@ -117,7 +117,7 @@ public class PresetPlayerFactory {
             case WIZARD -> {
                 Weapon staff = StaffFactory.createStaff(1);
 				Necklace necklace = new Necklace("Necklace of Wizardy", Stat.INTELLIGENCE, 1);
-				Chestpiece chestpiece = new Chestpiece("Cloak of Wizardy", 1);
+				Chestpiece chestpiece = new Chestpiece("Robe of Wizardy", 1);
                 player.getInventory().addItem(staff);
                 player.getInventory().addItem(new FireballScroll());
 				player.getInventory().addItem(necklace);
@@ -130,11 +130,13 @@ public class PresetPlayerFactory {
             case ROGUE -> {
                 Weapon dagger = DaggerFactory.createDagger(1);
 				Necklace necklace = new Necklace("Rogue's Stealth", Stat.DEXTERITY, 2);
+				Chestpiece chestpiece = new Chestpiece("Rogue's Cloak", 1);
                 player.getInventory().addItem(dagger);
 				player.getInventory().addItem(necklace);
+				player.getInventory().addItem(chestpiece);
                 player.equipItem(BodyPart.RIGHT_HAND, dagger);
 				player.equipItem(BodyPart.NECK, necklace);
-			
+				player.equipItem(BodyPart.TORSO, chestpiece);
 				player.getInventory().addItem(new MinorHealthPotion());
             }
             case RANGER -> {
@@ -153,7 +155,7 @@ public class PresetPlayerFactory {
 				Weapon staff = StaffFactory.createStaff(1); 
                 Helmet helmet = new Helmet("Cleric's Helmet", 2);
 				Necklace necklace = new Necklace("Necklace of Wisdom", Stat.WISDOM, 1);
-				Chestpiece chestpiece = new Chestpiece("Cloak of Wisdom", 1);
+				Chestpiece chestpiece = new Chestpiece("Robe of Wisdom", 1);
                 player.getInventory().addItem(staff);
                 player.getInventory().addItem(helmet);
 				player.getInventory().addItem(chestpiece);
