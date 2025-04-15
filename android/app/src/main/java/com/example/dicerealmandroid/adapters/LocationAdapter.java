@@ -17,7 +17,7 @@ import java.util.List;
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
 
     private Location currentLocation;
-    private List<Location> adjacentLocations = new ArrayList<>();
+    private final List<Location> adjacentLocations = new ArrayList<>();
 
 
     public LocationAdapter() {}
@@ -57,9 +57,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         adjacentLocations.addAll(locations);
         notifyDataSetChanged();
     }
-
-
-
 
     static class LocationViewHolder extends RecyclerView.ViewHolder {
         TextView locationName, locationDesc;

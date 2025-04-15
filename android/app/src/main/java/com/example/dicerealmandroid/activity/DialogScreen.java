@@ -26,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicerealm.core.dialogue.SkillCheck;
@@ -90,8 +91,7 @@ public class DialogScreen extends AppCompatActivity {
 		View decorView = getWindow().getDecorView();
 		WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
 
-		// Connect to adapter
-		locationAdapter = new LocationAdapter();
+
 
 		if (controller != null) {
 			controller.hide(WindowInsetsCompat.Type.systemBars());
@@ -138,6 +138,8 @@ public class DialogScreen extends AppCompatActivity {
 		shape.setColor(Color.argb(204, 255, 255, 255)); // White with 80% opacity (204/255 = 80%)
 
 		LinearLayout locationDropdown = findViewById(R.id.topBarRight);
+		// Connect to adapter
+		locationAdapter = new LocationAdapter();
 
 		MaterialTextView currentLocationText = findViewById(R.id.location);
 		currentLocationText.setTextSize(11);
@@ -162,6 +164,8 @@ public class DialogScreen extends AppCompatActivity {
 
 				RecyclerView locationRecyclerView = dropdownView.findViewById(R.id.locationRecyclerView);
 				locationRecyclerView.setAdapter(locationAdapter);
+				locationRecyclerView.setLayoutManager(
+						new LinearLayoutManager(DialogScreen.this, LinearLayoutManager.VERTICAL, false));
 
 				PopupWindow popupWindow = new PopupWindow(dropdownView, ViewGroup.LayoutParams.MATCH_PARENT,
 						ViewGroup.LayoutParams.WRAP_CONTENT, true);

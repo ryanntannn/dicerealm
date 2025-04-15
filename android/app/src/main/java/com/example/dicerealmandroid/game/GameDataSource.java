@@ -61,7 +61,8 @@ public class GameDataSource {
     // Destroy the singleton instance
     public static void destroy(){
         if(instance != null){
-            instance.setCurrentLocationGraph(null);
+            instance = null;
+//            instance.setCurrentLocationGraph(null);
 //            instance.setCurrentLocation(null);
         }
     }

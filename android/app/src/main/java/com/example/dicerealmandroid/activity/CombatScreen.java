@@ -110,8 +110,9 @@ public class CombatScreen extends AppCompatActivity {
 				if (roomState == null) {
 					Log.d("CombatScreen", "Navigating back to home screen");
 					Intent intent = new Intent(CombatScreen.this, HomeActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					startActivity(intent);
+					finish();
 				} else if (roomState == RoomState.State.DIALOGUE_PROCESSING) {
 					Log.d("CombatScreen", "Navigating back to dialog screen");
 					CombatScreen.this.finish();
