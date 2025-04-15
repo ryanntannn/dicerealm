@@ -1,14 +1,11 @@
-package com.example.dicerealmandroid.player;
+package com.example.dicerealmandroid.player.wrapper;
 
 import androidx.lifecycle.LiveData;
 
 import com.dicerealm.core.entity.BodyPart;
-import com.dicerealm.core.inventory.InventoryOf;
 import com.dicerealm.core.item.EquippableItem;
-import com.dicerealm.core.item.Item;
 import com.dicerealm.core.item.Potion;
 import com.dicerealm.core.item.Scroll;
-import com.dicerealm.core.skills.Skill;
 
 import java.util.List;
 import java.util.Map;

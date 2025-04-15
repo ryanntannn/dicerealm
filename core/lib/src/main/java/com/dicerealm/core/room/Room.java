@@ -17,6 +17,7 @@ import com.dicerealm.core.handler.PlayerEquipItemHandler;
 import com.dicerealm.core.handler.SkillSelectionResponseHandler;
 import com.dicerealm.core.handler.StartGameHandler;
 import com.dicerealm.core.handler.UpdatePlayerDetailsHandler;
+import com.dicerealm.core.handler.UpdateThemeHandler;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.strategy.BroadcastStrategy;
 import com.dicerealm.core.strategy.JsonSerializationStrategy;
@@ -24,7 +25,8 @@ import com.dicerealm.core.strategy.LLMStrategy;
 import com.dicerealm.core.strategy.RandomStrategy;
 
 /**
- * Represents a room in the game, containing the state of the room and the logic for handling player actions and messages
+ * Represents a room in the game, containing the state of the room and the logic for handling player
+ * actions and messages
  * 
  * @see Command - base class for sending/receiving information between players and the room
  * @see Player - represents a player in the room
@@ -48,14 +50,16 @@ public class Room {
 
 	/**
 	 * Create a new RoomBuilder for creating a Room
+	 * 
 	 * @return RoomBuilder
 	 */
 	public static RoomBuilder builder() {
 		return new RoomBuilder();
 	}
-	
+
 	/**
 	 * Create a new Room, you may want to use the RoomBuilder instead
+	 * 
 	 * @param broadcastStrategy
 	 * @param llmStrategy
 	 * @param jsonSerializationStrategy
@@ -63,7 +67,9 @@ public class Room {
 	 * 
 	 * @see RoomBuilder
 	 */
-	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy, JsonSerializationStrategy jsonSerializationStrategy, RandomStrategy randomStrategy, CommandRouter commandRouter) {
+	public Room(BroadcastStrategy broadcastStrategy, LLMStrategy llmStrategy,
+			JsonSerializationStrategy jsonSerializationStrategy, RandomStrategy randomStrategy,
+			CommandRouter commandRouter) {
 		this.broadcastStrategy = broadcastStrategy;
 		this.dungeonMaster = new DungeonMaster(llmStrategy, jsonSerializationStrategy, roomState);
 		this.commandRouter = commandRouter;
@@ -78,16 +84,19 @@ public class Room {
 		commandRouter.registerHandler(new DialogueTurnActionHandler());
 		commandRouter.registerHandler(new CombatTurnActionHandler());
 		commandRouter.registerHandler(new SkillSelectionResponseHandler());
+		commandRouter.registerHandler(new UpdateThemeHandler());
 	}
 
 	/**
 	 * Add a player to the room
+	 * 
 	 * @param player
 	 */
 	public void addPlayer(Player player) {
 		roomState.getPlayerMap().put(player.getId(), player);
 		broadcastStrategy.sendToAllPlayersExcept(new PlayerJoinCommand(player), player);
-		broadcastStrategy.sendToPlayer(new FullRoomStateCommand(roomState, player.getId().toString()), player);
+		broadcastStrategy.sendToPlayer(new FullRoomStateCommand(roomState, player.getId().toString()),
+				player);
 	}
 
 	public void addBigScreen() {
@@ -96,6 +105,7 @@ public class Room {
 
 	/**
 	 * Get a player by their ID
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -105,6 +115,7 @@ public class Room {
 
 	/**
 	 * Remove a player from the room by their ID
+	 * 
 	 * @param id
 	 * @throws NullPointerException
 	 */
@@ -112,13 +123,14 @@ public class Room {
 		Player player = roomState.getPlayerMap().get(id);
 		roomState.getPlayerMap().remove(id);
 		broadcastStrategy.sendToAllPlayers(new PlayerLeaveCommand(player));
-		if(roomState.getState() == RoomState.State.BATTLE) {
+		if (roomState.getState() == RoomState.State.BATTLE) {
 			combatManager.removePlayerFromCombat(id);
 		}
 	}
 
 	/**
 	 * Check if the room has no players
+	 * 
 	 * @return
 	 */
 	public boolean isEmpty() {
@@ -127,10 +139,12 @@ public class Room {
 
 	/**
 	 * Handle an incoming command from a player
+	 * 
 	 * @param playerId
 	 * @param json
 	 */
 	public void handlePlayerCommand(UUID playerId, String json) {
-		commandRouter.handlePlayerCommand(playerId, json, new RoomContext(roomState, dungeonMaster, broadcastStrategy, randomStrategy, combatManager, monsterAI, levelManager));
+		commandRouter.handlePlayerCommand(playerId, json, new RoomContext(roomState, dungeonMaster,
+				broadcastStrategy, randomStrategy, combatManager, monsterAI, levelManager));
 	}
 }

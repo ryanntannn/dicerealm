@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.dicerealm.core.combat.systems.InitiativeResult;
 import com.dicerealm.core.entity.Entity;
+import com.dicerealm.core.monster.Monster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,11 +105,12 @@ public class CombatDataSource {
     // Maintain observers connections :>
     public static void destroy(){
         if(instance != null){
-            instance.setMonsters(null);
-            instance.setInitiativeResults(null);
-            instance.updateTurnHistory(null);
-            instance.setCurrentRound(1);
-            instance.setPrevRound(0);
+            instance = null;
+//            instance.setMonster(null);
+//            instance.setInitiativeResults(null);
+//            instance.updateTurnHistory(null);
+//            instance.setCurrentRound(1);
+//            instance.setPrevRound(0);
         }
     }
 }

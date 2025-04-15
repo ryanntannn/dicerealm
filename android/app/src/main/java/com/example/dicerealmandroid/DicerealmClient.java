@@ -11,6 +11,7 @@ import com.dicerealm.core.command.FullRoomStateCommand;
 import com.dicerealm.core.command.PlayerEquipItemResponse;
 import com.dicerealm.core.command.PlayerJoinCommand;
 import com.dicerealm.core.command.ShowPlayerActionsCommand;
+import com.dicerealm.core.command.UpdateLocationGraphCommand;
 import com.dicerealm.core.command.UpdatePlayerDetailsCommand;
 import com.dicerealm.core.command.combat.CombatEndCommand;
 import com.dicerealm.core.command.combat.CombatEndTurnCommand;
@@ -24,7 +25,6 @@ import com.dicerealm.core.player.Player;
 import com.dicerealm.core.command.PlayerLeaveCommand;
 
 import com.dicerealm.core.room.RoomState;
-import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.game.GameRepo;
 import com.example.dicerealmandroid.game.combat.CombatRepo;
 import com.example.dicerealmandroid.game.combat.CombatTurnModal;
@@ -76,13 +76,13 @@ public class DicerealmClient extends WebSocketClient {
 
                     roomRepo.setRoomState(roomState);
                     playerRepo.setPlayer(myPlayer);
-                    gameRepo.changeLocation(roomState.getLocationGraph().getCurrentLocation());
                     break;
 
                 case "PLAYER_JOIN":
                     Player player = gson.fromJson(message, PlayerJoinCommand.class).getPlayer();
                     roomRepo.addRoomStatePlayer(player);
                     Message.showMessage(player.getDisplayName() + " has joined.");
+                    gameRepo.setplayercolor(playerRepo.getPlayerId());
                     break;
 
                 case "PLAYER_LEAVE":
@@ -137,8 +137,10 @@ public class DicerealmClient extends WebSocketClient {
                     EndTurnCommand endTurnCommand = gson.fromJson(message, EndTurnCommand.class);
                     // Disable the buttons for the player
                     roomRepo.changeState(RoomState.State.DIALOGUE_PROCESSING);
-                    dialogRepo.setActionResult(endTurnCommand.getActionResultDetail());
-                    Message.showMessage("Turn ended.");
+                    Message.showMessage(endTurnCommand.getActionResultDetail().toString());
+                    if (endTurnCommand.getActionResultDetail().getRollResultDetails().length > 0) {
+                        dialogRepo.setActionResult(endTurnCommand.getActionResultDetail());
+                    }
                     break;
 
                 case "PLAYER_EQUIP_ITEM_RESPONSE":
@@ -152,7 +154,7 @@ public class DicerealmClient extends WebSocketClient {
 
                 case "CHANGE_LOCATION":
                     ChangeLocationCommand changeLocationCommand = gson.fromJson(message, ChangeLocationCommand.class);
-                    gameRepo.changeLocation(changeLocationCommand.getLocation());
+                    gameRepo.updateCurrentLocation(changeLocationCommand.getLocation());
                     Message.showMessage("Party has moved to " + changeLocationCommand.getLocation().getDisplayName());
                     break;
 
@@ -213,6 +215,11 @@ public class DicerealmClient extends WebSocketClient {
                     }
                     break;
 
+                case "UPDATE_LOCATION_GRAPH":
+                    UpdateLocationGraphCommand updateLocationGraphCommand = gson.fromJson(message, UpdateLocationGraphCommand.class);
+                    gameRepo.updateLocationGraph(updateLocationGraphCommand.getGraph());
+                    break;
+
                 default:
                     System.out.println("Command Not Handled: " + command.getType());
             }
@@ -259,8 +266,8 @@ public class DicerealmClient extends WebSocketClient {
     public DicerealmClient (String roomCode) throws URISyntaxException {
         super(new URI(DicerealmClient.baseUrl + roomCode));
         this.roomCode = roomCode;
-//        this.setConnectTimeout(6000000); // 100 minutes
-        this.setReadTimeout(600000); // 10 minute of idle time
+        this.setConnectTimeout(15000); // 15 seconds
+        this.setReadTimeout(300000); // 5 minutes
         this.addHeader("Origin", "http://developer.example.com");
         this.enableAutomaticReconnection(5000);
         this.connect();

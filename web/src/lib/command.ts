@@ -122,6 +122,11 @@ export const combatEndCommandSchema = z.object({
   type: z.literal("COMBAT_END"),
 });
 
+export const updateThemeCommandSchema = z.object({
+  type: z.literal("UPDATE_THEME"),
+  theme: z.string(),
+});
+
 export const commandSchema = z.discriminatedUnion("type", [
   outgoingMessageCommandSchema,
   messageHistoryCommandSchema,
@@ -140,4 +145,5 @@ export const commandSchema = z.discriminatedUnion("type", [
   combatStartCommandSchema,
   combatEndCommandSchema,
   combatStartTurnCommandSchema,
+  updateThemeCommandSchema,
 ]);

@@ -129,7 +129,7 @@ public class CombatManager {
             }
             case Potion potion -> {
                 actionManager.rigDice(d20);
-                return actionManager.usePotion(player, target, potion);
+                return actionManager.usePotion(player, potion);
             }
             default -> {
                 combatLog.log(player.getDisplayName() + " attempted an unknown action!");
@@ -155,7 +155,7 @@ public class CombatManager {
                 return actionManager.useScroll(player, target, scroll);
             }
             case Potion potion -> {
-                return actionManager.usePotion(player, target, potion);
+                return actionManager.usePotion(player, potion);
             }
             default -> {
                 // combatLog.log(player.getDisplayName() + " attempted an unknown action!");

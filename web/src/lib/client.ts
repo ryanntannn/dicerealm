@@ -49,6 +49,8 @@ export function useRoomClient(
     null
   );
 
+  const [theme, setTheme] = useState<string | null>(null);
+
   const myPlayer = useMemo(() => {
     if (!myId) return null;
     return players[myId];
@@ -92,6 +94,13 @@ export function useRoomClient(
     sendJsonMessage({
       type: "UPDATE_PLAYER_DETAILS_REQUEST",
       ...player,
+    });
+  };
+
+  const updateTheme = (theme: string) => {
+    sendJsonMessage({
+      type: "UPDATE_THEME",
+      theme,
     });
   };
 
@@ -143,6 +152,7 @@ export function useRoomClient(
         setState(command.state.state);
         setMyId(command.myId);
         setDialogueTurns(command.state.dialogueTurns);
+        setTheme(command.state.theme);
         break;
       case "SHOW_PLAYER_ACTIONS":
         setActions(command.actions);
@@ -236,6 +246,9 @@ export function useRoomClient(
       case "COMBAT_START_TURN":
         setCurrentCombatTurnId(command.currentTurnEntityId);
         break;
+      case "UPDATE_THEME":
+        setTheme(command.theme);
+        break;
       default:
         console.warn("Unhandled command type", command);
     }
@@ -259,5 +272,7 @@ export function useRoomClient(
     dialogueTurns,
     initiativeResults,
     currentCombatTurnId,
+    theme,
+    updateTheme,
   };
 }

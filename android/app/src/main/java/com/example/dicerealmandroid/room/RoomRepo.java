@@ -96,18 +96,22 @@ public class RoomRepo {
 
         // Destroy all cached data but keep the singleton instance
         RoomDataSource.destroy();
+        PlayerDataSource.destroy();
+        DialogDataSource.destroy();
+        GameDataSource.destroy();
+        CombatDataSource.destroy();
 
-        // Don't ask :<
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-           @Override
-           public void run(){
-               PlayerDataSource.destroy();
-               DialogDataSource.destroy();
-               GameDataSource.destroy();
-               CombatDataSource.destroy();
-           }
-        }, 2000); // 2s delay
+//        // Don't ask :<
+//        Handler handler = new Handler(Looper.getMainLooper());
+//        handler.postDelayed(new Runnable() {
+//           @Override
+//           public void run(){
+//               PlayerDataSource.destroy();
+//               DialogDataSource.destroy();
+//               GameDataSource.destroy();
+//               CombatDataSource.destroy();
+//           }
+//        }, 500); // 0.5s delay
 
     }
 
