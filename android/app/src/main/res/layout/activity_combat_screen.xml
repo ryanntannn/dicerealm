@@ -14,7 +14,6 @@
         android:layout_width="160dp"
         android:layout_height="239dp"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
@@ -146,6 +145,7 @@
         app:srcCompat="@drawable/kid1" />
 
     <TextView
+        android:id="@+id/turnCombat"
         android:layout_width="157dp"
         android:layout_height="28dp"
         android:gravity="center"

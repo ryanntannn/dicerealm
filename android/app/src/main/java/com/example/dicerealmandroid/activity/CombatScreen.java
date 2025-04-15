@@ -49,6 +49,7 @@ import com.example.dicerealmandroid.recyclerview.CardAdapter;
 import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
 import com.example.dicerealmandroid.recyclerview.SpellCardAdapter;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.Initcombat;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -74,6 +75,8 @@ public class CombatScreen extends AppCompatActivity {
 	private RoomStateHolder roomSh = new RoomStateHolder();
 	private PlayerStateHolder playerSh = new PlayerStateHolder();
 	private CombatStateHolder combatSh = new CombatStateHolder();
+
+	private Initcombat initcombatscreen;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
