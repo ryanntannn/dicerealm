@@ -11,14 +11,14 @@
 
     <TableLayout
         android:id="@+id/turnCombatSquence"
-        android:layout_width="400px"
-        android:layout_height="171dp"
+        android:layout_width="160dp"
+        android:layout_height="239dp"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.292"
+        app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messagesCard"
-        app:layout_constraintVertical_bias="0.346" />
+        app:layout_constraintVertical_bias="0.250" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/messagesCard"
@@ -75,7 +75,7 @@
         app:layout_constraintHorizontal_bias="0.772"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messagesCard"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.3"
         app:srcCompat="@drawable/kid2" />
 
     <TextView
@@ -97,13 +97,13 @@
         android:id="@+id/enemyHealth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="28dp"
         android:text="0/0"
         app:layout_constraintBottom_toBottomOf="@+id/enemyHealthstatic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/enemyHealthstatic"
         app:layout_constraintTop_toTopOf="@+id/enemyHealthstatic"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/enemyicon"
@@ -138,16 +138,16 @@
         android:layout_height="139dp"
         app:layout_constraintBottom_toTopOf="@+id/Actions"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintHorizontal_bias="0.014"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.948"
         app:layout_constraintTop_toBottomOf="@+id/messagesCard"
-        app:layout_constraintVertical_bias="0.936"
         app:srcCompat="@drawable/kid1" />
 
     <TextView
         android:id="@+id/turnCombat"
-        android:layout_width="151dp"
-        android:layout_height="18dp"
+        android:layout_width="157dp"
+        android:layout_height="28dp"
         android:gravity="center"
         android:text="Combat turn"
         android:textStyle="bold"
@@ -161,12 +161,12 @@
         android:id="@+id/playerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:maxWidth="300dp"
         android:layout_marginBottom="4dp"
         android:text="Your name"
         app:layout_constraintBottom_toTopOf="@+id/me"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.028"
         app:layout_constraintStart_toStartOf="@+id/me" />
 
     <TableLayout

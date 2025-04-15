@@ -51,7 +51,6 @@ import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
 import com.example.dicerealmandroid.recyclerview.SpellCardAdapter;
 import com.example.dicerealmandroid.room.RoomStateHolder;
 import com.example.dicerealmandroid.util.Initcombat;
-import com.example.dicerealmandroid.util.Loading;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -77,23 +76,24 @@ public class CombatScreen extends AppCompatActivity {
     private PlayerStateHolder playerSh = new PlayerStateHolder();
     private CombatStateHolder combatSh = new CombatStateHolder();
 
-    private Initcombat initcombatscreen;
+	private Initcombat initcombatscreen;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_combat_screen);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        List<InitiativeResult> initiativeRes = combatSh.initiativeResults();
-        List<InitiativeResult> copy = new ArrayList<>();
-        for (InitiativeResult result : initiativeRes) {
-            copy.add(result.clone());  // or use a custom copy constructor
-        }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		EdgeToEdge.enable(this);
+		setContentView(R.layout.activity_combat_screen);
+		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+			Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+			return insets;
+		});
+
+		List<InitiativeResult> initiativeRes = combatSh.initiativeResults();
+		List<InitiativeResult> copy = new ArrayList<>();
+		for (InitiativeResult result : initiativeRes) {
+			copy.add(result.clone()); // or use a custom copy constructor
+		}
 
 		// Hide android bottom nav bar
 		View decorView = getWindow().getDecorView();
@@ -125,18 +125,17 @@ public class CombatScreen extends AppCompatActivity {
         Log.d("InitMessage:" , "CombatScreen " + combatSh.getinitmessage());
         initcombatscreen = new Initcombat(this, combatSh.getinitmessage());
         initcombatscreen.show();
-
-		this.combatSequence(copy);
-		this.trackCurrentTurn();
-		this.attackLeft();
-		this.attackRight();
-		this.openSpells();
-		this.displayPlayerInfo();
+        this.combatSequence(copy);
+        this.trackCurrentTurn();
+        this.attackLeft();
+        this.attackRight();
+        this.openSpells();
+        this.displayPlayerInfo();
         this.selectMonster();
-		this.closespell();
-		this.useitems();
-		this.trackCurrentRound();
-	}
+        this.closespell();
+        this.useitems();
+        this.trackCurrentRound();
+    }
 
     private void selectMonster() {
         // Observe the monsters list and set the initial target
@@ -286,22 +285,23 @@ public class CombatScreen extends AppCompatActivity {
         cardRecycleView.removeAllViews();
     }
 
-    public void useitems() {
-        playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
-            @Override
-            public void onChanged(InventoryOf<Item> Potions_Scroll) {
-                if (Potions_Scroll != null) {
-                    List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
-                    List<Item> remove_item = new ArrayList<>();
-                    for (int i = 0 ; i < Potions_Scrolllist.size(); i++) {
-                        Log.d("itemtype", Potions_Scrolllist.get(i).getType());
-                        if (!Objects.equals(Potions_Scrolllist.get(i).getType(), "POTION") && !Objects.equals(Potions_Scrolllist.get(i).getType(), "SCROLL")){
-                            remove_item.add(Potions_Scrolllist.get(i));
-                        }
-                    }
-                    for (Item removeitem : remove_item) {
-                        Potions_Scrolllist.remove(removeitem);
-                    }
+	public void useitems() {
+		playerSh.getScrolls_Potions().observe(this, new Observer<InventoryOf<Item>>() {
+			@Override
+			public void onChanged(InventoryOf<Item> Potions_Scroll) {
+				if (Potions_Scroll != null) {
+					List<Item> Potions_Scrolllist = new ArrayList<>(Potions_Scroll.getItems());
+					List<Item> remove_item = new ArrayList<>();
+					for (int i = 0; i < Potions_Scrolllist.size(); i++) {
+						Log.d("itemtype", Potions_Scrolllist.get(i).getType());
+						if (!Objects.equals(Potions_Scrolllist.get(i).getType(), "POTION")
+								&& !Objects.equals(Potions_Scrolllist.get(i).getType(), "SCROLL")) {
+							remove_item.add(Potions_Scrolllist.get(i));
+						}
+					}
+					for (Item removeitem : remove_item) {
+						Potions_Scrolllist.remove(removeitem);
+					}
 
 
 
@@ -403,36 +403,43 @@ public class CombatScreen extends AppCompatActivity {
                 turntable.removeAllViews();
                 List<InitiativeResult> removeplayer = new ArrayList<>();
 
-                for (InitiativeResult player_enemy : initiativeResults) {
-                    if (combatSequences.stream().anyMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
-                        TableRow newtablerow = new TableRow(CombatScreen.this);
-                        TextView nameView = new TextView(CombatScreen.this);
-                        int padding = 16;
-                        nameView.setPadding(padding, padding, padding, padding);
-                        nameView.setMaxWidth(400);
-                        Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    " + combatSequences.get(0).getName());
-                        String viewforname = "";
+				for (InitiativeResult player_enemy : initiativeResults) {
+					if (combatSequences.stream()
+							.anyMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
+						TableRow newtablerow = new TableRow(CombatScreen.this);
+						TextView nameView = new TextView(CombatScreen.this);
+						int padding = 16;
+						nameView.setPadding(padding, padding, padding, padding);
+						nameView.setMaxWidth(400);
+						Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    "
+								+ combatSequences.get(0).getName());
+						String viewforname = "";
 
-                        if (player_enemy.getEntity().getId().equals(combatSequences.get(0).getuuid())) {
-                            // Mark first element as the current turn
-                            if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {nameView.setBackgroundResource(R.drawable.bold_cell_border_green);viewforname = gameSh.getplayercolor(player_enemy.getEntity().getId());}
-                            else {nameView.setBackgroundResource(R.drawable.bold_cell_border_red);}
-                        } else {
-                            if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {
-                                viewforname = gameSh.getplayercolor(player_enemy.getEntity().getId());
-                                nameView.setBackgroundResource(R.drawable.cell_border_green);
-                            } else {
-                                nameView.setBackgroundResource(R.drawable.cell_border_red);
-                            }
-                        }
+						if (player_enemy.getEntity().getId().equals(combatSequences.get(0).getuuid())) {
+							// Mark first element as the current turn
+							if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {
+								nameView.setBackgroundResource(R.drawable.bold_cell_border_green);
+								viewforname = gameSh.getplayercolor(player_enemy.getEntity().getId());
+							} else {
+								nameView.setBackgroundResource(R.drawable.bold_cell_border_red);
+							}
+						} else {
+							if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {
+								viewforname = gameSh.getplayercolor(player_enemy.getEntity().getId());
+								nameView.setBackgroundResource(R.drawable.cell_border_green);
+							} else {
+								nameView.setBackgroundResource(R.drawable.cell_border_red);
+							}
+						}
 
-                        viewforname += player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll();
-                        if (player_enemy.getEntity().getId().equals(playerSh.getPlayerId())){
-                            viewforname += " (You)";
-                        }
-                        nameView.setText(viewforname);
-                        newtablerow.addView(nameView);
-                        turntable.addView(newtablerow);
+						viewforname += player_enemy.getEntity().getDisplayName() + " - "
+								+ player_enemy.getInitiativeRoll();
+						if (player_enemy.getEntity().getId().equals(playerSh.getPlayerId())) {
+							viewforname += " (You)";
+						}
+						nameView.setText(viewforname);
+						newtablerow.addView(nameView);
+						turntable.addView(newtablerow);
 
                         }
 
@@ -509,8 +516,6 @@ public class CombatScreen extends AppCompatActivity {
 		combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
 			@Override
 			public void onChanged(Integer round) {
-                turncombattext.setText("Combat Round: " + round);
-
 				CardView roundCard = new CardView(CombatScreen.this);
 				LayoutParams cardParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 				cardParams.setMargins(8, 20, 8, 4);
@@ -522,6 +527,7 @@ public class CombatScreen extends AppCompatActivity {
 				// Round header text
 				TextView roundText = new TextView(CombatScreen.this);
 				roundText.setText("Round: " + round);
+                turncombattext.setText("Combat Round: " + round);
 				roundText.setTextSize(18);
 				roundText.setTypeface(null, Typeface.BOLD);
 				roundText.setTextColor(Color.WHITE);
@@ -541,25 +547,28 @@ public class CombatScreen extends AppCompatActivity {
     private void displayMessageStream(String message, TextView currentTurnView) {
         ScrollView messagesScroll = findViewById(R.id.messages);
 
-        // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
-        Thread backgroundThread = new Thread(() -> {
-            if (message == null || message.isEmpty()) return;
-            for (int i = 0; i < message.length(); i++) {
-                char currChar = message.charAt(i);
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                // Important to run on UI thread
-                runOnUiThread(() -> {
-                    currentTurnView.append(String.valueOf(currChar));
-                    messagesScroll.fullScroll(ScrollView.FOCUS_DOWN);
-                });
-            }
-        });
-        backgroundThread.start();
-    }
+		// Run this on another thread/logical core to achieve true parallelism unlike python which
+		// thread is limited by GIL
+		Thread backgroundThread = new Thread(() -> {
+			if (message == null || message.isEmpty())
+				return;
+
+			for (int i = 0; i < message.length(); i++) {
+				char currChar = message.charAt(i);
+				try {
+					Thread.sleep(5);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					return;
+				}
+				// Important to run on UI thread
+				runOnUiThread(() -> {
+					currentTurnView.append(String.valueOf(currChar));
+					messagesScroll.fullScroll(ScrollView.FOCUS_DOWN);
+				});
+			}
+		});
+		backgroundThread.start();
+	}
 
 }
