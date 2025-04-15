@@ -42,6 +42,7 @@ import com.dicerealm.core.locations.Location;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
+import com.example.dicerealmandroid.fragments.DiceDialogFragment;
 import com.example.dicerealmandroid.fragments.InventoryDialogFragment;
 import com.example.dicerealmandroid.game.dialog.Dialog;
 import com.example.dicerealmandroid.R;
@@ -121,9 +122,8 @@ public class DialogScreen extends AppCompatActivity {
         dialogSh.subscribeDialogLatestActionResult().observe(this, new Observer<SkillCheck.ActionResultDetail>() {
             @Override
             public void onChanged(SkillCheck.ActionResultDetail actionResultDetail) {
-                if (actionResultDetail == null) return;
-
-                String actionResultsSummary = actionResultDetail.toString();
+                DiceDialogFragment diceDialogFragment = DiceDialogFragment.newInstance(actionResultDetail);
+                diceDialogFragment.show(getSupportFragmentManager(), "DiceDialog");
             }
         });
     }
@@ -503,5 +503,6 @@ public class DialogScreen extends AppCompatActivity {
             }
         });
     }
+
 
 }
