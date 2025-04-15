@@ -394,11 +394,42 @@ public class CombatScreen extends AppCompatActivity {
 
 
     private void combatSequence(List<InitiativeResult> initiativeResults){
+        // So that we can disable the buttons
+        MaterialButton attackBtnLeft = findViewById(R.id.attackButtonLeft);
+        MaterialButton attackBtnRight = findViewById(R.id.attackButtonRight);
+        MaterialButton spellBtn = findViewById(R.id.spellButton);
+        MaterialButton itemBtn = findViewById(R.id.itemButton);
+        int enabledColor = getResources().getColor(R.color.purple);
+        int disabledColor = Color.GRAY;
+
         TableLayout turntable = findViewById(R.id.turnCombatSquence);
 
         combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
             @Override
             public void onChanged(List<CombatSequence> combatSequences) {
+                if(combatSh.isMyTurn()){
+                    // Set enabled state and background colors
+                    attackBtnLeft.setEnabled(true);
+                    attackBtnLeft.setBackgroundColor(enabledColor);
+                    attackBtnRight.setEnabled(true);
+                    attackBtnRight.setBackgroundColor(enabledColor);
+                    spellBtn.setEnabled(true);
+                    spellBtn.setBackgroundColor(enabledColor);
+                    itemBtn.setEnabled(true);
+                    itemBtn.setBackgroundColor(enabledColor);
+                }
+                else{
+                    // Set disabled state and background colors
+                    attackBtnLeft.setEnabled(false);
+                    attackBtnLeft.setBackgroundColor(disabledColor);
+                    attackBtnRight.setEnabled(false);
+                    attackBtnRight.setBackgroundColor(disabledColor);
+                    spellBtn.setEnabled(false);
+                    spellBtn.setBackgroundColor(disabledColor);
+                    itemBtn.setEnabled(false);
+                    itemBtn.setBackgroundColor(disabledColor);
+                }
+
                 Log.d("combat", "Initiative Results:" + initiativeResults.toString());
                 turntable.removeAllViews();
                 List<InitiativeResult> removeplayer = new ArrayList<>();
