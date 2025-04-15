@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -346,9 +347,9 @@ public class CombatScreen extends AppCompatActivity {
                             //Call recycleview
 
                             CardAdapter cardAdapter = new InventoryCardAdapter(CombatScreen.this,Potions_Scrolllist ,"Item",combatSh, CombatScreen.this);
-
                             RecyclerView recyclerView = findViewById(R.id.cardRecycleView);
                             recyclerView.setAdapter(cardAdapter);
+							recyclerView.setForegroundGravity(Gravity.CENTER);
                             recyclerView.setLayoutManager(new GridLayoutManager(CombatScreen.this, 2));
 
                         }
