@@ -10,15 +10,15 @@
 
     <TableLayout
         android:id="@+id/turnCombatSquence"
-        android:layout_width="154dp"
-        android:layout_height="220dp"
+        android:layout_width="160dp"
+        android:layout_height="239dp"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
 
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.257"
+        app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="0.591" />
+        app:layout_constraintVertical_bias="0.463" />
 
     <ScrollView
         android:id="@+id/messages"
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
 
         android:layout_marginEnd="4dp"
-        android:text="Enemy Health:"
+        android:text="Enemy Health: "
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/enemyName"
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
@@ -82,12 +82,13 @@
         android:id="@+id/enemyHealth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="28dp"
         android:text="0/0"
         app:layout_constraintBottom_toBottomOf="@+id/enemyHealthstatic"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/enemyHealthstatic"
         app:layout_constraintTop_toTopOf="@+id/enemyHealthstatic"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/enemyicon"
@@ -129,8 +130,9 @@
         app:srcCompat="@drawable/kid1" />
 
     <TextView
-        android:layout_width="157dp"
-        android:layout_height="28dp"
+        android:id="@+id/turnCombat"
+        android:layout_width="151dp"
+        android:layout_height="18dp"
         android:gravity="center"
         android:text="Combat turn"
         android:textStyle="bold"

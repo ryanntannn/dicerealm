@@ -425,12 +425,15 @@ public class CombatScreen extends AppCompatActivity {
 
     private void trackCurrentRound(){
         LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
+        TextView turncombattext = findViewById(R.id.turnCombat);
 
+//add combat round
         combatSh.getCurrentRound().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer round){
                 TextView currentRound = new TextView(CombatScreen.this);
                 currentRound.setText("Round: " + round);
+                turncombattext.setText("Combat Round: " + round);
                 messageLayout.addView(currentRound);
             }
         });
