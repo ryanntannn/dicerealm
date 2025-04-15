@@ -36,7 +36,7 @@ public class DungeonMaster {
 					- Ensure that any skill checks required are logically tied to the action. For example, use DEXTERITY for lockpicking, CHARISMA for persuasion, etc. If no skill check is needed, set the skill check values to 0.
 				- Each player should have at least 3 action choices available.
 				- Different players can have the same action choices, but the playerId must be unique for each action choice.
-				- If there is an entity in the room that is still alive, include an action choice for the player to engage in combat with it, and this action should be available to all players, and should not require a skill check.
+				- If there is an entity in the room that is still alive, include an action choice for the player to engage in combat with it, and this action should be available to all players, and should not require a skill check, there should only be one of this actions and every player should have it and it should contain all the entities in the room.
 				- Players can only engage in combat with entities in the current location, not the adjacent locations.
 				- If there are adjacent locations, include an action choice for the player to move to all adjacent locations.
 				
@@ -124,9 +124,10 @@ public class DungeonMaster {
 		int playerCount = roomState.getPlayerMap().size();
 		for (DungeonMasterLocationResponse.Location location : response.locations) {
 			Location loc = new Location(location.displayName, location.description);
+			int monsterCount = (playerCount <= 2) ? 1 : 2;
 			int i = 0;
 			for (DungeonMasterLocationResponse.Enemy enemy : location.enemies) {
-				if (i >= playerCount) break; // Stop after generating monsters equal to the player count
+				if (i >= monsterCount) break; // Stop after generating monsters equal to the player count
 				loc.getEntities().add(MonsterGenerator.generateMonster(enemy.name, enemy.entityClass, enemy.race, roomState.getRoomLevel()));
 				i++;
 			}
