@@ -131,7 +131,6 @@ public class CombatRepo {
             if(!target.isAlive()){
                 removeCombatant(targetId.toString());
                 roomState.removePlayer(targetId);
-                rotateCombatSequence();
                 return;
             }
 
@@ -170,7 +169,7 @@ public class CombatRepo {
                 combatDataSource.deleteMonsterById(currTarget.getId());
                 targetId = target.getId();
                 removeCombatant(targetId.toString());
-                rotateCombatSequence();
+
             }
         }
     }
