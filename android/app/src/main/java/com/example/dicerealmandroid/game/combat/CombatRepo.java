@@ -167,7 +167,7 @@ public class CombatRepo {
             combatDataSource.setMonster(target);
 
             if(!target.isAlive()){
-                combatDataSource.setMonster(null);
+                combatDataSource.deleteMonsterById(currTarget.getId());
                 targetId = target.getId();
                 removeCombatant(targetId.toString());
                 rotateCombatSequence();

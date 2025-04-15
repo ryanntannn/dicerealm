@@ -71,6 +71,18 @@ public class CombatDataSource {
         }
     }
 
+    public void deleteMonsterById(UUID monsterId){
+        List<Entity> monsters = getMonsters().getValue();
+        List<Entity> updatedMonsters = new ArrayList<>();
+        if(monsterId == null || monsters == null) return;
+        for(Entity monster : monsters){
+            if(monster.getId() != monsterId){
+                updatedMonsters.add(monster);
+            }
+        }
+        setMonsters(updatedMonsters);
+    }
+
     public Entity getMonster(UUID monsterId) {
         List<Entity> currentMonsters = monsters.getValue();
         if (currentMonsters != null) {
