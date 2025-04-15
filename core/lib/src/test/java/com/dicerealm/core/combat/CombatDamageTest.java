@@ -18,7 +18,6 @@ import com.dicerealm.core.monster.Monster;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.skills.Skill;
 
-
 public class CombatDamageTest {
 
     private Player player;
@@ -49,7 +48,7 @@ public class CombatDamageTest {
         damageCalculator = new DamageCalculator();
         // Initialize weapon and skill for testing
         weapon = new Weapon("Sword", "Iron Sword forged from the Great Dwarfen Forges", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 1)), 1);
-        skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3,2,1,2);
+        skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3, 2, 1, 2);
     }
 
     @Test
@@ -58,7 +57,7 @@ public class CombatDamageTest {
         damageResult = damageCalculator.applyWeaponDamage(player, monster, weapon, false);
         combatLog.log(damageResult.getDamageLog());
         // The damage is based on the weapon's roll, which is 1 in this case
-        assertEquals("Darren hits Demon King with Sword for 1 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren hits Demon King with Sword for 1 damage (max 1d1)!", combatLog.printLatestReadout());
     }
 
     @Test
@@ -67,7 +66,7 @@ public class CombatDamageTest {
         damageResult = damageCalculator.applyWeaponDamage(player, monster, weapon, true);
         combatLog.log(damageResult.getDamageLog());
         // Critical hit doubles the weapon damage (1 + 1)
-        assertEquals("Darren hits Demon King with Sword for 2 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren hits Demon King with Sword for 2 damage (max 1d1)!", combatLog.printLatestReadout());
     }
 
     @Test
@@ -76,7 +75,7 @@ public class CombatDamageTest {
         damageResult = damageCalculator.applySkillDamage(player, monster, skill, false);
         combatLog.log(damageResult.getDamageLog());
         // The damage is based on the skill's roll, which is 2 in this case
-        assertEquals("Darren casts Fireball on Demon King for 2 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren casts Fireball on Demon King for 2 damage (max 2d1)!", combatLog.printLatestReadout());
     }
 
     @Test
@@ -85,7 +84,7 @@ public class CombatDamageTest {
         damageResult = damageCalculator.applySkillDamage(player, monster, skill, true);
         combatLog.log(damageResult.getDamageLog());
         // Critical hit doubles the skill damage (2 + 2)
-        assertEquals("Darren casts Fireball on Demon King for 4 damage!", combatLog.printLatestReadout());
+        assertEquals("Darren casts Fireball on Demon King for 4 damage (max 2d1)!", combatLog.printLatestReadout());
     }
 
     @Test
@@ -95,7 +94,7 @@ public class CombatDamageTest {
 
         // Verifying that the target (monster) received the expected damage
         // In this case, the monster should have taken 1 damage
-        assertEquals(23, monster.getHealth()); // Monster's health should reduce by 1
+        assertEquals(27, monster.getHealth()); // Monster's health should reduce by 1
         assertEquals(1, damageResult.getDamageRoll()); // DamageRoll should be 1
     }
 
@@ -105,7 +104,7 @@ public class CombatDamageTest {
         damageResult = damageCalculator.applySkillDamage(player, monster, skill, false);
 
         // Verifying that the target (monster) received the expected damage
-        assertEquals(22, monster.getHealth()); // Monster's health should reduce by 2
+        assertEquals(26, monster.getHealth()); // Monster's health should reduce by 2
         assertEquals(2, damageResult.getDamageRoll()); // DamageRoll should be 2
     }
 }
