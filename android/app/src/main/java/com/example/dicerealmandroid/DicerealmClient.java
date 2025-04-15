@@ -47,7 +47,7 @@ public class DicerealmClient extends WebSocketClient {
 
     private String roomCode;
 		
-		private final static String baseUrl = "wss://4652-115-66-9-157.ngrok-free.app/room/";
+		private final static String baseUrl = "wss://better-tonye-dicerealm-f2e6ebbb.koyeb.app/room/";
     private final PlayerRepo playerRepo = new PlayerRepo();
     private final RoomRepo roomRepo = new RoomRepo();
     private final DialogRepo dialogRepo = new DialogRepo();
