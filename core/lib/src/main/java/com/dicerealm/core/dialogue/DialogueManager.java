@@ -96,7 +96,7 @@ public class DialogueManager {
 	public static void handleSwitchToCombat(String displayText, RoomContext context) {
 		context.getRoomState().setState(RoomState.State.BATTLE);
 		List<Entity> combatParticipants = new ArrayList<>();
-
+		context.getDungeonMaster().handleMonsterGeneration();
 		// add all players and entities in the location to the combat manager
 		for (Player player : context.getRoomState().getPlayers()) {
 			combatParticipants.add(player);

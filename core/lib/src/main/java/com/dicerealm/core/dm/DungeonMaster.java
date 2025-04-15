@@ -36,10 +36,8 @@ public class DungeonMaster {
 					- Ensure that any skill checks required are logically tied to the action. For example, use DEXTERITY for lockpicking, CHARISMA for persuasion, etc. If no skill check is needed, set the skill check values to 0.
 				- Each player should have at least 3 action choices available.
 				- Different players can have the same action choices, but the playerId must be unique for each action choice.
-				- If there is an entity in the room that is still alive, include an action choice for the player to engage in combat with it, and this action should be available to all players, and should not require a skill check.
-				- Players can only engage in combat with entities in the current location, not the adjacent locations.
+				- Always provide an action choice to allow players to engage in combat with an enemy within context of the story.
 				- If there are adjacent locations, include an action choice for the player to move to all adjacent locations.
-				
 		
 			3. location
 			- A UUID representing the current location of the party.
@@ -69,20 +67,6 @@ public class DungeonMaster {
 					- A list of objects, each representing a location. Each object must contain:
 						- displayName: A string representing the name of the location.
 						- description: A string describing the location in detail.
-						- enemies: A list of objects, each representing an enemy. This should exactly have one enemy.
-							Each object must contain:
-							- name: A string representing the name of the enemy
-							- race: A string representing the race of the enemy out of these options: HUMAN, ELF, DEMON, DWARF, TIEFLING
-							- entityClass: A string representing the class of the enemy out of these options: WARRIOR, WIZARD, CLERIC, ROGUE, RANGER
-							- stats: A JSON object containing the following keys:
-								- maxHealth: An integer representing the maximum health of the enemy.
-								- armourClass: An integer representing the enemy's armor class.
-								- strength: An integer representing the enemy's strength.
-								- dexterity: An integer representing the enemy's dexterity.
-								- constitution: An integer representing the enemy's constitution.
-								- intelligence: An integer representing the enemy's intelligence.
-								- wisdom: An integer representing the enemy's wisdom.
-								- charisma: An integer representing the enemy's charisma.
 					- The first location will be the starting point of the adventure.
 					- Each location should be unique and have a distinct name and description.
 					- The locations should be interconnected in a way that makes sense for the game world.
@@ -96,6 +80,21 @@ public class DungeonMaster {
 					- The paths should connect the locations in a logical manner.
 					- Ensure al the locations are connected by at least one path.
 					- One location can have multiple paths leading to different locations.
+				""";
+	}
+
+	private String monsterPrompt(){
+		return """
+				Act as a Dungeon Master for a multiplayer game of DND. Come up with a list of monsters based on the current location.
+				Provide a JSON-formatted response that includes the following keys:
+				
+					1. enemies: A list of objects, each representing an enemy.
+					- Each object must contain:
+						- name: A string representing the name of the enemy
+						- race: A string representing the race of the enemy out of these options: HUMAN, ELF, DEMON, DWARF, TIEFLING
+						- entityClass: A string representing the class of the enemy out of these options: WARRIOR, WIZARD, CLERIC, ROGUE, RANGER
+					- Each monster should be unique and have a distinct name.
+					- The monsters should be interconnected in a way that makes sense for the game world.
 				""";
 	}
 
@@ -118,6 +117,13 @@ public class DungeonMaster {
 		roomState.setLocationGraph(generateLocations(response));
 	}
 
+	public void handleMonsterGeneration() {
+		String systemPrompt = monsterPrompt();
+		String userPrompt = "This is what has happened so far:\n" + contextSummary + "\nGenerate a list of 1 enemies for the player's to fight";;
+		DungeonMasterMonsterResponse response = llmStrategy.promptSchema(systemPrompt, userPrompt, DungeonMasterMonsterResponse.class); 
+		addMonsterToLocation(roomState.getLocationGraph().getCurrentLocation(), response);
+	}
+
 	public DungeonMasterResponse handleDialogueTurn(String dialogueTurnSummary) {
 
 		String systemPrompt = systemPrompt() + "\nCurrent Location\n" + roomState.getLocationGraph().getCurrentLocation().getSummary() + "\nAdjacent Locations\n" + roomState.getLocationGraph().getAdjacentLocationSummaries() + "\nPlayers\n" + roomState.getPlayerSummaries();
@@ -132,9 +138,6 @@ public class DungeonMaster {
 		ArrayList<Path> paths = new ArrayList<>();
 		for (DungeonMasterLocationResponse.Location location : response.locations) {
 			Location loc = new Location(location.displayName, location.description);
-			for (DungeonMasterLocationResponse.Enemy enemy : location.enemies) {
-				loc.getEntities().add(MonsterGenerator.generateMonster(enemy.name, enemy.entityClass, enemy.race, 1));
-			}
 			locations.add(loc);
 		}
 		for (DungeonMasterLocationResponse.PathList path : response.paths) {
@@ -158,5 +161,12 @@ public class DungeonMaster {
 		}
 
 		return graph;
+	}
+
+	public void addMonsterToLocation(Location currentLocation, DungeonMasterMonsterResponse response) {
+		roomState.getLocationGraph().getCurrentLocation().getEntities().clear();
+		for (DungeonMasterMonsterResponse.Enemy enemy : response.enemies) {
+			currentLocation.getEntities().add(MonsterGenerator.generateMonster(enemy.name, enemy.entityClass, enemy.race, 1));
+		}
 	}
 }

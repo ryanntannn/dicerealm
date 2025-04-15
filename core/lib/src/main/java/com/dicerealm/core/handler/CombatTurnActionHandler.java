@@ -136,6 +136,7 @@ public class CombatTurnActionHandler extends CommandHandler<CombatTurnActionComm
 			}
 					// TODO: Handle prompt for the DM to end the combat
 					String prompt = "The combat has ended and the players are victorious!";
+					context.getRoomState().getLocationGraph().getCurrentLocation().getEntities().clear();
 					DungeonMasterResponse response = context.getDungeonMaster().handleDialogueTurn(prompt);
 					DialogueManager.handleDungeonMasterResponse(response, context);
 				} else {
