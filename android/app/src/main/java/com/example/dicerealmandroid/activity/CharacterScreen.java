@@ -143,6 +143,7 @@ public class CharacterScreen extends AppCompatActivity {
 
     private void setRoomCode() {
         TextView roomCode = findViewById(R.id.roomCode);
+        if(roomSh == null) return;
         String roomCodeText = "Room Code: " + roomSh.getRoomCode();
         roomCode.setText(roomCodeText);
     }

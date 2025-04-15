@@ -18,26 +18,41 @@
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintTop_toBottomOf="@+id/messagesCard"
         app:layout_constraintVertical_bias="0.250" />
 
-    <ScrollView
-        android:id="@+id/messages"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/messagesCard"
         android:layout_width="410dp"
         android:layout_height="100dp"
-        android:background="@color/palepurpleCard"
-        android:padding="5dp"
-
+        android:layout_margin="4dp"
+        app:cardBackgroundColor="@color/palepurpleCard"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/combatTitle">
 
-        <LinearLayout
-            android:id="@+id/CombatMessageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+
+        <ScrollView
+            android:id="@+id/messages"
+            android:layout_width="410dp"
+            android:layout_height="100dp"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/combatTitle">
+
+            <LinearLayout
+                android:id="@+id/CombatMessageLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+    </androidx.cardview.widget.CardView>
+
+
 
     <TextView
         android:id="@+id/combatTitle"
@@ -60,7 +75,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.772"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintTop_toBottomOf="@+id/messagesCard"
         app:layout_constraintVertical_bias="0.3"
         app:srcCompat="@drawable/kid2" />
 
@@ -76,7 +91,7 @@
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintTop_toBottomOf="@+id/messagesCard"
         app:layout_constraintVertical_bias="0.979" />
 
     <TextView
@@ -115,7 +130,7 @@
         app:layout_constraintHorizontal_bias="0.0"
 
         app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintTop_toBottomOf="@+id/messagesCard"
         app:layout_constraintVertical_bias="0.968" />
 
     <ImageView
@@ -126,22 +141,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.014"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
         app:layout_constraintVertical_bias="0.948"
+        app:layout_constraintTop_toBottomOf="@+id/messagesCard"
         app:srcCompat="@drawable/kid1" />
 
     <TextView
-        android:id="@+id/turnCombat"
-        android:layout_width="151dp"
-        android:layout_height="18dp"
+        android:layout_width="157dp"
+        android:layout_height="28dp"
         android:gravity="center"
         android:text="Combat turn"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/turnCombatSquence"
         app:layout_constraintEnd_toEndOf="@+id/turnCombatSquence"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/turnCombatSquence"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
+        app:layout_constraintTop_toBottomOf="@+id/messagesCard"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
