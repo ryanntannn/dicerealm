@@ -576,9 +576,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/selectTargetButton"
-        android:layout_width="71dp"
-        android:layout_height="44dp"
-        android:text="Next"
+        android:layout_width="80dp"
+        android:layout_height="42dp"
+        android:text="Target"
         android:textSize="10dp"
         app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
