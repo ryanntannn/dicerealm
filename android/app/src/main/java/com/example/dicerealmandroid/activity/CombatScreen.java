@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -174,17 +175,38 @@ public class CombatScreen extends AppCompatActivity {
     private void updateEnemyInfo(Entity target) {
         TextView enemyName = findViewById(R.id.enemyName);
         TextView enemyHealth = findViewById(R.id.enemyHealth);
+		ImageView enemyImageView = findViewById(R.id.imageView3);
 
         if (target != null) {
             enemyName.setText(target.getDisplayName());
             enemyHealth.setText(target.getHealth() + "/" + target.getStat(Stat.MAX_HEALTH));
+
+			int imageResource = getEnemyImageResource(target);
+			enemyImageView.setImageResource(imageResource);
         } else {
             enemyName.setText("No target");
             enemyHealth.setText("0/0");
+
+			enemyImageView.setImageResource(R.drawable.kid2);
         }
     }
 
-
+	private int getEnemyImageResource(Entity enemy) {
+		switch (enemy.getRace()) { // Replace with your logic to identify the enemy type
+			case HUMAN:
+				return R.drawable.kid2;
+            case ELF:
+				return R.drawable.kid2;
+            case DWARF:
+				return R.drawable.dwarf_warrior;
+			case TIEFLING:
+				return R.drawable.demon_warrior;
+			case DEMON:
+				return R.drawable.demon_warrior;
+			default:
+				return R.drawable.kid2;
+		}
+	}
 
     private void displayPlayerInfo(){
 
