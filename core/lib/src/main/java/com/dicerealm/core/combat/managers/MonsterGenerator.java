@@ -24,25 +24,27 @@ import com.dicerealm.core.skills.SkillsRepository;
 public class MonsterGenerator {
 
     private static final Map<EntityClass, Float> CLASS_HEALTH_MULTIPLIERS = new HashMap<>();
-    private static final Map<EntityClass, Float> CLASS_DAMAGE_MULTIPLIERS = new HashMap<>();
+    private static final Map<EntityClass, Float> CLASS_ARMOUR_MULTIPLIERS = new HashMap<>();
     
     // Base stat scaling factor per level
     private static final float LEVEL_SCALING_FACTOR = 0.2f; // 20% increase per level
     
     static {
         // Class-specific health multipliers
-        CLASS_HEALTH_MULTIPLIERS.put(EntityClass.WARRIOR, 1.3f);
+        CLASS_HEALTH_MULTIPLIERS.put(EntityClass.WARRIOR, 1.2f);
         CLASS_HEALTH_MULTIPLIERS.put(EntityClass.WIZARD, 0.8f);
         CLASS_HEALTH_MULTIPLIERS.put(EntityClass.CLERIC, 1.1f);
         CLASS_HEALTH_MULTIPLIERS.put(EntityClass.ROGUE, 0.9f);
         CLASS_HEALTH_MULTIPLIERS.put(EntityClass.RANGER, 1.0f);
         
-        // Class-specific damage multipliers
-        CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.WARRIOR, 1.2f);
-        CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.WIZARD, 1.3f);
-        CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.CLERIC, 1.0f);
-        CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.ROGUE, 1.4f);
-        CLASS_DAMAGE_MULTIPLIERS.put(EntityClass.RANGER, 1.2f);
+
+        // Class-Specific Armour Class multipliers
+        CLASS_ARMOUR_MULTIPLIERS.put(EntityClass.WARRIOR, 1.3f);
+        CLASS_ARMOUR_MULTIPLIERS.put(EntityClass.WIZARD, 1.1f);
+        CLASS_ARMOUR_MULTIPLIERS.put(EntityClass.CLERIC, 1.1f);
+        CLASS_ARMOUR_MULTIPLIERS.put(EntityClass.ROGUE, 1.0f);
+        CLASS_ARMOUR_MULTIPLIERS.put(EntityClass.RANGER, 1.2f);
+
     }
     
     public static Monster generateMonster(String displayName, EntityClass entityClass, Race race, int roomLevel) {
@@ -68,18 +70,21 @@ public class MonsterGenerator {
     private static StatsMap scaleStats(StatsMap baseStats, EntityClass entityClass, int roomLevel) {
         float levelFactor = 1.0f + (LEVEL_SCALING_FACTOR * (roomLevel - 1));
         float healthMultiplier = CLASS_HEALTH_MULTIPLIERS.getOrDefault(entityClass, 1.0f);
+        float armourMultiplier = CLASS_ARMOUR_MULTIPLIERS.getOrDefault(entityClass, 1.0f);
         
         // Scale each stat
         StatsMap scaledStats = new StatsMap();
         for (Stat stat : baseStats.keySet()) {
             int baseValue = baseStats.get(stat);
-            int scaledValue = baseValue;
+            int scaledValue;
             
-            if (stat == Stat.MAX_HEALTH) {
-                scaledValue = Math.round(baseValue * healthMultiplier * levelFactor);
-            } else {
+            if (null == stat) {
                 scaledValue = Math.round(baseValue * levelFactor);
-            }
+            } else scaledValue = switch (stat) {
+                case MAX_HEALTH -> Math.round(baseValue * healthMultiplier * levelFactor);
+                case ARMOUR_CLASS -> Math.round(baseValue * armourMultiplier * levelFactor );
+                default -> Math.round(baseValue * levelFactor);
+            };
             
             scaledStats.put(stat, scaledValue);
         }

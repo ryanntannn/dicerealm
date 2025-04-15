@@ -23,6 +23,8 @@ public class CombatDataSource {
     private final MutableLiveData<Integer> currentRound = new MutableLiveData<>(1);
     private Integer prevRound = 0;
 
+    private final MutableLiveData<UUID> currentEntityTurnId = new MutableLiveData<>();
+
     private String initmessage;
 
     private CombatDataSource(){}
@@ -33,7 +35,11 @@ public class CombatDataSource {
         }
         return instance;
     }
+    public MutableLiveData<UUID> getPlayerturn() {
+        return currentEntityTurnId;
+    }
 
+    public void setPlayerturn(UUID playerId) { currentEntityTurnId.postValue(playerId); }
     public LiveData<CombatTurnModal> subscribeLatestTurn(){
         return currentTurn;
     }

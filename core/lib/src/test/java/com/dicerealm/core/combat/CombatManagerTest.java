@@ -90,7 +90,7 @@ class CombatManagerTest {
         Entity attacker = combatManager.getCurrentTurnEntity();
         Entity target = player_1;
         CombatResult result = combatManager.executeRiggedCombatTurn(attacker, target, weapon, new FixedD20(20));
-        assertEquals(result.getDamageLog(), "Demon King hits Darren with Sword for 2 damage!");
+        assertEquals(result.getDamageLog(), "Demon King hits Darren with Sword for 2 damage (max 1d1)!");
     }
 
     @Test
@@ -113,13 +113,13 @@ class CombatManagerTest {
         CombatResult result = combatManager.executeRiggedCombatTurn(attacker, target, skill_2, new FixedD20(20));
         assertEquals(result.getAttacker(), player_2, "The attacker should be Player 2.");
         assertEquals(result.getTarget(), monster, "The target should be the monster.");
-        assertEquals(result.getDamageLog(), "Don casts Dummy Skill on Demon King for 2 damage!");
+        assertEquals(result.getDamageLog(), "Don casts Dummy Skill on Demon King for 2 damage (max 1d1)!");
     }
 
     @Test
     void testCombatOverWhenAllMonstersAreDead() { 
         combatManager.startCombat();
-        monster.takeDamage(25); 
+        monster.takeDamage(29); 
         combatManager.endTurn();
         boolean combatOver = combatManager.isCombatOver();
         assertTrue(combatOver, "Combat should be over when all players are dead");

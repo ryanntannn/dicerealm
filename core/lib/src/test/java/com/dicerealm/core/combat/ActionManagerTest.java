@@ -56,8 +56,8 @@ public class ActionManagerTest {
 
         // Create a test weapon
         weapon = new Weapon("Sword", "Iron Sword forged from the Great Dwarfen Forges", ActionType.MELEE, WeaponClass.SWORD, new StatsMap(Map.of(Stat.STRENGTH, 1)), 1);
-        skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3,2,1,2);
-        scroll = new Scroll("Fireball Scroll", "A scroll containing a powerful fireball spell",  1, 1);
+        skill = new Skill("Fireball", "A massive ball of fire", EntityClass.WIZARD, ActionType.MAGIC, 3, 2, 1, 2);
+        scroll = new Scroll("Fireball Scroll", "A scroll containing a powerful fireball spell", 1, 1);
         potion = new Potion("Health Potion", "Health Potion", 1, 1);
         player.getInventory().addItem(weapon);
         player.equipItem(BodyPart.RIGHT_HAND, weapon);
@@ -71,8 +71,8 @@ public class ActionManagerTest {
         actionManager.rigDice(new FixedD20(19)); // Rolls 19, which should be a hit
         combatResult = actionManager.performAttack(player, monster, weapon);
 
-        assertEquals("Darren hits Demon King with Sword for 1 damage!", combatResult.getDamageLog());
-        assertEquals(23, monster.getHealth());
+        assertEquals("Darren hits Demon King with Sword for 1 damage (max 1d1)!", combatResult.getDamageLog());
+        assertEquals(27, monster.getHealth());
     }
 
     @Test
@@ -80,8 +80,8 @@ public class ActionManagerTest {
         actionManager.rigDice(new FixedD20(20));  // Rolls 20, which should be a crit
         combatResult = actionManager.performAttack(player, monster, weapon);
 
-        assertEquals("Darren hits Demon King with Sword for 2 damage!", combatResult.getDamageLog());
-        assertEquals(22, monster.getHealth());
+        assertEquals("Darren hits Demon King with Sword for 2 damage (max 1d1)!", combatResult.getDamageLog());
+        assertEquals(26, monster.getHealth());
     }
 
     @Test
@@ -95,11 +95,11 @@ public class ActionManagerTest {
 
     @Test
     void testPerformSkillAttack_Hit() {
-        actionManager.rigDice(new FixedD20(19)); // Rolls 18, should hit
+        actionManager.rigDice(new FixedD20(19)); // Rolls 19, should hit
         combatResult = actionManager.performSkillAttack(player, monster, skill);
 
-        assertEquals("Darren casts Fireball on Demon King for 2 damage!", combatResult.getDamageLog());
-        assertEquals(22, monster.getHealth());
+        assertEquals("Darren casts Fireball on Demon King for 2 damage (max 2d1)!", combatResult.getDamageLog());
+        assertEquals(26, monster.getHealth());
     }
 
     @Test
@@ -107,13 +107,13 @@ public class ActionManagerTest {
         actionManager.rigDice(new FixedD20(20)); // Rolls 20, should be a crit
         combatResult = actionManager.performSkillAttack(player, monster, skill);
 
-        assertEquals("Darren casts Fireball on Demon King for 4 damage!", combatResult.getDamageLog());
-        assertEquals(20, monster.getHealth());
+        assertEquals("Darren casts Fireball on Demon King for 4 damage (max 2d1)!", combatResult.getDamageLog());
+        assertEquals(24, monster.getHealth());
     }
 
     @Test
     void testPerformSkillAttack_Miss() {
-        actionManager.rigDice(new FixedD20(2)); // Rolls 3, should miss
+        actionManager.rigDice(new FixedD20(2)); // Rolls 2, should miss
         combatResult = actionManager.performSkillAttack(player, monster, skill);
 
         String log = combatResult.getHitLog();
@@ -121,21 +121,20 @@ public class ActionManagerTest {
     }
 
     @Test
-    void testPotionUsage(){
+    void testPotionUsage() {
         assertNotNull(player.getInventory().getItem(potion.getId()));
         player.takeDamage(1);
         actionManager.usePotion(player, potion);
-        assertEquals(24, player.getHealth(), "Player should be at max health after using potion");
+        assertEquals(28, player.getHealth(), "Player should be at max health after using potion");
         assertNull(player.getInventory().getItem(potion.getId()));
     }
 
     @Test
-    void testScrollUsage(){
+    void testScrollUsage() {
         assertNotNull(player.getInventory().getItem(scroll.getId()));
         actionManager.rigDice(new FixedD20(19));
         actionManager.useScroll(player, monster, scroll);
-        assertEquals(23, monster.getHealth(), "Player should be at max health after using potion");
+        assertEquals(27, monster.getHealth(), "Monster should have taken damage from the scroll");
         assertNull(player.getInventory().getItem(scroll.getId()));
     }
 }
-

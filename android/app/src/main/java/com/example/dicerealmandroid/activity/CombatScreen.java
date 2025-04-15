@@ -40,7 +40,6 @@ import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.Color_hashmap.Colorhashmap;
 import com.example.dicerealmandroid.R;
-import com.example.dicerealmandroid.fragments.InitCombatFragment;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
@@ -58,6 +57,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+
 import android.widget.LinearLayout.LayoutParams;
 
 // TODO: Implement Weapon attack functionality (DONE)
@@ -65,16 +66,17 @@ import android.widget.LinearLayout.LayoutParams;
 // TODO: Implement item functionality (Show potions and scrolls)
 
 
-// TODO: Refactor the classes to move the attributes in datasource to repo (datasouces shouldnt be holding data only talking to the server, make repo the singleton)
-//          - Make sure sub-repos is not a cycle
-//          - Maybe can make the DicerealmClient a singleton and can remove the roomDataSource
+// TODO: Refactor the classes to move the attributes in datasource to repo (datasouces shouldnt be
+// holding data only talking to the server, make repo the singleton)
+// - Make sure sub-repos is not a cycle
+// - Maybe can make the DicerealmClient a singleton and can remove the roomDataSource
 // TODO: Refactor code again to implement dependencies injection if got time
 
 public class CombatScreen extends AppCompatActivity {
-    private GameStateHolder gameSh = new GameStateHolder();
-    private RoomStateHolder roomSh = new RoomStateHolder();
-    private PlayerStateHolder playerSh = new PlayerStateHolder();
-    private CombatStateHolder combatSh = new CombatStateHolder();
+	private GameStateHolder gameSh = new GameStateHolder();
+	private RoomStateHolder roomSh = new RoomStateHolder();
+	private PlayerStateHolder playerSh = new PlayerStateHolder();
+	private CombatStateHolder combatSh = new CombatStateHolder();
 
 	private Initcombat initcombatscreen;
 
@@ -125,7 +127,8 @@ public class CombatScreen extends AppCompatActivity {
         Log.d("InitMessage:" , "CombatScreen " + combatSh.getinitmessage());
         initcombatscreen = new Initcombat(this, combatSh.getinitmessage());
         initcombatscreen.show();
-        this.combatSequence(copy);
+		this.turnTable(copy);
+
         this.trackCurrentTurn();
         this.attackLeft();
         this.attackRight();
@@ -390,63 +393,56 @@ public class CombatScreen extends AppCompatActivity {
             }
         });
 
-    }
+	}
 
 
-    private void combatSequence(List<InitiativeResult> initiativeResults){
-        // So that we can disable the buttons
-        MaterialButton attackBtnLeft = findViewById(R.id.attackButtonLeft);
-        MaterialButton attackBtnRight = findViewById(R.id.attackButtonRight);
-        MaterialButton spellBtn = findViewById(R.id.spellButton);
-        MaterialButton itemBtn = findViewById(R.id.itemButton);
-        int enabledColor = getResources().getColor(R.color.purple);
-        int disabledColor = Color.GRAY;
-
-        TableLayout turntable = findViewById(R.id.turnCombatSquence);
-
-        combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
-            @Override
-            public void onChanged(List<CombatSequence> combatSequences) {
-                if(combatSh.isMyTurn()){
-                    // Set enabled state and background colors
-                    attackBtnLeft.setEnabled(true);
-                    attackBtnLeft.setBackgroundColor(enabledColor);
-                    attackBtnRight.setEnabled(true);
-                    attackBtnRight.setBackgroundColor(enabledColor);
-                    spellBtn.setEnabled(true);
-                    spellBtn.setBackgroundColor(enabledColor);
-                    itemBtn.setEnabled(true);
-                    itemBtn.setBackgroundColor(enabledColor);
-                }
-                else{
-                    // Set disabled state and background colors
-                    attackBtnLeft.setEnabled(false);
-                    attackBtnLeft.setBackgroundColor(disabledColor);
-                    attackBtnRight.setEnabled(false);
-                    attackBtnRight.setBackgroundColor(disabledColor);
-                    spellBtn.setEnabled(false);
-                    spellBtn.setBackgroundColor(disabledColor);
-                    itemBtn.setEnabled(false);
-                    itemBtn.setBackgroundColor(disabledColor);
-                }
-
-                Log.d("combat", "Initiative Results:" + initiativeResults.toString());
-                turntable.removeAllViews();
-                List<InitiativeResult> removeplayer = new ArrayList<>();
-
+	private void combatSequence(List<InitiativeResult> initiativeResults) {
+		combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
+			@Override
+			public void onChanged(List<CombatSequence> combatSequences) {
+				List<UUID> removeplayer = new ArrayList<>();
 				for (InitiativeResult player_enemy : initiativeResults) {
 					if (combatSequences.stream()
-							.anyMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
+							.noneMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
+						removeplayer.add(player_enemy.getEntity().getId());
+					}
+				}
+				List<InitiativeResult> player = new ArrayList<>();
+				for (UUID remove : removeplayer) {
+					for (InitiativeResult player_enemy : initiativeResults) {
+						if (player_enemy.getEntity().getId().equals(remove)) {
+							player.add(player_enemy);
+						}
+					}
+				}
+				for (InitiativeResult remove : player) {
+					initiativeResults.remove(remove);
+				}
+			}
+		});
+	}
+	private void turnTable(List<InitiativeResult> initiativeResults) {
+		TableLayout turntable = findViewById(R.id.turnCombatSquence);
+		combatSh.getplayerturn().observe(this, new Observer<UUID>() {
+
+			@Override
+			public void onChanged(UUID player) {
+				Log.d("combat", "Initiative Results:" + initiativeResults.toString());
+				turntable.removeAllViews();
+				combatSequence(initiativeResults);
+
+
+				for (InitiativeResult player_enemy : initiativeResults) {
 						TableRow newtablerow = new TableRow(CombatScreen.this);
 						TextView nameView = new TextView(CombatScreen.this);
 						int padding = 16;
 						nameView.setPadding(padding, padding, padding, padding);
 						nameView.setMaxWidth(400);
-						Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    "
-								+ combatSequences.get(0).getName());
+						Log.d("nameofevery", player_enemy.getEntity().getId() + "    "
+								+ player.toString());
 						String viewforname = "";
 
-						if (player_enemy.getEntity().getId().equals(combatSequences.get(0).getuuid())) {
+						if (player_enemy.getEntity().getId().equals(player)) {
 							// Mark first element as the current turn
 							if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {
 								nameView.setBackgroundResource(R.drawable.bold_cell_border_green);
@@ -472,18 +468,18 @@ public class CombatScreen extends AppCompatActivity {
 						newtablerow.addView(nameView);
 						turntable.addView(newtablerow);
 
-                        }
+					}
 
-                    }
+				}
 
 
 
-            }
-        });
-    }
+			}
+		);
+	}
 
-    private void trackCurrentTurn() {
-        LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
+	private void trackCurrentTurn() {
+		LinearLayout messageLayout = findViewById(R.id.CombatMessageLayout);
 
 		combatSh.subscribeCombatLatestTurn().observe(this, new Observer<CombatTurnModal>() {
 			@Override

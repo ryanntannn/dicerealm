@@ -97,4 +97,6 @@ public class CombatStateHolder extends ViewModel {
     }
 
     public String getinitmessage(){return combatRepo.getinitmessage();}
+
+    public LiveData<UUID> getplayerturn(){return combatRepo.getplayerturn();}
 }
