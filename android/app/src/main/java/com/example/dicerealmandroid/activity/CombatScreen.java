@@ -57,6 +57,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+
 import android.widget.LinearLayout.LayoutParams;
 
 // TODO: Implement Weapon attack functionality (DONE)
@@ -124,7 +126,8 @@ public class CombatScreen extends AppCompatActivity {
         Log.d("InitMessage:" , "CombatScreen " + combatSh.getinitmessage());
         initcombatscreen = new Initcombat(this, combatSh.getinitmessage());
         initcombatscreen.show();
-        this.combatSequence(copy);
+		this.turnTable(copy);
+
         this.trackCurrentTurn();
         this.attackLeft();
         this.attackRight();
@@ -352,28 +355,52 @@ public class CombatScreen extends AppCompatActivity {
 
 
 	private void combatSequence(List<InitiativeResult> initiativeResults) {
-		TableLayout turntable = findViewById(R.id.turnCombatSquence);
-
 		combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
 			@Override
 			public void onChanged(List<CombatSequence> combatSequences) {
-				Log.d("combat", "Initiative Results:" + initiativeResults.toString());
-				turntable.removeAllViews();
-				List<InitiativeResult> removeplayer = new ArrayList<>();
-
+				List<UUID> removeplayer = new ArrayList<>();
 				for (InitiativeResult player_enemy : initiativeResults) {
 					if (combatSequences.stream()
-							.anyMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
+							.noneMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
+						removeplayer.add(player_enemy.getEntity().getId());
+					}
+				}
+				List<InitiativeResult> player = new ArrayList<>();
+				for (UUID remove : removeplayer) {
+					for (InitiativeResult player_enemy : initiativeResults) {
+						if (player_enemy.getEntity().getId().equals(remove)) {
+							player.add(player_enemy);
+						}
+					}
+				}
+				for (InitiativeResult remove : player) {
+					initiativeResults.remove(remove);
+				}
+			}
+		});
+	}
+	private void turnTable(List<InitiativeResult> initiativeResults) {
+		TableLayout turntable = findViewById(R.id.turnCombatSquence);
+		combatSh.getplayerturn().observe(this, new Observer<UUID>() {
+
+			@Override
+			public void onChanged(UUID player) {
+				Log.d("combat", "Initiative Results:" + initiativeResults.toString());
+				turntable.removeAllViews();
+				combatSequence(initiativeResults);
+
+
+				for (InitiativeResult player_enemy : initiativeResults) {
 						TableRow newtablerow = new TableRow(CombatScreen.this);
 						TextView nameView = new TextView(CombatScreen.this);
 						int padding = 16;
 						nameView.setPadding(padding, padding, padding, padding);
 						nameView.setMaxWidth(400);
-						Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    "
-								+ combatSequences.get(0).getName());
+						Log.d("nameofevery", player_enemy.getEntity().getId() + "    "
+								+ player.toString());
 						String viewforname = "";
 
-						if (player_enemy.getEntity().getId().equals(combatSequences.get(0).getuuid())) {
+						if (player_enemy.getEntity().getId().equals(player)) {
 							// Mark first element as the current turn
 							if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {
 								nameView.setBackgroundResource(R.drawable.bold_cell_border_green);
@@ -406,7 +433,7 @@ public class CombatScreen extends AppCompatActivity {
 
 
 			}
-		});
+		);
 	}
 
 	private void trackCurrentTurn() {

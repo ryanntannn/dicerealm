@@ -173,11 +173,8 @@ public class DicerealmClient extends WebSocketClient {
                 case "COMBAT_START_TURN":
                     CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
                     int round = combatStartTurnCommand.getRoundNumber();
+                    combatRepo.setplayerturn(combatStartTurnCommand.getCurrentTurnEntityId());
                     combatRepo.setNextRound(round);
-
-//                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
-//                        Message.showMessage("Your turn!");
-//                    }
                     break;
 
                 case "COMBAT_END_TURN":
@@ -187,7 +184,6 @@ public class DicerealmClient extends WebSocketClient {
                         Entity target = combatEndTurnCommand.getCombatResult().getTarget();
                         Entity attacker = combatEndTurnCommand.getCombatResult().getAttacker();
                         combatRepo.updateCombatantsDetails(target, attacker);
-
 
                         String damageLog = "";
                         if (combatEndTurnCommand.getCombatResult().getDamageLog() != null) {

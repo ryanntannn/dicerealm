@@ -201,4 +201,9 @@ public class CombatRepo {
         combatDataSource.setPrevRound(0);
         combatDataSource.setCurrentRound(1);
     }
+
+    public void setplayerturn(UUID playerId){combatDataSource.setPlayerturn(playerId);}
+
+    public LiveData<UUID> getplayerturn(){return combatDataSource.getPlayerturn();}
+
 }
