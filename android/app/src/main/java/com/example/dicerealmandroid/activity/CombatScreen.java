@@ -1,5 +1,7 @@
 package com.example.dicerealmandroid.activity;
 
+import static com.dicerealm.core.entity.Entity.Allegiance.ENEMY;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -36,6 +38,7 @@ import com.dicerealm.core.item.Item;
 import com.dicerealm.core.player.Player;
 import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
+import com.example.dicerealmandroid.Color_hashmap.Colorhashmap;
 import com.example.dicerealmandroid.R;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
@@ -53,8 +56,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
+import android.widget.LinearLayout.LayoutParams;
 
 // TODO: Implement Weapon attack functionality (DONE)
 // TODO: Implement spell functionality
@@ -345,35 +347,46 @@ public class CombatScreen extends AppCompatActivity {
 
         combatSh.getCombatSequence().observe(this, new Observer<List<CombatSequence>>() {
             @Override
-            public void onChanged(List<CombatSequence> combatSequences){
+            public void onChanged(List<CombatSequence> combatSequences) {
                 Log.d("combat", "Initiative Results:" + initiativeResults.toString());
                 turntable.removeAllViews();
                 List<InitiativeResult> removeplayer = new ArrayList<>();
 
-                for(InitiativeResult player_enemy : initiativeResults){
+                for (InitiativeResult player_enemy : initiativeResults) {
                     if (combatSequences.stream().anyMatch(r -> r.getuuid().equals(player_enemy.getEntity().getId()))) {
                         TableRow newtablerow = new TableRow(CombatScreen.this);
                         TextView nameView = new TextView(CombatScreen.this);
                         int padding = 16;
                         nameView.setPadding(padding, padding, padding, padding);
                         nameView.setMaxWidth(400);
-                        nameView.setBackgroundResource(R.drawable.cell_border);
                         Log.d("nameofevery", player_enemy.getEntity().getDisplayName() + "    " + combatSequences.get(0).getName());
+                        String viewforname = "";
+
                         if (player_enemy.getEntity().getId().equals(combatSequences.get(0).getuuid())) {
                             // Mark first element as the current turn
-                            nameView.setTypeface(null, Typeface.BOLD);
-                            nameView.setText(player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll());
-                            nameView.setBackgroundResource(R.drawable.bold_cell_border);
+                            if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {nameView.setBackgroundResource(R.drawable.bold_cell_border_green);viewforname = gameSh.getplayercolor(player_enemy.getEntity().getId());}
+                            else {nameView.setBackgroundResource(R.drawable.bold_cell_border_red);}
                         } else {
-                            nameView.setText(player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll());
-                            nameView.setBackgroundResource(R.drawable.cell_border);
+                            if (!player_enemy.getEntity().getAllegiance().equals(ENEMY)) {
+                                viewforname = gameSh.getplayercolor(player_enemy.getEntity().getId());
+                                nameView.setBackgroundResource(R.drawable.cell_border_green);
+                            } else {
+                                nameView.setBackgroundResource(R.drawable.cell_border_red);
+                            }
                         }
+
+                        viewforname += player_enemy.getEntity().getDisplayName() + " - " + player_enemy.getInitiativeRoll();
+                        if (player_enemy.getEntity().getId().equals(playerSh.getPlayerId())){
+                            viewforname += " (You)";
+                        }
+                        nameView.setText(viewforname);
                         newtablerow.addView(nameView);
                         turntable.addView(newtablerow);
 
+                        }
+
                     }
 
-                }
 
 
             }
@@ -425,6 +438,7 @@ public class CombatScreen extends AppCompatActivity {
 
         // Run this on another thread/logical core to achieve true parallelism unlike python which thread is limited by GIL
         Thread backgroundThread = new Thread(() -> {
+            if (message == null || message.isEmpty()) return;
             for (int i = 0; i < message.length(); i++) {
                 char currChar = message.charAt(i);
                 try {
