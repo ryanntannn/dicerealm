@@ -120,6 +120,7 @@ public class PresetPlayerFactory {
 				Chestpiece chestpiece = new Chestpiece("Cloak of Wizardy", 1);
                 player.getInventory().addItem(staff);
                 player.getInventory().addItem(new FireballScroll());
+				player.getInventory().addItem(chestpiece);
 				player.getInventory().addItem(necklace);
                 player.equipItem(BodyPart.RIGHT_HAND, staff);
 				player.equipItem(BodyPart.NECK, necklace);
