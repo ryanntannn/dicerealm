@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import cn from "./lib/cn";
 import { ReadyState } from "react-use-websocket";
 import { DialogueTurn } from "./lib/room-state";
@@ -12,6 +12,8 @@ import Lobby from "./lobby";
 import { Card, CardContent, CardHeader } from "./components/ui/card";
 import { Brain } from "lucide-react";
 import Combat from "./combat";
+import { Button } from "./components/ui/button";
+import OpenAI from "openai";
 
 function Messages({
   messages,
@@ -94,6 +96,59 @@ const paramsSchema = z.object({
 });
 
 function DialogueTurnRenderer({ turn }: { turn: DialogueTurn }) {
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const onAudioClick = async () => {
+    let apiKey = window.localStorage.getItem("openai_api_key");
+    if (!apiKey) {
+      apiKey = prompt("Please enter your OpenAI API key:");
+      if (!apiKey) {
+        alert("No API key provided. Please enter a valid OpenAI API key.");
+        return;
+      }
+      window.localStorage.setItem("openai_api_key", apiKey);
+    }
+    const openai = new OpenAI({
+      // API key will never hit the server
+      apiKey,
+      dangerouslyAllowBrowser: true,
+    });
+
+    const response = await openai.audio.speech.create({
+      model: "gpt-4o-mini-tts",
+      voice: "fable",
+      input: turn.dungeonMasterText,
+      instructions: "Speak like a dnd dungeon master",
+      response_format: "wav",
+    });
+
+    // Read the response body as a stream and convert to a blob
+    const reader = response.body?.getReader();
+    const chunks = [];
+
+    if (!reader) {
+      throw new Error("Failed to get reader from response body");
+    }
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+
+    const audioBlob = new Blob(chunks, { type: "audio/wav" });
+    const arrayBuffer = await audioBlob.arrayBuffer();
+
+    // Use Web Audio API to decode and play
+    const audioContext = new AudioContext();
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+    source.start();
+  };
+
+  console.log(window.localStorage);
   return (
     <Card>
       <CardHeader>
@@ -110,6 +165,21 @@ function DialogueTurnRenderer({ turn }: { turn: DialogueTurn }) {
           </Card>
         ))}
       </CardContent>
+      <Button
+        disabled={isAudioPlaying}
+        onClick={() => {
+          setIsAudioPlaying(true);
+          onAudioClick()
+            .then(() => {
+              setIsAudioPlaying(false);
+            })
+            .catch((error) => {
+              console.error("Error playing audio:", error);
+              setIsAudioPlaying(false);
+            });
+        }}>
+        Audio
+      </Button>
     </Card>
   );
 }
