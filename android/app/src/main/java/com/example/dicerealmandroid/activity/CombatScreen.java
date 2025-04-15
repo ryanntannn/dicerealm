@@ -40,7 +40,6 @@ import com.dicerealm.core.room.RoomState;
 import com.dicerealm.core.skills.Skill;
 import com.example.dicerealmandroid.Color_hashmap.Colorhashmap;
 import com.example.dicerealmandroid.R;
-import com.example.dicerealmandroid.fragments.InitCombatFragment;
 import com.example.dicerealmandroid.game.GameStateHolder;
 import com.example.dicerealmandroid.game.combat.CombatSequence;
 import com.example.dicerealmandroid.game.combat.CombatStateHolder;
@@ -58,8 +57,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import android.widget.LinearLayout.LayoutParams;
-
-import org.w3c.dom.Text;
 
 // TODO: Implement Weapon attack functionality (DONE)
 // TODO: Implement spell functionality

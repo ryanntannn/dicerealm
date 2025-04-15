@@ -78,11 +78,12 @@ public class CombatDataSource {
     // Maintain observers connections :>
     public static void destroy(){
         if(instance != null){
-            instance.setMonster(null);
-            instance.setInitiativeResults(null);
-            instance.updateTurnHistory(null);
-            instance.setCurrentRound(1);
-            instance.setPrevRound(0);
+            instance = null;
+//            instance.setMonster(null);
+//            instance.setInitiativeResults(null);
+//            instance.updateTurnHistory(null);
+//            instance.setCurrentRound(1);
+//            instance.setPrevRound(0);
         }
     }
 }

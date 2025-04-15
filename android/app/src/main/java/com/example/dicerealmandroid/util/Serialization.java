@@ -182,6 +182,9 @@ public class Serialization {
 				path.setTarget(graph.getN(path.getTarget().getId()));
 			}
 
+			// ensure that the current location points to the same memory addr as the list of nodes
+			graph.setCurrentLocation(graph.getN(graph.getCurrentLocation().getId()));
+
 			return graph;
 		}
 	}
