@@ -69,7 +69,7 @@ public class DungeonMaster {
 					- A list of objects, each representing a location. Each object must contain:
 						- displayName: A string representing the name of the location.
 						- description: A string describing the location in detail.
-						- enemies: A list of objects, each representing an enemy. This should exactly have 4 enemies.
+						- enemies: A list of objects, each representing an enemy. This should exactly have 2 enemies.
 							Each object must contain:
 							- name: A string representing the name of the enemy
 							- race: A string representing the race of the enemy out of these options: HUMAN, ELF, DEMON, DWARF, TIEFLING
