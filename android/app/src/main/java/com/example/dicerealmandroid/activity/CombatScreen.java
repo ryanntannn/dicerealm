@@ -50,6 +50,8 @@ import com.example.dicerealmandroid.recyclerview.CardAdapter;
 import com.example.dicerealmandroid.recyclerview.InventoryCardAdapter;
 import com.example.dicerealmandroid.recyclerview.SpellCardAdapter;
 import com.example.dicerealmandroid.room.RoomStateHolder;
+import com.example.dicerealmandroid.util.Initcombat;
+import com.example.dicerealmandroid.util.Loading;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class CombatScreen extends AppCompatActivity {
     private RoomStateHolder roomSh = new RoomStateHolder();
     private PlayerStateHolder playerSh = new PlayerStateHolder();
     private CombatStateHolder combatSh = new CombatStateHolder();
+
+    private Initcombat initcombatscreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +123,8 @@ public class CombatScreen extends AppCompatActivity {
             }
         });
         Log.d("InitMessage:" , "CombatScreen " + combatSh.getinitmessage());
-        InitCombatFragment combatinit = InitCombatFragment.newInstance(combatSh.getinitmessage() , this);
-        combatinit.show(getSupportFragmentManager(), "InitCombatFragment");
+        initcombatscreen = new Initcombat(this, combatSh.getinitmessage());
+        initcombatscreen.show();
 
 		this.combatSequence(copy);
 		this.trackCurrentTurn();

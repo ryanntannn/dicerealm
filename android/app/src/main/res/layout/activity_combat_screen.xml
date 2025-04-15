@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".activity.CombatScreen">
 
 
@@ -144,8 +145,9 @@
         app:srcCompat="@drawable/kid1" />
 
     <TextView
-        android:layout_width="157dp"
-        android:layout_height="28dp"
+        android:id="@+id/turnCombat"
+        android:layout_width="151dp"
+        android:layout_height="18dp"
         android:gravity="center"
         android:text="Combat turn"
         android:textStyle="bold"
