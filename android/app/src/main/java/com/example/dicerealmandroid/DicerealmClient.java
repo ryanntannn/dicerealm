@@ -90,6 +90,7 @@ public class DicerealmClient extends WebSocketClient {
                     roomRepo.removeRoomStatePlayer(playerId);
                     if(roomRepo.getRoomState().getState() == RoomState.State.BATTLE){
                         combatRepo.removeCombatant(playerId);
+                        combatRepo.rotateCombatSequence();
                     }
                     Message.showMessage("A player has left.");
                     break;
@@ -172,9 +173,6 @@ public class DicerealmClient extends WebSocketClient {
                     CombatStartTurnCommand combatStartTurnCommand = gson.fromJson(message, CombatStartTurnCommand.class);
                     int round = combatStartTurnCommand.getRoundNumber();
                     combatRepo.setNextRound(round);
-                    if(combatRepo.isNewRound()){
-                        Message.showMessage("Round " + round);
-                    }
 
 //                    if(playerRepo.getPlayerId().equals(combatStartTurnCommand.getCurrentTurnEntityId())){
 //                        Message.showMessage("Your turn!");

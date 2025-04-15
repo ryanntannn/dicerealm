@@ -171,9 +171,10 @@ public class CombatRepo {
 
 
     public void setNextRound(int round){
+        Integer currRound = combatDataSource.getCurrentRound().getValue();
 
-        // If its the same round
-        if(combatDataSource.getPrevRound() != round){
+        // If its the same round, currRound is not null, currRound is not equal to round
+        if(combatDataSource.getPrevRound() != round && currRound != null && currRound != round){
             combatDataSource.setPrevRound(round);
             combatDataSource.setCurrentRound(round);
         }
