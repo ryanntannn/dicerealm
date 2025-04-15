@@ -60,7 +60,8 @@ public class PlayerDataSource {
     // Maintain observers connections :>
     public static void destroy(){
         if(instance != null){
-            instance.setPlayer(null);
+            instance = null;
+//            instance.setPlayer(null);
         }
     }
 }

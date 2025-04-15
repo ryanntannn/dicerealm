@@ -16,7 +16,7 @@ import com.dicerealm.core.entity.BodyPart;
 import com.dicerealm.core.item.EquippableItem;
 import com.example.dicerealmandroid.R;
 import com.dicerealm.core.item.Item;
-import com.example.dicerealmandroid.player.PlayerInventoryWrapper;
+import com.example.dicerealmandroid.player.wrapper.PlayerInventoryWrapper;
 import com.example.dicerealmandroid.player.PlayerStateHolder;
 
 import java.util.ArrayList;

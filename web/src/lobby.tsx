@@ -3,7 +3,10 @@ import { Card, CardHeader, CardContent } from "./components/ui/card";
 import { Separator } from "./components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useRoomClientContext } from "./components/room-client-provider";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 export default function Lobby({ roomCode }: { roomCode: string }) {
   const { players, myId } = useRoomClientContext();
@@ -24,6 +27,7 @@ export default function Lobby({ roomCode }: { roomCode: string }) {
           </div>
         </div>
 
+        <ThemeForm />
         <Card className="lg:col-span-2">
           <CardHeader className="pb-3">
             <div className="flex justify-between items-center">
@@ -74,5 +78,56 @@ export default function Lobby({ roomCode }: { roomCode: string }) {
         </Card>
       </div>
     </main>
+  );
+}
+
+function ThemeForm() {
+  const { theme, updateTheme } = useRoomClientContext();
+
+  const form = useForm({
+    resolver: zodResolver(
+      z.object({
+        theme: z.string().min(1, "Theme is required"),
+      })
+    ),
+    defaultValues: theme ? { theme } : { theme: "" },
+  });
+
+  const { register, handleSubmit } = form;
+  const onSubmit = handleSubmit(({ theme }) => {
+    updateTheme(theme);
+  });
+
+  useEffect(() => {
+    if (theme) {
+      form.setValue("theme", theme);
+      form.reset({ theme });
+    }
+  }, [theme, form]);
+
+  return (
+    <form className="gap-2" onSubmit={onSubmit}>
+      <label htmlFor="theme" className="text-sm font-medium">
+        Theme:
+      </label>
+      <textarea
+        rows={3}
+        id="theme"
+        className="border border-gray-300 rounded-md p-2 resize-none w-full"
+        placeholder="Enter theme"
+        {...register("theme", { required: true })}
+      />
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          disabled={!form.formState.isDirty}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+          Update Theme
+        </button>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        This will be used to generate the game world.
+      </p>
+    </form>
   );
 }
