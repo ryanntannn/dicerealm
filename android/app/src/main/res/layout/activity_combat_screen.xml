@@ -8,17 +8,31 @@
     android:padding="10dp"
     tools:context=".activity.CombatScreen">
 
-
-    <TableLayout
-        android:id="@+id/turnCombatSquence"
-        android:layout_width="153dp"
-        android:layout_height="235dp"
+    <ScrollView
+        android:id="@+id/initiativeScrollView"
+        android:layout_width="163dp"
+        android:layout_height="220dp"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messagesCard"
-        app:layout_constraintVertical_bias="0.250" />
+        app:layout_constraintVertical_bias="0.250">
+
+    <TableLayout
+        android:id="@+id/turnCombatSquence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        app:layout_constraintHorizontal_bias="0.263"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messagesCard"
+        app:layout_constraintVertical_bias="0.150" />
+
+    </ScrollView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/messagesCard"
@@ -29,8 +43,7 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/combatTitle">
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
 
         <ScrollView
@@ -40,7 +53,7 @@
             android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/combatTitle">
+            app:layout_constraintTop_toBottomOf="@+id/topBar">
 
             <LinearLayout
                 android:id="@+id/CombatMessageLayout"
@@ -51,31 +64,58 @@
 
     </androidx.cardview.widget.CardView>
 
-
-
-    <TextView
-        android:id="@+id/combatTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Combat Mode"
+        android:background="@color/darkpurple"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/weapon_axe" />
+
+        <TextView
+            android:id="@+id/combatTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Combat Mode"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/initiativeScrollView"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="86dp"
+        android:layout_width="75dp"
         android:layout_height="123dp"
-
+        android:maxHeight="123dp"
         android:layout_marginTop="66dp"
         android:layout_marginBottom="80dp"
-
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.772"
+        app:layout_constraintHorizontal_bias="0.775"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messagesCard"
-        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintVertical_bias="0.333"
         app:srcCompat="@drawable/kid2" />
 
     <TextView
@@ -133,41 +173,43 @@
         app:layout_constraintVertical_bias="0.968" />
 
     <ImageView
-        android:id="@+id/me"
+        android:id="@+id/playerImage"
         android:layout_width="75dp"
         android:layout_height="139dp"
         app:layout_constraintBottom_toTopOf="@+id/Actions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.014"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.948"
         app:layout_constraintTop_toBottomOf="@+id/messagesCard"
+        app:layout_constraintVertical_bias="0.948"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/kid1" />
 
     <TextView
         android:id="@+id/turnCombat"
         android:layout_width="157dp"
-        android:layout_height="28dp"
+        android:layout_height="24dp"
         android:gravity="center"
         android:text="Combat turn"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/turnCombatSquence"
-        app:layout_constraintEnd_toEndOf="@+id/turnCombatSquence"
-        app:layout_constraintStart_toStartOf="@+id/turnCombatSquence"
+        app:layout_constraintBottom_toTopOf="@+id/initiativeScrollView"
+        app:layout_constraintEnd_toEndOf="@+id/initiativeScrollView"
+        app:layout_constraintStart_toStartOf="@+id/initiativeScrollView"
         app:layout_constraintTop_toBottomOf="@+id/messagesCard"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.5"
+        />
 
     <TextView
         android:id="@+id/playerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="300dp"
         android:layout_marginBottom="4dp"
+        android:maxWidth="300dp"
         android:text="Your name"
-        app:layout_constraintBottom_toTopOf="@+id/me"
+        app:layout_constraintBottom_toTopOf="@+id/playerImage"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="0.028"
-        app:layout_constraintStart_toStartOf="@+id/me" />
+        app:layout_constraintStart_toStartOf="@+id/playerImage" />
 
     <TableLayout
         android:id="@+id/tableLayout"
@@ -175,9 +217,9 @@
         android:layout_height="66dp"
         android:layout_gravity="center"
         android:layout_marginStart="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/me"
-        app:layout_constraintStart_toEndOf="@+id/me"
-        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintBottom_toBottomOf="@+id/playerImage"
+        app:layout_constraintStart_toEndOf="@+id/playerImage"
+        app:layout_constraintTop_toTopOf="@+id/playerImage"
         app:layout_constraintVertical_bias="1.0">
 
         <TableRow
@@ -191,10 +233,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginLeft="12dp"
                     android:id="@+id/img_constitution"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_marginLeft="12dp"
                     android:layout_weight="0"
                     android:src="@drawable/constitution" />
 
@@ -276,10 +318,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginLeft="12dp"
                     android:id="@+id/img_strength"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_marginLeft="12dp"
                     android:layout_weight="0"
                     android:src="@drawable/strength" />
 
@@ -361,7 +403,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
-        app:layout_constraintStart_toEndOf="@+id/me">
+        app:layout_constraintStart_toEndOf="@+id/playerImage">
 
         <ImageView
 
@@ -521,9 +563,9 @@
         android:layout_weight="0"
 
         android:src="@drawable/hearticon"
-        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintBottom_toBottomOf="@+id/playerImage"
         app:layout_constraintStart_toEndOf="@+id/yourHealth"
-        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintTop_toTopOf="@+id/playerImage"
         app:layout_constraintVertical_bias="0.01" />
 
     <TextView
@@ -537,9 +579,9 @@
 
 
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintBottom_toBottomOf="@+id/playerImage"
         app:layout_constraintStart_toEndOf="@+id/statichealth"
-        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintTop_toTopOf="@+id/playerImage"
         app:layout_constraintVertical_bias="0.108" />
 
     <TextView
@@ -548,11 +590,11 @@
         android:layout_height="wrap_content"
         android:text="Health:"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintBottom_toBottomOf="@+id/playerImage"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/me"
-        app:layout_constraintTop_toTopOf="@+id/me"
+        app:layout_constraintStart_toEndOf="@+id/playerImage"
+        app:layout_constraintTop_toTopOf="@+id/playerImage"
         app:layout_constraintVertical_bias="0.108" />
 
     <RelativeLayout
@@ -561,9 +603,9 @@
         android:layout_height="146dp"
         android:alpha="0.1"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/me"
+        app:layout_constraintBottom_toBottomOf="@+id/playerImage"
         app:layout_constraintStart_toStartOf="@+id/tableLayout"
-        app:layout_constraintTop_toTopOf="@+id/me">
+        app:layout_constraintTop_toTopOf="@+id/playerImage">
 
         <!-- Optional Icon or Image -->
         <ImageView
