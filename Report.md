@@ -1,3 +1,4 @@
+
 # **Background**
 ##### Problem Statement
 Tabletop Role Playing Games such as Dungeons and Dragons(DnD), are often perceived as difficult to jump into for new players. Many are interested in trying these games but are discouraged by the significant time investment required to learn the complex rules, purchase the necessary materials and organise group sessions. As a result, many people who are curious about Dungeons and Dragons never actually get the chance to experience playing them.
@@ -155,91 +156,21 @@ We have implemented a Graph class that contains a `shortestPath` method, that us
 A DistanceGraph subclass was implemented that extends Graph, created to represent locations and the roads between these locations. We override the `shortestPath` method with an implementation of Dikstra’s algorithm to account for the edge weights (distances).
 ##### Dependency Inversion
 We designed a core library independent of third-party libraries, which are instead dependent on interfaces called Strategies. These Strategies are injected into a Room via the RoomBuilder. This ensures that if a third-party software becomes obsolete, we can seamlessly replace it without impacting the core functionality. We may inject Mock Strategies for unit and integration tests, as well as debugging.
+```
+<div style="page-break-after: always;"></div>
+```
 ## **2D Aspect**
 We have implemented Dijkstra's algorithm in our `DistanceGraph` class to determine the shortest path between locations in our game.
-``` java
 
-@Override
- public N[] shortestPath(N source, N target) {
-   // We know that there are no negative weights in this graph, so we can use Dijkstra's algorithm
-   // Distance from source to each node
-   Map<N, Double> d = new HashMap<>();
-   // Predecessor of each node in the shortest path
-   Map<N, N> pi = new HashMap<>();
-   // Visited nodes
-   Map<N, Boolean> visited = new HashMap<>();
-   
-   // Initialize distances
-   for (N node : nodes.values()) {
-     d.put(node, Double.POSITIVE_INFINITY);
-     pi.put(node, null);
-     visited.put(node, false);
-   }
-   
-   // Distance to the source is 0
-   d.put(source, 0.0);
-   for (int i = 0; i < nodes.size(); i++) {
-     N u = null;
-     double min = Double.POSITIVE_INFINITY;
-
-     // Find the unvisited node with the smallest distance
-     for (N node : nodes.values()) {
-       if (!visited.get(node) && d.get(node) < min) {
-         min = d.get(node);
-         u = node;
-       }
-     }
-
-     if (u == null) {
-       break;
-     }
-
-     // Mark the node as visited
-     visited.put(u, true);
-
-     // Update distances to neighbors
-     for (E edge : edges.values()) {
-       // Bidirectional edges so we check both directions
-       if (edge.getSource().equals(u)) {
-         N v = edge.getTarget();
-         double alt = d.get(u) + edge.getDistance();
-  
-         if (alt < d.get(v)) {
-           d.put(v, alt);
-           pi.put(v, u);
-         }
-       }
-
-       if (edge.getTarget().equals(u)) {
-         N v = edge.getSource();
-         double alt = d.get(u) + edge.getDistance();
-         if (alt < d.get(v)) {
-           d.put(v, alt);
-           pi.put(v, u);
-         }
-       }
-     }
-   }
-
-   // Check if the target is reachable
-   if (d.get(target) == Double.POSITIVE_INFINITY) {
-     throw new IllegalArgumentException("Target node is not reachable from source node");
-   }
-
-   // Reconstruct the shortest path
-   N current = target;
-   ArrayList<N> path = new ArrayList<>();
-   while (current != null) {
-     path.add(0, current);
-     current = pi.get(current);
-   }
-
-   // Convert the ArrayList to an array
-   @SuppressWarnings("unchecked")
-   N[] pathArray = path.toArray((N[]) Array.newInstance(source.getClass(), path.size()));
-   return pathArray;
- }
-
+<div align="center">
+<img alt="center" src="Pasted image 20250427053357.png">
+</div>
+<div align="center">
+<img alt="center" src="Pasted image 20250427053430.png">
+</div>
+<div align="center">
+<img alt="center" src="Pasted image 20250427053451.png">
+</div>
 
 ## **Project Management**
 
@@ -320,3 +251,5 @@ The app Dice Realm demonstrates a strong potential for future enhancement, such 
 
 Reference:
 [https://developer.android.com/topic/architecture?gclid=CjwKCAjw6raYBhB7EiwABge5Klm_5PN8nJF0Jrb_ymrPP0JAEsbmemmGv_nsn0nBQKQtQMCBuvjehRoC7qcQAvD_BwE&gclsrc=aw.ds#recommended-app-arch](https://developer.android.com/topic/architecture?gclid=CjwKCAjw6raYBhB7EiwABge5Klm_5PN8nJF0Jrb_ymrPP0JAEsbmemmGv_nsn0nBQKQtQMCBuvjehRoC7qcQAvD_BwE&gclsrc=aw.ds#recommended-app-arch)
+
+[^1]: 
