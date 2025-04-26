@@ -239,7 +239,7 @@ We have implemented Dijkstra's algorithm in our `DistanceGraph` class to determi
    N[] pathArray = path.toArray((N[]) Array.newInstance(source.getClass(), path.size()));
    return pathArray;
  }
-```
+
 
 ## **Project Management**
 
