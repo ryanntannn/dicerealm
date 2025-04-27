@@ -41,6 +41,7 @@ Fig 1.1.
 <img alt="center" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXeDwXeASqb-u9xjO4xH998uTKwjNBkv18ZlVrgWEPxSB9cLuWja3MyBlQD6o1_nWMy3q3ZjYkugbSCP9HIPLFonrRINFk578PHBdOrn-K7A3c4DVIKK6MdqfXbTEcRMQpBcf7UG?key=uLeLIxj20T6aLSb7qVEY1yzm">
 </div>
 Referring to Fig 1.1, the architecture consists of those few components.
+
 ##### UI Screen (View)  
 The UI Screen is defined using `.layout` files, which are responsible for displaying UI information to the user. These layouts determine how the interface appears visually.
 ##### Activity (View)  
