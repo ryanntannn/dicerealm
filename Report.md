@@ -1,20 +1,18 @@
 # **Background**
 
-##### Problem Statement
-
+**Problem Statement**
 Tabletop Role Playing Games such as Dungeons and Dragons(DnD), are often perceived as difficult to jump into for new players. Many are interested in trying these games but are discouraged by the significant time investment required to learn the complex rules, purchase the necessary materials and organise group sessions. As a result, many people who are curious about Dungeons and Dragons never actually get the chance to experience playing them.
 
-##### Proposed Solution
-
+**Proposed Solution**
 Our app makes it easy for anyone to jump straight into a DnD session without all the usual hassle. Users can instantly create or join an online game room with up to four friends, without needing to schedule in advance or prepare anything beforehand. Once in a room, the app uses OpenAI’s language model to generate dynamic locations and storylines that are influenced by players’ choices, ensuring no two sessions are ever the same. To help lower the learning curve, players are given suggested actions, narrative prompts and automatic dice roll results. This removes the need for players to memorize the complex rules or manually manage gameplay mechanics. Since the AI acts as the Dungeon Master, it makes the experience approachable for beginners and those curious to give this game a try.
 
-##### Resources used
-
+**Resources used**
 We used Github and Figma as our primary resources. Github was used for collaboration and code management, allowing for multiple team members to work together efficiently and to keep track of changes throughout the development process. It also helped us ensure code integrity across different iterations. Figma was used for designing the UI and UX flow as well as for our initial ideation and scheduling.
 
-##### How our solution addresses sustainability goals, diversity and inclusion
-
+**How our solution addresses sustainability goals, diversity and inclusion**
 By providing a fully digital experience, the app removes the need for physical game materials such as printed rulebooks, dice sets and miniatures, reducing resource consumption and minimizing environmental impact. The app is designed to be welcoming to both seasoned players and complete newcomers, regardless of their familiarity with DnD. By eliminating barriers such as knowledge of rulesets or access to expensive materials, it creates a more inclusive entry point for players of different ages, backgrounds and experience levels.
+
+<div style="page-break-after: always;"></div>
 
 ## **Summary of Prototype**
 
@@ -90,11 +88,13 @@ Ensuring that each of the components communicates to its adjacent in a one way s
 </div>
 Dialog and Combat are part of the Game but are separated as each of them while similar have key differences in the logic. Separating them like this prevents the code from increasing too much in size. Furthermore, the picture on the left is inside the Combat `StateHolders` file depicting the separation of concerns by only encompassing UI logic as those only filtered relevant information without altering any of its data leaving it to the Combat Repo instead.
 
+
+
+## **System Architecture (Server)**
+
 <div align="center">
 <img alt="center" src="Blank diagram (2).png">
 </div>
-
-## **System Architecture (Server)**
 
 The server uses spring web to provide a websocket API that the android app can connect to. 
 It contains a single RoomRouter, which is responsible for routing connections and messages to RoomManagers based on the connected client’s room code. 
@@ -168,17 +168,14 @@ The `RoomContext` provides access to the following components:
 ### **OOP Principles Used for Server Side**
 
 ##### Interface Segregation
-
 DiceRealm demonstrates the Interface Segregation Principle by splitting item behavior into focused, specialized class hierarchies. Instead of forcing all items to implement a broad set of unrelated methods, UsableItem defines the useOn() behavior specifically for usable items like scrolls and potions, while EquippableItem defines equipment-specific attributes like suitableBodyParts and stats. Even within usable items, Scrolls and Potions manage their unique dice effects separately through damageDice and effectDice. This design ensures that each class only implements methods relevant to its purpose, preventing unnecessary dependencies and keeping item types lightweight and maintainable
 
 ##### Open-Closed Principle 
-
 In DiceRealm, the design of the Item system strongly follows the Open/Closed Principle. The core base classes like Item, UsableItem, and EquippableItem were established early in the project and have remained unchanged since. As new functionality was needed, such as supporting scrolls, potions, and weapons with specific behaviors like rollDamage() to determine damage roll, and useOn() to determine whether the item was usable on the specified target, we extended the system through inheritance rather than modifying existing classes. This allowed the codebase to stay stable and reliable while still accommodating new types of items and behaviors, showcasing a clear commitment to keeping classes open for extension but closed for modification.
 
 Class extensions:
-
 <div align="center">
-<img alt="center" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXeH6mP4cgF7hZmmEW1UEPFTDQOxcAVxubR2fGUW4jS-pWCxWebexxCTAutCDXowktKmdJ7XyIOuYJ_G2tyUqMZcOZIgOubKbm0B5L3ZDr_ZNmFDOwZ4SCPQGFyipzzUj4P68YS6?key=uLeLIxj20T6aLSb7qVEY1yzm">
+<img alt="center" src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXeH6mP4cgF7hZmmEW1UEPFTDQOxcAVxubR2fGUW4jS-pWCxWebexxCTAutCDXowktKmdJ7XyIOuYJ_G2tyUqMZcOZIgOubKbm0B5L3ZDr_ZNmFDOwZ4SCPQGFyipzzUj4P68YS6?key=uLeLIxj20T6aLSb7qVEY1yzm" width="400">
 </div>
 ##### Single Responsibility Principle
 Each `Command` subclass is responsible for storing information about a single action/state update, and each `CommandHandler` is responsible for handling one `Command` subclass. For example, a `PlayerEquipItemCommand` is responsible for storing information about a player’s request to equip an item, and the `PlayerEquipItemHandler` is responsible for processing `PlayerEquipItemCommand`.
@@ -192,9 +189,8 @@ We designed a core library independent of third-party libraries, which are inste
 
 The Big Screen Mode is a Single Page Application (SPA) that allows users to play Dicerealm on a big screen, like Kahoot or Jackbox. It was written in React and Typescript, and was originally used as a test client for the server before we started work on the android app. It was later repurposed for the Big Screen Mode. This is an optional feature, and does not affect the core functionality of the app.
 
-```
 <div style="page-break-after: always;"></div>
-```
+
 
 ## **2D Aspect**
 
@@ -282,7 +278,6 @@ Implement a win/loss screen with item drops after a battle
   UI Refinement for all screens for a better user experience
 
 ##### Conclusion
-
 In this project, we successfully developed Dice Realm, an interactive online multiplier LLM application that allows users to play with friends across the world while easing new players into the game. Through the process, we applied various key concepts that was taught in the course such as the Single Responsibility Principle, Observer and Singleton Design Pattern
 
 Additionally, we adopted industry standard practices by using Spring boot for backend development and implementing Dependency Injection to manage component interactions efficiently.These practices that we use not only enhance the scalability and maintainability of our application but also align with real-world software engineering workflow.
