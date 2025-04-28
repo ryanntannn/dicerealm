@@ -4,6 +4,7 @@
 The `combat` package is responsible for managing and executing combat scenarios within the game. It includes classes and systems for handling combat actions, calculating hits and damage, managing combat logs, and sequencing combat turns
 - **`CombatManager`**: Handles the main combat commands
 - **`ActionManager`**: Executes specific combat actions and calculates their outcomes
+- **`MonsterAI`**: Determines the Actions of the Monster during Monster's turn
 
 ---
 
@@ -17,16 +18,35 @@ The `combat` package is responsible for managing and executing combat scenarios 
     - `startCombat(Object action)`: Starts the combat loop and processes each entity's turn. Returns a CombatResult Obj for each Iteratation
     - `executeCombatTurn(Entity attacker, Entity target, Object action)`: Executes The Combat Turn Based on If its a Player Entity or Monster Entity
     - `performPlayerAction(Entity player, Entity target, Object action)`: Executes The Combat Turn Based on if Action is Skill Obj or a Weapon Obj
-    - `getTarget(Entity attacker)`: Determines the target for the current attacker
-    - `isValidTarget(Entity attacker, Entity Target)`: Determines if the Target is a ValidTarget, Players Cannot Attack Players, Monsters cannot Attack Monsters
-    - `isCombatOver()`: Checks if the combat is over by verifying if all players or all monsters are dead
+    - `performMonsterAction(Monster monster, Entity target, Object action)`: Executes The Combat Turn Based based on the Monster Action from MonsterAI
+    - `isValidAction(Entity attacker)`: Determines if the Action is made is valid, ie action being made by the turn of the current Player
+    - `isCombatOver()`: Checks if the combat is over by verifying if all players or all monsters 
+    are dead
+    - `reduceAllSkillCooldowns()`: Reduces the cooldown of all skills for all participants at the end of a round.
+    - `removePlayerFromCombat(UUID player)`: removes specific player from combat if they leave the game.
+    - `removeDeadEntities()`: removes entities from turnOrder if they are dead.
+    - `startTurn()`: Sets currentEntity as the entity who's current turn it is based on the currentTurnIndex.
+    - `startRound()`: Resets currentTurnIndex to 0.
+    - `endTurn()`: Ends the current turn of the player, then removes dead entities and checks if a round of combat has passed if it has it calls startRound() and reduces skill cooldowns
+
+
+
 
 ### 2. ActionManager
 - **Description**: Handles the execution of combat actions, such as attacks and skill usage
 - **Key Methods**:
     - `performAttack(Entity attacker, Entity target, Weapon weapon)`: Executes a weapon attack and calculates the hit and damage, returns CombatResult Obj
     - `performSkillAttack(Entity caster, Entity target, Skill skill)`: Executes a skill attack and calculates the hit and damage, returns CombatResult Obj
+    - `usePotion(Player player, Potion potion)`: Applies the effects of a potion to the player.
+    - `useScroll(Player player, Entity target, Scroll scroll)`: Applies the effects of a scroll to the target.
     - `rigDice(D20 riggedDice)`: Allows for rigging the dice for testing purposes.
+
+### 3. MonsterAI
+- **Description**: Handles the logic for monster actions during combat.
+- **Key Methods**:
+    - `handleMonsterTurn(List<Entity> participants, Entity monster)`: Determines the target and action for a monster's turn and executes the action.
+    - `setCombatManager(CombatManager combatManager)`: Sets the combat manager for the AI.
+
 
 ---
 
@@ -94,15 +114,21 @@ The `combat` package is responsible for managing and executing combat scenarios 
     - `int damageRoll`: The value of the damage roll.
     - `String hitLog`: A log message describing the result of the hit calculation.
     - `String damageLog`: A log message describing the result of the damage calculation.
+    - `String potionLog`: A log message describing the result of the potion usage
     - `Dice damageDice`: The dice used for calculating damage.
     - `Weapon weapon`: The weapon used in the attack (if applicable).
     - `Skill skill`: The skill used in the attack (if applicable).
+    - `Scroll scroll`: The scroll used in the attack (if applicable).
+    - `Potion potion`: The potion used in the turn (if applicable).
+
 
 - **Key Methods**:
     - **Constructors**:
         - `CombatResult()`: Default constructor that initializes an empty `CombatResult` object.
         - `CombatResult(Entity attacker, Entity target, Weapon weapon)`: Initializes a `CombatResult` object for a weapon-based attack.
         - `CombatResult(Entity attacker, Entity target, Skill skill)`: Initializes a `CombatResult` object for a skill-based attack.
+        - `CombatResult(Entity attacker, Entity target, Potion potion)`: Initializes a `CombatResult` object for usage of a Potion.
+        - `CombatResult(Entity attacker, Entity target, Scroll scroll)`: Initializes a `CombatResult` object for a scroll-based attack.
 
     - **Data Population**:
         - `fromHitResult(HitResult hitResult)`: Populates the `CombatResult` object with data from a `HitResult` object, including attack result, attack roll, attack bonus, and hit log.
@@ -118,8 +144,12 @@ The `combat` package is responsible for managing and executing combat scenarios 
         - `UUID getAttackerID()`: Retrieves the unique identifier (UUID) of the attacker.
         - `UUID getTargetID()`: Retrieves the unique identifier (UUID) of the target.
         - `Dice getDamageDice()`: Retrieves the dice used for calculating damage.
+        - `int getDamageRoll()`: Retrieves the roll the dice made.
         - `String getHitLog()`: Retrieves the log message generated during the hit calculation.
         - `String getDamageLog()`: Retrieves the log message generated during the damage calculation.
+        - `String getPotionLog()`: Retrieves the log message generated during the Potion usage.
+        
+        
 
 ### 5. CombatLog
 - **Description**: Logs combat events and actions for later review
@@ -130,17 +160,6 @@ The `combat` package is responsible for managing and executing combat scenarios 
     - `getLogs()`: Retrieves all logged messages as a list
 
 
-
-## TODO SECTION
-
-### Combat Manager
-Rewrite CombatManager as a command based system for Room to call
-
-### GlobalXP
-Introduce XP into Roomstate, Write XPManager to track and level players accordingly
-
-### If got time, SHOP system
-Shop system in tarven to allow players to buy weapons or items
 
 
 
