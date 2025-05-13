@@ -29,6 +29,7 @@ In the building of Dice Realm we implemented certain System Design choices. We w
 </div>
 Our application was developed in a monorepo environment, where both our android app and server gradle projects import a compiled core library (.jar file). 
 The core library contains the core data structures, data transfer objects and game logic that are essential to our game, and contains no external dependencies.
+
 ## **Architecture (Android)**
 The architecture that we will be using in our android development is recommended by Android. Allowing the separation of purposes, ideal for medium to large scale projects. In this project I didn't use the domain layer as it's explicitly stated to be optional and due to time constraints I decided to not overcomplicate things and omit it. I decided to use the `StateHolder` primarily extending from the `ViewHolder`.
 Because of the lack of a domain layer and the usage of the `StateHolder` extending from a `ViewHolder`. This architecture ends up looking similar to that of a MVVM + Repository Architecture. Which will be what we will be using in our Android Application, ensuring scalability. Through the separation of concerns from this Architecture, this ensures that we also adhere to the single responsibility principle.
